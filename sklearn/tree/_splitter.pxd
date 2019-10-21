@@ -26,6 +26,10 @@ cdef struct SplitRecord:
     SIZE_t pos             # Split samples array at the given position,
                            # i.e. count of samples below threshold for feature.
                            # pos is >= end if the node is a leaf.
+    #begin:construction:
+    SIZE_t[10] oblique_features
+    SIZE_t[10] oblique_weights
+    #end:construction:
     double threshold       # Threshold to split at.
     double improvement     # Impurity improvement given parent node.
     double impurity_left   # Impurity of the left split.
@@ -83,6 +87,14 @@ cdef class Splitter:
 
     cdef int node_reset(self, SIZE_t start, SIZE_t end,
                         double* weighted_n_node_samples) nogil except -1
+    #begin:construction:
+    cdef int node_oblique_split(self,
+                        double impurity,   # Impurity of the node
+                        SplitRecord* split,
+                        SIZE_t* n_constant_features,
+                        SIZE_t [:] oblique_features,
+                        SIZE_t [:] oblique_weights) except -1
+    #end:construction:
 
     cdef int node_split(self,
                         double impurity,   # Impurity of the node

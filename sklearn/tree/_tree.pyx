@@ -186,6 +186,10 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef double weighted_n_samples = splitter.weighted_n_samples
         cdef double weighted_n_node_samples
         cdef SplitRecord split
+        #begin:construction:
+        cdef SIZE_t [:] o_f = split.oblique_features
+        cdef SIZE_t [:] o_w = split.oblique_weights
+        #end:construction:
         cdef SIZE_t node_id
 
         cdef double impurity = INFINITY
@@ -233,6 +237,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                            (impurity <= min_impurity_split))
 
                 if not is_leaf:
+                    with gil:
+                        splitter.node_oblique_split(impurity, &split, &n_constant_features, o_f, o_w)
                     splitter.node_split(impurity, &split, &n_constant_features)
                     # If EPSILON=0 in the below comparison, float precision
                     # issues stop splitting, producing trees that are
