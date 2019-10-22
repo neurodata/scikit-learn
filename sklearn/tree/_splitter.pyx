@@ -1575,3 +1575,37 @@ cdef class RandomSparseSplitter(BaseSparseSplitter):
         split[0] = best
         n_constant_features[0] = n_total_constants
         return 0
+
+
+#begin:construction:
+cdef class ObliqueBestSplitter(BaseDenseSplitter):
+    """Splitter for finding the best split."""
+    def __reduce__(self):
+        return (ObliqueBestSplitter, (self.criterion,
+                               self.max_features,
+                               self.min_samples_leaf,
+                               self.min_weight_leaf,
+                               self.random_state), self.__getstate__())
+
+    cdef int node_split(self, double impurity, SplitRecord* split,
+                        SIZE_t* n_constant_features) nogil except -1:
+        """Find the best split on node samples[start:end]
+
+        Returns -1 in case of failure to allocate memory (and raise MemoryError)
+        or 0 otherwise.
+        """
+
+        return 0
+
+    cdef int node_oblique_split(self, double impurity, SplitRecord* split,
+            SIZE_t* n_constant_features, SIZE_t [:] oblique_features,
+            SIZE_t [:] oblique_weights) except -1:
+        """Find the best split on node samples[start:end]
+
+        Returns -1 in case of failure to allocate memory (and raise MemoryError)
+        or 0 otherwise.
+        """
+        # Find the best split
+        return 0
+
+#end:construction:
