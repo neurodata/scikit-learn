@@ -2503,3 +2503,98 @@ class RandomTreesEmbedding(BaseForest):
         """
         check_is_fitted(self)
         return self.one_hot_encoder_.transform(self.apply(X))
+
+
+class HistRandomForestClassifier(ForestClassifier):
+    def __init__(self,
+                base_estimator,
+                n_estimators=100, *,
+                max_bins=255,
+                estimator_params=tuple(),
+                bootstrap=False,
+                oob_score=False,
+                n_jobs=None,
+                random_state=None,
+                verbose=0,
+                warm_start=False,
+                class_weight=None,
+                max_samples=None):
+        self.max_bins = max_bins 
+    
+    def _validate_parameters(self):
+    
+    def apply(self, X):
+    
+    def decision_path(self, X):
+        
+    def _get_oob_predictions(tree, X):
+        
+    def _set_oob_score_and_attributes(self, X, y):
+        
+    def fit(self, X, y, sample_weight=None):
+        n_bins = self.max_bins + 1  # + 1 for missing values
+        self._bin_mapper = _BinMapper(
+            n_bins=n_bins,
+            is_categorical=self.is_categorical_,
+            known_categories=known_categories,
+            random_state=self._random_seed)
+        X_binned_train = self._bin_data(X_train, is_training_data=True)
+        if X_val is not None:
+            X_binned_val = self._bin_data(X_val, is_training_data=False)
+        else:
+            X_binned_val = None
+        
+    def predict(self, X):
+        
+    def predict_proba(self, X):
+        
+
+class HistRandomForestRegressor(ForestRegressor):
+    def __init__(self,
+                n_estimators=100, *,
+                criterion="squared_error",
+                max_depth=None,
+                max_bins=255,
+                min_samples_split=2,
+                min_samples_leaf=1,
+                min_weight_fraction_leaf=0.,
+                max_features="auto",
+                max_leaf_nodes=None,
+                min_impurity_decrease=0.,
+                min_impurity_split=None,
+                bootstrap=True,
+                oob_score=False,
+                n_jobs=None,
+                random_state=None,
+                verbose=0,
+                warm_start=False,
+                ccp_alpha=0.0,
+                max_samples=None):
+        self.max_bins = max_bins 
+    
+    def _validate_parameters(self):
+    
+    def apply(self, X):
+    
+    def decision_path(self, X):
+        
+    def _get_oob_predictions(tree, X):
+        
+    def _set_oob_score_and_attributes(self, X, y):
+        
+    def fit(self, X, y, sample_weight=None):
+        n_bins = self.max_bins + 1  # + 1 for missing values
+        self._bin_mapper = _BinMapper(
+            n_bins=n_bins,
+            is_categorical=self.is_categorical_,
+            known_categories=known_categories,
+            random_state=self._random_seed)
+        X_binned_train = self._bin_data(X_train, is_training_data=True)
+        if X_val is not None:
+            X_binned_val = self._bin_data(X_val, is_training_data=False)
+        else:
+            X_binned_val = None
+        
+    def predict(self, X):
+        
+    def predict_proba(self, X):
