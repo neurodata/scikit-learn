@@ -60,6 +60,7 @@ from ..tree._tree import DTYPE, DOUBLE
 from ..utils import check_random_state, compute_sample_weight, deprecated
 from ..exceptions import DataConversionWarning
 from ._base import BaseEnsemble, _partition_estimators
+from .binning import _BinMapper
 from ..utils.fixes import delayed
 from ..utils.fixes import _joblib_parallel_args
 from ..utils.multiclass import check_classification_targets, type_of_target
@@ -137,10 +138,113 @@ def _generate_unsampled_indices(random_state, n_samples, n_samples_bootstrap):
 
     return unsampled_indices
 
+def _check_categories(self, X):
+        """Check and validate categorical features in X
+
+        Return
+        ------
+        is_categorical : ndarray of shape (n_features,) or None, dtype=bool
+            Indicates whether a feature is categorical. If no feature is
+            categorical, this is None.
+        known_categories : list of size n_features or None
+            The list contains, for each feature:
+                - an array of shape (n_categories,) with the unique cat values
+                - None if the feature is not categorical
+            None if no feature is categorical.
+        """
+        if self.categorical_features is None:
+            return None, None
+
+        categorical_features = np.asarray(self.categorical_features)
+
+        if categorical_features.size == 0:
+            return None, None
+
+        if categorical_features.dtype.kind not in ('i', 'b'):
+            raise ValueError("categorical_features must be an array-like of "
+                             "bools or array-like of ints.")
+
+        n_features = X.shape[1]
+
+        # check for categorical features as indices
+        if categorical_features.dtype.kind == 'i':
+            if (np.max(categorical_features) >= n_features
+                    or np.min(categorical_features) < 0):
+                raise ValueError("categorical_features set as integer "
+                                 "indices must be in [0, n_features - 1]")
+            is_categorical = np.zeros(n_features, dtype=bool)
+            is_categorical[categorical_features] = True
+        else:
+            if categorical_features.shape[0] != n_features:
+                raise ValueError("categorical_features set as a boolean mask "
+                                 "must have shape (n_features,), got: "
+                                 f"{categorical_features.shape}")
+            is_categorical = categorical_features
+
+        if not np.any(is_categorical):
+            return None, None
+
+        # compute the known categories in the training data. We need to do
+        # that here instead of in the BinMapper because in case of early
+        # stopping, the mapper only gets a fraction of the training data.
+        known_categories = []
+
+        for f_idx in range(n_features):
+            if is_categorical[f_idx]:
+                categories = np.unique(X[:, f_idx])
+                missing = np.isnan(categories)
+                if missing.any():
+                    categories = categories[~missing]
+
+                if categories.size > self.max_bins:
+                    raise ValueError(
+                        f"Categorical feature at index {f_idx} is "
+                        f"expected to have a "
+                        f"cardinality <= {self.max_bins}"
+                    )
+
+                if (categories >= self.max_bins).any():
+                    raise ValueError(
+                        f"Categorical feature at index {f_idx} is "
+                        f"expected to be encoded with "
+                        f"values < {self.max_bins}"
+                    )
+            else:
+                categories = None
+            known_categories.append(categories)
+
+        return is_categorical, known_categories
+    
+def _bin_data(X, BinMapper, verbose=0):
+    """Bin data X.
+
+    If is_training_data, then fit the _bin_mapper attribute.
+    Else, the binned data is converted to a C-contiguous array.
+    """
+
+    # description = 'training' if is_training_data else 'validation'
+    if verbose:
+        print("Binning {:.3f} GB of data: ".format(
+            X.nbytes / 1e9), end="", flush=True)
+    tic = time()
+    if is_training_data:
+        X_binned = BinMapper.fit_transform(X)  # F-aligned array
+    else:
+        X_binned = BinMapper.transform(X)  # F-aligned array
+        # We convert the array to C-contiguous since predicting is faster
+        # with this layout (training is faster on F-arrays though)
+        X_binned = np.ascontiguousarray(X_binned)
+    toc = time()
+    if verbose:
+        duration = toc - tic
+        print("{:.3f} s".format(duration))
+
+    return X_binned
 
 def _parallel_build_trees(tree, forest, X, y, sample_weight, tree_idx, n_trees,
                           verbose=0, class_weight=None,
-                          n_samples_bootstrap=None):
+                          n_samples_bootstrap=None, hist_binning=False, 
+                          max_bins=255, is_categorical_=None, random_state):
     """
     Private function used to fit a single tree in parallel."""
     if verbose > 1:
@@ -154,7 +258,7 @@ def _parallel_build_trees(tree, forest, X, y, sample_weight, tree_idx, n_trees,
             curr_sample_weight = sample_weight.copy()
 
         indices = _generate_sample_indices(tree.random_state, n_samples,
-                                           n_samples_bootstrap)
+                                        n_samples_bootstrap)
         sample_counts = np.bincount(indices, minlength=n_samples)
         curr_sample_weight *= sample_counts
 
@@ -166,10 +270,44 @@ def _parallel_build_trees(tree, forest, X, y, sample_weight, tree_idx, n_trees,
         elif class_weight == 'balanced_subsample':
             curr_sample_weight *= compute_sample_weight('balanced', y,
                                                         indices=indices)
-
-        tree.fit(X, y, sample_weight=curr_sample_weight, check_input=False)
+        
+        if hist_binning:
+            is_categorical_, known_categories = _check_categories(X)
+            n_bins = max_bins + 1
+            self._bin_mapper = _BinMapper(
+                n_bins=n_bins,
+                is_categorical=is_categorical,
+                known_categories=known_categories,
+                random_state=random_state
+            )
+            X_binned = _bin_data(X, self._bin_mapper, verbose=verbose) 
+            has_missing_values = (
+                X_binned = _bin_mapper.missing_values_bin_idx_).any(
+                    axis=0).astype(np.uint8)
+                )
+            )
+            tree.fit(X_binned, y, sample_weight=curr_sample_weight, check_input=False)
+        else:
+            tree.fit(X, y, sample_weight=curr_sample_weight, check_input=False)
     else:
-        tree.fit(X, y, sample_weight=sample_weight, check_input=False)
+        if hist_binning:
+            is_categorical_, known_categories = _check_categories(X)
+            n_bins = max_bins + 1
+            self._bin_mapper = _BinMapper(
+                n_bins=n_bins,
+                is_categorical=is_categorical,
+                known_categories=known_categories,
+                random_state=random_state
+            )
+            X_binned = _bin_data(X, self._bin_mapper, verbose=verbose) 
+            has_missing_values = (
+                X_binned = _bin_mapper.missing_values_bin_idx_).any(
+                    axis=0).astype(np.uint8)
+                )
+            )
+            tree.fit(X_binned, y, sample_weight=curr_sample_weight, check_input=False)
+        else:
+            tree.fit(X, y, sample_weight=sample_weight, check_input=False)
 
     return tree
 
@@ -194,7 +332,9 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
                  verbose=0,
                  warm_start=False,
                  class_weight=None,
-                 max_samples=None):
+                 max_samples=None,
+                 hist_binning=False,
+                 max_bins=255):
         super().__init__(
             base_estimator=base_estimator,
             n_estimators=n_estimators,
@@ -208,6 +348,8 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         self.warm_start = warm_start
         self.class_weight = class_weight
         self.max_samples = max_samples
+        self.hist_binning = hist_binning
+        self.max_bins = max_bins
 
     def apply(self, X):
         """
@@ -342,7 +484,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             n_samples=X.shape[0],
             max_samples=self.max_samples
         )
-
+        
         # Check parameters
         self._validate_estimator()
         # TODO: Remove in v1.2
@@ -398,7 +540,9 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
                 delayed(_parallel_build_trees)(
                     t, self, X, y, sample_weight, i, len(trees),
                     verbose=self.verbose, class_weight=self.class_weight,
-                    n_samples_bootstrap=n_samples_bootstrap)
+                    n_samples_bootstrap=n_samples_bootstrap, 
+                    hist_binning=self.hist_binning, max_bins=self.max_bins,
+                    random_state=self.random_state)
                 for i, t in enumerate(trees))
 
             # Collect newly grown trees
@@ -509,7 +653,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         check_is_fitted(self)
 
         return self.estimators_[0]._validate_X_predict(X, check_input=True)
-
+    
     @property
     def feature_importances_(self):
         """
@@ -592,7 +736,9 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
                  verbose=0,
                  warm_start=False,
                  class_weight=None,
-                 max_samples=None):
+                 max_samples=None,
+                 hist_binning=False,
+                 max_bins=255):
         super().__init__(
             base_estimator,
             n_estimators=n_estimators,
@@ -604,7 +750,9 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             verbose=verbose,
             warm_start=warm_start,
             class_weight=class_weight,
-            max_samples=max_samples)
+            max_samples=max_samples,
+            hist_binning=hist_binning,
+            max_bins=max_bins)
 
     @staticmethod
     def _get_oob_predictions(tree, X):
@@ -1249,7 +1397,7 @@ class RandomForestClassifier(ForestClassifier):
     >>> print(clf.predict([[0, 0, 0, 0]]))
     [1]
     """
-    @_deprecate_positional_args
+#     @_deprecate_positional_args
     def __init__(self,
                  n_estimators=100, *,
                  criterion="gini",
@@ -1269,7 +1417,9 @@ class RandomForestClassifier(ForestClassifier):
                  warm_start=False,
                  class_weight=None,
                  ccp_alpha=0.0,
-                 max_samples=None):
+                 max_samples=None,
+                 hist_binning=False,
+                 max_bins=255):
         super().__init__(
             base_estimator=DecisionTreeClassifier(),
             n_estimators=n_estimators,
@@ -1285,7 +1435,9 @@ class RandomForestClassifier(ForestClassifier):
             verbose=verbose,
             warm_start=warm_start,
             class_weight=class_weight,
-            max_samples=max_samples)
+            max_samples=max_samples,
+            hist_binning=hist_binning,
+            max_bins=max_bins)
 
         self.criterion = criterion
         self.max_depth = max_depth
@@ -1297,6 +1449,8 @@ class RandomForestClassifier(ForestClassifier):
         self.min_impurity_decrease = min_impurity_decrease
         self.min_impurity_split = min_impurity_split
         self.ccp_alpha = ccp_alpha
+        self.hist_binning = hist_binning
+        self.max_bins = max_bins
 
 
 class RandomForestRegressor(ForestRegressor):
@@ -1568,7 +1722,9 @@ class RandomForestRegressor(ForestRegressor):
                  verbose=0,
                  warm_start=False,
                  ccp_alpha=0.0,
-                 max_samples=None):
+                 max_samples=None,
+                 hist_binning=False,
+                 max_bins=255):
         super().__init__(
             base_estimator=DecisionTreeRegressor(),
             n_estimators=n_estimators,
@@ -1583,7 +1739,9 @@ class RandomForestRegressor(ForestRegressor):
             random_state=random_state,
             verbose=verbose,
             warm_start=warm_start,
-            max_samples=max_samples)
+            max_samples=max_samples,
+            hist_binning=hist_binning,
+            max_bins=max_bins)
 
         self.criterion = criterion
         self.max_depth = max_depth
@@ -1595,6 +1753,8 @@ class RandomForestRegressor(ForestRegressor):
         self.min_impurity_decrease = min_impurity_decrease
         self.min_impurity_split = min_impurity_split
         self.ccp_alpha = ccp_alpha
+        self.hist_binning = hist_binning
+        self.max_bins = max_bins
 
 
 class ExtraTreesClassifier(ForestClassifier):
@@ -2503,154 +2663,3 @@ class RandomTreesEmbedding(BaseForest):
         """
         check_is_fitted(self)
         return self.one_hot_encoder_.transform(self.apply(X))
-
-
-class HistRandomForestClassifier(ForestClassifier):
-    def __init__(self,
-                n_estimators=100, *,
-                criterion="gini",
-                max_depth=None,
-                max_bins,
-                min_samples_split=2,
-                min_samples_leaf=1,
-                min_weight_fraction_leaf=0.,
-                max_features="auto",
-                max_leaf_nodes=None,
-                min_impurity_decrease=0.,
-                min_impurity_split=None,
-                bootstrap=True,
-                oob_score=False,
-                n_jobs=None,
-                random_state=None,
-                verbose=0,
-                warm_start=False,
-                class_weight=None,
-                ccp_alpha=0.0,
-                max_samples=None):
-        super().__init__(
-            base_estimator=DecisionTreeClassifier(),
-            n_estimators=n_estimators,
-            estimator_params=("criterion", "max_depth", "min_samples_split",
-                            "min_samples_leaf", "min_weight_fraction_leaf",
-                            "max_features", "max_leaf_nodes",
-                            "min_impurity_decrease", "min_impurity_split",
-                            "random_state", "ccp_alpha"),
-            bootstrap=bootstrap,
-            oob_score=oob_score,
-            n_jobs=n_jobs,
-            random_state=random_state,
-            verbose=verbose,
-            warm_start=warm_start,
-            class_weight=class_weight,
-            max_samples=max_samples)
-        self.criterion = criterion
-        self.max_depth = max_depth
-        self.max_bins = max_bins 
-        self.min_samples_split = min_samples_split
-        self.min_samples_leaf = min_samples_leaf
-        self.min_weight_fraction_leaf = min_weight_fraction_leaf
-        self.max_features = max_features
-        self.max_leaf_nodes = max_leaf_nodes
-        self.min_impurity_decrease = min_impurity_decrease
-        self.min_impurity_split = min_impurity_split
-        self.ccp_alpha = ccp_alpha
-    
-    def _validate_parameters(self):
-    
-    def apply(self, X):
-    
-    def decision_path(self, X):
-        
-    def _get_oob_predictions(tree, X):
-        
-    def _set_oob_score_and_attributes(self, X, y):
-        
-    def fit(self, X, y, sample_weight=None):
-        n_bins = self.max_bins + 1  # + 1 for missing values
-        self._bin_mapper = _BinMapper(
-            n_bins=n_bins,
-            is_categorical=self.is_categorical_,
-            known_categories=known_categories,
-            random_state=self._random_seed)
-        X_binned_train = self._bin_data(X_train, is_training_data=True)
-        if X_val is not None:
-            X_binned_val = self._bin_data(X_val, is_training_data=False)
-        else:
-            X_binned_val = None
-        
-    def predict(self, X):
-        
-    def predict_proba(self, X):
-        
-
-class HistRandomForestRegressor(ForestRegressor):
-    def __init__(self,
-                n_estimators=100, *,
-                criterion="squared_error",
-                max_depth=None,
-                max_bins=255,
-                min_samples_split=2,
-                min_samples_leaf=1,
-                min_weight_fraction_leaf=0.,
-                max_features="auto",
-                max_leaf_nodes=None,
-                min_impurity_decrease=0.,
-                min_impurity_split=None,
-                bootstrap=True,
-                oob_score=False,
-                n_jobs=None,
-                random_state=None,
-                verbose=0,
-                warm_start=False,
-                ccp_alpha=0.0,
-                max_samples=None):
-        super().__init__(
-            base_estimator=DecisionTreeClassifier(),
-            n_estimators=n_estimators,
-            estimator_params=("criterion", "max_depth", "min_samples_split",
-                            "min_samples_leaf", "min_weight_fraction_leaf",
-                            "max_features", "max_leaf_nodes",
-                            "min_impurity_decrease", "min_impurity_split",
-                            "random_state", "ccp_alpha"),
-            bootstrap=bootstrap,
-            oob_score=oob_score,
-            n_jobs=n_jobs,
-            random_state=random_state,
-            verbose=verbose,
-            warm_start=warm_start,
-            class_weight=class_weight,
-            max_samples=max_samples)
-        self.criterion = 
-        
-    
-    def _validate_parameters(self):
-    
-    def apply(self, X):
-    
-    def decision_path(self, X):
-        
-    def _get_oob_predictions(tree, X):
-        
-    def _set_oob_score_and_attributes(self, X, y):
-        
-    def fit(self, X, y, sample_weight=None):
-        X_train, X_val, y_train, y_val = train_test_split(
-            X, y, test_size=self.validation_fraction,
-            stratify=stratify,
-            random_state=self._random_seed)
-        sample_weight_train = sample_weight_val = None
-        n_bins = self.max_bins + 1  # + 1 for missing values
-        self._bin_mapper = _BinMapper(
-            n_bins=n_bins,
-            is_categorical=self.is_categorical_,
-            known_categories=known_categories,
-            random_state=self._random_seed)
-        X_binned_train = self._bin_data(X_train, is_training_data=True)
-        if X_val is not None:
-            X_binned_val = self._bin_data(X_val, is_training_data=False)
-        else:
-            X_binned_val = None
-        
-    def predict(self, X):
-        
-    def predict_proba(self, X):
