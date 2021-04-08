@@ -60,7 +60,7 @@ from ..tree._tree import DTYPE, DOUBLE
 from ..utils import check_random_state, compute_sample_weight, deprecated
 from ..exceptions import DataConversionWarning
 from ._base import BaseEnsemble, _partition_estimators
-from .binning import _BinMapper
+from ._binning import _BinMapper
 from ..utils.fixes import delayed
 from ..utils.fixes import _joblib_parallel_args
 from ..utils.multiclass import check_classification_targets, type_of_target
@@ -241,10 +241,10 @@ def _bin_data(X, BinMapper, verbose=0):
 
     return X_binned
 
-def _parallel_build_trees(tree, forest, X, y, sample_weight, tree_idx, n_trees,
-                          verbose=0, class_weight=None,
-                          n_samples_bootstrap=None, hist_binning=False, 
-                          max_bins=255, is_categorical_=None, random_state):
+def _parallel_build_trees(tree, forest, X, y, sample_weight, tree_idx, n_trees, random_state,
+                        verbose=0, class_weight=None, 
+                        n_samples_bootstrap=None, hist_binning=False, 
+                        max_bins=255, is_categorical_=None):
     """
     Private function used to fit a single tree in parallel."""
     if verbose > 1:
@@ -282,9 +282,7 @@ def _parallel_build_trees(tree, forest, X, y, sample_weight, tree_idx, n_trees,
             )
             X_binned = _bin_data(X, self._bin_mapper, verbose=verbose) 
             has_missing_values = (
-                X_binned = _bin_mapper.missing_values_bin_idx_).any(
-                    axis=0).astype(np.uint8)
-                )
+                X_binned == _bin_mapper.missing_values_bin_idx_.any(axis=0).astype(np.uint8)
             )
             tree.fit(X_binned, y, sample_weight=curr_sample_weight, check_input=False)
         else:
@@ -301,9 +299,7 @@ def _parallel_build_trees(tree, forest, X, y, sample_weight, tree_idx, n_trees,
             )
             X_binned = _bin_data(X, self._bin_mapper, verbose=verbose) 
             has_missing_values = (
-                X_binned = _bin_mapper.missing_values_bin_idx_).any(
-                    axis=0).astype(np.uint8)
-                )
+                X_binned == _bin_mapper.missing_values_bin_idx_.any(axis=0).astype(np.uint8)
             )
             tree.fit(X_binned, y, sample_weight=curr_sample_weight, check_input=False)
         else:
@@ -539,10 +535,10 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
                              **_joblib_parallel_args(prefer='threads'))(
                 delayed(_parallel_build_trees)(
                     t, self, X, y, sample_weight, i, len(trees),
+                    random_state=self.random_state,
                     verbose=self.verbose, class_weight=self.class_weight,
                     n_samples_bootstrap=n_samples_bootstrap, 
-                    hist_binning=self.hist_binning, max_bins=self.max_bins,
-                    random_state=self.random_state)
+                    hist_binning=self.hist_binning, max_bins=self.max_bins)
                 for i, t in enumerate(trees))
 
             # Collect newly grown trees

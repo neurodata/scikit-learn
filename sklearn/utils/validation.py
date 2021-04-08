@@ -71,7 +71,9 @@ def _deprecate_positional_args(func=None, *, version="1.0 (renaming of 0.25)"):
                           f"{version} passing these as positional arguments "
                           "will result in an error", FutureWarning)
             kwargs.update(zip(sig.parameters, args))
+            print("Args: ", kwargs)
             return f(**kwargs)
+            print("HELLO")
         return inner_f
 
     if func is not None:
