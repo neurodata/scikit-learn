@@ -11,6 +11,8 @@ randomized trees. Single and multi-output problems are both handled.
 #          Joly Arnaud <arnaud.v.joly@gmail.com>
 #          Fares Hedayati <fares.hedayati@gmail.com>
 #          Nelson Liu <nelson@nelsonliu.me>
+#          Philip Teng <fteng3@jhu.edu>
+#          Haoyin Xu <haoyinxu@gmail.com>
 #
 # License: BSD 3 clause
 
@@ -108,6 +110,8 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         min_impurity_decrease,
         class_weight=None,
         ccp_alpha=0.0,
+        hist_binning=False,
+        max_bins=255,
     ):
         self.criterion = criterion
         self.splitter = splitter
@@ -121,6 +125,8 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         self.min_impurity_decrease = min_impurity_decrease
         self.class_weight = class_weight
         self.ccp_alpha = ccp_alpha
+        self.hist_binning = hist_binning
+        self.max_bins = max_bins
 
     def get_depth(self):
         """Return the depth of the decision tree.
@@ -874,6 +880,7 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         min_impurity_decrease=0.0,
         class_weight=None,
         ccp_alpha=0.0,
+        hist_binning=False,
     ):
         super().__init__(
             criterion=criterion,
@@ -1245,6 +1252,7 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
         max_leaf_nodes=None,
         min_impurity_decrease=0.0,
         ccp_alpha=0.0,
+        hist_binning=False,
     ):
         super().__init__(
             criterion=criterion,
