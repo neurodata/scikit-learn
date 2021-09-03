@@ -21,21 +21,8 @@ from ._tree cimport SIZE_t           # Type for indices and counters
 from ._tree cimport INT32_t          # Signed 32 bit integer
 from ._tree cimport UINT32_t         # Unsigned 32 bit integer
 
-# ctypedef np.npy_float32 DTYPE_t          # Type of X
-# ctypedef np.npy_float64 DOUBLE_t         # Type of y, sample_weight
-# ctypedef np.npy_intp SIZE_t              # Type for indices and counters
-# ctypedef np.npy_int32 INT32_t            # Signed 32 bit integer
-# ctypedef np.npy_uint32 UINT32_t          # Unsigned 32 bit integer
-
-# from sklearn.tree._tree cimport DTYPE_t          # Type of X
-# from sklearn.tree._tree cimport DOUBLE_t         # Type of y, sample_weight
-# from sklearn.tree._tree cimport SIZE_t           # Type for indices and counters
-# from sklearn.tree._tree cimport INT32_t          # Signed 32 bit integer
-# from sklearn.tree._tree cimport UINT32_t         # Unsigned 32 bit integer
-
-
 from ._tree cimport Node, Tree
-from ._oblique_splitter cimport BaseObliqueSplitter
+from ._oblique_splitter cimport ObliqueSplitter
 from ._oblique_splitter cimport ObliqueSplitRecord
 
 cdef struct ObliqueNode:
@@ -110,7 +97,7 @@ cdef class ObliqueTreeBuilder:
     # This class controls the various stopping criteria and the node splitting
     # evaluation order, e.g. depth-first or best-first.
 
-    cdef BaseObliqueSplitter splitter   # Splitting algorithm
+    cdef ObliqueSplitter splitter   # Splitting algorithm
 
     cdef SIZE_t min_samples_split       # Minimum number of samples in an internal node
     cdef SIZE_t min_samples_leaf        # Minimum number of samples in a leaf

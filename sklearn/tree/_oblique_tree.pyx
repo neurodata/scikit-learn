@@ -134,7 +134,7 @@ cdef class ObliqueTreeBuilder:
 cdef class ObliqueDepthFirstTreeBuilder(ObliqueTreeBuilder):
     """Build a decision tree in depth-first fashion."""
 
-    def __cinit__(self, BaseObliqueSplitter splitter, SIZE_t min_samples_split,
+    def __cinit__(self, ObliqueSplitter splitter, SIZE_t min_samples_split,
                   SIZE_t min_samples_leaf, double min_weight_leaf,
                   SIZE_t max_depth, double min_impurity_decrease,
                   double min_impurity_split):
@@ -172,7 +172,7 @@ cdef class ObliqueDepthFirstTreeBuilder(ObliqueTreeBuilder):
         # print('finished resizing...')
 
         # Parameters
-        cdef BaseObliqueSplitter splitter = self.splitter
+        cdef ObliqueSplitter splitter = self.splitter
         cdef SIZE_t max_depth = self.max_depth
         cdef SIZE_t min_samples_leaf = self.min_samples_leaf
         cdef double min_weight_leaf = self.min_weight_leaf
