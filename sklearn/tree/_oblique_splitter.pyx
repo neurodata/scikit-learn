@@ -11,16 +11,6 @@ np.import_array()
 
 from ._criterion cimport Criterion
 
-from ._splitter cimport (FEATURE_THRESHOLD, INFINITY, Splitter,
-                         sort, swap, median3, introsort, sift_down, 
-                         heapsort) 
-
-from ._utils cimport log
-from ._utils cimport rand_int
-from ._utils cimport rand_uniform
-from ._utils cimport RAND_R_MAX
-from ._utils cimport safe_realloc
-
 from libc.stdlib cimport malloc
 from libc.stdlib cimport free
 from libc.stdlib cimport qsort
@@ -36,6 +26,18 @@ from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref
 from cython.parallel import prange
 
+from ._splitter cimport sort
+
+from ._utils cimport log
+from ._utils cimport rand_int
+from ._utils cimport rand_uniform
+from ._utils cimport RAND_R_MAX
+from ._utils cimport safe_realloc
+
+cdef double INFINITY = np.inf
+
+# Mitigate precision differences between 32 bit and 64 bit
+cdef DTYPE_t FEATURE_THRESHOLD = 1e-7
 
 # Constant to switch between algorithm non zero value extract algorithm
 # in SparseSplitter
@@ -50,7 +52,7 @@ cdef inline void _init_split(ObliqueSplitRecord* self, SIZE_t start_pos) nogil:
     self.improvement = -INFINITY
 
 
-cdef class ObliqueSplitter(Splitter):
+cdef class ObliqueSplitter:
     """Abstract oblique splitter class.
 
     Splitters are called by tree builders to find the best splits on 
@@ -82,9 +84,21 @@ cdef class ObliqueSplitter(Splitter):
         random_state : object
             The user inputted random state to be used for pseudo-randomness
         """
-        Splitter.__cinit__(criterion, max_features,
-                  min_samples_leaf, min_weight_leaf,
-                  random_state)
+        self.criterion = criterion
+
+        self.samples = NULL
+        self.n_samples = 0
+        self.features = NULL
+        self.n_features = 0
+        self.feature_values = NULL
+
+        self.sample_weight = NULL
+
+        # Max features = output dimensionality of projection vectors
+        self.max_features = max_features
+        self.min_samples_leaf = min_samples_leaf
+        self.min_weight_leaf = min_weight_leaf
+        self.random_state = random_state
 
         # SPORF parameters
         self.feature_combinations = feature_combinations
@@ -92,6 +106,7 @@ cdef class ObliqueSplitter(Splitter):
         # Sparse max_features x n_features projection matrix
         self.proj_mat_weights = vector[vector[DTYPE_t]](self.max_features)
         self.proj_mat_indices = vector[vector[SIZE_t]](self.max_features)
+
         self.n_non_zeros = max(int(self.max_features * self.feature_combinations), 1)
         
     def __dealloc__(self):
@@ -114,6 +129,79 @@ cdef class ObliqueSplitter(Splitter):
 
     def __setstate__(self, d):
         pass
+
+    cdef int init(self,
+                   object X,
+                   const DOUBLE_t[:, ::1] y,
+                   DOUBLE_t* sample_weight) except -1:
+        """Initialize the splitter.
+
+        Take in the input data X, the target Y, and optional sample weights.
+
+        Returns -1 in case of failure to allocate memory (and raise MemoryError)
+        or 0 otherwise.
+
+        Parameters
+        ----------
+        X : object
+            This contains the inputs. Usually it is a 2d numpy array.
+
+        y : ndarray, dtype=DOUBLE_t
+            This is the vector of targets, or true labels, for the samples
+
+        sample_weight : DOUBLE_t*
+            The weights of the samples, where higher weighted samples are fit
+            closer than lower weight samples. If not provided, all samples
+            are assumed to have uniform weight.
+        """
+        # print('inside split init...')
+        self.rand_r_state = self.random_state.randint(0, RAND_R_MAX)
+        cdef SIZE_t n_samples = X.shape[0]
+
+        # Create a new array which will be used to store nonzero
+        # samples from the feature of interest
+        cdef SIZE_t* samples = safe_realloc(&self.samples, n_samples)
+
+        cdef SIZE_t i, j
+        cdef double weighted_n_samples = 0.0
+        j = 0
+
+        # print('Initializing sample weights...')
+        for i in range(n_samples):
+            # Only work with positively weighted samples
+            if sample_weight == NULL or sample_weight[i] != 0.0:
+                samples[j] = i
+                j += 1
+
+            if sample_weight != NULL:
+                weighted_n_samples += sample_weight[i]
+            else:
+                weighted_n_samples += 1.0
+
+        # Number of samples is number of positively weighted samples
+        self.n_samples = j
+        self.weighted_n_samples = weighted_n_samples
+
+        cdef SIZE_t n_features = X.shape[1]
+        cdef SIZE_t* features = safe_realloc(&self.features, n_features)
+
+        for i in range(n_features):
+            features[i] = i
+
+        self.n_features = n_features
+
+        # print('About to safe realloc...')
+        safe_realloc(&self.feature_values, n_samples)
+        # print('Safe reallocated feature values..')
+        safe_realloc(&self.constant_features, n_features)
+        # print('After second...')
+        self.y = y
+
+        self.sample_weight = sample_weight
+        # print('Finished init...')
+ 
+        return 0
+
 
     cdef int node_reset(self, SIZE_t start, SIZE_t end,
                         double* weighted_n_node_samples) nogil except -1:
@@ -149,7 +237,7 @@ cdef class ObliqueSplitter(Splitter):
             self.proj_mat_weights[i].clear()
             self.proj_mat_indices[i].clear()
 
-    cdef int node_split(self, double impurity, ObliqueSplitRecord* split,
+    cdef int oblique_node_split(self, double impurity, ObliqueSplitRecord* split,
                         SIZE_t* n_constant_features) nogil except -1:
         """Find the best split on node samples[start:end].
 
@@ -159,6 +247,15 @@ cdef class ObliqueSplitter(Splitter):
         It should return -1 upon errors.
         """
         pass
+
+    cdef void node_value(self, double* dest) nogil:
+        """Copy the value of node samples[start:end] into dest."""
+
+        self.criterion.node_value(dest)
+
+    cdef double node_impurity(self) nogil:
+        """Return the impurity of the current node."""
+        return self.criterion.node_impurity()
 
     cdef void sample_proj_mat(self, 
                               vector[vector[DTYPE_t]]& proj_mat_weights, 
@@ -196,8 +293,7 @@ cdef class DenseObliqueSplitter(ObliqueSplitter):
     cdef int init(self,
                   object X,
                   const DOUBLE_t[:, ::1] y,
-                  DOUBLE_t* sample_weight,
-                  np.ndarray X_idx_sorted=None) except -1:
+                  DOUBLE_t* sample_weight) except -1:
         """Initialize the splitter
 
         Returns -1 in case of failure to allocate memory (and raise MemoryError)
@@ -253,7 +349,7 @@ cdef class BestObliqueSplitter(DenseObliqueSplitter):
             proj_mat_indices[proj_i].push_back(feat_i)  # Store index of nonzero
             proj_mat_weights[proj_i].push_back(weight)  # Store weight of nonzero
 
-    cdef int node_split(self, double impurity, ObliqueSplitRecord* split,
+    cdef int oblique_node_split(self, double impurity, ObliqueSplitRecord* split,
                         SIZE_t* n_constant_features) nogil except -1:
         """Find the best split on node samples[start:end]
 

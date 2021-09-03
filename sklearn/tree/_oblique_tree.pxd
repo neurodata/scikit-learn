@@ -1,3 +1,5 @@
+# distutils: language = c++
+
 # Authors: Gilles Louppe <g.louppe@gmail.com>
 #          Peter Prettenhofer <peter.prettenhofer@gmail.com>
 #          Brian Holt <bdholt1@gmail.com>
@@ -20,8 +22,6 @@ from ._tree cimport DOUBLE_t         # Type of y, sample_weight
 from ._tree cimport SIZE_t           # Type for indices and counters
 from ._tree cimport INT32_t          # Signed 32 bit integer
 from ._tree cimport UINT32_t         # Unsigned 32 bit integer
-
-from ._tree cimport Node, Tree
 from ._oblique_splitter cimport ObliqueSplitter
 from ._oblique_splitter cimport ObliqueSplitRecord
 
@@ -57,14 +57,16 @@ cdef class ObliqueTree:
     cdef double* value                   # (capacity, n_outputs, max_n_classes) array of values
     cdef SIZE_t value_stride             # = n_outputs * max_n_classes
 
-    cdef DTYPE_t** proj_vecs             # (capacity, n_features) array of projection vectors
+    cdef vector[vector[DTYPE_t]] proj_vec_weights # (capacity, n_features) array of projection vectors
+    cdef vector[vector[SIZE_t]] proj_vec_indices  # (capacity, n_features) array of projection vectors
 
     # Methods
     cdef SIZE_t _add_node(self, SIZE_t parent, bint is_left, bint is_leaf,
                           SIZE_t feature, double threshold, double impurity,
                           SIZE_t n_node_samples,
                           double weighted_n_samples, 
-                          DTYPE_t* proj_vec) nogil except -1
+                          vector[DTYPE_t]* proj_vec_weights,
+                          vector[SIZE_t]* proj_vec_indices) nogil except -1
 
     cdef int _resize(self, SIZE_t capacity) nogil except -1
     cdef int _resize_c(self, SIZE_t capacity=*) nogil except -1

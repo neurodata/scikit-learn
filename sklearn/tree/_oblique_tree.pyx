@@ -32,6 +32,8 @@ from scipy.sparse import issparse
 from scipy.sparse import csc_matrix
 from scipy.sparse import csr_matrix
 
+from cython.operator cimport dereference as deref
+
 # from ._tree cimport TreeBuilder
 
 from ._utils cimport Stack
@@ -182,7 +184,7 @@ cdef class ObliqueDepthFirstTreeBuilder(ObliqueTreeBuilder):
 
         # Recursive partition (without actual recursion)
         # print('splitter: ', splitter)
-        splitter.init(X, y, sample_weight_ptr, X_idx_sorted)
+        splitter.init(X, y, sample_weight_ptr)
         # print('Splitter initialized...')
 
         cdef SIZE_t start
@@ -244,7 +246,7 @@ cdef class ObliqueDepthFirstTreeBuilder(ObliqueTreeBuilder):
                            (impurity <= min_impurity_split))
 
                 if not is_leaf:
-                    splitter.node_split(impurity, &split, &n_constant_features)
+                    splitter.oblique_node_split(impurity, &split, &n_constant_features)
                     # If EPSILON=0 in the below comparison, float precision
                     # issues stop splitting, producing trees that are
                     # dissimilar to v0.18
@@ -254,7 +256,9 @@ cdef class ObliqueDepthFirstTreeBuilder(ObliqueTreeBuilder):
 
                 node_id = tree._add_node(parent, is_left, is_leaf, split.feature,
                                          split.threshold, impurity, n_node_samples,
-                                         weighted_n_node_samples, split.proj_vec)
+                                         weighted_n_node_samples, 
+                                         split.proj_vec_weights, 
+                                         split.proj_vec_indices)
 
                 if node_id == SIZE_MAX:
                     rc = -1
@@ -415,24 +419,14 @@ cdef class ObliqueTree:
         self.value = NULL
         self.nodes = NULL
 
-        self.proj_vecs = NULL
+        self.proj_vec_weights = vector[vector[DTYPE_t]](self.capacity)
+        self.proj_vec_indices = vector[vector[SIZE_t]](self.capacity)
 
     def __dealloc__(self):
         """Destructor."""
         # Free all inner structures
         free(self.n_classes)
         free(self.value)
-        
-        # Deallocate memory for all proj_vecs
-        # print(self.node_count)
-        cdef SIZE_t i
-        for i in range(self.node_count):
-            if self.proj_vecs[i] != NULL:
-                free(self.proj_vecs[i])
-        # print("freed each projection vector")
-        free(self.proj_vecs)
-        # print("freed proj_vec array")
-
         free(self.nodes)
         # print("freed nodes")
 
@@ -451,10 +445,13 @@ cdef class ObliqueTree:
         d["nodes"] = self._get_node_ndarray()
         d["values"] = self._get_value_ndarray()
 
-        # TODO: added but not sure if it works
-        # cdef float[::1] proj_vecs_arr = <float [:self.proj_vecs.size()]> self.proj_vecs.data()
-        # d['proj_vecs'] = np.asarray(<DTYPE_t[:,:]> proj_vecs_arr)
-        # d['proj_vecs'] = np.asarray(self.proj_vecs)
+        proj_vecs = np.zeros((self.node_count, self.n_features))
+        for i in range(0, self.node_count):
+            for j in range(0, self.proj_vec_weights[i].size()):
+                weight = self.proj_vec_weights[i][j]
+                feat = self.proj_vec_indices[i][j]
+                proj_vecs[i, feat] = weight
+        d['proj_vecs'] = proj_vecs
         return d
 
     def __setstate__(self, d):
@@ -486,7 +483,18 @@ cdef class ObliqueTree:
                        self.capacity * sizeof(ObliqueNode))
         value = memcpy(self.value, (<np.ndarray> value_ndarray).data,
                        self.capacity * self.value_stride * sizeof(double))
-        # TODO: pickling for proj_vecs
+
+        proj_vecs = d['proj_vecs']
+        self.n_features = proj_vecs.shape[1]
+        self.proj_vec_weights = vector[vector[DTYPE_t]](self.node_count)
+        self.proj_vec_indices = vector[vector[SIZE_t]](self.node_count)
+        for i in range(0, self.node_count):
+            for j in range(0, self.n_features):
+                weight = proj_vecs[i, j]
+                if weight == 0:
+                    continue
+                self.proj_vec_weights[i].push_back(weight)
+                self.proj_vec_indices[i].push_back(j)
 
     cdef int _resize(self, SIZE_t capacity) nogil except -1:
         """Resize all inner arrays to `capacity`, if `capacity` == -1, then
@@ -517,7 +525,9 @@ cdef class ObliqueTree:
 
         safe_realloc(&self.nodes, capacity)
         safe_realloc(&self.value, capacity * self.value_stride)
-        safe_realloc(&self.proj_vecs, capacity) 
+
+        self.proj_vec_weights.resize(capacity)
+        self.proj_vec_indices.resize(capacity)
 
         # value memory is initialised to 0 to enable classifier argmax
         if capacity > self.capacity:
@@ -535,9 +545,13 @@ cdef class ObliqueTree:
     cdef SIZE_t _add_node(self, SIZE_t parent, bint is_left, bint is_leaf,
                           SIZE_t feature, double threshold, double impurity,
                           SIZE_t n_node_samples,
-                          double weighted_n_node_samples, DTYPE_t* proj_vec) nogil except -1:
+                          double weighted_n_node_samples, 
+                          vector[DTYPE_t]* proj_vec_weights,
+                          vector[SIZE_t]* proj_vec_indices) nogil except -1:
         """Add a node to the tree.
+
         The new node registers itself as the child of its parent.
+
         Returns (size_t)(-1) on error.
         """
         cdef SIZE_t node_id = self.node_count
@@ -560,28 +574,18 @@ cdef class ObliqueTree:
             else:
                 self.nodes[parent].right_child = node_id
 
-        # allocate memory for projection vector for this node
-        self.proj_vecs[node_id] = NULL
-        # safe_realloc(&self.proj_vecs[node_id], self.n_features)
-
         if is_leaf:
             node.left_child = _TREE_LEAF
             node.right_child = _TREE_LEAF
             node.feature = _TREE_UNDEFINED
             node.threshold = _TREE_UNDEFINED
-            #node.proj_vec = NULL
-            # with gil:
-            #     print('Setting leaf...')
         else:
             # left_child and right_child will be set later
             node.feature = feature
             node.threshold = threshold
 
-            # Allocate memory for tree's proj_vec and make a deep copy
-            # with gil:
-            #     print('Allocating memory for proj_vecs')
-            self.proj_vecs[node_id] = <DTYPE_t*> malloc(n_features * sizeof(DTYPE_t))
-            memcpy(self.proj_vecs[node_id], proj_vec, n_features * sizeof(DTYPE_t))
+            self.proj_vec_weights[node_id] = deref(proj_vec_weights)
+            self.proj_vec_indices[node_id] = deref(proj_vec_indices)
 
         self.node_count += 1
 
@@ -627,7 +631,9 @@ cdef class ObliqueTree:
         cdef SIZE_t i = 0
         cdef SIZE_t j = 0
         cdef DTYPE_t proj_feat = 0
-        cdef DTYPE_t* proj_vec
+
+        cdef vector[DTYPE_t] proj_vec_weights
+        cdef vector[SIZE_t] proj_vec_indices
 
         cdef SIZE_t node_id = 0
 
@@ -643,9 +649,11 @@ cdef class ObliqueTree:
 
                     # compute projection of the data based on trained tree
                     proj_feat = 0
-                    proj_vec = self.proj_vecs[node_id]
-                    for j in range(n_features):
-                        proj_feat += X_ndarray[i, j] * proj_vec[j]
+
+                    proj_vec_weights = self.proj_vec_weights[node_id]
+                    proj_vec_indices = self.proj_vec_indices[node_id]
+                    for j in range(proj_vec_indices.size()):
+                        proj_feat += X_ndarray[i, proj_vec_indices[j]] * proj_vec_weights[j]
 
                     if proj_feat <= node.threshold:
                         node_id = node.left_child
@@ -770,7 +778,9 @@ cdef class ObliqueTree:
         cdef SIZE_t i = 0
         cdef SIZE_t j = 0
         cdef DTYPE_t proj_feat = 0
-        cdef DTYPE_t* proj_vec
+
+        cdef vector[DTYPE_t] proj_vec_weights
+        cdef vector[SIZE_t] proj_vec_indices
 
         # to traverse the nodes
         cdef SIZE_t node_id = 0
@@ -793,9 +803,10 @@ cdef class ObliqueTree:
 
                     # compute projection of the data based on trained tree
                     proj_feat = 0
-                    proj_vec = self.proj_vecs[node_id]
-                    for j in range(n_features):
-                        proj_feat += X_ndarray[i, j] * proj_vec[j]
+                    proj_vec_weights = self.proj_vec_weights[node_id]
+                    proj_vec_indices = self.proj_vec_indices[node_id]
+                    for j in range(proj_vec_indices.size()):
+                        proj_feat += X_ndarray[i, proj_vec_indices[j]] * proj_vec_weights[j]
 
                     if proj_feat <= node.threshold:
                         node_id = node.left_child
@@ -911,7 +922,41 @@ cdef class ObliqueTree:
 
     cpdef compute_feature_importances(self, normalize=True):
         """Computes the importance of each feature (aka variable)."""
-        pass
+        cdef ObliqueNode* left                                 # left child
+        cdef ObliqueNode* right                                # right child
+        cdef ObliqueNode* nodes = self.nodes                   # array of all nodes
+        cdef ObliqueNode* node = nodes                         # pointer to nodes
+        cdef ObliqueNode* end_node = node + self.node_count    # the last node
+
+        cdef double normalizer = 0.
+
+        cdef np.ndarray[np.float64_t, ndim=1] importances
+        importances = np.zeros((self.n_features,))
+        cdef DOUBLE_t* importance_data = <DOUBLE_t*>importances.data
+
+        with nogil:
+            while node != end_node:
+                if node.left_child != _TREE_LEAF:
+                    # ... and node.right_child != _TREE_LEAF:
+                    left = &nodes[node.left_child]
+                    right = &nodes[node.right_child]
+
+                    importance_data[node.feature] += (
+                        node.weighted_n_node_samples * node.impurity -
+                        left.weighted_n_node_samples * left.impurity -
+                        right.weighted_n_node_samples * right.impurity)
+                node += 1
+
+        importances /= nodes[0].weighted_n_node_samples
+
+        if normalize:
+            normalizer = np.sum(importances)
+
+            if normalizer > 0.0:
+                # Avoid dividing by zero (e.g., when root is pure)
+                importances /= normalizer
+
+        return importances
 
     cdef np.ndarray _get_value_ndarray(self):
         """Wraps value as a 3-d NumPy array.
