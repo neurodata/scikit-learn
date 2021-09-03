@@ -374,11 +374,19 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             # might be shared and modified concurrently during parallel fitting
             criterion = copy.deepcopy(criterion)
         # set splitter, tree and tree builder
-        splitter = self._set_splitter(issparse(X), criterion, min_samples_leaf, 
-                            min_weight_leaf, random_state)
+        splitter = self._set_splitter(
+            issparse(X), criterion, min_samples_leaf, min_weight_leaf, random_state
+        )
         self._set_tree()
-        builder = self._set_builder(splitter, min_samples_split, min_samples_leaf, min_weight_leaf, 
-            max_depth, max_leaf_nodes, self.min_impurity_decrease)
+        builder = self._set_builder(
+            splitter,
+            min_samples_split,
+            min_samples_leaf,
+            min_weight_leaf,
+            max_depth,
+            max_leaf_nodes,
+            self.min_impurity_decrease,
+        )
 
         # build the tree on the supervised dataset
         builder.build(self.tree_, X, y, sample_weight)
@@ -391,46 +399,65 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
 
         return self
 
-    def _set_splitter(self, issparse, criterion, min_samples_leaf, min_weight_leaf, random_state):
+    def _set_splitter(
+        self, issparse, criterion, min_samples_leaf, min_weight_leaf, random_state
+    ):
         SPLITTERS = SPARSE_SPLITTERS if issparse else DENSE_SPLITTERS
 
         splitter = self.splitter
         if not isinstance(self.splitter, Splitter):
-            splitter = SPLITTERS[self.splitter](criterion,
-                                                self.max_features_,
-                                                min_samples_leaf,
-                                                min_weight_leaf,
-                                                random_state)
+            splitter = SPLITTERS[self.splitter](
+                criterion,
+                self.max_features_,
+                min_samples_leaf,
+                min_weight_leaf,
+                random_state,
+            )
         return splitter
 
     def _set_tree(self):
         if is_classifier(self):
-            self.tree_ = Tree(self.n_features_,
-                              self.n_classes_, self.n_outputs_)
+            self.tree_ = Tree(self.n_features_, self.n_classes_, self.n_outputs_)
         else:
-            self.tree_ = Tree(self.n_features_,
-                              # TODO: tree should't need this in this case
-                              np.array([1] * self.n_outputs_, dtype=np.intp),
-                              self.n_outputs_)
+            self.tree_ = Tree(
+                self.n_features_,
+                # TODO: tree should't need this in this case
+                np.array([1] * self.n_outputs_, dtype=np.intp),
+                self.n_outputs_,
+            )
 
-    def _set_builder(self, splitter, min_samples_split, min_samples_leaf, min_weight_leaf, 
-            max_depth, max_leaf_nodes, min_impurity_split):
+    def _set_builder(
+        self,
+        splitter,
+        min_samples_split,
+        min_samples_leaf,
+        min_weight_leaf,
+        max_depth,
+        max_leaf_nodes,
+        min_impurity_split,
+    ):
         # Use BestFirst if max_leaf_nodes given; use DepthFirst otherwise
         if max_leaf_nodes < 0:
-            builder = DepthFirstTreeBuilder(splitter, min_samples_split,
-                                            min_samples_leaf,
-                                            min_weight_leaf,
-                                            max_depth,
-                                            self.min_impurity_decrease,
-                                            min_impurity_split)
+            builder = DepthFirstTreeBuilder(
+                splitter,
+                min_samples_split,
+                min_samples_leaf,
+                min_weight_leaf,
+                max_depth,
+                self.min_impurity_decrease,
+                min_impurity_split,
+            )
         else:
-            builder = BestFirstTreeBuilder(splitter, min_samples_split,
-                                           min_samples_leaf,
-                                           min_weight_leaf,
-                                           max_depth,
-                                           max_leaf_nodes,
-                                           self.min_impurity_decrease,
-                                           min_impurity_split)
+            builder = BestFirstTreeBuilder(
+                splitter,
+                min_samples_split,
+                min_samples_leaf,
+                min_weight_leaf,
+                max_depth,
+                max_leaf_nodes,
+                self.min_impurity_decrease,
+                min_impurity_split,
+            )
         return builder
 
     def _validate_X_predict(self, X, check_input):
@@ -662,7 +689,7 @@ class BaseObliqueDecisionTree(BaseDecisionTree):
         min_impurity_split,
         feature_combinations=None,
         class_weight=None,
-        ccp_alpha=0.0
+        ccp_alpha=0.0,
     ):
         super(BaseObliqueDecisionTree, self).__init__(
             criterion=criterion,
@@ -683,7 +710,9 @@ class BaseObliqueDecisionTree(BaseDecisionTree):
         # SPORF params
         self.feature_combinations = feature_combinations
 
-    def _set_splitter(self, issparse, criterion, min_samples_leaf, min_weight_leaf, random_state):
+    def _set_splitter(
+        self, issparse, criterion, min_samples_leaf, min_weight_leaf, random_state
+    ):
         SPLITTERS = OBLIQUE_SPARSE_SPLITTERS if issparse else OBLIQUE_DENSE_SPLITTERS
 
         splitter = self.splitter
@@ -697,7 +726,7 @@ class BaseObliqueDecisionTree(BaseDecisionTree):
                 random_state,
             )
         return splitter
-    
+
     def _set_tree(self):
         if is_classifier(self):
             self.tree_ = ObliqueTree(self.n_features_, self.n_classes_, self.n_outputs_)
@@ -709,8 +738,16 @@ class BaseObliqueDecisionTree(BaseDecisionTree):
                 self.n_outputs_,
             )
 
-    def _set_builder(self, splitter, min_samples_split, min_samples_leaf, min_weight_leaf, 
-            max_depth, max_leaf_nodes, min_impurity_split):
+    def _set_builder(
+        self,
+        splitter,
+        min_samples_split,
+        min_samples_leaf,
+        min_weight_leaf,
+        max_depth,
+        max_leaf_nodes,
+        min_impurity_split,
+    ):
         # Use BestFirst if max_leaf_nodes given; use DepthFirst otherwise
         if max_leaf_nodes < 0:
             builder = ObliqueDepthFirstTreeBuilder(
@@ -723,9 +760,9 @@ class BaseObliqueDecisionTree(BaseDecisionTree):
                 min_impurity_split,
             )
         else:
-            raise NotImplementedError('Havent implemented Best First tree builder')
+            raise NotImplementedError("Havent implemented Best First tree builder")
         return builder
-        
+
 
 # =============================================================================
 # Public estimators
@@ -2187,7 +2224,7 @@ class ObliqueDecisionTreeClassifier(ClassifierMixin, BaseObliqueDecisionTree):
         min_impurity_decrease=0.0,
         min_impurity_split=None,
         class_weight=None,
-        ccp_alpha=0.0
+        ccp_alpha=0.0,
     ):
         super().__init__(
             criterion=criterion,
