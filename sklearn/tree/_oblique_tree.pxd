@@ -53,10 +53,12 @@ cdef class ObliqueTree:
     cdef public SIZE_t max_depth         # Max depth of the tree
     cdef public SIZE_t node_count        # Counter for node IDs
     cdef public SIZE_t capacity          # Capacity of tree, in terms of nodes
-    cdef ObliqueNode* nodes                     # Array of "oblique" nodes
+    cdef ObliqueNode* nodes              # Array of "oblique" nodes
     cdef double* value                   # (capacity, n_outputs, max_n_classes) array of values
     cdef SIZE_t value_stride             # = n_outputs * max_n_classes
 
+    # oblique forests
+    # cdef ObliqueNode* nodes              # Array of "oblique" nodes
     cdef vector[vector[DTYPE_t]] proj_vec_weights # (capacity, n_features) array of projection vectors
     cdef vector[vector[SIZE_t]] proj_vec_indices  # (capacity, n_features) array of projection vectors
 

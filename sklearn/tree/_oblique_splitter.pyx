@@ -26,7 +26,7 @@ from libcpp.vector cimport vector
 from cython.operator cimport dereference as deref
 from cython.parallel import prange
 
-from ._splitter cimport sort
+from ._splitter cimport (sort, INFINITY, FEATURE_THRESHOLD, EXTRACT_NNZ_SWITCH)
 
 from ._utils cimport log
 from ._utils cimport rand_int
@@ -34,14 +34,6 @@ from ._utils cimport rand_uniform
 from ._utils cimport RAND_R_MAX
 from ._utils cimport safe_realloc
 
-cdef double INFINITY = np.inf
-
-# Mitigate precision differences between 32 bit and 64 bit
-cdef DTYPE_t FEATURE_THRESHOLD = 1e-7
-
-# Constant to switch between algorithm non zero value extract algorithm
-# in SparseSplitter
-# cdef DTYPE_t EXTRACT_NNZ_SWITCH = 0.1
 
 cdef inline void _init_split(ObliqueSplitRecord* self, SIZE_t start_pos) nogil:
     self.impurity_left = INFINITY
@@ -52,7 +44,7 @@ cdef inline void _init_split(ObliqueSplitRecord* self, SIZE_t start_pos) nogil:
     self.improvement = -INFINITY
 
 
-cdef class ObliqueSplitter:
+cdef class ObliqueSplitter(Splitter):
     """Abstract oblique splitter class.
 
     Splitters are called by tree builders to find the best splits on 
@@ -238,7 +230,7 @@ cdef class ObliqueSplitter:
             self.proj_mat_indices[i].clear()
 
     cdef int oblique_node_split(self, double impurity, ObliqueSplitRecord* split,
-                        SIZE_t* n_constant_features) nogil except -1:
+                                SIZE_t* n_constant_features) nogil except -1:
         """Find the best split on node samples[start:end].
 
         This is a placeholder method. The majority of computation will be done
@@ -248,24 +240,13 @@ cdef class ObliqueSplitter:
         """
         pass
 
-    cdef void node_value(self, double* dest) nogil:
-        """Copy the value of node samples[start:end] into dest."""
-
-        self.criterion.node_value(dest)
-
-    cdef double node_impurity(self) nogil:
-        """Return the impurity of the current node."""
-        return self.criterion.node_impurity()
-
     cdef void sample_proj_mat(self, 
                               vector[vector[DTYPE_t]]& proj_mat_weights, 
                               vector[vector[SIZE_t]]& proj_mat_indices) nogil:
-        """ Sample the projection vector. 
+        """ Sample the projection vector from the set of features. 
         
-        This is a placeholder method. 
-
+        This is a placeholder method.
         """
-
         pass
 
 
@@ -277,7 +258,6 @@ cdef class DenseObliqueSplitter(ObliqueSplitter):
     cdef SIZE_t X_idx_sorted_stride
     cdef SIZE_t n_total_samples
     cdef SIZE_t* sample_mask
-    # cdef DTYPE_t** X_proj
 
     def __cinit__(self, Criterion criterion, SIZE_t max_features,
                   SIZE_t min_samples_leaf, double min_weight_leaf,
@@ -288,7 +268,6 @@ cdef class DenseObliqueSplitter(ObliqueSplitter):
         self.sample_mask = NULL
         self.max_features = max_features # number of proj_vecs
         self.feature_combinations = feature_combinations
-        # self.X_proj = NULL
 
     cdef int init(self,
                   object X,
@@ -304,12 +283,6 @@ cdef class DenseObliqueSplitter(ObliqueSplitter):
         ObliqueSplitter.init(self, X, y, sample_weight)
 
         self.X = X
-        # self.X_proj = <DTYPE_t**> malloc(self.max_features * sizeof(DTYPE_t*))
-
-        # cdef SIZE_t i, j
-        # for i in range(self.max_features):
-        #     self.X_proj[i] = <DTYPE_t*> malloc(self.n_samples * (sizeof(DTYPE_t)))
-        #     memset(self.X_proj[i], 0, self.n_samples)
 
 
 cdef class BestObliqueSplitter(DenseObliqueSplitter):
@@ -322,14 +295,16 @@ cdef class BestObliqueSplitter(DenseObliqueSplitter):
                                self.feature_combinations,
                                self.random_state), self.__getstate__())
 
-    # NOTE: vectors are passed by value, so & is needed to pass by reference
     cdef void sample_proj_mat(self, 
                               vector[vector[DTYPE_t]]& proj_mat_weights,
                               vector[vector[SIZE_t]]& proj_mat_indices) nogil:
         """
-        SPORF Projection matrix.
+        Oblique sparse projection matrix.
+
         Randomly sample features to put in randomly sampled projection vectors
         weight = 1 or -1 with probability 0.5 
+
+        NOTE: vectors are passed by value, so & is needed to pass by reference.
         """
  
         cdef SIZE_t n_features = self.n_features
@@ -350,7 +325,7 @@ cdef class BestObliqueSplitter(DenseObliqueSplitter):
             proj_mat_weights[proj_i].push_back(weight)  # Store weight of nonzero
 
     cdef int oblique_node_split(self, double impurity, ObliqueSplitRecord* split,
-                        SIZE_t* n_constant_features) nogil except -1:
+                                SIZE_t* n_constant_features) nogil except -1:
         """Find the best split on node samples[start:end]
 
         Returns -1 in case of failure to allocate memory (and raise MemoryError)
@@ -477,17 +452,6 @@ cdef class BestObliqueSplitter(DenseObliqueSplitter):
                                              &best.impurity_right)
             best.improvement = self.criterion.impurity_improvement(
                 impurity, best.impurity_left, best.impurity_right)
-
-        # NOTE: skipping over constant features part cuz irrelevant
-        # Respect invariant for constant features: the original order of
-        # element in features[:n_known_constants] must be preserved for sibling
-        # and child nodes
-        # memcpy(features, constant_features, sizeof(SIZE_t) * n_known_constants)
-
-        # Copy newly found constant features
-        # memcpy(constant_features + n_known_constants,
-            #    features + n_known_constants,
-            #    sizeof(SIZE_t) * n_found_constants)
 
         # Return values
         split[0] = best
