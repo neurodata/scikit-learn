@@ -11,6 +11,7 @@ randomized trees. Single and multi-output problems are both handled.
 #          Joly Arnaud <arnaud.v.joly@gmail.com>
 #          Fares Hedayati <fares.hedayati@gmail.com>
 #          Nelson Liu <nelson@nelsonliu.me>
+#          Haoyin Xu <haoyinxu@gmail.com>
 #
 # License: BSD 3 clause
 
@@ -36,6 +37,7 @@ from ..utils.deprecation import deprecated
 from ..utils.validation import _check_sample_weight
 from ..utils import compute_sample_weight
 from ..utils.multiclass import check_classification_targets
+from ..utils.multiclass import _check_partial_fit_first_call
 from ..utils.validation import check_is_fitted
 
 from ._criterion import Criterion
@@ -148,7 +150,13 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         return self.tree_.n_leaves
 
     def fit(
-        self, X, y, sample_weight=None, check_input=True, X_idx_sorted="deprecated"
+        self,
+        X,
+        y,
+        sample_weight=None,
+        check_input=True,
+        classes=None,
+        X_idx_sorted="deprecated",
     ):
 
         random_state = check_random_state(self.random_state)
@@ -203,24 +211,35 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             check_classification_targets(y)
             y = np.copy(y)
 
-            self.classes_ = []
-            self.n_classes_ = []
-
             if self.class_weight is not None:
                 y_original = np.copy(y)
-
-            y_encoded = np.zeros(y.shape, dtype=int)
-            for k in range(self.n_outputs_):
-                classes_k, y_encoded[:, k] = np.unique(y[:, k], return_inverse=True)
-                self.classes_.append(classes_k)
-                self.n_classes_.append(classes_k.shape[0])
-            y = y_encoded
-
-            if self.class_weight is not None:
                 expanded_class_weight = compute_sample_weight(
                     self.class_weight, y_original
                 )
 
+            self.classes_ = []
+            self.n_classes_ = []
+
+            y_encoded = np.zeros(y.shape, dtype=int)
+            if classes is not None:
+                classes = np.atleast_1d(classes)
+                if classes.ndim == 1:
+                    classes = np.array([classes])
+
+                for k in classes:
+                    self.classes_.append(np.array(k))
+                    self.n_classes_.append(np.array(k).shape[0])
+
+                for i in range(n_samples):
+                    for j in range(self.n_outputs_):
+                        y_encoded[i, j] = np.where(self.classes_[j] == y[i, j])[0][0]
+            else:
+                for k in range(self.n_outputs_):
+                    classes_k, y_encoded[:, k] = np.unique(y[:, k], return_inverse=True)
+                    self.classes_.append(classes_k)
+                    self.n_classes_.append(classes_k.shape[0])
+
+            y = y_encoded
             self.n_classes_ = np.array(self.n_classes_, dtype=np.intp)
 
         if getattr(y, "dtype", None) != DOUBLE or not y.flags.contiguous:
@@ -386,7 +405,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 random_state,
             )
 
-        if is_classifier(self):
+        if is_classification:
             self.tree_ = Tree(self.n_features_in_, self.n_classes_, self.n_outputs_)
         else:
             self.tree_ = Tree(
@@ -398,7 +417,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
 
         # Use BestFirst if max_leaf_nodes given; use DepthFirst otherwise
         if max_leaf_nodes < 0:
-            builder = DepthFirstTreeBuilder(
+            self.builder_ = DepthFirstTreeBuilder(
                 splitter,
                 min_samples_split,
                 min_samples_leaf,
@@ -407,7 +426,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 self.min_impurity_decrease,
             )
         else:
-            builder = BestFirstTreeBuilder(
+            self.builder_ = BestFirstTreeBuilder(
                 splitter,
                 min_samples_split,
                 min_samples_leaf,
@@ -417,9 +436,9 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 self.min_impurity_decrease,
             )
 
-        builder.build(self.tree_, X, y, sample_weight)
+        self.builder_.build(self.tree_, X, y, sample_weight)
 
-        if self.n_outputs_ == 1 and is_classifier(self):
+        if self.n_outputs_ == 1 and is_classification:
             self.n_classes_ = self.n_classes_[0]
             self.classes_ = self.classes_[0]
 
@@ -820,6 +839,9 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         :ref:`sphx_glr_auto_examples_tree_plot_unveil_tree_structure.py`
         for basic usage of these attributes.
 
+    builder_ : TreeBuilder instance
+        The underlying TreeBuilder object.
+
     See Also
     --------
     DecisionTreeRegressor : A decision tree regressor.
@@ -897,7 +919,13 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         )
 
     def fit(
-        self, X, y, sample_weight=None, check_input=True, X_idx_sorted="deprecated"
+        self,
+        X,
+        y,
+        sample_weight=None,
+        check_input=True,
+        classes=None,
+        X_idx_sorted="deprecated",
     ):
         """Build a decision tree classifier from the training set (X, y).
 
@@ -922,6 +950,11 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
             Allow to bypass several input checking.
             Don't use this parameter unless you know what you do.
 
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
+            Must be provided at the first call to partial_fit, can be omitted
+            in subsequent calls.
+
         X_idx_sorted : deprecated, default="deprecated"
             This parameter is deprecated and has no effect.
             It will be removed in 1.1 (renaming of 0.26).
@@ -939,8 +972,123 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
             y,
             sample_weight=sample_weight,
             check_input=check_input,
+            classes=classes,
             X_idx_sorted=X_idx_sorted,
         )
+        return self
+
+    def partial_fit(self, X, y, classes=None, sample_weight=None, check_input=True):
+        """Update a decision tree classifier from the training set (X, y).
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix} of shape (n_samples, n_features)
+            The training input samples. Internally, it will be converted to
+            ``dtype=np.float32`` and if a sparse matrix is provided
+            to a sparse ``csc_matrix``.
+
+        y : array-like of shape (n_samples,) or (n_samples, n_outputs)
+            The target values (class labels) as integers or strings.
+
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
+            Must be provided at the first call to partial_fit, can be omitted
+            in subsequent calls.
+
+        sample_weight : array-like of shape (n_samples,), default=None
+            Sample weights. If None, then samples are equally weighted. Splits
+            that would create child nodes with net zero or negative weight are
+            ignored while searching for a split in each node. Splits are also
+            ignored if they would result in any single class carrying a
+            negative weight in either child node.
+
+        check_input : bool, default=True
+            Allow to bypass several input checking.
+            Don't use this parameter unless you know what you do.
+
+        Returns
+        -------
+        self : DecisionTreeClassifier
+            Fitted estimator.
+        """
+
+        first_call = _check_partial_fit_first_call(self, classes=classes)
+
+        # Fit if no tree exists yet
+        if first_call:
+            self.fit(
+                X,
+                y,
+                sample_weight=sample_weight,
+                check_input=check_input,
+                classes=classes,
+            )
+            return self
+
+        if self.ccp_alpha < 0.0:
+            raise ValueError("ccp_alpha must be greater than or equal to 0")
+
+        if check_input:
+            # Need to validate separately here.
+            # We can't pass multi_ouput=True because that would allow y to be
+            # csr.
+            check_X_params = dict(dtype=DTYPE, accept_sparse="csc")
+            check_y_params = dict(ensure_2d=False, dtype=None)
+            X, y = self._validate_data(
+                X, y, reset=False, validate_separately=(check_X_params, check_y_params)
+            )
+            if issparse(X):
+                X.sort_indices()
+
+                if X.indices.dtype != np.intc or X.indptr.dtype != np.intc:
+                    raise ValueError(
+                        "No support for np.int64 index based sparse matrices"
+                    )
+
+            if self.criterion == "poisson":
+                if np.any(y < 0):
+                    raise ValueError(
+                        "Some value(s) of y are negative which is"
+                        " not allowed for Poisson regression."
+                    )
+                if np.sum(y) <= 0:
+                    raise ValueError(
+                        "Sum of y is not positive which is "
+                        "necessary for Poisson regression."
+                    )
+
+        if X.shape[1] != self.n_features_in_:
+            msg = "Number of features %d does not match previous data %d."
+            raise ValueError(msg % (X.shape[1], self.n_features_in_))
+
+        y = np.atleast_1d(y)
+
+        if y.ndim == 1:
+            # reshape is necessary to preserve the data contiguity against vs
+            # [:, np.newaxis] that does not.
+            y = np.reshape(y, (-1, 1))
+
+        check_classification_targets(y)
+        y = np.copy(y)
+
+        classes = self.classes_
+        if self.n_outputs_ == 1:
+            classes = [classes]
+
+        y_encoded = np.zeros(y.shape, dtype=int)
+        for i in range(X.shape[0]):
+            for j in range(self.n_outputs_):
+                y_encoded[i, j] = np.where(classes[j] == y[i, j])[0][0]
+        y = y_encoded
+
+        if getattr(y, "dtype", None) != DOUBLE or not y.flags.contiguous:
+            y = np.ascontiguousarray(y, dtype=DOUBLE)
+
+        # Update tree
+        self.builder_.update(self.tree_, X, y, sample_weight)
+
+        self._prune_tree()
+
         return self
 
     def predict_proba(self, X, check_input=True):
@@ -1206,6 +1354,9 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
         :ref:`sphx_glr_auto_examples_tree_plot_unveil_tree_structure.py`
         for basic usage of these attributes.
 
+    builder_ : TreeBuilder instance
+        The underlying TreeBuilder object.
+
     See Also
     --------
     DecisionTreeClassifier : A decision tree classifier.
@@ -1276,7 +1427,13 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
         )
 
     def fit(
-        self, X, y, sample_weight=None, check_input=True, X_idx_sorted="deprecated"
+        self,
+        X,
+        y,
+        sample_weight=None,
+        check_input=True,
+        classes=None,
+        X_idx_sorted="deprecated",
     ):
         """Build a decision tree regressor from the training set (X, y).
 
@@ -1299,6 +1456,9 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
         check_input : bool, default=True
             Allow to bypass several input checking.
             Don't use this parameter unless you know what you do.
+
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
 
         X_idx_sorted : deprecated, default="deprecated"
             This parameter is deprecated and has no effect.
@@ -1542,6 +1702,9 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
         :ref:`sphx_glr_auto_examples_tree_plot_unveil_tree_structure.py`
         for basic usage of these attributes.
 
+    builder_ : TreeBuilder instance
+        The underlying TreeBuilder object.
+
     See Also
     --------
     ExtraTreeRegressor : An extremely randomized tree regressor.
@@ -1782,6 +1945,9 @@ class ExtraTreeRegressor(DecisionTreeRegressor):
         ``help(sklearn.tree._tree.Tree)`` for attributes of Tree object and
         :ref:`sphx_glr_auto_examples_tree_plot_unveil_tree_structure.py`
         for basic usage of these attributes.
+
+    builder_ : TreeBuilder instance
+        The underlying TreeBuilder object.
 
     See Also
     --------
