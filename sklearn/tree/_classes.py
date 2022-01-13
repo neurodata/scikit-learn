@@ -124,6 +124,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         class_weight=None,
         ccp_alpha=0.0,
     ):
+        self.is_oblique = False
         self.criterion = criterion
         self.splitter = splitter
         self.max_depth = max_depth
@@ -317,7 +318,9 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             raise ValueError("min_weight_fraction_leaf must in [0, 0.5]")
         if max_depth <= 0:
             raise ValueError("max_depth must be greater than zero. ")
-        if not (0 < max_features <= self.n_features_in_):
+
+        # oblique trees can theoretically sample more then n_features 
+        if not (0 < max_features <= self.n_features_in_) and not self.is_oblique:
             raise ValueError("max_features must be in (0, n_features]")
         if not isinstance(max_leaf_nodes, numbers.Integral):
             raise ValueError(
@@ -725,6 +728,7 @@ class BaseObliqueDecisionTree(BaseDecisionTree):
         )
 
         # SPORF params
+        self.is_oblique = True
         self.feature_combinations = feature_combinations
 
     # def _set_splitter(
