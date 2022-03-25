@@ -85,3 +85,10 @@ sklearn/linear_model/_sag_fast.pyx
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# virtual env
+venv
+
+# result output
+dat
+fig
