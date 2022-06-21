@@ -113,6 +113,8 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         min_impurity_decrease,
         class_weight=None,
         ccp_alpha=0.0,
+        hist_binning=False,
+        max_bins=255,
     ):
         self.criterion = criterion
         self.splitter = splitter
@@ -126,6 +128,8 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         self.min_impurity_decrease = min_impurity_decrease
         self.class_weight = class_weight
         self.ccp_alpha = ccp_alpha
+        self.hist_binning = hist_binning
+        self.max_bins = max_bins
 
     def get_depth(self):
         """Return the depth of the decision tree.
@@ -920,6 +924,8 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         min_impurity_decrease=0.0,
         class_weight=None,
         ccp_alpha=0.0,
+        hist_binning=False,
+        max_bins=255,
     ):
         super().__init__(
             criterion=criterion,
@@ -934,6 +940,8 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
             random_state=random_state,
             min_impurity_decrease=min_impurity_decrease,
             ccp_alpha=ccp_alpha,
+            hist_binning=hist_binning,
+            max_bins=max_bins
         )
 
     def fit(self, X, y, sample_weight=None, check_input=True):
