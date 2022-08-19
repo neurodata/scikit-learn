@@ -29,8 +29,8 @@ from sklearn.model_selection import train_test_split, RepeatedKFold, cross_valid
 random_state = 123456
 t0 = datetime.now()
 
-def sparse_parity(n_samples, p=20, p_star=3, random_seed=None, **kwarg):
 
+def sparse_parity(n_samples, p=20, p_star=3, random_seed=None, **kwarg):
     if random_seed:
         np.random.seed(random_seed)
 
@@ -43,44 +43,58 @@ def sparse_parity(n_samples, p=20, p_star=3, random_seed=None, **kwarg):
     return X, y
 
 
-def get_scores(X, y, n_cv=5, n_repeats=1, **kwargs):
-
+def get_scores(X, y, n_cv=5, n_repeats=1, random_state=1, kwargs=None):
     clfs = [
-        RandomForestClassifier(**kwargs),
-        ObliqueRandomForestClassifier(**kwargs)
+        RandomForestClassifier(**kwargs[0], random_state=random_state),
+        ObliqueRandomForestClassifier(**kwargs[1], random_state=random_state),
     ]
 
     tmp = []
 
     for i, clf in enumerate(clfs):
-        cv = RepeatedKFold(n_splits=n_cv, n_repeats=n_repeats,
-                           random_state=kwargs['random_state'])
-        test_score = cross_validate(estimator=clf, X=X, y=y, cv=cv, scoring='accuracy')
+        cv = RepeatedKFold(
+            n_splits=n_cv, n_repeats=n_repeats, random_state=random_state
+        )
+        test_score = cross_validate(estimator=clf, X=X, y=y, cv=cv, scoring="accuracy")
 
         tmp.append(
-            [['RF', 'OF'][i], test_score['test_score'], test_score['test_score'].mean()]
+            [["RF", "OF"][i], test_score["test_score"], test_score["test_score"].mean()]
         )
 
-    df = pd.DataFrame(tmp, columns=['model', 'score', 'mean']) #dtype=[('model',object), ('score',float), ('mean',float)])
-    df = df.explode('score')
-    df['score'] = df['score'].astype(float)
+    df = pd.DataFrame(tmp, columns=["model", "score", "mean"])
+    df = df.explode("score")
+    df["score"] = df["score"].astype(float)
     df.reset_index(inplace=True, drop=True)
 
     return df
 
-params = {'max_features': None, 'n_estimators': 50, 'max_depth': None,
-          'random_state': random_state, 'n_cv': 3, 'n_repeats': 1}
+
+# Grid searched hyper-parameters
+params = [
+    {"max_features": None, "n_estimators": 100, "max_depth": None},
+    {"max_features": 40, "n_estimators": 100, "max_depth": 20},
+]
 
 X, y = sparse_parity(n_samples=10000, random_seed=random_state)
 
-df = get_scores(X=X, y=y, **params)
-print(f'It took {(datetime.now()-t0).seconds} seconds to run the script')
+df = get_scores(X=X, y=y, n_cv=3, n_repeats=1, random_state=random_state, kwargs=params)
+t_d = (datetime.now() - t0).seconds
+print(f"It took {t_d} seconds to run the script")
 
 # Draw a comparison plot
-fig, ax = plt.subplots(1,1, figsize=(6,6))
+fig, ax = plt.subplots(1, 1, figsize=(6, 6))
 
-sns.stripplot(data=df, x='model', y='score', ax=ax, dodge=True)
-sns.boxplot(data=df, x='model', y='score', ax=ax, color='white')
-ax.set_title('Sparse Parity')
+sns.stripplot(data=df, x="model", y="score", ax=ax, dodge=True)
+sns.boxplot(data=df, x="model", y="score", ax=ax, color="white")
+ax.set_title("Sparse Parity")
 
+rf = df.query('model=="RF"')["mean"].iloc[0]
+rff = f"RF (Mean Test Score: {round(rf,3)})"
+
+of = df.query('model=="OF"')["mean"].iloc[0]
+off = f"OF (Mean Test Score: {round(of,3)})"
+
+ax.legend([rff, off], loc=4)
+
+plt.savefig(f"plot_sim_{t_d}s.jpg")
 plt.show()
