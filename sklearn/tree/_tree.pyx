@@ -703,7 +703,8 @@ cdef class BaseTree:
     cdef void _compute_feature_importances(
         self,
         DOUBLE_t* importance_data,
-        Node* node
+        Node* node,
+        SIZE_t node_id
     ) nogil:
         """Compute feature importances from a Node in the Tree.
         
@@ -866,6 +867,7 @@ cdef class BaseTree:
         # Extract input
         cdef const DTYPE_t[:, ::1] X_ndarray = X
         cdef SIZE_t n_samples = X.shape[0]
+        cdef DTYPE_t feature_value
 
         # Initialize output
         cdef cnp.ndarray[SIZE_t] indptr = np.zeros(n_samples + 1, dtype=np.intp)
@@ -1033,8 +1035,6 @@ cdef class BaseTree:
 
     cpdef compute_feature_importances(self, normalize=True):
         """Computes the importance of each feature (aka variable)."""
-        cdef Node* left
-        cdef Node* right
         cdef Node* nodes = self.nodes
         cdef Node* node = nodes
         cdef Node* end_node = node + self.node_count
@@ -1045,16 +1045,20 @@ cdef class BaseTree:
         importances = np.zeros((self.n_features,))
         cdef DOUBLE_t* importance_data = <DOUBLE_t*>importances.data
 
+        # to keep track of the current ID of each node
+        cdef SIZE_t node_id = 0
+
         with nogil:
+            node_id = 0
+
             while node != end_node:
                 if node.left_child != _TREE_LEAF:
                     # ... and node.right_child != _TREE_LEAF:
-                    # aggregate feature importances for each node in the traversed tree
                     self._compute_feature_importances(
-                        importance_data,
-                        node,
-                        node_id)
+                        importance_data, node, node_id)
+                    
                 node += 1
+                node_id += 1
 
         importances /= nodes[0].weighted_n_node_samples
 
@@ -1291,7 +1295,8 @@ cdef class Tree(BaseTree):
         self,
         const DTYPE_t[:, ::1] X_ndarray,
         SIZE_t sample_index,
-        Node *node
+        Node *node,
+        SIZE_t node_id
     ) nogil:
         """Compute feature from a given data matrix, X.
 
@@ -1357,7 +1362,8 @@ cdef class Tree(BaseTree):
     cdef void _compute_feature_importances(
         self,
         DOUBLE_t* importance_data,
-        Node* node
+        Node* node,
+        SIZE_t node_id
     ) nogil:
         """Compute feature importances from a Node in the Tree.
         
