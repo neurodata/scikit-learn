@@ -247,14 +247,8 @@ cdef class ObliqueTree(Tree):
         self.proj_vec_weights[node_id] = deref(deref(oblique_split_node).proj_vec_weights)
         self.proj_vec_indices[node_id] = deref(deref(oblique_split_node).proj_vec_indices)
         return 1 
-        
-    cpdef DTYPE_t compute_feature_value(self, object X, SIZE_t node_id):
-        cdef const DTYPE_t[:] X_vector = X
-        cdef Node* node = &self.nodes[node_id]
-        feature_value = self._compute_feature(X_vector, node, node_id)
-        return feature_value
 
-    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:] X_ndarray, Node *node, SIZE_t node_id) nogil:
+    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:, ::1] X_ndarray, SIZE_t sample_index, Node *node, SIZE_t node_id) nogil:
         """Compute feature from a given data matrix, X.
 
         In oblique-aligned trees, this is the projection of X.
@@ -277,12 +271,16 @@ cdef class ObliqueTree(Tree):
             # skip a multiplication step if there is nothing to be done
             if weight == 0:
                 continue
-            proj_feat += X_ndarray[feature_index] * weight
+            proj_feat += X_ndarray[sample_index, feature_index] * weight
 
         return proj_feat
 
-    cdef void _compute_feature_importances(self, DOUBLE_t* importance_data,
-                                Node* node, SIZE_t node_id) nogil:
+    cdef void _compute_feature_importances(
+        self,
+        DOUBLE_t* importance_data,
+        Node* node,
+        SIZE_t node_id
+    ) nogil:
         """Compute feature importances from a Node in the Tree.
         
         Wrapped in a private function to allow subclassing that

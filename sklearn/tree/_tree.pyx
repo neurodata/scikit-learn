@@ -688,9 +688,10 @@ cdef class BaseTree:
 
     cdef DTYPE_t _compute_feature(
         self,
-        const DTYPE_t[:, :] X_ndarray,
+        const DTYPE_t[:, ::1] X_ndarray,
         SIZE_t sample_index,
-        Node *node
+        Node *node,
+        SIZE_t node_id,
     ) nogil:
         """Compute feature from a given data matrix, X.
 
@@ -738,7 +739,7 @@ cdef class BaseTree:
             raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
 
         # Extract input
-        cdef const DTYPE_t[:, :] X_ndarray = X
+        cdef const DTYPE_t[:, ::1] X_ndarray = X
         cdef SIZE_t n_samples = X.shape[0]
         cdef DTYPE_t feature_value
 
@@ -749,6 +750,7 @@ cdef class BaseTree:
         # Initialize auxiliary data-structure
         cdef Node* node = NULL
         cdef SIZE_t i = 0
+        cdef SIZE_t node_id = 0
 
         with nogil:
             for i in range(n_samples):
@@ -756,11 +758,13 @@ cdef class BaseTree:
                 # While node not a leaf
                 while node.left_child != _TREE_LEAF:
                     # ... and node.right_child != _TREE_LEAF:
-                    feature_value = self._compute_feature(X_ndarray, i, node)
+                    feature_value = self._compute_feature(X_ndarray, i, node, node_id)
                     if feature_value <= node.threshold:
-                        node = &self.nodes[node.left_child]
+                        node_id = node.left_child
+                        node = &self.nodes[node_id]
                     else:
-                        node = &self.nodes[node.right_child]
+                        node_id = node.right_child
+                        node = &self.nodes[node_id]
 
                 out_ptr[i] = <SIZE_t>(node - self.nodes)  # node offset
 
@@ -860,7 +864,7 @@ cdef class BaseTree:
             raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
 
         # Extract input
-        cdef const DTYPE_t[:, :] X_ndarray = X
+        cdef const DTYPE_t[:, ::1] X_ndarray = X
         cdef SIZE_t n_samples = X.shape[0]
 
         # Initialize output
@@ -875,6 +879,7 @@ cdef class BaseTree:
         # Initialize auxiliary data-structure
         cdef Node* node = NULL
         cdef SIZE_t i = 0
+        cdef SIZE_t node_id = 0
 
         with nogil:
             for i in range(n_samples):
@@ -887,10 +892,13 @@ cdef class BaseTree:
                     indices_ptr[indptr_ptr[i + 1]] = <SIZE_t>(node - self.nodes)
                     indptr_ptr[i + 1] += 1
 
-                    if X_ndarray[i, node.feature] <= node.threshold:
-                        node = &self.nodes[node.left_child]
+                    feature_value = self._compute_feature(X_ndarray, i, node, node_id)
+                    if feature_value <= node.threshold:
+                        node_id = node.left_child
+                        node = &self.nodes[node_id]
                     else:
-                        node = &self.nodes[node.right_child]
+                        node_id = node.right_child
+                        node = &self.nodes[node_id]
 
                 # Add the leave node
                 indices_ptr[indptr_ptr[i + 1]] = <SIZE_t>(node - self.nodes)
@@ -1044,7 +1052,8 @@ cdef class BaseTree:
                     # aggregate feature importances for each node in the traversed tree
                     self._compute_feature_importances(
                         importance_data,
-                        node)
+                        node,
+                        node_id)
                 node += 1
 
         importances /= nodes[0].weighted_n_node_samples
@@ -1280,7 +1289,7 @@ cdef class Tree(BaseTree):
 
     cdef DTYPE_t _compute_feature(
         self,
-        const DTYPE_t[:, :] X_ndarray,
+        const DTYPE_t[:, ::1] X_ndarray,
         SIZE_t sample_index,
         Node *node
     ) nogil:

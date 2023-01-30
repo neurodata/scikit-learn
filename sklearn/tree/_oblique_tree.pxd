@@ -43,15 +43,16 @@ cdef class ObliqueTree(Tree):
     ) nogil except -1
     cdef DTYPE_t _compute_feature(
         self,
-        const DTYPE_t[:, :] X_ndarray,
+        const DTYPE_t[:, ::1] X_ndarray,
         SIZE_t sample_index,
         Node *node,
+        SIZE_t node_id
     ) nogil
     cdef void _compute_feature_importances(
         self,
         DOUBLE_t* importance_data,
-        Node* node
+        Node* node,
+        SIZE_t node_id
     ) nogil
 
-    cpdef DTYPE_t compute_feature_value(self, object X, SIZE_t node_id)
     cpdef cnp.ndarray get_projection_matrix(self)
