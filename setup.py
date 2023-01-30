@@ -433,8 +433,8 @@ extension_config = {
         {"sources": ["_splitter.pyx"], "language": "c++", "include_np": True, "optimization_level": "O3"},
         {"sources": ["_criterion.pyx"], "language": "c++", "include_np": True, "optimization_level": "O3"},
         {"sources": ["_utils.pyx"], "language": "c++", "include_np": True, "optimization_level": "O3"},
-        {"sources": ["_oblique_splitter.pyx"], "language": "c++", "optimization_level": "O3"},
-        {"sources": ["_oblique_tree.pyx"], "language": "c++", "optimization_level": "O3"},
+        {"sources": ["_oblique_splitter.pyx"], "language": "c++", "include_np": True, "optimization_level": "O3"},
+        {"sources": ["_oblique_tree.pyx"], "language": "c++", "include_np": True, "optimization_level": "O3"},
     ],
     "utils": [
         {"sources": ["sparsefuncs_fast.pyx"], "include_np": True},
