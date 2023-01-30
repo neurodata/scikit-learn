@@ -229,9 +229,11 @@ cdef class ObliqueTree(Tree):
         self.capacity = capacity
         return 0
 
-    cdef int _set_node_values(self, SplitRecord* split_node, Node *node) nogil except -1:
-        """Set node data.
-        """
+    cdef int _set_split_node(
+        self,
+        SplitRecord* split_node,
+        Node* node
+    ) nogil except -1:
         # Cython type cast split record into its inherited split record
         # For reference, see: https://www.codementor.io/@arpitbhayani/powering-inheritance-in-c-using-structure-composition-176sygr724
         cdef ObliqueSplitRecord* oblique_split_node = <ObliqueSplitRecord*>(split_node)
@@ -244,7 +246,14 @@ cdef class ObliqueTree(Tree):
         # inside the tree itself
         self.proj_vec_weights[node_id] = deref(deref(oblique_split_node).proj_vec_weights)
         self.proj_vec_indices[node_id] = deref(deref(oblique_split_node).proj_vec_indices)
-        return 1
+        return 1 
+
+    cdef int _set_leaf_node(
+        self,
+        SplitRecord* split_node,
+        Node* node
+    ) nogil except -1:
+        pass
         
     cpdef DTYPE_t compute_feature_value(self, object X, SIZE_t node_id):
         cdef const DTYPE_t[:] X_vector = X
