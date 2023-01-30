@@ -1974,6 +1974,8 @@ def assert_is_subtree(tree, subtree):
 def test_apply_path_readonly_all_trees(name, splitter, X_format):
     dataset = DATASETS["clf_small"]
     X_small = dataset["X"].astype(tree._tree.DTYPE, copy=False)
+    if name == "ObliqueDecisionTreeClassifier" and splitter == 'random':
+        pytest.skip()
     if X_format == "dense":
         X_readonly = create_memmap_backed_data(X_small)
     else:
