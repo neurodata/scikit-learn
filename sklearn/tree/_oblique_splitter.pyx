@@ -139,9 +139,8 @@ cdef class ObliqueSplitter(Splitter):
         self.criterion.init(self.y,
                             self.sample_weight,
                             self.weighted_n_samples,
-                            self.samples,
-                            start,
-                            end)
+                            self.samples)
+        self.criterion.set_sample_pointers(start, end)
 
         weighted_n_node_samples[0] = self.criterion.weighted_n_node_samples
 
