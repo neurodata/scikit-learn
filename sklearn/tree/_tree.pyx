@@ -688,7 +688,7 @@ cdef class BaseTree:
 
     cdef DTYPE_t _compute_feature(
         self,
-        const DTYPE_t[:, ::1] X_ndarray,
+        const DTYPE_t[:, :] X_ndarray,
         SIZE_t sample_index,
         Node *node,
         SIZE_t node_id,
@@ -740,7 +740,7 @@ cdef class BaseTree:
             raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
 
         # Extract input
-        cdef const DTYPE_t[:, ::1] X_ndarray = X
+        cdef const DTYPE_t[:, :] X_ndarray = X
         cdef SIZE_t n_samples = X.shape[0]
         cdef DTYPE_t feature_value
 
@@ -865,7 +865,7 @@ cdef class BaseTree:
             raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
 
         # Extract input
-        cdef const DTYPE_t[:, ::1] X_ndarray = X
+        cdef const DTYPE_t[:, :] X_ndarray = X
         cdef SIZE_t n_samples = X.shape[0]
         cdef DTYPE_t feature_value
 
@@ -1293,7 +1293,7 @@ cdef class Tree(BaseTree):
 
     cdef DTYPE_t _compute_feature(
         self,
-        const DTYPE_t[:, ::1] X_ndarray,
+        const DTYPE_t[:, :] X_ndarray,
         SIZE_t sample_index,
         Node *node,
         SIZE_t node_id

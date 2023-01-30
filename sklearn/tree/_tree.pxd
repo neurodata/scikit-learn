@@ -85,7 +85,7 @@ cdef class BaseTree:
     ) nogil except -1
     cdef DTYPE_t _compute_feature(
         self,
-        const DTYPE_t[:, ::1] X_ndarray,
+        const DTYPE_t[:, :] X_ndarray,
         SIZE_t sample_index,
         Node *node,
         SIZE_t node_id

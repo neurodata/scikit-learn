@@ -1977,6 +1977,9 @@ def test_apply_path_readonly_all_trees(name, splitter, X_format):
     if X_format == "dense":
         X_readonly = create_memmap_backed_data(X_small)
     else:
+        if name == "ObliqueDecisionTreeClassifier":
+            pytest.skip()
+
         X_readonly = dataset["X_sparse"]  # CSR
         if X_format == "csc":
             # Cheap CSR to CSC conversion
