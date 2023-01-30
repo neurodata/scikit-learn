@@ -528,187 +528,15 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
 # Tree
 # =============================================================================
 
-cdef class Tree:
-    """Array-based representation of a binary decision tree.
-
-    The binary tree is represented as a number of parallel arrays. The i-th
-    element of each array holds information about the node `i`. Node 0 is the
-    tree's root. You can find a detailed description of all arrays in
-    `_tree.pxd`. NOTE: Some of the arrays only apply to either leaves or split
-    nodes, resp. In this case the values of nodes of the other type are
-    arbitrary!
-
-    Attributes
-    ----------
-    node_count : int
-        The number of nodes (internal nodes + leaves) in the tree.
-
-    capacity : int
-        The current capacity (i.e., size) of the arrays, which is at least as
-        great as `node_count`.
-
-    max_depth : int
-        The depth of the tree, i.e. the maximum depth of its leaves.
-
-    children_left : array of int, shape [node_count]
-        children_left[i] holds the node id of the left child of node i.
-        For leaves, children_left[i] == TREE_LEAF. Otherwise,
-        children_left[i] > i. This child handles the case where
-        X[:, feature[i]] <= threshold[i].
-
-    children_right : array of int, shape [node_count]
-        children_right[i] holds the node id of the right child of node i.
-        For leaves, children_right[i] == TREE_LEAF. Otherwise,
-        children_right[i] > i. This child handles the case where
-        X[:, feature[i]] > threshold[i].
-
-    feature : array of int, shape [node_count]
-        feature[i] holds the feature to split on, for the internal node i.
-
-    threshold : array of double, shape [node_count]
-        threshold[i] holds the threshold for the internal node i.
-
-    value : array of double, shape [node_count, n_outputs, max_n_classes]
-        Contains the constant prediction value of each node.
-
-    impurity : array of double, shape [node_count]
-        impurity[i] holds the impurity (i.e., the value of the splitting
-        criterion) at node i.
-
-    n_node_samples : array of int, shape [node_count]
-        n_node_samples[i] holds the number of training samples reaching node i.
-
-    weighted_n_node_samples : array of double, shape [node_count]
-        weighted_n_node_samples[i] holds the weighted number of training samples
-        reaching node i.
+cdef class BaseTree:
+    """Base class for Cython tree models.
+    
+    Downstream classes must implement
     """
-    # Wrap for outside world.
-    # WARNING: these reference the current `nodes` and `value` buffers, which
-    # must not be freed by a subsequent memory allocation.
-    # (i.e. through `_resize` or `__setstate__`)
-    property n_classes:
-        def __get__(self):
-            return sizet_ptr_to_ndarray(self.n_classes, self.n_outputs)
-
-    property children_left:
-        def __get__(self):
-            return self._get_node_ndarray()['left_child'][:self.node_count]
-
-    property children_right:
-        def __get__(self):
-            return self._get_node_ndarray()['right_child'][:self.node_count]
-
-    property n_leaves:
-        def __get__(self):
-            return np.sum(np.logical_and(
-                self.children_left == -1,
-                self.children_right == -1))
-
-    property feature:
-        def __get__(self):
-            return self._get_node_ndarray()['feature'][:self.node_count]
-
-    property threshold:
-        def __get__(self):
-            return self._get_node_ndarray()['threshold'][:self.node_count]
-
-    property impurity:
-        def __get__(self):
-            return self._get_node_ndarray()['impurity'][:self.node_count]
-
-    property n_node_samples:
-        def __get__(self):
-            return self._get_node_ndarray()['n_node_samples'][:self.node_count]
-
-    property weighted_n_node_samples:
-        def __get__(self):
-            return self._get_node_ndarray()['weighted_n_node_samples'][:self.node_count]
-
-    property value:
-        def __get__(self):
-            return self._get_value_ndarray()[:self.node_count]
-
-    def __cinit__(self, int n_features, cnp.ndarray n_classes, int n_outputs):
-        """Constructor."""
-        cdef SIZE_t dummy = 0
-        size_t_dtype = np.array(dummy).dtype
-
-        n_classes = _check_n_classes(n_classes, size_t_dtype)
-
-        # Input/Output layout
-        self.n_features = n_features
-        self.n_outputs = n_outputs
-        self.n_classes = NULL
-        safe_realloc(&self.n_classes, n_outputs)
-
-        self.max_n_classes = np.max(n_classes)
-        self.value_stride = n_outputs * self.max_n_classes
-
-        cdef SIZE_t k
-        for k in range(n_outputs):
-            self.n_classes[k] = n_classes[k]
-
-        # Inner structures
-        self.max_depth = 0
-        self.node_count = 0
-        self.capacity = 0
-        self.value = NULL
-        self.nodes = NULL
-
-    def __dealloc__(self):
-        """Destructor."""
-        # Free all inner structures
-        free(self.n_classes)
-        free(self.value)
-        free(self.nodes)
-
-    def __reduce__(self):
-        """Reduce re-implementation, for pickling."""
-        return (Tree, (self.n_features,
-                       sizet_ptr_to_ndarray(self.n_classes, self.n_outputs),
-                       self.n_outputs), self.__getstate__())
-
-    def __getstate__(self):
-        """Getstate re-implementation, for pickling."""
-        d = {}
-        # capacity is inferred during the __setstate__ using nodes
-        d["max_depth"] = self.max_depth
-        d["node_count"] = self.node_count
-        d["nodes"] = self._get_node_ndarray()
-        d["values"] = self._get_value_ndarray()
-        return d
-
-    def __setstate__(self, d):
-        """Setstate re-implementation, for unpickling."""
-        self.max_depth = d["max_depth"]
-        self.node_count = d["node_count"]
-
-        if 'nodes' not in d:
-            raise ValueError('You have loaded Tree version which '
-                             'cannot be imported')
-
-        node_ndarray = d['nodes']
-        value_ndarray = d['values']
-
-        value_shape = (node_ndarray.shape[0], self.n_outputs,
-                       self.max_n_classes)
-
-        node_ndarray = _check_node_ndarray(node_ndarray, expected_dtype=NODE_DTYPE)
-        value_ndarray = _check_value_ndarray(
-            value_ndarray,
-            expected_dtype=np.dtype(np.float64),
-            expected_shape=value_shape
-        )
-
-        self.capacity = node_ndarray.shape[0]
-        if self._resize_c(self.capacity) != 0:
-            raise MemoryError("resizing tree to %d" % self.capacity)
-        nodes = memcpy(self.nodes, (<cnp.ndarray> node_ndarray).data,
-                       self.capacity * sizeof(Node))
-        value = memcpy(self.value, (<cnp.ndarray> value_ndarray).data,
-                       self.capacity * self.value_stride * sizeof(double))
-
-    cdef int _resize(self, SIZE_t capacity) nogil except -1:
+    cdef int _resize(
+        self,
+        SIZE_t capacity
+    ) nogil except -1:
         """Resize all inner arrays to `capacity`, if `capacity` == -1, then
            double the size of the inner arrays.
 
@@ -720,7 +548,10 @@ cdef class Tree:
             with gil:
                 raise MemoryError()
 
-    cdef int _resize_c(self, SIZE_t capacity=SIZE_MAX) nogil except -1:
+    cdef int _resize_c(
+        self,
+        SIZE_t capacity=SIZE_MAX
+    ) nogil except -1:
         """Guts of _resize
 
         Returns -1 in case of failure to allocate memory (and raise MemoryError)
@@ -863,14 +694,6 @@ cdef class Tree:
         self.node_count += 1
 
         return node_id
-
-    cpdef cnp.ndarray predict(self, object X):
-        """Predict target for X."""
-        out = self._get_value_ndarray().take(self.apply(X), axis=0,
-                                             mode='clip')
-        if self.n_outputs == 1:
-            out = out.reshape(X.shape[0], self.max_n_classes)
-        return out
 
     cpdef cnp.ndarray apply(self, object X):
         """Finds the terminal region (=leaf node) for each sample in X."""
@@ -1252,45 +1075,6 @@ cdef class Tree:
             left.weighted_n_node_samples * left.impurity -
             right.weighted_n_node_samples * right.impurity)
 
-    cdef cnp.ndarray _get_value_ndarray(self):
-        """Wraps value as a 3-d NumPy array.
-
-        The array keeps a reference to this Tree, which manages the underlying
-        memory.
-        """
-        cdef cnp.npy_intp shape[3]
-        shape[0] = <cnp.npy_intp> self.node_count
-        shape[1] = <cnp.npy_intp> self.n_outputs
-        shape[2] = <cnp.npy_intp> self.max_n_classes
-        cdef cnp.ndarray arr
-        arr = cnp.PyArray_SimpleNewFromData(3, shape, cnp.NPY_DOUBLE, self.value)
-        Py_INCREF(self)
-        if PyArray_SetBaseObject(arr, <PyObject*> self) < 0:
-            raise ValueError("Can't initialize array.")
-        return arr
-
-    cdef cnp.ndarray _get_node_ndarray(self):
-        """Wraps nodes as a NumPy struct array.
-
-        The array keeps a reference to this Tree, which manages the underlying
-        memory. Individual fields are publicly accessible as properties of the
-        Tree.
-        """
-        cdef cnp.npy_intp shape[1]
-        shape[0] = <cnp.npy_intp> self.node_count
-        cdef cnp.npy_intp strides[1]
-        strides[0] = sizeof(Node)
-        cdef cnp.ndarray arr
-        Py_INCREF(NODE_DTYPE)
-        arr = PyArray_NewFromDescr(<PyTypeObject *> cnp.ndarray,
-                                   <cnp.dtype> NODE_DTYPE, 1, shape,
-                                   strides, <void*> self.nodes,
-                                   cnp.NPY_DEFAULT, None)
-        Py_INCREF(self)
-        if PyArray_SetBaseObject(arr, <PyObject*> self) < 0:
-            raise ValueError("Can't initialize array.")
-        return arr
-
     def compute_partial_dependence(self, DTYPE_t[:, ::1] X,
                                    int[::1] target_features,
                                    double[::1] out):
@@ -1396,6 +1180,234 @@ cdef class Tree:
             if not (0.999 < total_weight < 1.001):
                 raise ValueError("Total weight should be 1.0 but was %.9f" %
                                  total_weight)
+
+
+cdef class Tree(BaseTree):
+    """Array-based representation of a binary decision tree.
+
+    The binary tree is represented as a number of parallel arrays. The i-th
+    element of each array holds information about the node `i`. Node 0 is the
+    tree's root. You can find a detailed description of all arrays in
+    `_tree.pxd`. NOTE: Some of the arrays only apply to either leaves or split
+    nodes, resp. In this case the values of nodes of the other type are
+    arbitrary!
+
+    Attributes
+    ----------
+    node_count : int
+        The number of nodes (internal nodes + leaves) in the tree.
+
+    capacity : int
+        The current capacity (i.e., size) of the arrays, which is at least as
+        great as `node_count`.
+
+    max_depth : int
+        The depth of the tree, i.e. the maximum depth of its leaves.
+
+    children_left : array of int, shape [node_count]
+        children_left[i] holds the node id of the left child of node i.
+        For leaves, children_left[i] == TREE_LEAF. Otherwise,
+        children_left[i] > i. This child handles the case where
+        X[:, feature[i]] <= threshold[i].
+
+    children_right : array of int, shape [node_count]
+        children_right[i] holds the node id of the right child of node i.
+        For leaves, children_right[i] == TREE_LEAF. Otherwise,
+        children_right[i] > i. This child handles the case where
+        X[:, feature[i]] > threshold[i].
+
+    feature : array of int, shape [node_count]
+        feature[i] holds the feature to split on, for the internal node i.
+
+    threshold : array of double, shape [node_count]
+        threshold[i] holds the threshold for the internal node i.
+
+    value : array of double, shape [node_count, n_outputs, max_n_classes]
+        Contains the constant prediction value of each node.
+
+    impurity : array of double, shape [node_count]
+        impurity[i] holds the impurity (i.e., the value of the splitting
+        criterion) at node i.
+
+    n_node_samples : array of int, shape [node_count]
+        n_node_samples[i] holds the number of training samples reaching node i.
+
+    weighted_n_node_samples : array of double, shape [node_count]
+        weighted_n_node_samples[i] holds the weighted number of training samples
+        reaching node i.
+    """
+        # Wrap for outside world.
+    # WARNING: these reference the current `nodes` and `value` buffers, which
+    # must not be freed by a subsequent memory allocation.
+    # (i.e. through `_resize` or `__setstate__`)
+    property n_classes:
+        def __get__(self):
+            return sizet_ptr_to_ndarray(self.n_classes, self.n_outputs)
+
+    property children_left:
+        def __get__(self):
+            return self._get_node_ndarray()['left_child'][:self.node_count]
+
+    property children_right:
+        def __get__(self):
+            return self._get_node_ndarray()['right_child'][:self.node_count]
+
+    property n_leaves:
+        def __get__(self):
+            return np.sum(np.logical_and(
+                self.children_left == -1,
+                self.children_right == -1))
+
+    property feature:
+        def __get__(self):
+            return self._get_node_ndarray()['feature'][:self.node_count]
+
+    property threshold:
+        def __get__(self):
+            return self._get_node_ndarray()['threshold'][:self.node_count]
+
+    property impurity:
+        def __get__(self):
+            return self._get_node_ndarray()['impurity'][:self.node_count]
+
+    property n_node_samples:
+        def __get__(self):
+            return self._get_node_ndarray()['n_node_samples'][:self.node_count]
+
+    property weighted_n_node_samples:
+        def __get__(self):
+            return self._get_node_ndarray()['weighted_n_node_samples'][:self.node_count]
+
+    property value:
+        def __get__(self):
+            return self._get_value_ndarray()[:self.node_count]
+
+    def __cinit__(self, int n_features, cnp.ndarray n_classes, int n_outputs):
+        """Constructor."""
+        cdef SIZE_t dummy = 0
+        size_t_dtype = np.array(dummy).dtype
+
+        n_classes = _check_n_classes(n_classes, size_t_dtype)
+
+        # Input/Output layout
+        self.n_features = n_features
+        self.n_outputs = n_outputs
+        self.n_classes = NULL
+        safe_realloc(&self.n_classes, n_outputs)
+
+        self.max_n_classes = np.max(n_classes)
+        self.value_stride = n_outputs * self.max_n_classes
+
+        cdef SIZE_t k
+        for k in range(n_outputs):
+            self.n_classes[k] = n_classes[k]
+
+        # Inner structures
+        self.max_depth = 0
+        self.node_count = 0
+        self.capacity = 0
+        self.value = NULL
+        self.nodes = NULL
+
+    def __dealloc__(self):
+        """Destructor."""
+        # Free all inner structures
+        free(self.n_classes)
+        free(self.value)
+        free(self.nodes)
+
+    def __reduce__(self):
+        """Reduce re-implementation, for pickling."""
+        return (Tree, (self.n_features,
+                       sizet_ptr_to_ndarray(self.n_classes, self.n_outputs),
+                       self.n_outputs), self.__getstate__())
+
+    def __getstate__(self):
+        """Getstate re-implementation, for pickling."""
+        d = {}
+        # capacity is inferred during the __setstate__ using nodes
+        d["max_depth"] = self.max_depth
+        d["node_count"] = self.node_count
+        d["nodes"] = self._get_node_ndarray()
+        d["values"] = self._get_value_ndarray()
+        return d
+
+    def __setstate__(self, d):
+        """Setstate re-implementation, for unpickling."""
+        self.max_depth = d["max_depth"]
+        self.node_count = d["node_count"]
+
+        if 'nodes' not in d:
+            raise ValueError('You have loaded Tree version which '
+                             'cannot be imported')
+
+        node_ndarray = d['nodes']
+        value_ndarray = d['values']
+
+        value_shape = (node_ndarray.shape[0], self.n_outputs,
+                       self.max_n_classes)
+
+        node_ndarray = _check_node_ndarray(node_ndarray, expected_dtype=NODE_DTYPE)
+        value_ndarray = _check_value_ndarray(
+            value_ndarray,
+            expected_dtype=np.dtype(np.float64),
+            expected_shape=value_shape
+        )
+
+        self.capacity = node_ndarray.shape[0]
+        if self._resize_c(self.capacity) != 0:
+            raise MemoryError("resizing tree to %d" % self.capacity)
+        nodes = memcpy(self.nodes, (<cnp.ndarray> node_ndarray).data,
+                       self.capacity * sizeof(Node))
+        value = memcpy(self.value, (<cnp.ndarray> value_ndarray).data,
+                       self.capacity * self.value_stride * sizeof(double))
+
+    cdef cnp.ndarray _get_value_ndarray(self):
+        """Wraps value as a 3-d NumPy array.
+
+        The array keeps a reference to this Tree, which manages the underlying
+        memory.
+        """
+        cdef cnp.npy_intp shape[3]
+        shape[0] = <cnp.npy_intp> self.node_count
+        shape[1] = <cnp.npy_intp> self.n_outputs
+        shape[2] = <cnp.npy_intp> self.max_n_classes
+        cdef cnp.ndarray arr
+        arr = cnp.PyArray_SimpleNewFromData(3, shape, cnp.NPY_DOUBLE, self.value)
+        Py_INCREF(self)
+        if PyArray_SetBaseObject(arr, <PyObject*> self) < 0:
+            raise ValueError("Can't initialize array.")
+        return arr
+
+    cdef cnp.ndarray _get_node_ndarray(self):
+        """Wraps nodes as a NumPy struct array.
+
+        The array keeps a reference to this Tree, which manages the underlying
+        memory. Individual fields are publicly accessible as properties of the
+        Tree.
+        """
+        cdef cnp.npy_intp shape[1]
+        shape[0] = <cnp.npy_intp> self.node_count
+        cdef cnp.npy_intp strides[1]
+        strides[0] = sizeof(Node)
+        cdef cnp.ndarray arr
+        Py_INCREF(NODE_DTYPE)
+        arr = PyArray_NewFromDescr(<PyTypeObject *> cnp.ndarray,
+                                   <cnp.dtype> NODE_DTYPE, 1, shape,
+                                   strides, <void*> self.nodes,
+                                   cnp.NPY_DEFAULT, None)
+        Py_INCREF(self)
+        if PyArray_SetBaseObject(arr, <PyObject*> self) < 0:
+            raise ValueError("Can't initialize array.")
+        return arr
+
+    cpdef cnp.ndarray predict(self, object X):
+        """Predict target for X."""
+        out = self._get_value_ndarray().take(self.apply(X), axis=0,
+                                             mode='clip')
+        if self.n_outputs == 1:
+            out = out.reshape(X.shape[0], self.max_n_classes)
+        return out
 
 
 def _check_n_classes(n_classes, expected_dtype):
