@@ -28,10 +28,10 @@ cdef class ObliqueTree(Tree):
     cdef vector[vector[SIZE_t]] proj_vec_indices  # (capacity, n_features) array of projection vectors
 
     cdef int _resize_c(self, SIZE_t capacity=*) nogil except -1
-    cdef int _set_node_values(self, SplitRecord* split_node, Node *node)  nogil except -1
-    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:] X_ndarray, Node *node, SIZE_t node_id) nogil
+    cdef int _set_split_node(self, SplitRecord* split_node, Node *node)  nogil except -1
+    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:, :] X_ndarray, SIZE_t sample_index, Node *node, SIZE_t node_id) nogil
     cdef void _compute_feature_importances(self, DOUBLE_t* importance_data,
                                 Node* node, SIZE_t node_id) nogil
 
-    cpdef DTYPE_t compute_feature_value(self, object X, SIZE_t node_id)
+    # cpdef DTYPE_t compute_feature_value(self, object X, SIZE_t node_id)
     cpdef cnp.ndarray get_projection_matrix(self)

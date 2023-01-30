@@ -62,9 +62,19 @@ cdef class Tree:
                           double impurity,
                           SIZE_t n_node_samples,
                           double weighted_n_node_samples) nogil except -1
-    cdef int _set_node_values(self, SplitRecord* split_node,
-                              Node *node)  nogil except -1
-    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:] X_ndarray,
+    # Abstract methods: these functions must be implemented by any decision tree
+    cdef int _set_split_node(
+        self,
+        SplitRecord* split_node,
+        Node* node
+    ) nogil except -1
+    cdef int _set_leaf_node(
+        self,
+        SplitRecord* split_node,
+        Node* node
+    ) nogil except -1
+    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:, :] X_ndarray,
+        SIZE_t sample_index,
                             Node *node, SIZE_t node_id) nogil
     cdef int _resize(self, SIZE_t capacity) nogil except -1
     cdef int _resize_c(self, SIZE_t capacity=*) nogil except -1

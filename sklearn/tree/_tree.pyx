@@ -751,15 +751,47 @@ cdef class Tree:
         self.capacity = capacity
         return 0
 
-    cdef int _set_node_values(self, SplitRecord* split_node,
-            Node *node) nogil except -1:
-        """Set node data.
+    cdef int _set_split_node(
+        self,
+        SplitRecord* split_node,
+        Node* node
+    ) nogil except -1:
+        """Set split node data.
+        
+        Parameters
+        ----------
+        split_node : SplitRecord*
+            The pointer to the record of the split node data.
+        node : Node*
+            The pointer to the node that will hold the split node.
         """
+        # left_child and right_child will be set later for a split node
         node.feature = split_node.feature
         node.threshold = split_node.threshold
         return 1
 
-    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:] X_ndarray,
+    cdef int _set_leaf_node(
+        self,
+        SplitRecord* split_node,
+        Node* node
+    ) nogil except -1:
+        """Set leaf node data.
+        
+        Parameters
+        ----------
+        split_node : SplitRecord*
+            The pointer to the record of the leaf node data.
+        node : Node*
+            The pointer to the node that will hold the leaf node.
+        """
+        node.left_child = _TREE_LEAF
+        node.right_child = _TREE_LEAF
+        node.feature = _TREE_UNDEFINED
+        node.threshold = _TREE_UNDEFINED
+        return 1
+
+    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:, :] X_ndarray,
+            SIZE_t sample_index,
             Node *node, SIZE_t node_id) nogil:
         """Compute feature from a given data matrix, X.
 
@@ -767,17 +799,39 @@ cdef class Tree:
         for this specific feature.
         """
         # the feature index
-        cdef DTYPE_t feature = X_ndarray[node.feature]
+        cdef DTYPE_t feature = X_ndarray[sample_index, node.feature]
         return feature
 
-    cdef SIZE_t _add_node(self, SIZE_t parent, bint is_left, bint is_leaf,
-                          SplitRecord* split_node, double impurity,
-                          SIZE_t n_node_samples,
-                          double weighted_n_node_samples) nogil except -1:
+    cdef SIZE_t _add_node(
+        self, 
+        SIZE_t parent,
+        bint is_left,
+        bint is_leaf,
+        SplitRecord* split_node,
+        double impurity,
+        SIZE_t n_node_samples,
+        double weighted_n_node_samples
+    ) nogil except -1:
         """Add a node to the tree.
-
         The new node registers itself as the child of its parent.
-
+        Parameters
+        ----------
+        parent : SIZE_t
+            The index of the parent. If '_TREE_UNDEFINED', then the current
+            node is a root node.
+        is_left : bint
+            Whether or not the current node is to the left of the parent node.
+        is_leaf : bint
+            Whether or not the current node is a leaf node.
+        split_node : SplitRecord*
+            A pointer to a SplitRecord pointer address.
+        impurity : double
+            The impurity of the node to be added.
+        n_node_samples : SIZE_t
+            The number of samples in the node.
+        weighted_n_node_samples : double
+            The weight of the samples in the node.
+            
         Returns (size_t)(-1) on error.
         """
         cdef SIZE_t node_id = self.node_count
@@ -798,16 +852,13 @@ cdef class Tree:
                 self.nodes[parent].right_child = node_id
 
         if is_leaf:
-            node.left_child = _TREE_LEAF
-            node.right_child = _TREE_LEAF
-            node.feature = _TREE_UNDEFINED
-            node.threshold = _TREE_UNDEFINED
+            if self._set_leaf_node(split_node, node) != 1:
+                 with gil:
+                     raise RuntimeError
         else:
-            # set the Node values
-            # left_child and right_child will be set later
-            if self._set_node_values(split_node, node) != 1:
-                with gil:
-                    raise RuntimeError
+            if self._set_split_node(split_node, node) != 1:
+                 with gil:
+                     raise RuntimeError
 
         self.node_count += 1
 
@@ -841,7 +892,6 @@ cdef class Tree:
 
         # Extract input
         cdef const DTYPE_t[:, :] X_ndarray = X
-        cdef const DTYPE_t[:] X_vector
         cdef SIZE_t n_samples = X.shape[0]
 
         # Initialize output
@@ -868,8 +918,7 @@ cdef class Tree:
                     # ... and node.right_child != _TREE_LEAF:
                     
                     # compute the feature value to compare against threshold
-                    X_vector = X_ndarray[i, :]
-                    feature_value = self._compute_feature(X_vector, node, node_id)
+                    feature_value = self._compute_feature(X_ndarray, i, node, node_id)
                     if feature_value <= node.threshold:
                         node_id = node.left_child
                         node = &self.nodes[node.left_child]
@@ -974,7 +1023,6 @@ cdef class Tree:
 
         # Extract input
         cdef const DTYPE_t[:, :] X_ndarray = X
-        cdef const DTYPE_t[:] X_vector
         cdef SIZE_t n_samples = X.shape[0]
 
         # Initialize output
@@ -1008,8 +1056,7 @@ cdef class Tree:
                     indptr_ptr[i + 1] += 1
 
                     # compute the feature value to compare against threshold
-                    X_vector = X_ndarray[i, :]
-                    feature = self._compute_feature(X_vector, node, node_id)
+                    feature = self._compute_feature(X_ndarray, i, node, node_id)
                     if feature <= node.threshold:
                         node_id = node.left_child
                         node = &self.nodes[node.left_child]
