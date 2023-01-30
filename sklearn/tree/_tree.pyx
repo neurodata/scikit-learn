@@ -921,10 +921,10 @@ cdef class Tree:
                     feature_value = self._compute_feature(X_ndarray, i, node, node_id)
                     if feature_value <= node.threshold:
                         node_id = node.left_child
-                        node = &self.nodes[node.left_child]
+                        node = &self.nodes[node_id]
                     else:
                         node_id = node.right_child
-                        node = &self.nodes[node.right_child]
+                        node = &self.nodes[node_id]
 
                 out_ptr[i] = <SIZE_t>(node - self.nodes)  # node offset
         return out
