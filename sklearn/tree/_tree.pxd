@@ -87,14 +87,12 @@ cdef class BaseTree:
         self,
         const DTYPE_t[:, :] X_ndarray,
         SIZE_t sample_index,
-        Node *node,
-        SIZE_t node_id
+        Node *node
     ) nogil
     cdef void _compute_feature_importances(
         self,
         DOUBLE_t* importance_data,
         Node* node,
-        SIZE_t node_id
     ) nogil
 
 cdef class Tree(BaseTree):

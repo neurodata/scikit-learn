@@ -623,7 +623,7 @@ cdef class BaseTree:
 
     cdef DTYPE_t _compute_feature(self, const DTYPE_t[:, :] X_ndarray,
             SIZE_t sample_index,
-            Node *node, SIZE_t node_id) nogil:
+            Node *node) nogil:
         """Compute feature from a given data matrix, X.
 
         In axis-aligned trees, this is simply the value in the column of X
@@ -725,29 +725,23 @@ cdef class BaseTree:
         cdef Node* node = NULL
         cdef SIZE_t i = 0
 
-        # to keep track of the current ID of each node
-        cdef SIZE_t node_id = 0
-
         # the feature value
         cdef DTYPE_t feature_value = 0
 
         with nogil:
             for i in range(n_samples):
                 node = self.nodes
-                node_id = 0
 
                 # While node not a leaf
                 while node.left_child != _TREE_LEAF:
                     # ... and node.right_child != _TREE_LEAF:
                     
                     # compute the feature value to compare against threshold
-                    feature_value = self._compute_feature(X_ndarray, i, node, node_id)
+                    feature_value = self._compute_feature(X_ndarray, i, node)
                     if feature_value <= node.threshold:
-                        node_id = node.left_child
-                        node = &self.nodes[node_id]
+                        node = &self.nodes[node.left_child]
                     else:
-                        node_id = node.right_child
-                        node = &self.nodes[node_id]
+                        node = &self.nodes[node.right_child]
 
                 out_ptr[i] = <SIZE_t>(node - self.nodes)  # node offset
         return out
@@ -861,9 +855,6 @@ cdef class BaseTree:
         cdef Node* node = NULL
         cdef SIZE_t i = 0
 
-        # to keep track of the current ID of each node
-        cdef SIZE_t node_id = 0
-
         # the feature index
         cdef DOUBLE_t feature
 
@@ -879,12 +870,10 @@ cdef class BaseTree:
                     indptr_ptr[i + 1] += 1
 
                     # compute the feature value to compare against threshold
-                    feature = self._compute_feature(X_ndarray, i, node, node_id)
+                    feature = self._compute_feature(X_ndarray, i, node)
                     if feature <= node.threshold:
-                        node_id = node.left_child
                         node = &self.nodes[node.left_child]
                     else:
-                        node_id = node.right_child
                         node = &self.nodes[node.right_child]
 
                 # Add the leave node
@@ -1030,20 +1019,14 @@ cdef class BaseTree:
         importances = np.zeros((self.n_features,))
         cdef DOUBLE_t* importance_data = <DOUBLE_t*>importances.data
 
-        # to keep track of the current ID of each node
-        cdef SIZE_t node_id = 0
-
         with nogil:
-            node_id = 0
-
             while node != end_node:
                 if node.left_child != _TREE_LEAF:
                     # ... and node.right_child != _TREE_LEAF:
                     self._compute_feature_importances(
-                        importance_data, node, node_id)
+                        importance_data, node)
                     
                 node += 1
-                node_id += 1
 
         importances /= nodes[0].weighted_n_node_samples
 
@@ -1057,7 +1040,7 @@ cdef class BaseTree:
         return importances
 
     cdef void _compute_feature_importances(self, DOUBLE_t* importance_data,
-                                Node* node, SIZE_t node_id) nogil:
+                                Node* node) nogil:
         """Compute feature importances from a Node in the Tree.
         
         Wrapped in a private function to allow subclassing that

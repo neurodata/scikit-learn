@@ -246,7 +246,7 @@ cdef class ObliqueTree(Tree):
         self.proj_vec_indices[node_id] = deref(deref(oblique_split_node).proj_vec_indices)
         return 1
 
-    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:, :] X_ndarray, SIZE_t sample_index, Node *node, SIZE_t node_id) nogil:
+    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:, :] X_ndarray, SIZE_t sample_index, Node *node) nogil:
         """Compute feature from a given data matrix, X.
 
         In oblique-aligned trees, this is the projection of X.
@@ -257,6 +257,9 @@ cdef class ObliqueTree(Tree):
         cdef SIZE_t j = 0
         cdef SIZE_t feature_index
         cdef SIZE_t n_features = self.n_features
+        
+        # get the index of the node
+        cdef SIZE_t node_id = node - self.nodes
 
         # cdef SIZE_t n_projections = proj_vec_indices.size()
         # compute projection of the data based on trained tree
@@ -274,7 +277,7 @@ cdef class ObliqueTree(Tree):
         return proj_feat
 
     cdef void _compute_feature_importances(self, DOUBLE_t* importance_data,
-                                Node* node, SIZE_t node_id) nogil:
+                                Node* node) nogil:
         """Compute feature importances from a Node in the Tree.
         
         Wrapped in a private function to allow subclassing that
@@ -283,6 +286,9 @@ cdef class ObliqueTree(Tree):
         cdef Node* nodes = self.nodes
         cdef Node* left
         cdef Node* right
+
+        # get the index of the node
+        cdef SIZE_t node_id = node - self.nodes
 
         left = &nodes[node.left_child]
         right = &nodes[node.right_child]
