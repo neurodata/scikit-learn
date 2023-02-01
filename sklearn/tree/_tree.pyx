@@ -17,7 +17,8 @@ from cpython cimport Py_INCREF, PyObject, PyTypeObject
 from libc.stdlib cimport free
 from libc.string cimport memcpy
 from libc.string cimport memset
-from libc.stdint cimport SIZE_MAX
+from libc.stdint cimport INTPTR_MAX
+from libcpp.vector cimport vector
 from libcpp.algorithm cimport pop_heap
 from libcpp.algorithm cimport push_heap
 from libcpp cimport bool
@@ -252,7 +253,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                                          impurity, n_node_samples,
                                          weighted_n_node_samples)
 
-                if node_id == SIZE_MAX:
+                if node_id == INTPTR_MAX:
                     rc = -1
                     break
 
@@ -492,7 +493,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
                                  is_left, is_leaf,
                                  split_ptr, impurity, n_node_samples,
                                  weighted_n_node_samples)
-        if node_id == SIZE_MAX:
+        if node_id == INTPTR_MAX:
             return -1
 
         # compute values also for split nodes (might become leafs later).
@@ -550,7 +551,7 @@ cdef class BaseTree:
 
     cdef int _resize_c(
         self,
-        SIZE_t capacity=SIZE_MAX
+        SIZE_t capacity=INTPTR_MAX
     ) nogil except -1:
         """Guts of _resize
 
@@ -560,7 +561,7 @@ cdef class BaseTree:
         if capacity == self.capacity and self.nodes != NULL:
             return 0
 
-        if capacity == SIZE_MAX:
+        if capacity == INTPTR_MAX:
             if self.capacity == 0:
                 capacity = 3  # default initial value
             else:
@@ -669,7 +670,7 @@ cdef class BaseTree:
 
         if node_id >= self.capacity:
             if self._resize_c() != 0:
-                return SIZE_MAX
+                return INTPTR_MAX
 
         cdef Node* node = &self.nodes[node_id]
         node.impurity = impurity
@@ -1918,7 +1919,7 @@ cdef _build_pruned_tree(
                 node.impurity, node.n_node_samples,
                 node.weighted_n_node_samples)
 
-            if new_node_id == SIZE_MAX:
+            if new_node_id == INTPTR_MAX:
                 rc = -1
                 break
 
