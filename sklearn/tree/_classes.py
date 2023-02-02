@@ -2131,26 +2131,34 @@ class ObliqueDecisionTreeClassifier(DecisionTreeClassifier):
 
         Parameters
         ----------
-        X : _type_
-            _description_
-        y : _type_
-            _description_
-        sample_weight : _type_
-            _description_
+        X : {array-like, sparse matrix} of shape (n_samples, n_features)
+            The training input samples. Internally, it will be converted to
+            ``dtype=np.float32`` and if a sparse matrix is provided
+            to a sparse ``csc_matrix``.
+        y : array-like of shape (n_samples,) or (n_samples, n_outputs)
+            The target values (class labels) as integers or strings.
+        sample_weight : array-like of shape (n_samples,), default=None
+            Sample weights. If None, then samples are equally weighted. Splits
+            that would create child nodes with net zero or negative weight are
+            ignored while searching for a split in each node. Splits are also
+            ignored if they would result in any single class carrying a
+            negative weight in either child node.
         is_classification : bool
-            _description_
-        min_samples_leaf : _type_
-            _description_
-        min_weight_leaf : _type_
-            _description_
-        max_leaf_nodes : _type_
-            _description_
-        min_samples_split : _type_
-            _description_
-        max_depth : _type_
-            _description_
-        random_state : _type_
-            _description_
+            Whether or not is classification.
+        min_samples_leaf : int or float
+            The minimum number of samples required to be at a leaf node.
+        min_weight_leaf : float, default=0.0
+           The minimum weighted fraction of the sum total of weights.
+        max_leaf_nodes : int, default=None
+            Grow a tree with ``max_leaf_nodes`` in best-first fashion.
+        min_samples_split : int or float, default=2
+            The minimum number of samples required to split an internal node:
+        max_depth : int, default=None
+            The maximum depth of the tree. If None, then nodes are expanded until
+            all leaves are pure or until all leaves contain less than
+            min_samples_split samples.
+        random_state : int, RandomState instance or None, default=None
+            Controls the randomness of the estimator.
         """
 
         n_samples = X.shape[0]
