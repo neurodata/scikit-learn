@@ -190,9 +190,10 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             # csr.
             check_X_params = dict(dtype=DTYPE, accept_sparse="csc")
             check_y_params = dict(ensure_2d=False, dtype=None)
-            X = self._validate_data(X, validate_separately=check_X_params)
             if y is not None:
-                y = self._validate_data(y, validate_separately=check_y_params)
+                X, y = self._validate_data(X, y, validate_separately=(check_X_params, check_y_params))
+            else:
+                X = self._validate_data(X, **check_X_params)
             if issparse(X):
                 X.sort_indices()
 
