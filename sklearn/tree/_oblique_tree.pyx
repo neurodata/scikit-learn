@@ -14,7 +14,7 @@ from libc.stdlib cimport malloc, free
 from libc.math cimport fabs
 from libc.string cimport memcpy
 from libc.string cimport memset
-from libc.stdint cimport SIZE_MAX
+from libc.stdint cimport INTPTR_MAX
 
 import numpy as np
 cimport numpy as cnp
@@ -191,7 +191,7 @@ cdef class ObliqueTree(Tree):
                 proj_vecs[i, feat] = weight
         return proj_vecs
 
-    cdef int _resize_c(self, SIZE_t capacity=SIZE_MAX) nogil except -1:
+    cdef int _resize_c(self, SIZE_t capacity=INTPTR_MAX) nogil except -1:
         """Guts of _resize.
 
         Additionally resizes the projection indices and weights.
@@ -202,7 +202,7 @@ cdef class ObliqueTree(Tree):
         if capacity == self.capacity and self.nodes != NULL:
             return 0
 
-        if capacity == SIZE_MAX:
+        if capacity == INTPTR_MAX:
             if self.capacity == 0:
                 capacity = 3  # default initial value
             else:
