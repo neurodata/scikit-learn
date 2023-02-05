@@ -191,7 +191,9 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             check_X_params = dict(dtype=DTYPE, accept_sparse="csc")
             check_y_params = dict(ensure_2d=False, dtype=None)
             if y is not None:
-                X, y = self._validate_data(X, y, validate_separately=(check_X_params, check_y_params))
+                X, y = self._validate_data(X, y, validate_separately=(
+                    check_X_params, check_y_params
+                ))
             else:
                 X = self._validate_data(X, **check_X_params)
             if issparse(X):
@@ -365,26 +367,26 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
 
         Parameters
         ----------
-        X : _type_
-            _description_
-        y : _type_
-            _description_
-        sample_weight : _type_
-            _description_
+        X : Array-like
+            X dataset.
+        y : Array-like
+            Y targets.
+        sample_weight : Array-like
+            Sample weights
         is_classification : bool
-            _description_
-        min_samples_leaf : _type_
-            _description_
-        min_weight_leaf : _type_
-            _description_
-        max_leaf_nodes : _type_
-            _description_
-        min_samples_split : _type_
-            _description_
-        max_depth : _type_
-            _description_
-        random_state : _type_
-            _description_
+            Whether or not this is classification or not.
+        min_samples_leaf : float
+            Number of samples required to be a leaf.
+        min_weight_leaf : float
+            Weight of samples required to be a leaf.
+        max_leaf_nodes : float
+            Maximum number of leaf nodes allowed in tree.
+        min_samples_split : float
+            Minimum number of samples to split on.
+        max_depth : int
+            The maximum depth of any tree.
+        random_state : int
+            Random seed.
         """
 
         n_samples = X.shape[0]
