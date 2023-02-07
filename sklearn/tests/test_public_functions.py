@@ -109,6 +109,7 @@ PARAM_VALIDATION_FUNCTION_LIST = [
     "sklearn.feature_extraction.grid_to_graph",
     "sklearn.feature_extraction.img_to_graph",
     "sklearn.feature_extraction.image.extract_patches_2d",
+    "sklearn.feature_extraction.image.reconstruct_from_patches_2d",
     "sklearn.metrics.accuracy_score",
     "sklearn.metrics.auc",
     "sklearn.metrics.average_precision_score",
@@ -116,6 +117,7 @@ PARAM_VALIDATION_FUNCTION_LIST = [
     "sklearn.metrics.cluster.contingency_matrix",
     "sklearn.metrics.cohen_kappa_score",
     "sklearn.metrics.confusion_matrix",
+    "sklearn.metrics.d2_pinball_score",
     "sklearn.metrics.det_curve",
     "sklearn.metrics.hamming_loss",
     "sklearn.metrics.mean_absolute_error",
@@ -150,6 +152,7 @@ def test_function_param_validation(func_module):
 
 PARAM_VALIDATION_CLASS_WRAPPER_LIST = [
     ("sklearn.cluster.affinity_propagation", "sklearn.cluster.AffinityPropagation"),
+    ("sklearn.cluster.spectral_clustering", "sklearn.cluster.SpectralClustering"),
     ("sklearn.covariance.ledoit_wolf", "sklearn.covariance.LedoitWolf"),
     ("sklearn.covariance.oas", "sklearn.covariance.OAS"),
     ("sklearn.decomposition.dict_learning", "sklearn.decomposition.DictionaryLearning"),
