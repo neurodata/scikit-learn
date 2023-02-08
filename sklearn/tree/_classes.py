@@ -339,7 +339,6 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             X,
             y,
             sample_weight,
-            is_classification,
             min_samples_leaf,
             min_weight_leaf,
             max_leaf_nodes,
@@ -355,7 +354,6 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         X,
         y,
         sample_weight,
-        is_classification,
         min_samples_leaf,
         min_weight_leaf,
         max_leaf_nodes,
@@ -373,8 +371,6 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             Y targets.
         sample_weight : Array-like
             Sample weights
-        is_classification : bool
-            Whether or not this is classification or not.
         min_samples_leaf : float
             Number of samples required to be a leaf.
         min_weight_leaf : float
@@ -394,7 +390,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         # Build tree
         criterion = self.criterion
         if not isinstance(criterion, BaseCriterion):
-            if is_classification:
+            if is_classifier(self):
                 criterion = CRITERIA_CLF[self.criterion](
                     self.n_outputs_, self.n_classes_
                 )
@@ -1977,9 +1973,15 @@ class ObliqueDecisionTreeClassifier(DecisionTreeClassifier):
 
         .. versionadded:: 0.22
 
-    feature_combinations : float, default=1.5
+    feature_combinations : float, default=None
         The number of features to combine on average at each split
-        of the decision trees.
+        of the decision trees. If ``None``, then will default to the minimum of
+        ``(1.5, n_features)``. This controls the number of non-zeros is the
+        projection matrix. Setting the value to 1.0 is equivalent to a
+        traditional decision-tree. ``feature_combinations * max_features``
+        gives the number of expected non-zeros in the projection matrix of shape
+        ``(max_features, n_features)``. Thus this value must always be less than
+        ``n_features`` in order to be valid.
 
     Attributes
     ----------
@@ -2024,6 +2026,9 @@ class ObliqueDecisionTreeClassifier(DecisionTreeClassifier):
         The underlying Tree object. Please refer to
         ``help(sklearn.tree._tree.Tree)`` for
         attributes of Tree object.
+
+    feature_combinations_ : float
+        The number of feature combinations on average taken to fit the tree.
 
     See Also
     --------
@@ -2080,7 +2085,10 @@ class ObliqueDecisionTreeClassifier(DecisionTreeClassifier):
 
     _parameter_constraints = {
         **DecisionTreeClassifier._parameter_constraints,
-        "feature_combinations": [Interval(Real, 1.0, None, closed="left")],
+        "feature_combinations": [
+            Interval(Real, 1.0, None, closed="left"),
+            None
+        ],
     }
 
     def __init__(
@@ -2098,7 +2106,7 @@ class ObliqueDecisionTreeClassifier(DecisionTreeClassifier):
         min_impurity_decrease=0.0,
         class_weight=None,
         ccp_alpha=0.0,
-        feature_combinations=1.5,
+        feature_combinations=None,
     ):
         super().__init__(
             criterion=criterion,
@@ -2122,7 +2130,6 @@ class ObliqueDecisionTreeClassifier(DecisionTreeClassifier):
         X,
         y,
         sample_weight,
-        is_classification,
         min_samples_leaf,
         min_weight_leaf,
         max_leaf_nodes,
@@ -2146,8 +2153,6 @@ class ObliqueDecisionTreeClassifier(DecisionTreeClassifier):
             ignored while searching for a split in each node. Splits are also
             ignored if they would result in any single class carrying a
             negative weight in either child node.
-        is_classification : bool
-            Whether or not is classification.
         min_samples_leaf : int or float
             The minimum number of samples required to be at a leaf node.
         min_weight_leaf : float, default=0.0
@@ -2163,13 +2168,22 @@ class ObliqueDecisionTreeClassifier(DecisionTreeClassifier):
         random_state : int, RandomState instance or None, default=None
             Controls the randomness of the estimator.
         """
+        n_samples, n_features = X.shape
 
-        n_samples = X.shape[0]
+        if self.feature_combinations is None:
+            self.feature_combinations_ = min(n_features, 1.5)
+        elif self.feature_combinations > n_features:
+            raise RuntimeError(
+                f"Feature combinations {self.feature_combinations} should not be "
+                f"greater than the possible number of features {n_features}"
+            )
+        else:
+            self.feature_combinations_ = self.feature_combinations
 
         # Build tree
         criterion = self.criterion
         if not isinstance(criterion, BaseCriterion):
-            if is_classification:
+            if is_classifier(self):
                 criterion = CRITERIA_CLF[self.criterion](
                     self.n_outputs_, self.n_classes_
                 )
@@ -2195,8 +2209,8 @@ class ObliqueDecisionTreeClassifier(DecisionTreeClassifier):
                 self.max_features_,
                 min_samples_leaf,
                 min_weight_leaf,
-                self.feature_combinations,
                 random_state,
+                self.feature_combinations_,
             )
 
         if is_classifier(self):
