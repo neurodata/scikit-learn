@@ -113,6 +113,7 @@ USE_NEWEST_NUMPY_C_API = (
     "sklearn.tree._splitter",
     "sklearn.tree._tree",
     "sklearn.tree._utils",
+    "sklearn.tree._oblique_tree",
     "sklearn.tree._oblique_splitter",
     "sklearn.utils._cython_blas",
     "sklearn.utils._fast_dict",

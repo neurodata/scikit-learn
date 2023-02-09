@@ -556,137 +556,6 @@ cdef class BaseTree:
     
     Downstream classes must implement
     """
-    # Wrap for outside world.
-    # WARNING: these reference the current `nodes` and `value` buffers, which
-    # must not be freed by a subsequent memory allocation.
-    # (i.e. through `_resize` or `__setstate__`)
-    property n_classes:
-        def __get__(self):
-            return sizet_ptr_to_ndarray(self.n_classes, self.n_outputs)
-
-    property children_left:
-        def __get__(self):
-            return self._get_node_ndarray()['left_child'][:self.node_count]
-
-    property children_right:
-        def __get__(self):
-            return self._get_node_ndarray()['right_child'][:self.node_count]
-
-    property n_leaves:
-        def __get__(self):
-            return np.sum(np.logical_and(
-                self.children_left == -1,
-                self.children_right == -1))
-
-    property feature:
-        def __get__(self):
-            return self._get_node_ndarray()['feature'][:self.node_count]
-
-    property threshold:
-        def __get__(self):
-            return self._get_node_ndarray()['threshold'][:self.node_count]
-
-    property impurity:
-        def __get__(self):
-            return self._get_node_ndarray()['impurity'][:self.node_count]
-
-    property n_node_samples:
-        def __get__(self):
-            return self._get_node_ndarray()['n_node_samples'][:self.node_count]
-
-    property weighted_n_node_samples:
-        def __get__(self):
-            return self._get_node_ndarray()['weighted_n_node_samples'][:self.node_count]
-
-    property value:
-        def __get__(self):
-            return self._get_value_ndarray()[:self.node_count]
-
-    # TODO: Convert n_classes to cython.integral memory view once
-    #  https://github.com/cython/cython/issues/5243 is fixed
-    def __cinit__(self, int n_features, cnp.ndarray n_classes, int n_outputs):
-        """Constructor."""
-        cdef SIZE_t dummy = 0
-        size_t_dtype = np.array(dummy).dtype
-
-        n_classes = _check_n_classes(n_classes, size_t_dtype)
-
-        # Input/Output layout
-        self.n_features = n_features
-        self.n_outputs = n_outputs
-        self.n_classes = NULL
-        safe_realloc(&self.n_classes, n_outputs)
-
-        self.max_n_classes = np.max(n_classes)
-        self.value_stride = n_outputs * self.max_n_classes
-
-        cdef SIZE_t k
-        for k in range(n_outputs):
-            self.n_classes[k] = n_classes[k]
-
-        # Inner structures
-        self.max_depth = 0
-        self.node_count = 0
-        self.capacity = 0
-        self.value = NULL
-        self.nodes = NULL
-
-    def __dealloc__(self):
-        """Destructor."""
-        # Free all inner structures
-        free(self.n_classes)
-        free(self.value)
-        free(self.nodes)
-
-    def __reduce__(self):
-        """Reduce re-implementation, for pickling."""
-        return (Tree, (self.n_features,
-                       sizet_ptr_to_ndarray(self.n_classes, self.n_outputs),
-                       self.n_outputs), self.__getstate__())
-
-    def __getstate__(self):
-        """Getstate re-implementation, for pickling."""
-        d = {}
-        # capacity is inferred during the __setstate__ using nodes
-        d["max_depth"] = self.max_depth
-        d["node_count"] = self.node_count
-        d["nodes"] = self._get_node_ndarray()
-        d["values"] = self._get_value_ndarray()
-        return d
-
-    def __setstate__(self, d):
-        """Setstate re-implementation, for unpickling."""
-        self.max_depth = d["max_depth"]
-        self.node_count = d["node_count"]
-
-        if 'nodes' not in d:
-            raise ValueError('You have loaded Tree version which '
-                             'cannot be imported')
-
-        node_ndarray = d['nodes']
-        value_ndarray = d['values']
-
-        value_shape = (node_ndarray.shape[0], self.n_outputs,
-                       self.max_n_classes)
-
-        node_ndarray = _check_node_ndarray(node_ndarray, expected_dtype=NODE_DTYPE)
-        value_ndarray = _check_value_ndarray(
-            value_ndarray,
-            expected_dtype=np.dtype(np.float64),
-            expected_shape=value_shape
-        )
-
-        self.capacity = node_ndarray.shape[0]
-        if self._resize_c(self.capacity) != 0:
-            raise MemoryError("resizing tree to %d" % self.capacity)
-
-        cdef Node[::1] node_memory_view = node_ndarray
-        cdef DOUBLE_t[:, :, ::1] value_memory_view = value_ndarray
-        nodes = memcpy(self.nodes, &node_memory_view[0],
-                       self.capacity * sizeof(Node))
-        value = memcpy(self.value, &value_memory_view[0, 0, 0],
-                       self.capacity * self.value_stride * sizeof(double))
-
     cdef int _resize(
         self,
         SIZE_t capacity
@@ -1175,8 +1044,11 @@ cdef class BaseTree:
 
         return np.asarray(importances)
 
-    cdef void _compute_feature_importances(self, cnp.float64_t[:] importances,
-                                Node* node) nogil:
+    cdef void _compute_feature_importances(
+        self,
+        cnp.float64_t[:] importances,
+        Node* node
+    ) nogil:
         """Compute feature importances from a Node in the Tree.
         
         Wrapped in a private function to allow subclassing that
@@ -1355,7 +1227,7 @@ cdef class Tree(BaseTree):
         weighted_n_node_samples[i] holds the weighted number of training samples
         reaching node i.
     """
-        # Wrap for outside world.
+    # Wrap for outside world.
     # WARNING: these reference the current `nodes` and `value` buffers, which
     # must not be freed by a subsequent memory allocation.
     # (i.e. through `_resize` or `__setstate__`)
@@ -1401,6 +1273,8 @@ cdef class Tree(BaseTree):
         def __get__(self):
             return self._get_value_ndarray()[:self.node_count]
 
+    # TODO: Convert n_classes to cython.integral memory view once
+    #  https://github.com/cython/cython/issues/5243 is fixed
     def __cinit__(self, int n_features, cnp.ndarray n_classes, int n_outputs):
         """Constructor."""
         cdef SIZE_t dummy = 0
@@ -1476,9 +1350,12 @@ cdef class Tree(BaseTree):
         self.capacity = node_ndarray.shape[0]
         if self._resize_c(self.capacity) != 0:
             raise MemoryError("resizing tree to %d" % self.capacity)
-        nodes = memcpy(self.nodes, (<cnp.ndarray> node_ndarray).data,
+
+        cdef Node[::1] node_memory_view = node_ndarray
+        cdef DOUBLE_t[:, :, ::1] value_memory_view = value_ndarray
+        nodes = memcpy(self.nodes, &node_memory_view[0],
                        self.capacity * sizeof(Node))
-        value = memcpy(self.value, (<cnp.ndarray> value_ndarray).data,
+        value = memcpy(self.value, &value_memory_view[0, 0, 0],
                        self.capacity * self.value_stride * sizeof(double))
 
     cdef cnp.ndarray _get_value_ndarray(self):
