@@ -1351,11 +1351,9 @@ cdef class Tree(BaseTree):
         if self._resize_c(self.capacity) != 0:
             raise MemoryError("resizing tree to %d" % self.capacity)
 
-        cdef Node[::1] node_memory_view = node_ndarray
-        cdef DOUBLE_t[:, :, ::1] value_memory_view = value_ndarray
-        nodes = memcpy(self.nodes, &node_memory_view[0],
+        nodes = memcpy(self.nodes, cnp.PyArray_DATA(node_ndarray),
                        self.capacity * sizeof(Node))
-        value = memcpy(self.value, &value_memory_view[0, 0, 0],
+        value = memcpy(self.value, cnp.PyArray_DATA(value_ndarray),
                        self.capacity * self.value_stride * sizeof(double))
 
     cdef cnp.ndarray _get_value_ndarray(self):
