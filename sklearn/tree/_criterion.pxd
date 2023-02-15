@@ -76,7 +76,7 @@ cdef class Criterion(BaseCriterion):
         const DOUBLE_t[:] sample_weight,
         double weighted_n_samples,
         const SIZE_t[:] sample_indices
-    ) nogil except -1
+    ) except -1 nogil
 
 cdef class ClassificationCriterion(Criterion):
     """Abstract criterion for classification."""

@@ -194,7 +194,7 @@ cdef class Criterion(BaseCriterion):
         const DOUBLE_t[:] sample_weight,
         double weighted_n_samples,
         const SIZE_t[:] sample_indices
-    ) nogil except -1:
+    ) except -1 nogil:
         """Placeholder for a method which will initialize the criterion.
         Returns -1 in case of failure to allocate memory (and raise MemoryError)
         or 0 otherwise.
@@ -268,7 +268,7 @@ cdef class ClassificationCriterion(Criterion):
         const DOUBLE_t[:] sample_weight,
         double weighted_n_samples,
         const SIZE_t[:] sample_indices
-    ) nogil except -1:
+    ) except -1 nogil:
         """Initialize the criterion.
         Returns -1 in case of failure to allocate memory (and raise MemoryError)
         or 0 otherwise.
@@ -635,7 +635,7 @@ cdef class RegressionCriterion(Criterion):
         const DOUBLE_t[:] sample_weight,
         double weighted_n_samples,
         const SIZE_t[:] sample_indices
-    ) nogil except -1:
+    ) except -1 nogil:
         """Initialize the criterion."""
         # Initialize fields
         self.y = y
@@ -908,7 +908,7 @@ cdef class MAE(RegressionCriterion):
         const DOUBLE_t[:] sample_weight,
         double weighted_n_samples,
         const SIZE_t[:] sample_indices
-    ) nogil except -1:
+    ) except -1 nogil:
         """Initialize the criterion."""
         # Initialize fields
         self.y = y
