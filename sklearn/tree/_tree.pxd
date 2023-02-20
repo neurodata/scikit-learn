@@ -47,8 +47,8 @@ cdef class BaseTree:
     cdef double* value                   # Array of values prediction values for each node        
 
     # Generic Methods: These are generic methods used by any tree.
-    cdef int _resize(self, SIZE_t capacity) nogil except -1
-    cdef int _resize_c(self, SIZE_t capacity=*) nogil except -1
+    cdef int _resize(self, SIZE_t capacity) except -1 nogil
+    cdef int _resize_c(self, SIZE_t capacity=*) except -1 nogil
     cdef SIZE_t _add_node(
         self,
         SIZE_t parent,
@@ -58,7 +58,7 @@ cdef class BaseTree:
         double impurity,
         SIZE_t n_node_samples,
         double weighted_n_node_samples
-    ) nogil except -1
+    ) except -1 nogil
 
     # Python API methods: These are methods exposed to Python
     cpdef cnp.ndarray apply(self, object X)
@@ -77,23 +77,23 @@ cdef class BaseTree:
         self,
         SplitRecord* split_node,
         Node* node
-    ) nogil except -1
+    ) except -1 nogil
     cdef int _set_leaf_node(
         self,
         SplitRecord* split_node,
         Node* node
-    ) nogil except -1
+    ) except -1 nogil
     cdef DTYPE_t _compute_feature(
         self,
         const DTYPE_t[:, :] X_ndarray,
         SIZE_t sample_index,
         Node *node
-    ) nogil
+    ) noexcept nogil
     cdef void _compute_feature_importances(
         self,
         cnp.float64_t[:] importances,
         Node* node,
-    ) nogil
+    ) noexcept nogil
 
 cdef class Tree(BaseTree):
     # The Supervised Tree object is a binary tree structure constructed by the

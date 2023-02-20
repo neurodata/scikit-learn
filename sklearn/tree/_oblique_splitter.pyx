@@ -30,7 +30,7 @@ cdef DTYPE_t FEATURE_THRESHOLD = 1e-7
 cdef DTYPE_t EXTRACT_NNZ_SWITCH = 0.1
 
 
-cdef inline void _init_split(ObliqueSplitRecord* self, SIZE_t start_pos) nogil:
+cdef inline void _init_split(ObliqueSplitRecord* self, SIZE_t start_pos) noexcept nogil:
     self.impurity_left = INFINITY
     self.impurity_right = INFINITY
     self.pos = start_pos
@@ -97,7 +97,7 @@ cdef class BaseObliqueSplitter(Splitter):
         pass
 
     cdef int node_reset(self, SIZE_t start, SIZE_t end,
-                        double* weighted_n_node_samples) nogil except -1:
+                        double* weighted_n_node_samples) except -1 nogil:
         """Reset splitter on node samples[start:end].
 
         Returns -1 in case of failure to allocate memory (and raise MemoryError)
@@ -134,14 +134,14 @@ cdef class BaseObliqueSplitter(Splitter):
         self,
         vector[vector[DTYPE_t]]& proj_mat_weights,
         vector[vector[SIZE_t]]& proj_mat_indices
-    ) nogil:
+    ) noexcept nogil:
         """ Sample the projection vector.
 
         This is a placeholder method.
         """
         pass
 
-    cdef int pointer_size(self) nogil:
+    cdef int pointer_size(self) noexcept nogil:
         """Get size of a pointer to record for ObliqueSplitter."""
 
         return sizeof(ObliqueSplitRecord)
@@ -151,7 +151,7 @@ cdef class BaseObliqueSplitter(Splitter):
         double impurity,
         SplitRecord* split,
         SIZE_t* n_constant_features
-    ) nogil except -1:
+    ) except -1 nogil:
         """Find the best split on node samples[start:end]
 
         Returns -1 in case of failure to allocate memory (and raise MemoryError)
@@ -375,7 +375,7 @@ cdef class BestObliqueSplitter(ObliqueSplitter):
         self,
         vector[vector[DTYPE_t]]& proj_mat_weights,
         vector[vector[SIZE_t]]& proj_mat_indices
-    ) nogil:
+    ) noexcept nogil:
         """Sample oblique projection matrix.
 
         Randomly sample features to put in randomly sampled projection vectors
@@ -433,7 +433,7 @@ cdef class BestObliqueSplitter(ObliqueSplitter):
 
 # Sort n-element arrays pointed to by feature_values and samples, simultaneously,
 # by the values in feature_values. Algorithm: Introsort (Musser, SP&E, 1997).
-cdef inline void sort(DTYPE_t* feature_values, SIZE_t* samples, SIZE_t n) nogil:
+cdef inline void sort(DTYPE_t* feature_values, SIZE_t* samples, SIZE_t n) noexcept nogil:
     if n == 0:
       return
     cdef int maxd = 2 * <int>log(n)
@@ -441,13 +441,13 @@ cdef inline void sort(DTYPE_t* feature_values, SIZE_t* samples, SIZE_t n) nogil:
 
 
 cdef inline void swap(DTYPE_t* feature_values, SIZE_t* samples,
-        SIZE_t i, SIZE_t j) nogil:
+        SIZE_t i, SIZE_t j) noexcept nogil:
     # Helper for sort
     feature_values[i], feature_values[j] = feature_values[j], feature_values[i]
     samples[i], samples[j] = samples[j], samples[i]
 
 
-cdef inline DTYPE_t median3(DTYPE_t* feature_values, SIZE_t n) nogil:
+cdef inline DTYPE_t median3(DTYPE_t* feature_values, SIZE_t n) noexcept nogil:
     # Median of three pivot selection, after Bentley and McIlroy (1993).
     # Engineering a sort function. SP&E. Requires 8/3 comparisons on average.
     cdef DTYPE_t a = feature_values[0], b = feature_values[n / 2], c = feature_values[n - 1]
@@ -470,7 +470,7 @@ cdef inline DTYPE_t median3(DTYPE_t* feature_values, SIZE_t n) nogil:
 # Introsort with median of 3 pivot selection and 3-way partition function
 # (robust to repeated elements, e.g. lots of zero features).
 cdef void introsort(DTYPE_t* feature_values, SIZE_t *samples,
-                    SIZE_t n, int maxd) nogil:
+                    SIZE_t n, int maxd) noexcept nogil:
     cdef DTYPE_t pivot
     cdef SIZE_t i, l, r
 
@@ -503,7 +503,7 @@ cdef void introsort(DTYPE_t* feature_values, SIZE_t *samples,
 
 
 cdef inline void sift_down(DTYPE_t* feature_values, SIZE_t* samples,
-                           SIZE_t start, SIZE_t end) nogil:
+                           SIZE_t start, SIZE_t end) noexcept nogil:
     # Restore heap order in feature_values[start:end] by moving the max element to start.
     cdef SIZE_t child, maxind, root
 
@@ -525,7 +525,7 @@ cdef inline void sift_down(DTYPE_t* feature_values, SIZE_t* samples,
             root = maxind
 
 
-cdef void heapsort(DTYPE_t* feature_values, SIZE_t* samples, SIZE_t n) nogil:
+cdef void heapsort(DTYPE_t* feature_values, SIZE_t* samples, SIZE_t n) noexcept nogil:
     cdef SIZE_t start, end
 
     # heapify
