@@ -26,7 +26,7 @@ jobs:
   check_build_trigger:
     name: Check build trigger
     runs-on: ubuntu-latest
-    if: github.repository == 'scikit-learn/scikit-learn'
+    if: github.repository == 'neurodata/scikit-learn'
     outputs:
       build: ${{ steps.check_build_trigger.outputs.build }}
 
