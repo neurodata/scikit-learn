@@ -2494,3 +2494,25 @@ def test_oblique_tree_sampling():
     assert rc_cv_scores.mean() > ri_cv_scores.mean()
     assert rc_cv_scores.std() < ri_cv_scores.std()
     assert rc_cv_scores.mean() > 0.91
+
+
+@pytest.mark.parametrize("Tree", ALL_TREES.values())
+def test_min_sample_split_1_error(Tree):
+    """Check that an error is raised when min_sample_split=1.
+
+    non-regression test for issue gh-25481.
+    """
+    X = np.array([[0, 0], [1, 1]])
+    y = np.array([0, 1])
+
+    # min_samples_split=1.0 is valid
+    Tree(min_samples_split=1.0).fit(X, y)
+
+    # min_samples_split=1 is invalid
+    tree = Tree(min_samples_split=1)
+    msg = (
+        r"'min_samples_split' .* must be an int in the range \[2, inf\) "
+        r"or a float in the range \(0.0, 1.0\]"
+    )
+    with pytest.raises(ValueError, match=msg):
+        tree.fit(X, y)
