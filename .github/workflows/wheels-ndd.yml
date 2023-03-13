@@ -20,22 +20,22 @@ concurrency:
 
 jobs:
   # Check whether to build the wheels and the source tarball
-  check_build_trigger:
-    name: Check build trigger
-    runs-on: ubuntu-latest
-    if: github.repository == 'neurodata/scikit-learn'
-    outputs:
-      build: ${{ steps.check_build_trigger.outputs.build }}
+  # check_build_trigger:
+  #   name: Check build trigger
+  #   runs-on: ubuntu-latest
+  #   if: github.repository == 'neurodata/scikit-learn'
+  #   outputs:
+  #     build: ${{ steps.check_build_trigger.outputs.build }}
 
-    steps:
-      - name: Checkout NeuroData scikit-learn
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
+  #   steps:
+  #     - name: Checkout NeuroData scikit-learn
+  #       uses: actions/checkout@v3
+  #       with:
+  #         ref: ${{ github.event.pull_request.head.sha }}
 
-      - id: check_build_trigger
-        name: Check build trigger
-        run: bash build_tools/github/check_build_trigger.sh
+  #     - id: check_build_trigger
+  #       name: Check build trigger
+  #       run: bash build_tools/github/check_build_trigger.sh
 
   # Build the wheels for Linux, Windows and macOS for Python 3.8 and newer
   build_wheels:
