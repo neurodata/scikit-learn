@@ -191,7 +191,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             # csr.
             check_X_params = dict(dtype=DTYPE, accept_sparse="csc")
             check_y_params = dict(ensure_2d=False, dtype=None)
-            if y is not None:
+            if y is not None or self._get_tags()["requires_y"]:
                 X, y = self._validate_data(
                     X, y, validate_separately=(check_X_params, check_y_params)
                 )

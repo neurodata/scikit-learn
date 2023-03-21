@@ -18,11 +18,12 @@ are subsampled due to computational constraints.
 
 import pandas as pd
 from datetime import datetime
-import openml
+
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier, ObliqueRandomForestClassifier
 from sklearn.model_selection import RepeatedKFold, cross_validate
+from sklearn.datasets import fetch_openml
 
 random_state = 123456
 t0 = datetime.now()
@@ -31,7 +32,7 @@ df = pd.DataFrame()
 
 
 def load_cc18(data_id):
-    dat = openml.datasets.get_dataset(data_id, download_data=False)
+    dat = fetch_openml(data_id=data_id)
     d_name = dat.name
     d = dat.get_data()[0]
 
