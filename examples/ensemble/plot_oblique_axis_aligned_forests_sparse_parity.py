@@ -1,18 +1,18 @@
 """
-==========================================================================================
-Plot oblique forest and axis-aligned random forest predictions on sparse parity simulation
-==========================================================================================
+============================================================================
+Plot oblique forest and axis-aligned random forest predictions on simulation
+============================================================================
 A performance comparison between oblique forest and standard axis-
 aligned random forest using sparse parity simulation dataset.
-Sparse parity is a variation of the noisy parity problem, 
-which itself is a multivariate generalization of the noisy XOR problem. 
-This is a binary classification task in high dimensions. The simulation 
-will generate uniformly distributed `n_samples` number of sample points 
-in the range of -1 and +1 with `p` number of features. `p*` is a 
-parameter used to limit features that carry information about the class. 
-The informative binary label is then defined as 1 if there are odd number 
-of the sum of data `X` across first `p*` features that are greater than 0, 
-otherwise the label is defined as 0. The simulation is further detailed 
+Sparse parity is a variation of the noisy parity problem,
+which itself is a multivariate generalization of the noisy XOR problem.
+This is a binary classification task in high dimensions. The simulation
+will generate uniformly distributed `n_samples` number of sample points
+in the range of -1 and +1 with `p` number of features. `p*` is a
+parameter used to limit features that carry information about the class.
+The informative binary label is then defined as 1 if there are odd number
+of the sum of data `X` across first `p*` features that are greater than 0,
+otherwise the label is defined as 0. The simulation is further detailed
 in this [publication](https://epubs.siam.org/doi/epdf/10.1137/1.9781611974973.56).
 """
 
@@ -22,13 +22,13 @@ from datetime import datetime
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier, ObliqueRandomForestClassifier
-from sklearn.model_selection import train_test_split, RepeatedKFold, cross_validate
+from sklearn.model_selection import RepeatedKFold, cross_validate
 
 random_state = 123456
 t0 = datetime.now()
 
 
-def sparse_parity(n_samples, p=20, p_star=3, random_seed=None, **kwarg):
+def sparse_parity(n_samples, p=20, p_star=3, random_seed=None):
     if random_seed:
         np.random.seed(random_seed)
 

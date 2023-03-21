@@ -4,10 +4,11 @@ Plot oblique forest and axis-aligned random forest predictions on cc18 datasets
 ===============================================================================
 A performance comparison between oblique forest and standard axis-
 aligned random forest using three datasets from OpenML benchmarking suites.
-Two of these datasets, namely [WDBC](https://www.openml.org/search?type=data&sort=runs&id=1510) 
-and [Phishing Website](https://www.openml.org/search?type=data&sort=runs&id=4534) datasets
-consist of 31 features where the former dataset is entirely numeric
-and the latter dataset is entirely norminal. The third dataset, dubbed 
+Two of these datasets, namely
+[WDBC](https://www.openml.org/search?type=data&sort=runs&id=1510)
+and [Phishing Website](https://www.openml.org/search?type=data&sort=runs&id=4534)
+datasets consist of 31 features where the former dataset is entirely numeric
+and the latter dataset is entirely norminal. The third dataset, dubbed
 [cnae-9](https://www.openml.org/search?type=data&status=active&id=1468), is a
 numeric dataset that has notably large feature space of 857 features. As you
 will notice, of these three datasets, the oblique forest outperforms axis-aligned
@@ -15,14 +16,13 @@ random forest on cnae-9 utilizing sparse random projection machanism. All datase
 are subsampled due to computational constraints.
 """
 
-import numpy as np
 import pandas as pd
 from datetime import datetime
 import openml
 import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier, ObliqueRandomForestClassifier
-from sklearn.model_selection import train_test_split, RepeatedKFold, cross_validate
+from sklearn.model_selection import RepeatedKFold, cross_validate
 
 random_state = 123456
 t0 = datetime.now()
@@ -79,7 +79,6 @@ def get_scores(X, y, d_name="UNK", n_cv=5, n_repeats=2, random_state=1, kwargs=N
 
 
 def load_best_params(data_ids):
-    # folder_path = "/home/jshinm/Desktop/workstation/sklearn-jms/notebook/hidden/output/"
     folder_path = None
     params = []
 
