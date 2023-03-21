@@ -273,6 +273,41 @@ cdef class Splitter(BaseSplitter):
 
         return self.criterion.node_impurity()
 
+    cdef bint check_presplit_conditions(
+        self,
+        SplitRecord current_split,
+    ) noexcept nogil:
+        """Check stopping conditions pre-split.
+        
+        This is typically a metric that is cheaply computed given the
+        current proposed split, which is stored as a the `current_split`
+        argument.
+        """
+        cdef SIZE_t min_samples_leaf = self.min_samples_leaf
+
+        if (((current_split.pos - self.start) < min_samples_leaf) or
+                ((self.end - current_split.pos) < min_samples_leaf)):
+            return 1
+        
+        return 0
+
+    cdef bint check_postsplit_conditions(
+        self
+    ) noexcept nogil:
+        """Check stopping conditions after evaluating the split.
+        
+        This takes some metric that is stored in the Criterion
+        object and checks against internal stop metrics.
+        """
+        cdef double min_weight_leaf = self.min_weight_leaf
+
+        # Reject if min_weight_leaf is not satisfied
+        if ((self.criterion.weighted_n_left < min_weight_leaf) or
+                (self.criterion.weighted_n_right < min_weight_leaf)):
+            return 1
+        
+        return 0
+
 # Introduce a fused-class to make it possible to share the split implementation
 # between the dense and sparse cases in the node_split_best and node_split_random
 # functions. The alternative would have been to use inheritance-based polymorphism
@@ -401,15 +436,13 @@ cdef inline int node_split_best(
             current_split.pos = p
 
             # Reject if min_samples_leaf is not guaranteed
-            if (((current_split.pos - start) < min_samples_leaf) or
-                    ((end - current_split.pos) < min_samples_leaf)):
+            if splitter.check_presplit_conditions(current_split) == 1:
                 continue
 
             criterion.update(current_split.pos)
 
             # Reject if min_weight_leaf is not satisfied
-            if ((criterion.weighted_n_left < min_weight_leaf) or
-                    (criterion.weighted_n_right < min_weight_leaf)):
+            if splitter.check_postsplit_conditions() == 1:
                 continue
 
             current_proxy_improvement = criterion.proxy_impurity_improvement()
@@ -697,8 +730,7 @@ cdef inline int node_split_random(
         current_split.pos = partitioner.partition_samples(current_split.threshold)
 
         # Reject if min_samples_leaf is not guaranteed
-        if (((current_split.pos - start) < min_samples_leaf) or
-                ((end - current_split.pos) < min_samples_leaf)):
+        if splitter.check_presplit_conditions(current_split) == 1:
             continue
 
         # Evaluate split
@@ -708,8 +740,7 @@ cdef inline int node_split_random(
         criterion.update(current_split.pos)
 
         # Reject if min_weight_leaf is not satisfied
-        if ((criterion.weighted_n_left < min_weight_leaf) or
-                (criterion.weighted_n_right < min_weight_leaf)):
+        if splitter.check_postsplit_conditions() == 1:
             continue
 
         current_proxy_improvement = criterion.proxy_impurity_improvement()

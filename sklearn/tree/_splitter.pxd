@@ -102,3 +102,12 @@ cdef class Splitter(BaseSplitter):
         const DOUBLE_t[:, ::1] y,
         const DOUBLE_t[:] sample_weight
     ) except -1
+
+    # Methods that allow modifications to stopping conditions
+    cdef bint check_presplit_conditions(
+        self,
+        SplitRecord current_split,
+    ) noexcept nogil
+    cdef bint check_postsplit_conditions(
+        self
+    ) noexcept nogil

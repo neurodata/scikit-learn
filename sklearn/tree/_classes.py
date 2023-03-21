@@ -192,9 +192,9 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             check_X_params = dict(dtype=DTYPE, accept_sparse="csc")
             check_y_params = dict(ensure_2d=False, dtype=None)
             if y is not None:
-                X, y = self._validate_data(X, y, validate_separately=(
-                    check_X_params, check_y_params
-                ))
+                X, y = self._validate_data(
+                    X, y, validate_separately=(check_X_params, check_y_params)
+                )
             else:
                 X = self._validate_data(X, **check_X_params)
             if issparse(X):
@@ -2086,10 +2086,7 @@ class ObliqueDecisionTreeClassifier(DecisionTreeClassifier):
 
     _parameter_constraints = {
         **DecisionTreeClassifier._parameter_constraints,
-        "feature_combinations": [
-            Interval(Real, 1.0, None, closed="left"),
-            None
-        ],
+        "feature_combinations": [Interval(Real, 1.0, None, closed="left"), None],
     }
 
     def __init__(
