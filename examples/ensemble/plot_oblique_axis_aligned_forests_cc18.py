@@ -16,6 +16,7 @@ random forest on cnae-9 utilizing sparse random projection machanism. All datase
 are subsampled due to computational constraints.
 """
 
+import numpy as np
 import pandas as pd
 from datetime import datetime
 
@@ -26,21 +27,24 @@ from sklearn.model_selection import RepeatedKFold, cross_validate
 from sklearn.datasets import fetch_openml
 
 random_state = 123456
+rng = np.random.default_rng(random_state)
 t0 = datetime.now()
 data_ids = [11, 40499]  # openml dataset id
 df = pd.DataFrame()
 
 
 def load_cc18(data_id):
-    dat = fetch_openml(data_id=data_id)
-    d_name = dat.name
-    d = dat.get_data()[0]
+    dat = fetch_openml(data_id=data_id, as_frame=False)
+
+    d_name = dat["details"]["name"]
+    d = dat["data"]
+    y = dat["target"]
 
     # Subsampling large datasets
     n = int(d.shape[0] * 0.1)
-    d = d.sample(n, random_state=random_state)
-    X, y = d.iloc[:, :-1], d.iloc[:, -1]
-
+    subsample_idx = rng.choice(np.arange(d.shape[0]), n)
+    X = d[subsample_idx, :]
+    y = y[subsample_idx, ...]
     return X, y, d_name
 
 
