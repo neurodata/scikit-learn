@@ -44,16 +44,36 @@
 .. |PytestMinVersion| replace:: 5.3.1
 .. |PlotlyMinVersion| replace:: 5.10.0
 
-.. image:: https://raw.githubusercontent.com/scikit-learn/scikit-learn/main/doc/logos/scikit-learn-logo.png
-  :target: https://scikit-learn.org/
+``scikit-learn-tree`` is a maintained fork of scikit-learn, which advances the tree submodule, while staying in-line
+with changes from upstream scikit-learn. It is an exact stand-in for ``sklearn`` in package imports, but is
+released under the name ``scikit-learn-tree`` to avoid confusion.
 
-This is a maintained fork of scikit-learn, which advances the tree submodule, while staying in-line
-with changes from upstream scikit-learn. It is currently maintained by a team of volunteers.
+It is currently maintained by a team of volunteers.
 
-**scikit-learn** is a Python module for machine learning built on top of
-SciPy and is distributed under the 3-Clause BSD license.
+The upstream package **scikit-learn** is a Python module for machine learning built on top of
+SciPy and is distributed under the 3-Clause BSD license. Refer to their website for all documentation
+needs: https://scikit-learn.org.
 
-Website: https://scikit-learn.org
+Why a fork?
+-----------
+Currently, the scikit-learn tree submodule is difficult to extend. Requests to modularize
+and improve the extensibility of the code is currently unsupported, or may take a long time.
+The desire for advanced tree models that also leverage the robustness of scikit-learn is desirable.
+
+However, "hard-forking" via copy/pasting the explicit Python/Cython code into another tree package
+altogether is undesirable because it results in a tree codebase that is inherently different
+and not compatible with ``scikit-learn``. For example, `quantile-forests <https://github.com/zillow/quantile-forest>`_,
+and `EconML <https://github.com/py-why/EconML>`_ do this, and their current tree submodules
+cannot take advantage of improvements made in upstream ``scikit-learn``.
+
+An example of seamless integration would be `scikit-survival <https://github.com/sebp/scikit-survival>`_, which
+only needs to implement a subclass of the Cython ``Criterion`` oject in their code to enable survival trees.
+
+Maintaining a "soft-fork" of ``scikit-learn`` in the form of a repository fork allows us to develop
+a separate package that serves as a stand-in for ``sklearn`` in any package, extends the tree submodule
+and can also be synced with upstream changes in ``scikit-learn``. This enables this fork to always
+take advantage of improvements made in ``scikit-learn`` main upstream, while providing a customizable
+tree API.
 
 Installation
 ------------
@@ -75,11 +95,7 @@ User installation
 If you already have a working installation of numpy and scipy,
 the easiest way to install scikit-learn is using ``pip``::
 
-    pip install -U scikit-learn
-
-or ``conda``::
-
-    conda install -c conda-forge scikit-learn
+    pip install -U scikit-learn-tree
 
 The documentation includes more detailed `installation instructions <https://scikit-learn.org/stable/install.html>`_.
 

@@ -30,19 +30,19 @@ except ImportError:
 builtins.__SKLEARN_SETUP__ = True
 
 
-DISTNAME = "scikit-learn"
-DESCRIPTION = "A set of python modules for machine learning and data mining"
+DISTNAME = "scikit-learn-tree"
+DESCRIPTION = "A maintained fork of scikit-learn that extends the tree submodule."
 with open("README.rst") as f:
     LONG_DESCRIPTION = f.read()
-MAINTAINER = "Andreas Mueller"
-MAINTAINER_EMAIL = "amueller@ais.uni-bonn.de"
+MAINTAINER = "Adam Li"
+MAINTAINER_EMAIL = "adam.li@columbia.edu"
 URL = "http://scikit-learn.org"
-DOWNLOAD_URL = "https://pypi.org/project/scikit-learn/#files"
+DOWNLOAD_URL = "https://pypi.org/project/scikit-learn-tree/#files"
 LICENSE = "new BSD"
 PROJECT_URLS = {
-    "Bug Tracker": "https://github.com/scikit-learn/scikit-learn/issues",
+    "Bug Tracker": "https://github.com/neurodata/scikit-learn/issues",
     "Documentation": "https://scikit-learn.org/stable/documentation.html",
-    "Source Code": "https://github.com/scikit-learn/scikit-learn",
+    "Source Code": "https://github.com/neurodata/scikit-learn",
 }
 
 # We can actually import a restricted version of sklearn that
@@ -170,11 +170,11 @@ def check_package_status(package, min_version):
         package_status["up_to_date"] = False
         package_status["version"] = ""
 
-    req_str = "scikit-learn requires {} >= {}.\n".format(package, min_version)
+    req_str = "scikit-learn-tree requires {} >= {}.\n".format(package, min_version)
 
     instructions = (
         "Installation instructions are available on the "
-        "scikit-learn website: "
+        "scikit-learn-tree website: "
         "http://scikit-learn.org/stable/install.html\n"
     )
 
