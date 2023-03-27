@@ -1,3 +1,5 @@
+.. _fork-changelog:
+
 Major Changes of the Fork
 =========================
 
