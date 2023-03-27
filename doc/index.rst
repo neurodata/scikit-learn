@@ -30,12 +30,14 @@ tree API.
 
 Contents
 --------
+Here is a link to the original sklearn docs for the sake of removing sphinx errors: `local mirror <sphinx_index.html>`_.
 
 .. toctree::
    :maxdepth: 1
 
-   Changelog of Fork<fork_changelog>
-   Installation<fork_install>
+   Changelog of Fork<fork-changelog>
+   Installation<fork-install>
+
 
 Indices and tables
 ------------------

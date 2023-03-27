@@ -40,6 +40,7 @@ Single and multi-output problems are both handled.
 # License: BSD 3 clause
 
 
+import time
 from numbers import Integral, Real
 from warnings import catch_warnings, simplefilter, warn
 import threading
@@ -73,10 +74,11 @@ from ..utils.validation import (
     _check_sample_weight,
     _check_feature_names_in,
 )
+from ..utils._openmp_helpers import _openmp_effective_n_threads
 from ..utils.validation import _num_samples
 from ..utils._param_validation import Interval, StrOptions
 from ..utils._param_validation import RealNotInt
-
+from ._hist_gradient_boosting.binning import _BinMapper
 
 __all__ = [
     "RandomForestClassifier",
@@ -427,6 +429,48 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
         n_more_estimators = self.n_estimators - len(self.estimators_)
 
+        if self.max_bins is not None:
+            # `_openmp_effective_n_threads` is used to take cgroups CPU quotes
+            # into account when determine the maximum number of threads to use.
+            n_threads = _openmp_effective_n_threads()
+
+            # Bin the data
+            # For ease of use of the API, the user-facing GBDT classes accept the
+            # parameter max_bins, which doesn't take into account the bin for
+            # missing values (which is always allocated). However, since max_bins
+            # isn't the true maximal number of bins, all other private classes
+            # (binmapper, histbuilder...) accept n_bins instead, which is the
+            # actual total number of bins. Everywhere in the code, the
+            # convention is that n_bins == max_bins + 1
+            n_bins = self.max_bins + 1  # + 1 for missing values
+            self._bin_mapper = _BinMapper(
+                n_bins=n_bins,
+                is_categorical=self.is_categorical_,
+                known_categories=None,
+                random_state=random_state,
+                n_threads=n_threads,
+            )
+            X_binned = self._bin_data(X_binned, is_training_data=True)
+
+            # Uses binned data to check for missing values
+            has_missing_values = (
+                (X_binned == self._bin_mapper.missing_values_bin_idx_)
+                .any(axis=0)
+                .astype(np.uint8)
+            )
+
+            # we need this stateful variable to tell raw_predict() that it was
+            # called from fit() (this current method), and that the data it has
+            # received is pre-binned.
+            # predicting is faster on pre-binned data, so we want early stopping
+            # predictions to be made on pre-binned data. Unfortunately the _scorer
+            # can only call predict() or predict_proba(), not raw_predict(), and
+            # there's no way to tell the scorer that it needs to predict binned
+            # data.
+            self._in_fit = True
+        else:
+            X_binned = X
+
         if n_more_estimators < 0:
             raise ValueError(
                 "n_estimators=%d must be larger or equal to "
@@ -634,6 +678,35 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
         all_importances = np.mean(all_importances, axis=0, dtype=np.float64)
         return all_importances / np.sum(all_importances)
+
+    def _bin_data(self, X, is_training_data):
+        """Bin data X.
+
+        If is_training_data, then fit the _bin_mapper attribute.
+        Else, the binned data is converted to a C-contiguous array.
+        """
+
+        description = "training" if is_training_data else "validation"
+        if self.verbose:
+            print(
+                "Binning {:.3f} GB of {} data: ".format(X.nbytes / 1e9, description),
+                end="",
+                flush=True,
+            )
+        tic = time()
+        if is_training_data:
+            X_binned = self._bin_mapper.fit_transform(X)  # F-aligned array
+        else:
+            X_binned = self._bin_mapper.transform(X)  # F-aligned array
+            # We convert the array to C-contiguous since predicting is faster
+            # with this layout (training is faster on F-arrays though)
+            X_binned = np.ascontiguousarray(X_binned)
+        toc = time()
+        if self.verbose:
+            duration = toc - tic
+            print("{:.3f} s".format(duration))
+
+        return X_binned
 
 
 def _accumulate_prediction(predict, X, out, lock):
