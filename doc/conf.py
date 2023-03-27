@@ -211,7 +211,7 @@ html_static_path = ["images"]
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
-html_additional_pages = {"sklearn_index": "index.html"}
+html_additional_pages = {"index": "index.html"}
 
 # If false, no module index is generated.
 html_domain_indices = False
