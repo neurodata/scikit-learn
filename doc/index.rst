@@ -35,9 +35,8 @@ Here is a link to the original sklearn docs for the sake of removing sphinx erro
 .. toctree::
    :maxdepth: 1
 
-   Changelog of Fork<fork-changelog>
-   Installation<fork-install>
-
+   Changelog of Fork<fork_changelog>
+   Installation<fork_install>
 
 Indices and tables
 ------------------
