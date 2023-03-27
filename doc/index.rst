@@ -36,8 +36,6 @@ Contents
 
    Changelog of Fork<fork_changelog>
    Installation<fork_install>
-   OG landing page for the sake of sphinx errors <sklearn_index>
-   OG landing page for the sake of sphinx errors <templates/index.html>
 
 Indices and tables
 ------------------

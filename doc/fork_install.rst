@@ -14,7 +14,7 @@ and recommend therefore installing with ``pip``.
 
 There are different ways to install scikit-learn-tree:
 
-  * :ref:`Install the latest official release <install_official_release>`. This
+  * :ref:`Install the latest official release <install_fork_release>`. This
     is the best approach for most users. It will provide a stable version
     and pre-built packages are available for most platforms.
     
@@ -24,7 +24,7 @@ There are different ways to install scikit-learn-tree:
     brand-new code. This is also needed for users who wish to contribute to the
     project.
 
-.. _install_official_release:
+.. _install_fork_release:
 
 Installing the latest release
 =============================
