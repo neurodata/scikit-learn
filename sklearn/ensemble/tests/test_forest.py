@@ -46,7 +46,6 @@ from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import ObliqueRandomForestClassifier
 from sklearn.ensemble import RandomTreesEmbedding
 from sklearn.metrics import explained_variance_score, f1_score
 from sklearn.model_selection import train_test_split, cross_val_score
@@ -99,7 +98,6 @@ DEFAULT_JOBLIB_BACKEND = joblib.parallel.get_active_backend()[0].__class__
 FOREST_CLASSIFIERS = {
     "ExtraTreesClassifier": ExtraTreesClassifier,
     "RandomForestClassifier": RandomForestClassifier,
-    "ObliqueRandomForestClassifier": ObliqueRandomForestClassifier,
 }
 
 FOREST_REGRESSORS = {
@@ -627,9 +625,6 @@ def test_forest_classifier_oob(
     ForestClassifier, X, y, X_type, lower_bound_accuracy, oob_score
 ):
     """Check that OOB score is close to score on a test set."""
-    if ForestClassifier == ObliqueRandomForestClassifier and X_type != "array":
-        pytest.skip()
-
     X = _convert_container(X, constructor_name=X_type)
     X_train, X_test, y_train, y_test = train_test_split(
         X,
@@ -1251,8 +1246,6 @@ def check_sparse_input(name, X, X_sparse, y):
 @pytest.mark.parametrize("name", FOREST_ESTIMATORS)
 @pytest.mark.parametrize("sparse_matrix", (csr_matrix, csc_matrix, coo_matrix))
 def test_sparse_input(name, sparse_matrix):
-    if name == "ObliqueRandomForestClassifier":
-        pytest.skip()
     X, y = datasets.make_multilabel_classification(random_state=0, n_samples=50)
 
     check_sparse_input(name, X, sparse_matrix(X), y)
@@ -1285,7 +1278,6 @@ def check_memory_layout(name, dtype):
 
     if (
         est.estimator.splitter in SPARSE_SPLITTERS
-        and name != "ObliqueRandomForestClassifier"
     ):
         # csr matrix
         X = csr_matrix(iris.data, dtype=dtype)
@@ -1619,15 +1611,14 @@ def check_decision_path(name):
         np.diff(n_nodes_ptr), [e.tree_.node_count for e in est.estimators_]
     )
 
-    if name != "ObliqueRandomForestClassifier":
-        # Assert that leaves index are correct
-        leaves = est.apply(X)
-        for est_id in range(leaves.shape[1]):
-            leave_indicator = [
-                indicator[i, n_nodes_ptr[est_id] + j]
-                for i, j in enumerate(leaves[:, est_id])
-            ]
-            assert_array_almost_equal(leave_indicator, np.ones(shape=n_samples))
+    # Assert that leaves index are correct
+    leaves = est.apply(X)
+    for est_id in range(leaves.shape[1]):
+        leave_indicator = [
+            indicator[i, n_nodes_ptr[est_id] + j]
+            for i, j in enumerate(leaves[:, est_id])
+        ]
+        assert_array_almost_equal(leave_indicator, np.ones(shape=n_samples))
 
 
 @pytest.mark.parametrize("name", FOREST_CLASSIFIERS_REGRESSORS)
@@ -1867,91 +1858,6 @@ def test_random_trees_embedding_feature_names_out():
     assert_array_equal(expected_names, names)
 
 
-def test_oblique_forest_sparse_parity():
-    # Sparse parity dataset
-    n = 1000
-    X, y = _sparse_parity(n, random_state=0)
-    n_test = 0.1
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=n_test,
-        random_state=0,
-    )
-
-    rc_clf = ObliqueRandomForestClassifier(max_features=None, random_state=0)
-    rc_clf.fit(X_train, y_train)
-    y_hat = rc_clf.predict(X_test)
-    rc_accuracy = accuracy_score(y_test, y_hat)
-
-    ri_clf = RandomForestClassifier(random_state=0)
-    ri_clf.fit(X_train, y_train)
-    y_hat = ri_clf.predict(X_test)
-    ri_accuracy = accuracy_score(y_test, y_hat)
-
-    assert ri_accuracy < rc_accuracy
-    assert ri_accuracy > 0.45
-    assert rc_accuracy > 0.5
-
-
-def test_oblique_forest_orthant():
-    """Test oblique forests on orthant problem.
-
-    It is expected that axis-aligned and oblique-aligned
-    forests will perform similarly.
-    """
-    n = 500
-    X, y = _orthant(n, p=6, random_state=0)
-    n_test = 0.3
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=n_test,
-        random_state=0,
-    )
-
-    rc_clf = ObliqueRandomForestClassifier(max_features=None, random_state=0)
-    rc_clf.fit(X_train, y_train)
-    y_hat = rc_clf.predict(X_test)
-    rc_accuracy = accuracy_score(y_test, y_hat)
-
-    ri_clf = RandomForestClassifier(max_features="sqrt", random_state=0)
-    ri_clf.fit(X_train, y_train)
-    y_hat = ri_clf.predict(X_test)
-    ri_accuracy = accuracy_score(y_test, y_hat)
-
-    assert rc_accuracy >= ri_accuracy
-    assert ri_accuracy > 0.84
-    assert rc_accuracy > 0.85
-
-
-def test_oblique_forest_trunk():
-    """Test oblique vs axis-aligned forests on Trunk."""
-    n = 1000
-    X, y = _trunk(n, p=100, random_state=0)
-    n_test = 0.2
-    X_train, X_test, y_train, y_test = train_test_split(
-        X,
-        y,
-        test_size=n_test,
-        random_state=0,
-    )
-
-    rc_clf = ObliqueRandomForestClassifier(max_features=X.shape[1], random_state=0)
-    rc_clf.fit(X_train, y_train)
-    y_hat = rc_clf.predict(X_test)
-    rc_accuracy = accuracy_score(y_test, y_hat)
-
-    ri_clf = RandomForestClassifier(max_features="sqrt", random_state=0)
-    ri_clf.fit(X_train, y_train)
-    y_hat = ri_clf.predict(X_test)
-    ri_accuracy = accuracy_score(y_test, y_hat)
-
-    assert rc_accuracy > ri_accuracy
-    assert ri_accuracy > 0.83
-    assert rc_accuracy > 0.86
-
-
 # TODO(1.4): remove in 1.4
 @pytest.mark.parametrize(
     "name",
@@ -2001,3 +1907,52 @@ def test_round_samples_to_one_when_samples_too_low(class_weight):
         n_estimators=10, max_samples=1e-4, class_weight=class_weight, random_state=0
     )
     forest.fit(X, y)
+
+
+@pytest.mark.parametrize("name", FOREST_CLASSIFIERS)
+def test_classification_toy_withbins(name):
+    """Check classification on a toy dataset."""
+    ForestClassifier = FOREST_CLASSIFIERS[name]
+
+    clf = ForestClassifier(n_estimators=10, random_state=1, max_bins=255)
+    clf.fit(X, y)
+    assert_array_equal(clf.predict(T), true_result)
+    assert 10 == len(clf)
+
+    clf = ForestClassifier(n_estimators=10, max_features=1, random_state=1, max_bins=255)
+    clf.fit(X, y)
+    assert_array_equal(clf.predict(T), true_result)
+    assert 10 == len(clf)
+
+    # also test apply
+    leaf_indices = clf.apply(X)
+    assert leaf_indices.shape == (len(X), clf.n_estimators)
+
+
+@pytest.mark.parametrize("name", FOREST_REGRESSORS)
+@pytest.mark.parametrize(
+    "criterion", ("squared_error", "absolute_error", "friedman_mse")
+)
+def test_regression_criterion_withbins(name, criterion):
+    # Check consistency on regression dataset.
+    ForestRegressor = FOREST_REGRESSORS[name]
+
+    reg = ForestRegressor(n_estimators=5, criterion=criterion, random_state=1, max_bins=250)
+    reg.fit(X_reg, y_reg)
+    score = reg.score(X_reg, y_reg)
+    assert (
+        score > 0.93
+    ), "Failed with max_features=None, criterion %s and score = %f" % (
+        criterion,
+        score,
+    )
+
+    reg = ForestRegressor(
+        n_estimators=5, criterion=criterion, max_features=6, random_state=1, max_bins=250
+    )
+    reg.fit(X_reg, y_reg)
+    score = reg.score(X_reg, y_reg)
+    assert score > 0.92, "Failed with max_features=6, criterion %s and score = %f" % (
+        criterion,
+        score,
+    )
