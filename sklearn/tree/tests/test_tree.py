@@ -466,9 +466,7 @@ def test_importances():
     assert_array_equal(clf.feature_importances_, clf2.feature_importances_)
 
 
-@pytest.mark.parametrize(
-    "clf", [DecisionTreeClassifier()]
-)
+@pytest.mark.parametrize("clf", [DecisionTreeClassifier()])
 def test_importances_raises(clf):
     # Check if variable importance before fit raises ValueError.
     with pytest.raises(ValueError):
