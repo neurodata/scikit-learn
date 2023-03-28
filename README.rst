@@ -232,11 +232,41 @@ Python API:
   users from generalizing the ``Criterion`` and ``Splitter`` and creating a neat Python API wrapper.
   Moreover, the ``Tree`` class is not customizable.
   - Our fix: We internally implement a private function to actually build the entire tree, ``BaseDecisionTree._build_tree``, which can be overridden in subclasses that customize the criterion, splitter, or tree, or any combination of them.
+- ``sklearn.ensemble.BaseForest`` and its subclass algorithms are slow when ``n_samples`` is very high. Binning
+  features into a histogram, which is the basis of "LightGBM" and "HistGradientBoostingClassifier" is a computational
+  trick that can both significantly increase runtime efficiency, but also help prevent overfitting in trees, since
+  the sorting in "BestSplitter" is done on bins rather than the continuous feature values. This would enable
+  random forests and their variants to scale to millions of samples.
+  - Our fix: We added a ``max_bins=None`` keyword argument to the ``BaseForest`` class, and all its subclasses. The default behavior is no binning. The current implementation is not necessarily efficient. There are several improvements to be made. See below.
 
 Overall, the existing tree models, such as :class:`~sklearn.tree.DecisionTreeClassifier`
 and :class:`~sklearn.ensemble.RandomForestClassifier` all work exactly the same as they
 would in ``scikit-learn`` main, but these extensions enable 3rd-party packages to extend
 the Cython/Python API easily.
+
+Roadmap
+-------
+There are several improvements that can be made in this fork. Primarily, the binning feature
+promises to make Random Forests and their variants ultra-fast. However, the binning needs
+to be implemented in a similar fashion to ``HistGradientBoostingClassifier``, which passes
+in the binning thresholds throughout the tree construction step, such that the split nodes
+store the actual numerical value of the bin rather than the "bin index". This requires
+modifying the tree Cython code to take in a ``binning_thresholds`` parameter that is part
+of the ``_BinMapper`` fitted class. This also allows us not to do any binning during prediction/apply
+time because the tree already stores the "numerical" threshold value we would want to apply
+to any incoming ``X`` that is not binned.
+
+Besides that modification, the tree and splitter need to be able to handle not just ``np.float32``
+data (the type for X normally in Random Forests), but also ``uint8`` data (the type for X when it
+is binned in to e.g. 255 bins). This would not only save RAM since ``uint8`` storage of millions
+of samples would result in many GB saved, but also improved runtime.
+
+So in summary, the Cython code of the tree submodule needs to take in an extra parameter for
+the binning thresholds if binning occurs and also be able to handle ``X`` being of dtype ``uint8``.
+Afterwards, Random Forests will have fully leveraged the binning feature.
+
+Something to keep in mind is that upstream scikit-learn is actively working on incorporating
+missing-value handling and categorical handling into Random Forests.
 
 Next steps
 ----------
