@@ -54,7 +54,7 @@ from sklearn.svm import LinearSVC
 from sklearn.utils.parallel import Parallel
 from sklearn.utils.validation import check_random_state
 
-from sklearn.metrics import mean_squared_error, accuracy_score
+from sklearn.metrics import mean_squared_error
 
 from sklearn.tree._classes import SPARSE_SPLITTERS
 
@@ -1276,9 +1276,7 @@ def check_memory_layout(name, dtype):
     y = iris.target
     assert_array_almost_equal(est.fit(X, y).predict(X), y)
 
-    if (
-        est.estimator.splitter in SPARSE_SPLITTERS
-    ):
+    if est.estimator.splitter in SPARSE_SPLITTERS:
         # csr matrix
         X = csr_matrix(iris.data, dtype=dtype)
         y = iris.target
@@ -1919,7 +1917,9 @@ def test_classification_toy_withbins(name):
     assert_array_equal(clf.predict(T), true_result)
     assert 10 == len(clf)
 
-    clf = ForestClassifier(n_estimators=10, max_features=1, random_state=1, max_bins=255)
+    clf = ForestClassifier(
+        n_estimators=10, max_features=1, random_state=1, max_bins=255
+    )
     clf.fit(X, y)
     assert_array_equal(clf.predict(T), true_result)
     assert 10 == len(clf)
@@ -1937,7 +1937,9 @@ def test_regression_criterion_withbins(name, criterion):
     # Check consistency on regression dataset.
     ForestRegressor = FOREST_REGRESSORS[name]
 
-    reg = ForestRegressor(n_estimators=5, criterion=criterion, random_state=1, max_bins=250)
+    reg = ForestRegressor(
+        n_estimators=5, criterion=criterion, random_state=1, max_bins=250
+    )
     reg.fit(X_reg, y_reg)
     score = reg.score(X_reg, y_reg)
     assert (
@@ -1948,7 +1950,11 @@ def test_regression_criterion_withbins(name, criterion):
     )
 
     reg = ForestRegressor(
-        n_estimators=5, criterion=criterion, max_features=6, random_state=1, max_bins=250
+        n_estimators=5,
+        criterion=criterion,
+        max_features=6,
+        random_state=1,
+        max_bins=250,
     )
     reg.fit(X_reg, y_reg)
     score = reg.score(X_reg, y_reg)

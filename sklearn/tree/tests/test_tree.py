@@ -27,7 +27,6 @@ from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_poisson_deviance
 
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_val_score
 
 from sklearn.utils._testing import assert_array_equal
 from sklearn.utils._testing import assert_array_almost_equal

@@ -463,9 +463,9 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             # code, we need to convert this into the original data's DTYPE because
             # the Cython code assumes that `DTYPE` is used.
             # The proper implementation will be a lot more complicated and should be
-            # tackled once scikit-learn has finalized their inclusion of missing data and
-            # categorical support for decision trees
-            X = self._bin_data(X, is_training_data=True)#.astype(DTYPE)
+            # tackled once scikit-learn has finalized their inclusion of missing data
+            # and categorical support for decision trees
+            X = self._bin_data(X, is_training_data=True)  # .astype(DTYPE)
         else:
             self._bin_mapper = None
 
@@ -747,7 +747,7 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
         class_weight=None,
         max_samples=None,
         base_estimator="deprecated",
-        max_bins=None
+        max_bins=None,
     ):
         super().__init__(
             estimator=estimator,
@@ -762,7 +762,7 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             class_weight=class_weight,
             max_samples=max_samples,
             base_estimator=base_estimator,
-            max_bins=max_bins
+            max_bins=max_bins,
         )
 
     @staticmethod
@@ -1025,7 +1025,7 @@ class ForestRegressor(RegressorMixin, BaseForest, metaclass=ABCMeta):
         warm_start=False,
         max_samples=None,
         base_estimator="deprecated",
-        max_bins=None
+        max_bins=None,
     ):
         super().__init__(
             estimator,
@@ -1039,7 +1039,7 @@ class ForestRegressor(RegressorMixin, BaseForest, metaclass=ABCMeta):
             warm_start=warm_start,
             max_samples=max_samples,
             base_estimator=base_estimator,
-            max_bins=max_bins
+            max_bins=max_bins,
         )
 
     def predict(self, X):
@@ -1497,7 +1497,7 @@ class RandomForestClassifier(ForestClassifier):
         class_weight=None,
         ccp_alpha=0.0,
         max_samples=None,
-        max_bins=None
+        max_bins=None,
     ):
         super().__init__(
             estimator=DecisionTreeClassifier(),
@@ -1522,7 +1522,7 @@ class RandomForestClassifier(ForestClassifier):
             warm_start=warm_start,
             class_weight=class_weight,
             max_samples=max_samples,
-            max_bins=max_bins
+            max_bins=max_bins,
         )
 
         self.criterion = criterion
@@ -1834,7 +1834,7 @@ class RandomForestRegressor(ForestRegressor):
         warm_start=False,
         ccp_alpha=0.0,
         max_samples=None,
-        max_bins=None
+        max_bins=None,
     ):
         super().__init__(
             estimator=DecisionTreeRegressor(),
@@ -1858,7 +1858,7 @@ class RandomForestRegressor(ForestRegressor):
             verbose=verbose,
             warm_start=warm_start,
             max_samples=max_samples,
-            max_bins=max_bins
+            max_bins=max_bins,
         )
 
         self.criterion = criterion
@@ -2186,7 +2186,7 @@ class ExtraTreesClassifier(ForestClassifier):
         class_weight=None,
         ccp_alpha=0.0,
         max_samples=None,
-        max_bins=None
+        max_bins=None,
     ):
         super().__init__(
             estimator=ExtraTreeClassifier(),
@@ -2211,7 +2211,7 @@ class ExtraTreesClassifier(ForestClassifier):
             warm_start=warm_start,
             class_weight=class_weight,
             max_samples=max_samples,
-            max_bins=max_bins
+            max_bins=max_bins,
         )
 
         self.criterion = criterion
@@ -2510,7 +2510,7 @@ class ExtraTreesRegressor(ForestRegressor):
         warm_start=False,
         ccp_alpha=0.0,
         max_samples=None,
-        max_bins=None
+        max_bins=None,
     ):
         super().__init__(
             estimator=ExtraTreeRegressor(),
@@ -2534,7 +2534,7 @@ class ExtraTreesRegressor(ForestRegressor):
             verbose=verbose,
             warm_start=warm_start,
             max_samples=max_samples,
-            max_bins=max_bins
+            max_bins=max_bins,
         )
 
         self.criterion = criterion
