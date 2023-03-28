@@ -1,0 +1,167 @@
+Metadata-Version: 2.1
+Name: scikit-learn-tree
+Version: 1.3.dev0
+Summary: A maintained fork of scikit-learn that extends the tree submodule.
+Home-page: http://scikit-learn.org
+Maintainer: Adam Li
+Maintainer-email: adam.li@columbia.edu
+License: new BSD
+Download-URL: https://pypi.org/project/scikit-learn-tree/#files
+Project-URL: Bug Tracker, https://github.com/neurodata/scikit-learn/issues
+Project-URL: Documentation, https://scikit-learn.org/stable/documentation.html
+Project-URL: Source Code, https://github.com/neurodata/scikit-learn
+Platform: UNKNOWN
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: C
+Classifier: Programming Language :: Python
+Classifier: Topic :: Software Development
+Classifier: Topic :: Scientific/Engineering
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Unix
+Classifier: Operating System :: MacOS
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Requires-Python: >=3.8
+Provides-Extra: examples
+Provides-Extra: docs
+Provides-Extra: tests
+Provides-Extra: benchmark
+License-File: COPYING
+
+.. -*- mode: rst -*-
+
+|Azure|_ |CirrusCI|_ |Codecov|_ |CircleCI|_ |Nightly wheels|_ |Black|_ |PythonVersion|_ |PyPi|_ |DOI|_ |Benchmark|_
+
+.. |Azure| image:: https://dev.azure.com/scikit-learn/scikit-learn/_apis/build/status/scikit-learn.scikit-learn?branchName=main
+.. _Azure: https://dev.azure.com/scikit-learn/scikit-learn/_build/latest?definitionId=1&branchName=main
+
+.. |CircleCI| image:: https://circleci.com/gh/scikit-learn/scikit-learn/tree/main.svg?style=shield&circle-token=:circle-token
+.. _CircleCI: https://circleci.com/gh/scikit-learn/scikit-learn
+
+.. |CirrusCI| image:: https://img.shields.io/cirrus/github/scikit-learn/scikit-learn/main?label=Cirrus%20CI
+.. _CirrusCI: https://cirrus-ci.com/github/scikit-learn/scikit-learn/main
+
+.. |Codecov| image:: https://codecov.io/gh/scikit-learn/scikit-learn/branch/main/graph/badge.svg?token=Pk8G9gg3y9
+.. _Codecov: https://codecov.io/gh/scikit-learn/scikit-learn
+
+.. |Nightly wheels| image:: https://github.com/scikit-learn/scikit-learn/workflows/Wheel%20builder/badge.svg?event=schedule
+.. _`Nightly wheels`: https://github.com/scikit-learn/scikit-learn/actions?query=workflow%3A%22Wheel+builder%22+event%3Aschedule
+
+.. |PythonVersion| image:: https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10-blue
+.. _PythonVersion: https://pypi.org/project/scikit-learn/
+
+.. |PyPi| image:: https://img.shields.io/pypi/v/scikit-learn
+.. _PyPi: https://pypi.org/project/scikit-learn
+
+.. |Black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+.. _Black: https://github.com/psf/black
+
+.. |DOI| image:: https://zenodo.org/badge/21369/scikit-learn/scikit-learn.svg
+.. _DOI: https://zenodo.org/badge/latestdoi/21369/scikit-learn/scikit-learn
+
+.. |Benchmark| image:: https://img.shields.io/badge/Benchmarked%20by-asv-blue
+.. _`Benchmark`: https://scikit-learn.org/scikit-learn-benchmarks/
+
+.. |PythonMinVersion| replace:: 3.8
+.. |NumPyMinVersion| replace:: 1.17.3
+.. |SciPyMinVersion| replace:: 1.5.0
+.. |JoblibMinVersion| replace:: 1.1.1
+.. |ThreadpoolctlMinVersion| replace:: 2.0.0
+.. |MatplotlibMinVersion| replace:: 3.1.3
+.. |Scikit-ImageMinVersion| replace:: 0.16.2
+.. |PandasMinVersion| replace:: 1.0.5
+.. |SeabornMinVersion| replace:: 0.9.0
+.. |PytestMinVersion| replace:: 5.3.1
+.. |PlotlyMinVersion| replace:: 5.10.0
+
+``scikit-learn-tree`` is a maintained fork of scikit-learn, which advances the tree submodule, while staying in-line
+with changes from upstream scikit-learn. It is an exact stand-in for ``sklearn`` in package imports, but is
+released under the name ``scikit-learn-tree`` to avoid confusion.
+
+It is currently maintained by a team of volunteers.
+
+The upstream package **scikit-learn** is a Python module for machine learning built on top of
+SciPy and is distributed under the 3-Clause BSD license. Refer to their website for all documentation
+needs: https://scikit-learn.org.
+
+Why a fork?
+-----------
+Currently, the scikit-learn tree submodule is difficult to extend. Requests to modularize
+and improve the extensibility of the code is currently unsupported, or may take a long time.
+The desire for advanced tree models that also leverage the robustness of scikit-learn is desirable.
+
+However, "hard-forking" via copy/pasting the explicit Python/Cython code into another tree package
+altogether is undesirable because it results in a tree codebase that is inherently different
+and not compatible with ``scikit-learn``. For example, `quantile-forests <https://github.com/zillow/quantile-forest>`_,
+and `EconML <https://github.com/py-why/EconML>`_ do this, and their current tree submodules
+cannot take advantage of improvements made in upstream ``scikit-learn``.
+
+An example of seamless integration would be `scikit-survival <https://github.com/sebp/scikit-survival>`_, which
+only needs to implement a subclass of the Cython ``Criterion`` oject in their code to enable survival trees.
+
+Maintaining a "soft-fork" of ``scikit-learn`` in the form of a repository fork allows us to develop
+a separate package that serves as a stand-in for ``sklearn`` in any package, extends the tree submodule
+and can also be synced with upstream changes in ``scikit-learn``. This enables this fork to always
+take advantage of improvements made in ``scikit-learn`` main upstream, while providing a customizable
+tree API.
+
+Installation
+------------
+
+Dependencies
+~~~~~~~~~~~~
+
+scikit-learn requires:
+
+- Python (>= |PythonMinVersion|)
+- NumPy (>= |NumPyMinVersion|)
+- SciPy (>= |SciPyMinVersion|)
+- joblib (>= |JoblibMinVersion|)
+- threadpoolctl (>= |ThreadpoolctlMinVersion|)
+
+User installation
+~~~~~~~~~~~~~~~~~
+
+If you already have a working installation of numpy and scipy,
+the easiest way to install scikit-learn is using ``pip``::
+
+    pip install -U scikit-learn-tree
+
+The documentation includes more detailed `installation instructions <https://scikit-learn.org/stable/install.html>`_.
+
+
+Changelog
+---------
+
+See the `changelog <https://scikit-learn.org/dev/whats_new.html>`__
+for a history of notable changes to scikit-learn.
+
+Development
+-----------
+
+We welcome new contributors of all experience levels, specifically to maintain the fork.
+Any contributions that make sure our fork is "better in-line" with scikit-learn upstream,
+or improves the tree submodule in anyway will be appreciated.
+
+The scikit-learn community goals are to be helpful, welcoming, and effective. The
+`Development Guide <https://scikit-learn.org/stable/developers/index.html>`_
+has detailed information about contributing code, documentation, tests, and
+more. We've included some basic information in this README.
+
+Important links
+~~~~~~~~~~~~~~~
+
+- Official source code repo: https://github.com/scikit-learn/scikit-learn
+- Download releases: https://pypi.org/project/scikit-learn/
+- Issue tracker: https://github.com/scikit-learn/scikit-learn/issues
+
+
