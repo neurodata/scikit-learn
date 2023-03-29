@@ -95,7 +95,7 @@ Installing scikit-learn-tree
 
 Scikit-learn-tree is a maintained fork of scikit-learn, which extends the
 tree submodule in a few ways documented in :ref:`changelog of the fork
-<fork-changelog>`. 
+<fork_changelog>`. 
 
 We release versions of scikit-learn-tree in an analagous fashion to
 scikit-learn main. Due to maintenance resources, we only release on PyPi
@@ -119,9 +119,7 @@ Installing the latest release
 -----------------------------
 We release wheels for common distributions and this is thus installable via pip.
 
-.. prompt:: bash $
-  
-  pip install scikit-learn-tree
+    pip install scikit-learn-tree
 
 This will install ``scikit-learn-tree`` under the namespace of ``sklearn``, which then
 can be used as a stand-in for any package that relies on the public API of ``sklearn``.
@@ -146,8 +144,10 @@ features to the fork, the building from source instructions are exactly the same
 as that of scikit-learn main, so please refer to `scikit-learn documentation <https://scikit-learn.org/stable/developers/advanced_installation.html#install-bleeding-edge>`_
 for instructions on building from source.
 
-Development
 ===========
+
+Development
+-----------
 
 We welcome new contributors of all experience levels, specifically to maintain the fork.
 Any contributions that make sure our fork is "better in-line" with scikit-learn upstream,
@@ -158,15 +158,18 @@ The scikit-learn community goals are to be helpful, welcoming, and effective. Th
 has detailed information about contributing code, documentation, tests, and
 more. We've included some basic information in this README.
 
-.. _fork-changelog:
-Major Changes of the Fork
 =========================
+
+.. _fork_changelog:
+
+Major Changes of the Fork
+-------------------------
 
 The purpose of this page is to illustrate some of the main features that
 ``scikit-learn-tree`` provides compared to ``scikit-learn``. It assumes a
 an understanding of core package ``scikit-learn`` and also decision trees
 models. Please refer to our :ref:`installation instructions
-<fork-installation-instructions>` for installing ``scikit-learn-tree``.
+<install_fork_release>` for installing ``scikit-learn-tree``.
 
 Scikit-learn-tree though operates as a stand-in for upstream ``scikit-learn``.
 It is used in packages exactly the same way and will support all features
