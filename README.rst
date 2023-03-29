@@ -98,8 +98,7 @@ Installing scikit-learn-tree
 ============================
 
 Scikit-learn-tree is a maintained fork of scikit-learn, which extends the
-tree submodule in a few ways documented in :ref:`changelog of the fork
-<fork_changelog>`. 
+tree submodule in a few ways documented in `fork_changelog`_. 
 
 We release versions of scikit-learn-tree in an analagous fashion to
 scikit-learn main. Due to maintenance resources, we only release on PyPi
@@ -107,11 +106,11 @@ and recommend therefore installing with ``pip``.
 
 There are different ways to install scikit-learn-tree:
 
-  * :ref:`Install the latest official release<install_fork_release>`. This
+  * Install the latest official release `install_fork_release`_. This
     is the best approach for most users. It will provide a stable version
     and pre-built packages are available for most platforms.
     
-  * :ref:`Building the package from source<install_source>`. This is best for users who want the
+  * Building the package from source `install_source`_. This is best for users who want the
     latest-and-greatest features and aren't afraid of running
     brand-new code. This is also needed for users who wish to contribute to the
     project.
@@ -171,7 +170,7 @@ Major Changes of the Fork
 The purpose of this page is to illustrate some of the main features that
 ``scikit-learn-tree`` provides compared to ``scikit-learn``. It assumes a
 an understanding of core package ``scikit-learn`` and also decision trees
-models. Please refer to our :ref:`installation instructions<install_fork_release>` for installing ``scikit-learn-tree``.
+models. Please refer to our installation instructions `install_fork_release`_ for installing ``scikit-learn-tree``.
 
 Scikit-learn-tree though operates as a stand-in for upstream ``scikit-learn``.
 It is used in packages exactly the same way and will support all features
