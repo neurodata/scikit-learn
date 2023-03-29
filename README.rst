@@ -44,6 +44,10 @@
 .. |PytestMinVersion| replace:: 5.3.1
 .. |PlotlyMinVersion| replace:: 5.10.0
 
+=================
+Scikit-learn-tree
+=================
+
 ``scikit-learn-tree`` is a maintained fork of scikit-learn, which advances the tree submodule, while staying in-line
 with changes from upstream scikit-learn. It is an exact stand-in for ``sklearn`` in package imports, but is
 released under the name ``scikit-learn-tree`` to avoid confusion.
