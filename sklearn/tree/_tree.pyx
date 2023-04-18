@@ -80,6 +80,11 @@ NODE_DTYPE = np.asarray(<Node[:1]>(&dummy)).dtype
 cdef class TreeBuilder:
     """Interface for different tree building strategies."""
 
+    cpdef initialize_node_queue(object X, np.ndarray y,
+                np.ndarray sample_weight=None):
+        """Initialize a list of roots"""
+        pass
+
     cpdef build(self, Tree tree, object X, np.ndarray y,
                 np.ndarray sample_weight=None):
         """Build a decision tree from the training set (X, y)."""
@@ -126,7 +131,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
     def __cinit__(self, Splitter splitter, SIZE_t min_samples_split,
                   SIZE_t min_samples_leaf, double min_weight_leaf,
-                  SIZE_t max_depth, double min_impurity_decrease):
+                  SIZE_t max_depth, double min_impurity_decrease,
+                  np.ndarray initial_roots):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
         self.min_samples_leaf = min_samples_leaf
@@ -141,6 +147,54 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                                      self.min_weight_leaf,
                                      self.max_depth,
                                      self.min_impurity_decrease))
+
+    cpdef initialize_node_queue(object X, np.ndarray y,
+                np.ndarray sample_weight=None):
+        """Initialize a list of roots"""
+        # check input
+        X, y, sample_weight = self._check_input(X, y, sample_weight)
+
+        cdef DOUBLE_t* sample_weight_ptr = NULL
+        if sample_weight is not None:
+            sample_weight_ptr = <DOUBLE_t*> sample_weight.data
+
+        # organize samples by decision paths
+        paths = tree.decision_path(X)
+        cdef int PARENT
+        cdef int CHILD
+        false_roots = {}
+        X_copy = {}
+        y_copy = {}
+        for i in range(X.shape[0]):
+            depth_i = paths[i].indices.shape[0] - 1
+            PARENT = depth_i - 1
+            CHILD = depth_i
+
+            if PARENT < 0:
+                parent_i = 0
+            else:
+                parent_i = paths[i].indices[PARENT]
+            child_i = paths[i].indices[CHILD]
+            left = 0
+            if tree.children_left[parent_i] == child_i:
+                left = 1
+
+            if (parent_i, left) in false_roots:
+                false_roots[(parent_i, left)][0] += 1
+                X_copy[(parent_i, left)].append(X[i])
+                y_copy[(parent_i, left)].append(y[i])
+            else:
+                false_roots[(parent_i, left)] = [1, depth_i]
+                X_copy[(parent_i, left)] = [X[i]]
+                y_copy[(parent_i, left)] = [y[i]]
+
+        X_list = []
+        y_list = []
+        for key, value in reversed(sorted(X_copy.items())):
+            X_list = X_list + value
+            y_list = y_list + y_copy[key]
+        cdef object X_new = np.array(X_list)
+        cdef np.ndarray y_new = np.array(y_list)
 
     cpdef build(self, Tree tree, object X, np.ndarray y,
                 np.ndarray sample_weight=None):
@@ -469,7 +523,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
     def __cinit__(self, Splitter splitter, SIZE_t min_samples_split,
                   SIZE_t min_samples_leaf,  min_weight_leaf,
                   SIZE_t max_depth, SIZE_t max_leaf_nodes,
-                  double min_impurity_decrease):
+                  double min_impurity_decrease, np.ndarray initial_roots):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
         self.min_samples_leaf = min_samples_leaf
