@@ -1,6 +1,6 @@
 .. include:: _contributors.rst
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 .. _changes_1_0_2:
 
@@ -19,21 +19,21 @@ Version 1.0.2
 Changelog
 ---------
 
-:mod:`sklearn.cluster`
+:mod:`sklearn_fork.cluster`
 ......................
 
 - |Fix| Fixed an infinite loop in :func:`cluster.SpectralClustering` by
   moving an iteration counter from try to except.
   :pr:`21271` by :user:`Tyler Martin <martintb>`.
 
-:mod:`sklearn.datasets`
+:mod:`sklearn_fork.datasets`
 .......................
 
 - |Fix| :func:`datasets.fetch_openml` is now thread safe. Data is first
   downloaded to a temporary subfolder and then renamed.
   :pr:`21833` by :user:`Siavash Rezazadeh <siavrez>`.
 
-:mod:`sklearn.decomposition`
+:mod:`sklearn_fork.decomposition`
 ............................
 
 - |Fix| Fixed the constraint on the objective function of
@@ -42,7 +42,7 @@ Changelog
   and :class:`decomposition.MiniBatchSparsePCA` to be convex and match the referenced
   article. :pr:`19210` by :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.ensemble`
+:mod:`sklearn_fork.ensemble`
 .......................
 
 - |Fix| :class:`ensemble.RandomForestClassifier`,
@@ -57,14 +57,14 @@ Changelog
   negative one.
   :pr:`22050` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.feature_selection`
+:mod:`sklearn_fork.feature_selection`
 ................................
 
 - |Fix| Fixed :class:`feature_selection.SelectFromModel` by improving support
   for base estimators that do not set `feature_names_in_`. :pr:`21991` by
   `Thomas Fan`_.
 
-:mod:`sklearn.impute`
+:mod:`sklearn_fork.impute`
 .....................
 
 - |Fix| Fix a bug in :class:`linear_model.RidgeClassifierCV` where the method
@@ -72,7 +72,7 @@ Changelog
   `decision_function` instead of returning the multilabel indicator matrix.
   :pr:`19869` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.linear_model`
+:mod:`sklearn_fork.linear_model`
 ...........................
 
 - |Fix| :class:`linear_model.LassoLarsIC` now correctly computes AIC
@@ -81,22 +81,22 @@ Changelog
   :pr:`21481` by :user:`Guillaume Lemaitre <glemaitre>` and
   :user:`Andrés Babino <ababino>`.
 
-:mod:`sklearn.manifold`
+:mod:`sklearn_fork.manifold`
 .......................
 
 - |Fix| Fixed an unnecessary error when fitting :class:`manifold.Isomap` with a
   precomputed dense distance matrix where the neighbors graph has multiple
   disconnected components. :pr:`21915` by `Tom Dupre la Tour`_.
 
-:mod:`sklearn.metrics`
+:mod:`sklearn_fork.metrics`
 ......................
 
-- |Fix| All :class:`sklearn.metrics.DistanceMetric` subclasses now correctly support
+- |Fix| All :class:`sklearn_fork.metrics.DistanceMetric` subclasses now correctly support
   read-only buffer attributes.
   This fixes a regression introduced in 1.0.0 with respect to 0.24.2.
   :pr:`21694` by :user:`Julien Jerphanion <jjerphan>`.
 
-- |Fix| All :class:`sklearn.metrics.MinkowskiDistance` now accepts a weight
+- |Fix| All :class:`sklearn_fork.metrics.MinkowskiDistance` now accepts a weight
   parameter that makes it possible to write code that behaves consistently both
   with scipy 1.8 and earlier versions. In turns this means that all
   neighbors-based estimators (except those that use `algorithm="kd_tree"`) now
@@ -104,25 +104,25 @@ Changelog
   are always consistent with `scipy.spatial.distance.cdist`.
   :pr:`21741` by :user:`Olivier Grisel <ogrisel>`.
 
-:mod:`sklearn.multiclass`
+:mod:`sklearn_fork.multiclass`
 .........................
 
 - |Fix| :meth:`multiclass.OneVsRestClassifier.predict_proba` does not error when
   fitted on constant integer targets. :pr:`21871` by `Thomas Fan`_.
 
-:mod:`sklearn.neighbors`
+:mod:`sklearn_fork.neighbors`
 ........................
 
 - |Fix| :class:`neighbors.KDTree` and :class:`neighbors.BallTree` correctly supports
   read-only buffer attributes. :pr:`21845` by `Thomas Fan`_.
 
-:mod:`sklearn.preprocessing`
+:mod:`sklearn_fork.preprocessing`
 ............................
 
 - |Fix| Fixes compatibility bug with NumPy 1.22 in :class:`preprocessing.OneHotEncoder`.
   :pr:`21517` by `Thomas Fan`_.
 
-:mod:`sklearn.tree`
+:mod:`sklearn_fork.tree`
 ...................
 
 - |Fix| Prevents :func:`tree.plot_tree` from drawing out of the boundary of
@@ -133,7 +133,7 @@ Changelog
   to train and pickle the model on 64 bit machine and load the model on a 32
   bit machine for prediction. :pr:`21552` by :user:`Loïc Estève <lesteve>`.
 
-:mod:`sklearn.utils`
+:mod:`sklearn_fork.utils`
 ....................
 
 - |Fix| :func:`utils.estimator_html_repr` now escapes all the estimator
@@ -161,7 +161,7 @@ Fixed models
   :class:`neighbors.RadiusNeighborsClassifier`,
   :class:`neighbors.RadiusNeighborsRegressor`. :pr:`21199` by `Thomas Fan`_.
 
-:mod:`sklearn.calibration`
+:mod:`sklearn_fork.calibration`
 ..........................
 
 - |Fix| Fixed :class:`calibration.CalibratedClassifierCV` to take into account
@@ -174,14 +174,14 @@ Fixed models
   the Bayesian priors.
   :pr:`21179` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.cluster`
+:mod:`sklearn_fork.cluster`
 ......................
 
 - |Fix| Fixed a bug in :class:`cluster.KMeans`, ensuring reproducibility and equivalence
   between sparse and dense input. :pr:`21195`
   by :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.ensemble`
+:mod:`sklearn_fork.ensemble`
 .......................
 
 - |Fix| Fixed a bug that could produce a segfault in rare cases for
@@ -189,15 +189,15 @@ Fixed models
   :class:`ensemble.HistGradientBoostingRegressor`.
   :pr:`21130` :user:`Christian Lorentzen <lorentzenchr>`.
 
-:mod:`sklearn.gaussian_process`
+:mod:`sklearn_fork.gaussian_process`
 ...............................
 
 - |Fix| Compute `y_std` properly with multi-target in
-  :class:`sklearn.gaussian_process.GaussianProcessRegressor` allowing
+  :class:`sklearn_fork.gaussian_process.GaussianProcessRegressor` allowing
   proper normalization in multi-target scene.
   :pr:`20761` by :user:`Patrick de C. T. R. Ferreira <patrickctrf>`.
 
-:mod:`sklearn.feature_extraction`
+:mod:`sklearn_fork.feature_extraction`
 .................................
 
 - |Efficiency| Fixed an efficiency regression introduced in version 1.0.0 in the
@@ -210,7 +210,7 @@ Fixed models
   error when 'min_idf' or 'max_idf' are floating-point numbers greater than 1.
   :pr:`20752` by :user:`Alek Lefebvre <AlekLefebvre>`.
 
-:mod:`sklearn.linear_model`
+:mod:`sklearn_fork.linear_model`
 ...........................
 
 - |Fix| Improves stability of :class:`linear_model.LassoLars` for different
@@ -220,7 +220,7 @@ Fixed models
   message when the solver does not support sparse matrices with int64 indices.
   :pr:`21093` by `Tom Dupre la Tour`_.
 
-:mod:`sklearn.neighbors`
+:mod:`sklearn_fork.neighbors`
 ........................
 
 - |Fix| :class:`neighbors.KNeighborsClassifier`,
@@ -231,14 +231,14 @@ Fixed models
   and `radius_neighbors`, due to handling of explicit zeros in `bsr` and `dok`
   :term:`sparse graph` formats. :pr:`21199` by `Thomas Fan`_.
 
-:mod:`sklearn.pipeline`
+:mod:`sklearn_fork.pipeline`
 .......................
 
 - |Fix| :meth:`pipeline.Pipeline.get_feature_names_out` correctly passes feature
   names out from one step of a pipeline to the next. :pr:`21351` by
   `Thomas Fan`_.
 
-:mod:`sklearn.svm`
+:mod:`sklearn_fork.svm`
 ..................
 
 - |Fix| :class:`svm.SVC` and :class:`svm.SVR` check for an inconsistency
@@ -247,7 +247,7 @@ Fixed models
   `CVE-2020-28975 <https://nvd.nist.gov/vuln/detail/CVE-2020-28975>`__.
   :pr:`21336` by `Thomas Fan`_.
 
-:mod:`sklearn.utils`
+:mod:`sklearn_fork.utils`
 ....................
 
 - |Enhancement| :func:`utils.validation._check_sample_weight` can perform a
@@ -262,7 +262,7 @@ Fixed models
   :pr:`20880` by :user:`Guillaume Lemaitre <glemaitre>`
   and :user:`András Simon <simonandras>`.
 
-- |Fix| Solve a bug in :func:`~sklearn.utils.metaestimators.if_delegate_has_method`
+- |Fix| Solve a bug in :func:`~sklearn_fork.utils.metaestimators.if_delegate_has_method`
   where the underlying check for an attribute did not work with NumPy arrays.
   :pr:`21145` by :user:`Zahlii <Zahlii>`.
 
@@ -421,12 +421,12 @@ Changelog
   These ``FutureWarning`` s will become ``ValueError`` s in 1.2. :pr:`18010` by
   `Thomas Fan`_.
 
-:mod:`sklearn.base`
+:mod:`sklearn_fork.base`
 ...................
 
 - |Fix| :func:`config_context` is now threadsafe. :pr:`18736` by `Thomas Fan`_.
 
-:mod:`sklearn.calibration`
+:mod:`sklearn_fork.calibration`
 ..........................
 
 - |Feature| :func:`calibration.CalibrationDisplay` added to plot
@@ -441,7 +441,7 @@ Changelog
   :pr:`20087` by :user:`Clément Fauchereau <clement-f>`.
 
 
-:mod:`sklearn.cluster`
+:mod:`sklearn_fork.cluster`
 ......................
 
 - |Efficiency| The ``"k-means++"`` initialization of :class:`cluster.KMeans`
@@ -503,7 +503,7 @@ Changelog
 - |API| :func:`cluster.spectral_clustering` raises an improved error when passed
   a `np.matrix`. :pr:`20560` by `Thomas Fan`_.
 
-:mod:`sklearn.compose`
+:mod:`sklearn_fork.compose`
 ......................
 
 - |Enhancement| :class:`compose.ColumnTransformer` now records the output
@@ -534,7 +534,7 @@ Changelog
   This flag controls the prefixing of feature names out in
   :term:`get_feature_names_out`. :pr:`18444` and :pr:`21080` by `Thomas Fan`_.
 
-:mod:`sklearn.covariance`
+:mod:`sklearn_fork.covariance`
 .........................
 
 - |Fix| Adds arrays check to :func:`covariance.ledoit_wolf` and
@@ -545,7 +545,7 @@ Changelog
   `'std_score'`, and `'split(k)_score'` in favor of `'mean_test_score'`
   `'std_test_score'`, and `'split(k)_test_score'`. :pr:`20583` by `Thomas Fan`_.
 
-:mod:`sklearn.datasets`
+:mod:`sklearn_fork.datasets`
 .......................
 
 - |Enhancement| :func:`datasets.fetch_openml` now supports categories with
@@ -575,7 +575,7 @@ Changelog
   :pr:`20729` by `Guillaume Lemaitre`_.
 
 
-:mod:`sklearn.decomposition`
+:mod:`sklearn_fork.decomposition`
 ............................
 
 - |Enhancement| added a new approximate solver (randomized SVD, available with
@@ -624,25 +624,25 @@ Changelog
   in 1.2. Use the new parameters `alpha_W` and `alpha_H` instead. :pr:`20512` by
   :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.dummy`
+:mod:`sklearn_fork.dummy`
 ....................
 
 - |API| Attribute `n_features_in_` in :class:`dummy.DummyRegressor` and
   :class:`dummy.DummyRegressor` is deprecated and will be removed in 1.2.
   :pr:`20960` by `Thomas Fan`_.
 
-:mod:`sklearn.ensemble`
+:mod:`sklearn_fork.ensemble`
 .......................
 
-- |Enhancement| :class:`~sklearn.ensemble.HistGradientBoostingClassifier` and
-  :class:`~sklearn.ensemble.HistGradientBoostingRegressor` take cgroups quotas
+- |Enhancement| :class:`~sklearn_fork.ensemble.HistGradientBoostingClassifier` and
+  :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor` take cgroups quotas
   into account when deciding the number of threads used by OpenMP. This
   avoids performance problems caused by over-subscription when using those
   classes in a docker container for instance. :pr:`20477`
   by `Thomas Fan`_.
 
-- |Enhancement| :class:`~sklearn.ensemble.HistGradientBoostingClassifier` and
-  :class:`~sklearn.ensemble.HistGradientBoostingRegressor` are no longer
+- |Enhancement| :class:`~sklearn_fork.ensemble.HistGradientBoostingClassifier` and
+  :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor` are no longer
   experimental. They are now considered stable and are subject to the same
   deprecation cycles as all other estimators. :pr:`19799` by `Nicolas Hug`_.
 
@@ -682,7 +682,7 @@ Changelog
   :class:`ensemble.HistGradientBoostingRegressor`. Please use `tol=0` for
   the same behavior. :pr:`19296` by `Thomas Fan`_.
 
-:mod:`sklearn.feature_extraction`
+:mod:`sklearn_fork.feature_extraction`
 .................................
 
 - |Fix| Fixed a bug in :class:`feature_extraction.text.HashingVectorizer`
@@ -703,7 +703,7 @@ Changelog
   characters to avoid silent misses in the resulting feature vectors.
   :pr:`19401` by :user:`Zito Relova <zitorelova>`
 
-:mod:`sklearn.feature_selection`
+:mod:`sklearn_fork.feature_selection`
 ................................
 
 - |Feature| :func:`feature_selection.r_regression` computes Pearson's R
@@ -734,7 +734,7 @@ Changelog
   version 1.2.
   :pr:`20161` by :user:`Shuhei Kayawari <wowry>` and :user:`arka204`.
 
-:mod:`sklearn.inspection`
+:mod:`sklearn_fork.inspection`
 .........................
 
 - |Enhancement| Add `max_samples` parameter in
@@ -757,7 +757,7 @@ Changelog
   :func:`inspection.plot_partial_dependence` is deprecated in favor of the
   class method and will be removed in 1.2. :pr:`20959` by `Thomas Fan`_.
 
-:mod:`sklearn.kernel_approximation`
+:mod:`sklearn_fork.kernel_approximation`
 ...................................
 
 - |Fix| Fix a bug in :class:`kernel_approximation.Nystroem`
@@ -765,7 +765,7 @@ Changelog
   sample indices used to generate the approximated kernel. :pr:`20554` by
   :user:`Xiangyin Kong <kxytim>`.
 
-:mod:`sklearn.linear_model`
+:mod:`sklearn_fork.linear_model`
 ...........................
 
 - |MajorFeature| Added :class:`linear_model.QuantileRegressor` which implements
@@ -840,7 +840,7 @@ Changelog
   ``normalize`` parameter did not take any effect if ``fit_intercept`` was set
   to False and therefore was deemed confusing. The behavior of the deprecated
   ``LinearModel(normalize=True)`` can be reproduced with a
-  :class:`~sklearn.pipeline.Pipeline` with ``LinearModel`` (where
+  :class:`~sklearn_fork.pipeline.Pipeline` with ``LinearModel`` (where
   ``LinearModel`` is :class:`~linear_model.LinearRegression`,
   :class:`~linear_model.Ridge`, :class:`~linear_model.RidgeClassifier`,
   :class:`~linear_model.RidgeCV` or :class:`~linear_model.RidgeClassifierCV`)
@@ -881,7 +881,7 @@ Changelog
   :class:`~linear_model.PassiveAggressiveRegressor`.
   :pr:`20683` by `Guillaume Lemaitre`_.
 
-:mod:`sklearn.manifold`
+:mod:`sklearn_fork.manifold`
 .......................
 
 - |Enhancement| Implement `'auto'` heuristic for the `learning_rate` in
@@ -904,7 +904,7 @@ Changelog
   in :func:`manifold.spectral_embedding` to prevent numerical instability.
   :pr:`21194` by :user:`Andrew Knyazev <lobpcg>`.
 
-:mod:`sklearn.metrics`
+:mod:`sklearn_fork.metrics`
 ......................
 
 - |Feature| :func:`metrics.mean_pinball_loss` exposes the pinball loss for
@@ -967,7 +967,7 @@ Changelog
   class methods and will be removed in 1.2.
   :pr:`19278` by `Guillaume Lemaitre`_.
 
-:mod:`sklearn.mixture`
+:mod:`sklearn_fork.mixture`
 ......................
 
 - |Fix| Ensure that the best parameters are set appropriately
@@ -976,7 +976,7 @@ Changelog
   :pr:`20030` by :user:`Tingshan Liu <tliu68>` and
   :user:`Benjamin Pedigo <bdpedigo>`.
 
-:mod:`sklearn.model_selection`
+:mod:`sklearn_fork.model_selection`
 ..............................
 
 - |Feature| added :class:`model_selection.StratifiedGroupKFold`, that combines
@@ -996,7 +996,7 @@ Changelog
 - |Fix| Avoid premature overflow in :func:`model_selection.train_test_split`.
   :pr:`20904` by :user:`Tomasz Jakubek <t-jakubek>`.
 
-:mod:`sklearn.naive_bayes`
+:mod:`sklearn_fork.naive_bayes`
 ..........................
 
 - |Fix| The `fit` and `partial_fit` methods of the discrete naive Bayes
@@ -1011,7 +1011,7 @@ Changelog
   Use ``var_`` instead.
   :pr:`18842` by :user:`Hong Shao Yang <hongshaoyang>`.
 
-:mod:`sklearn.neighbors`
+:mod:`sklearn_fork.neighbors`
 ........................
 
 - |Enhancement| The creation of :class:`neighbors.KDTree` and
@@ -1033,21 +1033,21 @@ Changelog
   deprecated and will be removed in 1.2.
   :pr:`20842` by :user:`Juan Martín Loyola <jmloyola>`.
 
-:mod:`sklearn.neural_network`
+:mod:`sklearn_fork.neural_network`
 .............................
 
 - |Fix| :class:`neural_network.MLPClassifier` and
   :class:`neural_network.MLPRegressor` now correctly support continued training
   when loading from a pickled file. :pr:`19631` by `Thomas Fan`_.
 
-:mod:`sklearn.pipeline`
+:mod:`sklearn_fork.pipeline`
 .......................
 
 - |API| The `predict_proba` and `predict_log_proba` methods of the
   :class:`pipeline.Pipeline` now support passing prediction kwargs to the final
   estimator. :pr:`19790` by :user:`Christopher Flynn <crflynn>`.
 
-:mod:`sklearn.preprocessing`
+:mod:`sklearn_fork.preprocessing`
 ............................
 
 - |Feature| The new :class:`preprocessing.SplineTransformer` is a feature
@@ -1122,14 +1122,14 @@ Changelog
   `n_features_in_` and will be removed in 1.2. :pr:`20240` by
   :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.svm`
+:mod:`sklearn_fork.svm`
 ...................
 
 - |API| The parameter `**params` of :func:`svm.OneClassSVM.fit` is
   deprecated and will be removed in 1.2.
   :pr:`20843` by :user:`Juan Martín Loyola <jmloyola>`.
 
-:mod:`sklearn.tree`
+:mod:`sklearn_fork.tree`
 ...................
 
 - |Enhancement| Add `fontname` argument in :func:`tree.export_graphviz`
@@ -1150,11 +1150,11 @@ Changelog
   and will be removed in 1.2. :pr:`20272` by
   :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.utils`
+:mod:`sklearn_fork.utils`
 ....................
 
 - |Enhancement| Deprecated the default value of the `random_state=0` in
-  :func:`~sklearn.utils.extmath.randomized_svd`. Starting in 1.2,
+  :func:`~sklearn_fork.utils.extmath.randomized_svd`. Starting in 1.2,
   the default value of `random_state` will be set to `None`.
   :pr:`19459` by :user:`Cindy Bezuidenhout <cinbez>` and
   :user:`Clifford Akai-Nettey<cliffordEmmanuel>`.
@@ -1200,7 +1200,7 @@ Changelog
   :pr:`20727` by `Guillaume Lemaitre`_.
 
 - |Fix| Support for `np.matrix` is deprecated in
-  :func:`~sklearn.utils.check_array` in 1.0 and will raise a `TypeError` in
+  :func:`~sklearn_fork.utils.check_array` in 1.0 and will raise a `TypeError` in
   1.2. :pr:`20165` by `Thomas Fan`_.
 
 - |API| `utils._testing.assert_warns` and `utils._testing.assert_warns_message`

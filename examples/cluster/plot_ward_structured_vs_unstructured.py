@@ -41,7 +41,7 @@ import numpy as np
 #
 # We start by generating the Swiss Roll dataset.
 
-from sklearn.datasets import make_swiss_roll
+from sklearn_fork.datasets import make_swiss_roll
 
 n_samples = 1500
 noise = 0.05
@@ -56,7 +56,7 @@ X[:, 1] *= 0.5
 # We perform AgglomerativeClustering which comes under Hierarchical Clustering
 # without any connectivity constraints.
 
-from sklearn.cluster import AgglomerativeClustering
+from sklearn_fork.cluster import AgglomerativeClustering
 
 print("Compute unstructured hierarchical clustering...")
 st = time.time()
@@ -91,7 +91,7 @@ _ = fig1.suptitle(f"Without connectivity constraints (time {elapsed_time:.2f}s)"
 # We are defining k-Nearest Neighbors with 10 neighbors
 # -----------------------------------------------------
 
-from sklearn.neighbors import kneighbors_graph
+from sklearn_fork.neighbors import kneighbors_graph
 
 connectivity = kneighbors_graph(X, n_neighbors=10, include_self=False)
 

@@ -3,7 +3,7 @@
 Column Transformer with Mixed Types
 ===================================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 This example illustrates how to apply different preprocessing and feature
 extraction pipelines to different subsets of features, using
@@ -32,14 +32,14 @@ model.
 # %%
 import numpy as np
 
-from sklearn.compose import ColumnTransformer
-from sklearn.datasets import fetch_openml
-from sklearn.pipeline import Pipeline
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
-from sklearn.feature_selection import SelectPercentile, chi2
+from sklearn_fork.compose import ColumnTransformer
+from sklearn_fork.datasets import fetch_openml
+from sklearn_fork.pipeline import Pipeline
+from sklearn_fork.impute import SimpleImputer
+from sklearn_fork.preprocessing import StandardScaler, OneHotEncoder
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.model_selection import train_test_split, RandomizedSearchCV
+from sklearn_fork.feature_selection import SelectPercentile, chi2
 
 np.random.seed(0)
 
@@ -117,7 +117,7 @@ clf
 # When dealing with a cleaned dataset, the preprocessing can be automatic by
 # using the data types of the column to decide whether to treat a column as a
 # numerical or categorical feature.
-# :func:`sklearn.compose.make_column_selector` gives this possibility.
+# :func:`sklearn_fork.compose.make_column_selector` gives this possibility.
 # First, let's only select a subset of columns to simplify our
 # example.
 
@@ -143,7 +143,7 @@ X_train.info()
 #    refer to their documentation regarding `Categorical data
 #    <https://pandas.pydata.org/pandas-docs/stable/user_guide/categorical.html>`_.
 
-from sklearn.compose import make_column_selector as selector
+from sklearn_fork.compose import make_column_selector as selector
 
 preprocessor = ColumnTransformer(
     transformers=[
@@ -179,10 +179,10 @@ selector(dtype_include="category")(X_train)
 # hyperparameters as part of the ``Pipeline``.
 # We will search for both the imputer strategy of the numeric preprocessing
 # and the regularization parameter of the logistic regression using
-# :class:`~sklearn.model_selection.RandomizedSearchCV`. This
+# :class:`~sklearn_fork.model_selection.RandomizedSearchCV`. This
 # hyperparameter search randomly selects a fixed number of parameter
 # settings configured by `n_iter`. Alternatively, one can use
-# :class:`~sklearn.model_selection.GridSearchCV` but the cartesian product of
+# :class:`~sklearn_fork.model_selection.GridSearchCV` but the cartesian product of
 # the parameter space will be evaluated.
 
 param_grid = {

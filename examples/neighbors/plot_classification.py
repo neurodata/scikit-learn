@@ -11,8 +11,8 @@ It will plot the decision boundaries for each class.
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.colors import ListedColormap
-from sklearn import neighbors, datasets
-from sklearn.inspection import DecisionBoundaryDisplay
+from sklearn_fork import neighbors, datasets
+from sklearn_fork.inspection import DecisionBoundaryDisplay
 
 n_neighbors = 15
 

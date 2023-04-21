@@ -10,7 +10,7 @@ is proportional to its weight.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import linear_model
+from sklearn_fork import linear_model
 
 # we create 20 points
 np.random.seed(0)

@@ -3,7 +3,7 @@
 Release Highlights for scikit-learn 0.22
 ========================================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 We are pleased to announce the release of scikit-learn 0.22, which comes
 with many bug fixes and new features! We detail below a few of the major
@@ -34,14 +34,14 @@ or with conda::
 # :class:`~metrics.plot_confusion_matrix`. Read more about this new API in the
 # :ref:`User Guide <visualizations>`.
 
-from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.svm import SVC
 
-# from sklearn.metrics import plot_roc_curve
-from sklearn.metrics import RocCurveDisplay
+# from sklearn_fork.metrics import plot_roc_curve
+from sklearn_fork.metrics import RocCurveDisplay
 
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import make_classification
+from sklearn_fork.ensemble import RandomForestClassifier
+from sklearn_fork.datasets import make_classification
 import matplotlib.pyplot as plt
 
 X, y = make_classification(random_state=0)
@@ -78,13 +78,13 @@ plt.show()
 #
 # Read more in the :ref:`User Guide <stacking>`.
 
-from sklearn.datasets import load_iris
-from sklearn.svm import LinearSVC
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import make_pipeline
-from sklearn.ensemble import StackingClassifier
-from sklearn.model_selection import train_test_split
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.svm import LinearSVC
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.ensemble import StackingClassifier
+from sklearn_fork.model_selection import train_test_split
 
 X, y = load_iris(return_X_y=True)
 estimators = [
@@ -104,9 +104,9 @@ clf.fit(X_train, y_train).score(X_test, y_test)
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.datasets import make_classification
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.inspection import permutation_importance
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.ensemble import RandomForestClassifier
+from sklearn_fork.inspection import permutation_importance
 
 X, y = make_classification(random_state=0, n_features=5, n_informative=3)
 feature_names = np.array([f"x_{i}" for i in range(X.shape[1])])
@@ -133,7 +133,7 @@ plt.show()
 # support for missing values (NaNs). This means that there is no need for
 # imputing data when training or predicting.
 
-from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
 
 X = np.array([0, 1, 2, np.nan]).reshape(-1, 1)
 y = [0, 0, 1, 1]
@@ -155,9 +155,9 @@ print(gbdt.predict(X))
 # See more details in the :ref:`User Guide <neighbors_transformer>`.
 
 from tempfile import TemporaryDirectory
-from sklearn.neighbors import KNeighborsTransformer
-from sklearn.manifold import Isomap
-from sklearn.pipeline import make_pipeline
+from sklearn_fork.neighbors import KNeighborsTransformer
+from sklearn_fork.manifold import Isomap
+from sklearn_fork.pipeline import make_pipeline
 
 X, y = make_classification(random_state=0)
 
@@ -190,7 +190,7 @@ with TemporaryDirectory(prefix="sklearn_cache_") as tmpdir:
 #
 # Read more in the :ref:`User Guide <knnimpute>`.
 
-from sklearn.impute import KNNImputer
+from sklearn_fork.impute import KNNImputer
 
 X = [[1, 2, np.nan], [3, 4, 3], [np.nan, 6, 5], [8, 8, 7]]
 imputer = KNNImputer(n_neighbors=2)
@@ -226,7 +226,7 @@ print(
 # :func:`datasets.fetch_openml` can now return pandas dataframe and thus
 # properly handle datasets with heterogeneous data:
 
-from sklearn.datasets import fetch_openml
+from sklearn_fork.datasets import fetch_openml
 
 titanic = fetch_openml("titanic", version=1, as_frame=True, parser="pandas")
 print(titanic.data.head()[["pclass", "embarked"]])
@@ -245,9 +245,9 @@ print(titanic.data.head()[["pclass", "embarked"]])
 #   This entry was slightly updated in version 0.24, where passing classes
 #   isn't supported anymore: pass instances instead.
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.utils.estimator_checks import parametrize_with_checks
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.tree import DecisionTreeRegressor
+from sklearn_fork.utils.estimator_checks import parametrize_with_checks
 
 
 @parametrize_with_checks([LogisticRegression(), DecisionTreeRegressor()])
@@ -271,9 +271,9 @@ def test_sklearn_compatible_estimator(estimator, check):
 # Read more in the :ref:`User Guide <roc_metrics>`.
 
 
-from sklearn.datasets import make_classification
-from sklearn.svm import SVC
-from sklearn.metrics import roc_auc_score
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.svm import SVC
+from sklearn_fork.metrics import roc_auc_score
 
 X, y = make_classification(n_classes=4, n_informative=16)
 clf = SVC(decision_function_shape="ovo", probability=True).fit(X, y)

@@ -4,7 +4,7 @@
 
 .. _computational_performance:
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 Computational Performance
 =========================
@@ -86,8 +86,8 @@ scikit-learn, or configure it in Python with :func:`set_config`.
 For more control than these global settings, a :func:`config_context`
 allows you to set this configuration within a specified context::
 
-  >>> import sklearn
-  >>> with sklearn.config_context(assume_finite=True):
+  >>> import sklearn_fork
+  >>> with sklearn_fork.config_context(assume_finite=True):
   ...     pass  # do learning/prediction here with reduced validation
 
 Note that this will affect all uses of
@@ -156,7 +156,7 @@ interesting, but for many applications we would better not increase
 prediction latency too much. We will now review this idea for different
 families of supervised models.
 
-For :mod:`sklearn.linear_model` (e.g. Lasso, ElasticNet,
+For :mod:`sklearn_fork.linear_model` (e.g. Lasso, ElasticNet,
 SGDClassifier/Regressor, Ridge & RidgeClassifier,
 PassiveAggressiveClassifier/Regressor, LinearSVC, LogisticRegression...) the
 decision function that is applied at prediction time is the same (a dot product)
@@ -179,7 +179,7 @@ non-zero coefficients.
 
 .. centered:: |en_model_complexity|
 
-For the :mod:`sklearn.svm` family of algorithms with a non-linear kernel,
+For the :mod:`sklearn_fork.svm` family of algorithms with a non-linear kernel,
 the latency is tied to the number of support vectors (the fewer the faster).
 Latency and throughput should (asymptotically) grow linearly with the number
 of support vectors in a SVC or SVR model. The kernel will also influence the
@@ -194,7 +194,7 @@ support vectors.
 
 .. centered:: |nusvr_model_complexity|
 
-For :mod:`sklearn.ensemble` of trees (e.g. RandomForest, GBT,
+For :mod:`sklearn_fork.ensemble` of trees (e.g. RandomForest, GBT,
 ExtraTrees, etc.) the number of trees and their depth play the most
 important role. Latency and throughput should scale linearly with the number
 of trees. In this case we used directly the ``n_estimators`` parameter of
@@ -280,7 +280,7 @@ non-optimized BLAS.
 You can display the BLAS / LAPACK implementation used by your NumPy / SciPy /
 scikit-learn install with the following command::
 
-    python -c "import sklearn; sklearn.show_versions()"
+    python -c "import sklearn_fork; sklearn_fork.show_versions()"
 
 Optimized BLAS / LAPACK implementations include:
  - Atlas (need hardware specific tuning by rebuilding on the target machine)
@@ -307,8 +307,8 @@ working memory (defaulting to 1GB) using :func:`set_config` or
 :func:`config_context`.  The following suggests to limit temporary working
 memory to 128 MiB::
 
-  >>> import sklearn
-  >>> with sklearn.config_context(working_memory=128):
+  >>> import sklearn_fork
+  >>> with sklearn_fork.config_context(working_memory=128):
   ...     pass  # do chunked work here
 
 An example of a chunked operation adhering to this setting is

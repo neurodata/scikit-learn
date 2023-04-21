@@ -39,8 +39,8 @@ y = np.sin(X).ravel() + np.sin(6 * X).ravel() + rng.normal(0, 0.1, X.shape[0])
 # of `max_depth=4` as base learner and will be built with `n_estimators=300`
 # of those base learners.
 
-from sklearn.ensemble import AdaBoostRegressor
-from sklearn.tree import DecisionTreeRegressor
+from sklearn_fork.ensemble import AdaBoostRegressor
+from sklearn_fork.tree import DecisionTreeRegressor
 
 regr_1 = DecisionTreeRegressor(max_depth=4)
 

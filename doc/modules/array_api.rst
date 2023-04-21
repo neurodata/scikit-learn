@@ -8,7 +8,7 @@
 Array API support (experimental)
 ================================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 The `Array API <https://data-apis.org/array-api/latest/>`_ specification defines
 a standard API for all array manipulation libraries with a NumPy-like API.
@@ -35,9 +35,9 @@ Here is an example code snippet to demonstrate how to use `CuPy
 <https://cupy.dev/>`_ to run
 :class:`~discriminant_analysis.LinearDiscriminantAnalysis` on a GPU::
 
-    >>> from sklearn.datasets import make_classification
-    >>> from sklearn import config_context
-    >>> from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+    >>> from sklearn_fork.datasets import make_classification
+    >>> from sklearn_fork import config_context
+    >>> from sklearn_fork.discriminant_analysis import LinearDiscriminantAnalysis
     >>> import cupy
 
     >>> X_np, y_np = make_classification(random_state=0)
@@ -58,7 +58,7 @@ Array API namespace was used for training, then fitted attributes will be on the
 GPU. We provide a experimental `_estimator_with_converted_arrays` utility that
 transfers an estimator attributes from Array API to a ndarray::
 
-    >>> from sklearn.utils._array_api import _estimator_with_converted_arrays
+    >>> from sklearn_fork.utils._array_api import _estimator_with_converted_arrays
     >>> cupy_to_ndarray = lambda array : array.get()
     >>> lda_np = _estimator_with_converted_arrays(lda, cupy_to_ndarray)
     >>> X_trans = lda_np.transform(X_np)

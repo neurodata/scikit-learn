@@ -25,9 +25,9 @@ import numpy as np
 from time import time
 import scipy.stats as stats
 
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
-from sklearn.datasets import load_digits
-from sklearn.linear_model import SGDClassifier
+from sklearn_fork.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn_fork.datasets import load_digits
+from sklearn_fork.linear_model import SGDClassifier
 
 # get some data
 X, y = load_digits(return_X_y=True, n_class=3)

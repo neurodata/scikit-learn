@@ -25,13 +25,13 @@ with tempfile.TemporaryDirectory() as tmpdir:
     tmpdir = pathlib.Path(tmpdir)
     # A cython test file which cimports all modules corresponding to found
     # pxd files.
-    # e.g. sklearn/tree/_utils.pxd becomes `cimport sklearn.tree._utils`
+    # e.g. sklearn_fork/tree/_utils.pxd becomes `cimport sklearn_fork.tree._utils`
     with open(tmpdir / "tst.pyx", "w") as f:
         for pxd_file in pxd_files:
             to_import = str(pxd_file.relative_to(sklearn_dir))
             to_import = to_import.replace(os.path.sep, ".")
             to_import = to_import.replace(".pxd", "")
-            f.write("cimport sklearn." + to_import + "\n")
+            f.write("cimport sklearn_fork." + to_import + "\n")
 
     # A basic setup file to build the test file.
     # We set the language to c++ and we use numpy.get_include() because

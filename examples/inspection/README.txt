@@ -3,5 +3,5 @@
 Inspection
 ----------
 
-Examples related to the :mod:`sklearn.inspection` module.
+Examples related to the :mod:`sklearn_fork.inspection` module.
 

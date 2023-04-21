@@ -4,7 +4,7 @@
 Naive Bayes
 ===========
 
-.. currentmodule:: sklearn.naive_bayes
+.. currentmodule:: sklearn_fork.naive_bayes
 
 
 Naive Bayes methods are a set of supervised learning algorithms
@@ -90,9 +90,9 @@ classification. The likelihood of the features is assumed to be Gaussian:
 The parameters :math:`\sigma_y` and :math:`\mu_y`
 are estimated using maximum likelihood.
 
-   >>> from sklearn.datasets import load_iris
-   >>> from sklearn.model_selection import train_test_split
-   >>> from sklearn.naive_bayes import GaussianNB
+   >>> from sklearn_fork.datasets import load_iris
+   >>> from sklearn_fork.model_selection import train_test_split
+   >>> from sklearn_fork.naive_bayes import GaussianNB
    >>> X, y = load_iris(return_X_y=True)
    >>> X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
    >>> gnb = GaussianNB()

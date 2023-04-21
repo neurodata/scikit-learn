@@ -40,11 +40,11 @@ four correct classifications and fails on one.
 
 # %%
 import numpy as np
-from sklearn.gaussian_process.kernels import Kernel, Hyperparameter
-from sklearn.gaussian_process.kernels import GenericKernelMixin
-from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.base import clone
+from sklearn_fork.gaussian_process.kernels import Kernel, Hyperparameter
+from sklearn_fork.gaussian_process.kernels import GenericKernelMixin
+from sklearn_fork.gaussian_process import GaussianProcessRegressor
+from sklearn_fork.gaussian_process import GaussianProcessClassifier
+from sklearn_fork.base import clone
 
 
 class SequenceKernel(GenericKernelMixin, Kernel):

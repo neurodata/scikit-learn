@@ -34,12 +34,12 @@ around 0.7.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import datasets
-from sklearn.svm import SVC
-from sklearn.model_selection import StratifiedKFold
-from sklearn.semi_supervised import SelfTrainingClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.utils import shuffle
+from sklearn_fork import datasets
+from sklearn_fork.svm import SVC
+from sklearn_fork.model_selection import StratifiedKFold
+from sklearn_fork.semi_supervised import SelfTrainingClassifier
+from sklearn_fork.metrics import accuracy_score
+from sklearn_fork.utils import shuffle
 
 n_splits = 3
 

@@ -59,7 +59,7 @@ In particular, one can run a `single test based on its node ID
 
 .. prompt:: bash $
 
-  pytest -v sklearn/linear_model/tests/test_logistic.py::test_sparsify
+  pytest -v sklearn_fork/linear_model/tests/test_logistic.py::test_sparsify
 
 or use the `-k pytest parameter
 <https://docs.pytest.org/en/latest/example/markers.html#using-k-expr-to-select-tests-based-on-their-name>`_
@@ -67,7 +67,7 @@ to select tests based on their name. For instance,:
 
 .. prompt:: bash $
 
-  pytest sklearn/tests/test_common.py -v -k LogisticRegression
+  pytest sklearn_fork/tests/test_common.py -v -k LogisticRegression
 
 will run all :term:`common tests` for the ``LogisticRegression`` estimator.
 
@@ -136,7 +136,7 @@ Issue: Software versions
 
         To help diagnose your issue, please paste the output of:
         ```py
-        import sklearn; sklearn.show_versions()
+        import sklearn_fork; sklearn_fork.show_versions()
         ```
         Thanks.
 

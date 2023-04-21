@@ -16,7 +16,7 @@ example of this pattern that are heavily used.
     The unsupervised data reduction and the supervised estimator can be
     chained in one step. See :ref:`pipeline`.
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 PCA: principal component analysis
 ----------------------------------

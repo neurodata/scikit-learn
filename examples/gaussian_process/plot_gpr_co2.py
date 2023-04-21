@@ -34,7 +34,7 @@ print(__doc__)
 # samples. We are interested in estimating the concentration of CO2 and
 # extrapolate it for further year. First, we load the original dataset available
 # in OpenML.
-from sklearn.datasets import fetch_openml
+from sklearn_fork.datasets import fetch_openml
 
 co2 = fetch_openml(data_id=41187, as_frame=True, parser="pandas")
 co2.frame.head()
@@ -98,7 +98,7 @@ y = co2_data["co2"].to_numpy()
 # with a large length-scale enforces this component to be smooth. An trending
 # increase is not enforced as to give a degree of freedom to our model. The
 # specific length-scale and the amplitude are free hyperparameters.
-from sklearn.gaussian_process.kernels import RBF
+from sklearn_fork.gaussian_process.kernels import RBF
 
 long_term_trend_kernel = 50.0**2 * RBF(length_scale=50.0)
 
@@ -110,7 +110,7 @@ long_term_trend_kernel = 50.0**2 * RBF(length_scale=50.0)
 # taken. The length-scale of this RBF component controls the decay time and is
 # a further free parameter. This type of kernel is also known as locally
 # periodic kernel.
-from sklearn.gaussian_process.kernels import ExpSineSquared
+from sklearn_fork.gaussian_process.kernels import ExpSineSquared
 
 seasonal_kernel = (
     2.0**2
@@ -124,7 +124,7 @@ seasonal_kernel = (
 # diffuseness of the length-scales, are to be determined. A rational quadratic
 # kernel is equivalent to an RBF kernel with several length-scale and will
 # better accommodate the different irregularities.
-from sklearn.gaussian_process.kernels import RationalQuadratic
+from sklearn_fork.gaussian_process.kernels import RationalQuadratic
 
 irregularities_kernel = 0.5**2 * RationalQuadratic(length_scale=1.0, alpha=1.0)
 
@@ -134,7 +134,7 @@ irregularities_kernel = 0.5**2 * RationalQuadratic(length_scale=1.0, alpha=1.0)
 # components such as local weather phenomena, and a white kernel contribution
 # for the white noise. The relative amplitudes and the RBF's length scale are
 # further free parameters.
-from sklearn.gaussian_process.kernels import WhiteKernel
+from sklearn_fork.gaussian_process.kernels import WhiteKernel
 
 noise_kernel = 0.1**2 * RBF(length_scale=0.1) + WhiteKernel(
     noise_level=0.1**2, noise_level_bounds=(1e-5, 1e5)
@@ -157,7 +157,7 @@ co2_kernel
 # would have also scaled the target (dividing `y` by its standard deviation).
 # Thus, the hyperparameters of the different kernel would have had different
 # meaning since they would not have been expressed in ppm.
-from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn_fork.gaussian_process import GaussianProcessRegressor
 
 y_mean = y.mean()
 gaussian_process = GaussianProcessRegressor(kernel=co2_kernel, normalize_y=False)

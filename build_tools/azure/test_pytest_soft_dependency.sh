@@ -20,5 +20,5 @@ fi
 
 # .coverage from running the tests is in TEST_DIR
 pushd $TEST_DIR
-$CMD -m sklearn.utils.tests.test_estimator_checks
+$CMD -m sklearn_fork.utils.tests.test_estimator_checks
 popd

@@ -16,8 +16,8 @@ feature agglomeration.
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn import datasets, cluster
-from sklearn.feature_extraction.image import grid_to_graph
+from sklearn_fork import datasets, cluster
+from sklearn_fork.feature_extraction.image import grid_to_graph
 
 digits = datasets.load_digits()
 images = digits.images

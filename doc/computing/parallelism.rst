@@ -139,11 +139,11 @@ threads than the number of CPUs on a machine. Over-subscription happens when
 a program is running too many threads at the same time.
 
 Suppose you have a machine with 8 CPUs. Consider a case where you're running
-a :class:`~sklearn.model_selection.GridSearchCV` (parallelized with joblib)
+a :class:`~sklearn_fork.model_selection.GridSearchCV` (parallelized with joblib)
 with ``n_jobs=8`` over a
-:class:`~sklearn.ensemble.HistGradientBoostingClassifier` (parallelized with
+:class:`~sklearn_fork.ensemble.HistGradientBoostingClassifier` (parallelized with
 OpenMP). Each instance of
-:class:`~sklearn.ensemble.HistGradientBoostingClassifier` will spawn 8 threads
+:class:`~sklearn_fork.ensemble.HistGradientBoostingClassifier` will spawn 8 threads
 (since you have 8 CPUs). That's a total of ``8 * 8 = 64`` threads, which
 leads to oversubscription of threads for physical CPU resources and thus
 to scheduling overhead.
@@ -157,7 +157,7 @@ number of threads they can use, so as to avoid oversubscription. In practice
 the heuristic that joblib uses is to tell the processes to use ``max_threads
 = n_cpus // n_jobs``, via their corresponding environment variable. Back to
 our example from above, since the joblib backend of
-:class:`~sklearn.model_selection.GridSearchCV` is ``loky``, each process will
+:class:`~sklearn_fork.model_selection.GridSearchCV` is ``loky``, each process will
 only be able to use 1 thread instead of 8, thus mitigating the
 oversubscription issue.
 
@@ -192,7 +192,7 @@ Configuration switches
 Python API
 ..........
 
-:func:`sklearn.set_config` and :func:`sklearn.config_context` can be used to change
+:func:`sklearn_fork.set_config` and :func:`sklearn_fork.config_context` can be used to change
 parameters of the configuration which control aspect of parallelism.
 
 .. _environment_variable:
@@ -206,13 +206,13 @@ These environment variables should be set before importing scikit-learn.
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets the default value for the `assume_finite` argument of
-:func:`sklearn.set_config`.
+:func:`sklearn_fork.set_config`.
 
 `SKLEARN_WORKING_MEMORY`
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sets the default value for the `working_memory` argument of
-:func:`sklearn.set_config`.
+:func:`sklearn_fork.set_config`.
 
 `SKLEARN_SEED`
 ~~~~~~~~~~~~~~

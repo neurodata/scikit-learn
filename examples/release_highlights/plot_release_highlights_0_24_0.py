@@ -4,7 +4,7 @@
 Release Highlights for scikit-learn 0.24
 ========================================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 We are pleased to announce the release of scikit-learn 0.24! Many bug fixes
 and improvements were added, as well as some new key features. We detail
@@ -26,11 +26,11 @@ or with conda::
 # ---------------------------------------------------------
 # Successive Halving, a state of the art method, is now available to
 # explore the space of the parameters and identify their best combination.
-# :class:`~sklearn.model_selection.HalvingGridSearchCV` and
-# :class:`~sklearn.model_selection.HalvingRandomSearchCV` can be
+# :class:`~sklearn_fork.model_selection.HalvingGridSearchCV` and
+# :class:`~sklearn_fork.model_selection.HalvingRandomSearchCV` can be
 # used as drop-in replacement for
-# :class:`~sklearn.model_selection.GridSearchCV` and
-# :class:`~sklearn.model_selection.RandomizedSearchCV`.
+# :class:`~sklearn_fork.model_selection.GridSearchCV` and
+# :class:`~sklearn_fork.model_selection.RandomizedSearchCV`.
 # Successive Halving is an iterative selection process illustrated in the
 # figure below. The first iteration is run with a small amount of resources,
 # where the resource typically corresponds to the number of training samples,
@@ -51,10 +51,10 @@ or with conda::
 
 import numpy as np
 from scipy.stats import randint
-from sklearn.experimental import enable_halving_search_cv  # noqa
-from sklearn.model_selection import HalvingRandomSearchCV
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import make_classification
+from sklearn_fork.experimental import enable_halving_search_cv  # noqa
+from sklearn_fork.model_selection import HalvingRandomSearchCV
+from sklearn_fork.ensemble import RandomForestClassifier
+from sklearn_fork.datasets import make_classification
 
 rng = np.random.RandomState(0)
 
@@ -79,8 +79,8 @@ rsh.best_params_
 ##############################################################################
 # Native support for categorical features in HistGradientBoosting estimators
 # --------------------------------------------------------------------------
-# :class:`~sklearn.ensemble.HistGradientBoostingClassifier` and
-# :class:`~sklearn.ensemble.HistGradientBoostingRegressor` now have native
+# :class:`~sklearn_fork.ensemble.HistGradientBoostingClassifier` and
+# :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor` now have native
 # support for categorical features: they can consider splits on non-ordered,
 # categorical data. Read more in the :ref:`User Guide
 # <categorical_support_gbdt>`.
@@ -118,9 +118,9 @@ rsh.best_params_
 # Read more in the :ref:`User guide <self_training>`.
 
 import numpy as np
-from sklearn import datasets
-from sklearn.semi_supervised import SelfTrainingClassifier
-from sklearn.svm import SVC
+from sklearn_fork import datasets
+from sklearn_fork.semi_supervised import SelfTrainingClassifier
+from sklearn_fork.svm import SVC
 
 rng = np.random.RandomState(42)
 iris = datasets.load_iris()
@@ -134,15 +134,15 @@ self_training_model.fit(iris.data, iris.target)
 # New SequentialFeatureSelector transformer
 # -----------------------------------------
 # A new iterative transformer to select features is available:
-# :class:`~sklearn.feature_selection.SequentialFeatureSelector`.
+# :class:`~sklearn_fork.feature_selection.SequentialFeatureSelector`.
 # Sequential Feature Selection can add features one at a time (forward
 # selection) or remove features from the list of the available features
 # (backward selection), based on a cross-validated score maximization.
 # See the :ref:`User Guide <sequential_feature_selection>`.
 
-from sklearn.feature_selection import SequentialFeatureSelector
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.datasets import load_iris
+from sklearn_fork.feature_selection import SequentialFeatureSelector
+from sklearn_fork.neighbors import KNeighborsClassifier
+from sklearn_fork.datasets import load_iris
 
 X, y = load_iris(return_X_y=True, as_frame=True)
 feature_names = X.columns
@@ -157,17 +157,17 @@ print(
 ##############################################################################
 # New PolynomialCountSketch kernel approximation function
 # -------------------------------------------------------
-# The new :class:`~sklearn.kernel_approximation.PolynomialCountSketch`
+# The new :class:`~sklearn_fork.kernel_approximation.PolynomialCountSketch`
 # approximates a polynomial expansion of a feature space when used with linear
 # models, but uses much less memory than
-# :class:`~sklearn.preprocessing.PolynomialFeatures`.
+# :class:`~sklearn_fork.preprocessing.PolynomialFeatures`.
 
-from sklearn.datasets import fetch_covtype
-from sklearn.pipeline import make_pipeline
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.kernel_approximation import PolynomialCountSketch
-from sklearn.linear_model import LogisticRegression
+from sklearn_fork.datasets import fetch_covtype
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.preprocessing import MinMaxScaler
+from sklearn_fork.kernel_approximation import PolynomialCountSketch
+from sklearn_fork.linear_model import LogisticRegression
 
 X, y = fetch_covtype(return_X_y=True)
 pipe = make_pipeline(
@@ -194,11 +194,11 @@ linear_baseline.fit(X_train, y_train).score(X_test, y_test)
 # prediction on a feature for each sample separately, with one line per sample.
 # See the :ref:`User Guide <individual_conditional>`
 
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.datasets import fetch_california_housing
+from sklearn_fork.ensemble import RandomForestRegressor
+from sklearn_fork.datasets import fetch_california_housing
 
-# from sklearn.inspection import plot_partial_dependence
-from sklearn.inspection import PartialDependenceDisplay
+# from sklearn_fork.inspection import plot_partial_dependence
+from sklearn_fork.inspection import PartialDependenceDisplay
 
 X, y = fetch_california_housing(return_X_y=True, as_frame=True)
 features = ["MedInc", "AveOccup", "HouseAge", "AveRooms"]
@@ -228,12 +228,12 @@ display.figure_.subplots_adjust(hspace=0.3)
 # New Poisson splitting criterion for DecisionTreeRegressor
 # ---------------------------------------------------------
 # The integration of Poisson regression estimation continues from version 0.23.
-# :class:`~sklearn.tree.DecisionTreeRegressor` now supports a new `'poisson'`
+# :class:`~sklearn_fork.tree.DecisionTreeRegressor` now supports a new `'poisson'`
 # splitting criterion. Setting `criterion="poisson"` might be a good choice
 # if your target is a count or a frequency.
 
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.model_selection import train_test_split
+from sklearn_fork.tree import DecisionTreeRegressor
+from sklearn_fork.model_selection import train_test_split
 import numpy as np
 
 n_samples, n_features = 1000, 20
@@ -256,7 +256,7 @@ regressor.fit(X_train, y_train)
 #   practices <common_pitfalls>`,
 # - an example illustrating how to :ref:`statistically compare the performance of
 #   models <sphx_glr_auto_examples_model_selection_plot_grid_search_stats.py>`
-#   evaluated using :class:`~sklearn.model_selection.GridSearchCV`,
+#   evaluated using :class:`~sklearn_fork.model_selection.GridSearchCV`,
 # - an example on how to :ref:`interpret coefficients of linear models
 #   <sphx_glr_auto_examples_inspection_plot_linear_model_coefficient_interpretation.py>`,
 # - an :ref:`example

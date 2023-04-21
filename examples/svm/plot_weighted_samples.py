@@ -16,7 +16,7 @@ deformation of the decision boundary very visible.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import svm
+from sklearn_fork import svm
 
 
 def plot_decision_function(classifier, sample_weight, axis, title):

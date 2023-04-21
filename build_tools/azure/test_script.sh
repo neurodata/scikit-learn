@@ -32,7 +32,7 @@ cd $TEST_DIR
 
 python -c "import joblib; print(f'Number of cores (physical): \
 {joblib.cpu_count()} ({joblib.cpu_count(only_physical_cores=True)})')"
-python -c "import sklearn; sklearn.show_versions()"
+python -c "import sklearn_fork; sklearn_fork.show_versions()"
 
 show_installed_libraries
 
@@ -45,7 +45,7 @@ if [[ "$COVERAGE" == "true" ]]; then
     # report that otherwise hides the test failures and forces long scrolls in
     # the CI logs.
     export COVERAGE_PROCESS_START="$BUILD_SOURCESDIRECTORY/.coveragerc"
-    TEST_CMD="$TEST_CMD --cov-config='$COVERAGE_PROCESS_START' --cov sklearn --cov-report="
+    TEST_CMD="$TEST_CMD --cov-config='$COVERAGE_PROCESS_START' --cov sklearn_fork --cov-report="
 fi
 
 if [[ -n "$CHECK_WARNINGS" ]]; then
@@ -83,5 +83,5 @@ if [[ -n "$SELECTED_TESTS" ]]; then
 fi
 
 set -x
-eval "$TEST_CMD --pyargs sklearn"
+eval "$TEST_CMD --pyargs sklearn_fork"
 set +x

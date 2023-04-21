@@ -13,7 +13,7 @@ better**.
 
 ::
 
-    >>> from sklearn import datasets, svm
+    >>> from sklearn_fork import datasets, svm
     >>> X_digits, y_digits = datasets.load_digits(return_X_y=True)
     >>> svc = svm.SVC(C=1, kernel='linear')
     >>> svc.fit(X_digits[:-100], y_digits[:-100]).score(X_digits[-100:], y_digits[-100:])
@@ -39,7 +39,7 @@ data in *folds* that we use for training and testing::
     >>> print(scores)
     [0.934..., 0.956..., 0.939...]
 
-.. currentmodule:: sklearn.model_selection
+.. currentmodule:: sklearn_fork.model_selection
 
 This is called a :class:`KFold` cross-validation.
 
@@ -57,7 +57,7 @@ of the chosen cross-validation strategy.
 
 This example shows an example usage of the ``split`` method.
 
-    >>> from sklearn.model_selection import KFold, cross_val_score
+    >>> from sklearn_fork.model_selection import KFold, cross_val_score
     >>> X = ["a", "a", "a", "b", "b", "c", "c", "c", "c", "c"]
     >>> k_fold = KFold(n_splits=5)
     >>> for train_indices, test_indices in k_fold.split(X):
@@ -177,7 +177,7 @@ scoring method.
     - Generates train/test indices based on predefined splits.
 
 
-.. currentmodule:: sklearn.svm
+.. currentmodule:: sklearn_fork.svm
 
 .. topic:: **Exercise**
 
@@ -201,14 +201,14 @@ Grid-search and cross-validated estimators
 Grid-search
 -------------
 
-.. currentmodule:: sklearn.model_selection
+.. currentmodule:: sklearn_fork.model_selection
 
 scikit-learn provides an object that, given data, computes the score
 during the fit of an estimator on a parameter grid and chooses the
 parameters to maximize the cross-validation score. This object takes an
 estimator during the construction and exposes an estimator API::
 
-    >>> from sklearn.model_selection import GridSearchCV, cross_val_score
+    >>> from sklearn_fork.model_selection import GridSearchCV, cross_val_score
     >>> Cs = np.logspace(-6, -1, 10)
     >>> clf = GridSearchCV(estimator=svc, param_grid=dict(C=Cs),
     ...                    n_jobs=-1)
@@ -256,7 +256,7 @@ algorithm-by-algorithm basis. This is why, for certain estimators,
 scikit-learn exposes :ref:`cross_validation` estimators that set their
 parameter automatically by cross-validation::
 
-    >>> from sklearn import linear_model, datasets
+    >>> from sklearn_fork import linear_model, datasets
     >>> lasso = linear_model.LassoCV()
     >>> X_diabetes, y_diabetes = datasets.load_diabetes(return_X_y=True)
     >>> lasso.fit(X_diabetes, y_diabetes)

@@ -36,9 +36,9 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 
-from sklearn import datasets
-from sklearn.mixture import GaussianMixture
-from sklearn.model_selection import StratifiedKFold
+from sklearn_fork import datasets
+from sklearn_fork.mixture import GaussianMixture
+from sklearn_fork.model_selection import StratifiedKFold
 
 colors = ["navy", "turquoise", "darkorange"]
 

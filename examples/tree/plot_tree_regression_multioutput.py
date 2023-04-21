@@ -17,7 +17,7 @@ details of the training data and learn from the noise, i.e. they overfit.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.tree import DecisionTreeRegressor
+from sklearn_fork.tree import DecisionTreeRegressor
 
 # Create a random dataset
 rng = np.random.RandomState(1)

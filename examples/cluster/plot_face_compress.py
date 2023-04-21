@@ -3,7 +3,7 @@
 Vector Quantization Example
 ===========================
 
-This example shows how one can use :class:`~sklearn.preprocessing.KBinsDiscretizer`
+This example shows how one can use :class:`~sklearn_fork.preprocessing.KBinsDiscretizer`
 to perform vector quantization on a set of toy image, the raccoon face.
 """
 
@@ -68,12 +68,12 @@ _ = fig.suptitle("Original image of a raccoon face")
 # """""""""""""""""
 #
 # The compression can be done using a
-# :class:`~sklearn.preprocessing.KBinsDiscretizer`. We need to choose a strategy
+# :class:`~sklearn_fork.preprocessing.KBinsDiscretizer`. We need to choose a strategy
 # to define the 8 gray values to sub-sample. The simplest strategy is to define
 # them equally spaced, which correspond to setting `strategy="uniform"`. From
 # the previous histogram, we know that this strategy is certainly not optimal.
 
-from sklearn.preprocessing import KBinsDiscretizer
+from sklearn_fork.preprocessing import KBinsDiscretizer
 
 n_bins = 8
 encoder = KBinsDiscretizer(
@@ -173,7 +173,7 @@ print(f"Compression ratio: {compressed_raccoon_kmeans.nbytes / raccoon_face.nbyt
 print(f"Type of the compressed image: {compressed_raccoon_kmeans.dtype}")
 
 # %%
-# Indeed, the output of the :class:`~sklearn.preprocessing.KBinsDiscretizer` is
+# Indeed, the output of the :class:`~sklearn_fork.preprocessing.KBinsDiscretizer` is
 # an array of 64-bit float. It means that it takes x8 more memory. However, we
 # use this 64-bit float representation to encode 8 values. Indeed, we will save
 # memory only if we cast the compressed image into an array of 3-bits integers. We

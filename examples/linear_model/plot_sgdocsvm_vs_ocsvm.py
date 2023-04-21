@@ -4,15 +4,15 @@ One-Class SVM versus One-Class SVM using Stochastic Gradient Descent
 ====================================================================
 
 This example shows how to approximate the solution of
-:class:`sklearn.svm.OneClassSVM` in the case of an RBF kernel with
-:class:`sklearn.linear_model.SGDOneClassSVM`, a Stochastic Gradient Descent
+:class:`sklearn_fork.svm.OneClassSVM` in the case of an RBF kernel with
+:class:`sklearn_fork.linear_model.SGDOneClassSVM`, a Stochastic Gradient Descent
 (SGD) version of the One-Class SVM. A kernel approximation is first used in
-order to apply :class:`sklearn.linear_model.SGDOneClassSVM` which implements a
+order to apply :class:`sklearn_fork.linear_model.SGDOneClassSVM` which implements a
 linear One-Class SVM using SGD.
 
-Note that :class:`sklearn.linear_model.SGDOneClassSVM` scales linearly with
+Note that :class:`sklearn_fork.linear_model.SGDOneClassSVM` scales linearly with
 the number of samples whereas the complexity of a kernelized
-:class:`sklearn.svm.OneClassSVM` is at best quadratic with respect to the
+:class:`sklearn_fork.svm.OneClassSVM` is at best quadratic with respect to the
 number of samples. It is not the purpose of this example to illustrate the
 benefits of such an approximation in terms of computation time but rather to
 show that we obtain similar results on a toy dataset.
@@ -22,10 +22,10 @@ show that we obtain similar results on a toy dataset.
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
-from sklearn.svm import OneClassSVM
-from sklearn.linear_model import SGDOneClassSVM
-from sklearn.kernel_approximation import Nystroem
-from sklearn.pipeline import make_pipeline
+from sklearn_fork.svm import OneClassSVM
+from sklearn_fork.linear_model import SGDOneClassSVM
+from sklearn_fork.kernel_approximation import Nystroem
+from sklearn_fork.pipeline import make_pipeline
 
 font = {"weight": "normal", "size": 15}
 

@@ -19,12 +19,12 @@ training set.
 
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.neighbors import KNeighborsClassifier, NeighborhoodComponentsAnalysis
-from sklearn.pipeline import Pipeline
-from sklearn.inspection import DecisionBoundaryDisplay
+from sklearn_fork import datasets
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.neighbors import KNeighborsClassifier, NeighborhoodComponentsAnalysis
+from sklearn_fork.pipeline import Pipeline
+from sklearn_fork.inspection import DecisionBoundaryDisplay
 
 
 n_neighbors = 1

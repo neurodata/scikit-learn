@@ -22,7 +22,7 @@ propagate correctly around the circle.
 # Here, all labels but two are tagged as unknown.
 
 import numpy as np
-from sklearn.datasets import make_circles
+from sklearn_fork.datasets import make_circles
 
 n_samples = 200
 X, y = make_circles(n_samples=n_samples, shuffle=False)
@@ -66,9 +66,9 @@ _ = plt.title("Raw data (2 classes=outer and inner)")
 
 # %%
 #
-# The aim of :class:`~sklearn.semi_supervised.LabelSpreading` is to associate
+# The aim of :class:`~sklearn_fork.semi_supervised.LabelSpreading` is to associate
 # a label to sample where the label is initially unknown.
-from sklearn.semi_supervised import LabelSpreading
+from sklearn_fork.semi_supervised import LabelSpreading
 
 label_spread = LabelSpreading(kernel="knn", alpha=0.8)
 label_spread.fit(X, labels)

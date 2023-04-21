@@ -4,9 +4,9 @@ Permutation Importance vs Random Forest Feature Importance (MDI)
 ================================================================
 
 In this example, we will compare the impurity-based feature importance of
-:class:`~sklearn.ensemble.RandomForestClassifier` with the
+:class:`~sklearn_fork.ensemble.RandomForestClassifier` with the
 permutation importance on the titanic dataset using
-:func:`~sklearn.inspection.permutation_importance`. We will show that the
+:func:`~sklearn_fork.inspection.permutation_importance`. We will show that the
 impurity-based feature importance can inflate the importance of numerical
 features.
 
@@ -40,8 +40,8 @@ import numpy as np
 #   values as records).
 # - ``random_cat`` is a low cardinality categorical variable (3 possible
 #   values).
-from sklearn.datasets import fetch_openml
-from sklearn.model_selection import train_test_split
+from sklearn_fork.datasets import fetch_openml
+from sklearn_fork.model_selection import train_test_split
 
 X, y = fetch_openml(
     "titanic", version=1, as_frame=True, return_X_y=True, parser="pandas"
@@ -60,15 +60,15 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_sta
 # We define a predictive model based on a random forest. Therefore, we will make
 # the following preprocessing steps:
 #
-# - use :class:`~sklearn.preprocessing.OrdinalEncoder` to encode the
+# - use :class:`~sklearn_fork.preprocessing.OrdinalEncoder` to encode the
 #   categorical features;
-# - use :class:`~sklearn.impute.SimpleImputer` to fill missing values for
+# - use :class:`~sklearn_fork.impute.SimpleImputer` to fill missing values for
 #   numerical features using a mean strategy.
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.impute import SimpleImputer
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OrdinalEncoder
+from sklearn_fork.ensemble import RandomForestClassifier
+from sklearn_fork.impute import SimpleImputer
+from sklearn_fork.compose import ColumnTransformer
+from sklearn_fork.pipeline import Pipeline
+from sklearn_fork.preprocessing import OrdinalEncoder
 
 categorical_encoder = OrdinalEncoder(
     handle_unknown="use_encoded_value", unknown_value=-1, encoded_missing_value=-1
@@ -160,7 +160,7 @@ ax.figure.tight_layout()
 #
 # Also note that both random features have very low importances (close to 0) as
 # expected.
-from sklearn.inspection import permutation_importance
+from sklearn_fork.inspection import permutation_importance
 
 result = permutation_importance(
     rf, X_test, y_test, n_repeats=10, random_state=42, n_jobs=2

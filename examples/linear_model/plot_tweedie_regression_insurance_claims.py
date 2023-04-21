@@ -50,10 +50,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from sklearn.datasets import fetch_openml
-from sklearn.metrics import mean_tweedie_deviance
-from sklearn.metrics import mean_absolute_error
-from sklearn.metrics import mean_squared_error
+from sklearn_fork.datasets import fetch_openml
+from sklearn_fork.metrics import mean_tweedie_deviance
+from sklearn_fork.metrics import mean_absolute_error
+from sklearn_fork.metrics import mean_squared_error
 
 
 def load_mtpl2(n_samples=None):
@@ -209,10 +209,10 @@ def score_estimator(
 # containing the number of claims (``ClaimNb``), with the freMTPL2sev table,
 # containing the claim amount (``ClaimAmount``) for the same policy ids
 # (``IDpol``).
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import FunctionTransformer, OneHotEncoder
-from sklearn.preprocessing import StandardScaler, KBinsDiscretizer
-from sklearn.compose import ColumnTransformer
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import FunctionTransformer, OneHotEncoder
+from sklearn_fork.preprocessing import StandardScaler, KBinsDiscretizer
+from sklearn_fork.compose import ColumnTransformer
 
 
 df = load_mtpl2()
@@ -274,8 +274,8 @@ with pd.option_context("display.max_columns", 15):
 # constant rate in a given time interval (``Exposure``, in units of years).
 # Here we model the frequency ``y = ClaimNb / Exposure``, which is still a
 # (scaled) Poisson distribution, and use ``Exposure`` as `sample_weight`.
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import PoissonRegressor
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.linear_model import PoissonRegressor
 
 
 df_train, df_test, X_train, X_test = train_test_split(df, X, random_state=0)
@@ -394,7 +394,7 @@ plot_obs_pred(
 #   on :math:`(0, \infty)`, not :math:`[0, \infty)`.
 # - We use ``ClaimNb`` as `sample_weight` to account for policies that contain
 #   more than one claim.
-from sklearn.linear_model import GammaRegressor
+from sklearn_fork.linear_model import GammaRegressor
 
 
 mask_train = df_train["ClaimAmount"] > 0
@@ -427,7 +427,7 @@ print(scores)
 # features and always predicts a constant value, i.e. the average claim
 # amount, in the same setting:
 
-from sklearn.dummy import DummyRegressor
+from sklearn_fork.dummy import DummyRegressor
 
 dummy_sev = DummyRegressor(strategy="mean")
 dummy_sev.fit(
@@ -451,7 +451,7 @@ print(scores)
 # %%
 #
 # We conclude that the claim amount is very challenging to predict. Still, the
-# :class:`~sklearn.linear.GammaRegressor` is able to leverage some information
+# :class:`~sklearn_fork.linear.GammaRegressor` is able to leverage some information
 # from the input features to slighly improve upon the mean baseline in terms
 # of D².
 #
@@ -532,13 +532,13 @@ plt.tight_layout()
 # Poisson-Gamma distribution of the total claim amount. This is equivalent to
 # a Tweedie distribution with a `power` parameter between 1 and 2.
 #
-# The :func:`sklearn.metrics.mean_tweedie_deviance` depends on a `power`
+# The :func:`sklearn_fork.metrics.mean_tweedie_deviance` depends on a `power`
 # parameter. As we do not know the true value of the `power` parameter, we here
 # compute the mean deviances for a grid of possible values, and compare the
 # models side by side, i.e. we compare them at identical values of `power`.
 # Ideally, we hope that one model will be consistently better than the other,
 # regardless of `power`.
-from sklearn.linear_model import TweedieRegressor
+from sklearn_fork.linear_model import TweedieRegressor
 
 
 glm_pure_premium = TweedieRegressor(power=1.9, alpha=0.1, solver="newton-cholesky")
@@ -641,7 +641,7 @@ print(pd.DataFrame(res).set_index("subset").T)
 # directly fit on the pure premium is operationally simpler to develop and
 # maintain as it consists of a single scikit-learn estimator instead of a pair
 # of models, each with its own set of hyperparameters.
-from sklearn.metrics import auc
+from sklearn_fork.metrics import auc
 
 
 def lorenz_curve(y_true, y_pred, exposure):

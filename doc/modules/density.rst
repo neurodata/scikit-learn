@@ -8,9 +8,9 @@ Density Estimation
 Density estimation walks the line between unsupervised learning, feature
 engineering, and data modeling.  Some of the most popular and useful
 density estimation techniques are mixture models such as
-Gaussian Mixtures (:class:`~sklearn.mixture.GaussianMixture`), and
+Gaussian Mixtures (:class:`~sklearn_fork.mixture.GaussianMixture`), and
 neighbor-based approaches such as the kernel density estimate
-(:class:`~sklearn.neighbors.KernelDensity`).
+(:class:`~sklearn_fork.neighbors.KernelDensity`).
 Gaussian Mixtures are discussed more fully in the context of
 :ref:`clustering <clustering>`, because the technique is also useful as
 an unsupervised clustering scheme.
@@ -58,7 +58,7 @@ distribution of points.
 Kernel Density Estimation
 =========================
 Kernel density estimation in scikit-learn is implemented in the
-:class:`~sklearn.neighbors.KernelDensity` estimator, which uses the
+:class:`~sklearn_fork.neighbors.KernelDensity` estimator, which uses the
 Ball Tree or KD Tree for efficient queries (see :ref:`neighbors` for
 a discussion of these).  Though the above example
 uses a 1D data set for simplicity, kernel density estimation can be
@@ -78,7 +78,7 @@ It's clear how the kernel shape affects the smoothness of the resulting
 distribution.  The scikit-learn kernel density estimator can be used as
 follows:
 
-   >>> from sklearn.neighbors import KernelDensity
+   >>> from sklearn_fork.neighbors import KernelDensity
    >>> import numpy as np
    >>> X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
    >>> kde = KernelDensity(kernel='gaussian', bandwidth=0.2).fit(X)
@@ -104,7 +104,7 @@ The parameter `bandwidth` controls this smoothing. One can either set
 manually this parameter or use Scott's and Silvermann's estimation
 methods.
 
-:class:`~sklearn.neighbors.KernelDensity` implements several common kernel
+:class:`~sklearn_fork.neighbors.KernelDensity` implements several common kernel
 forms, which are shown in the following figure:
 
 .. |kde_kernels| image:: ../auto_examples/neighbors/images/sphx_glr_plot_kde_1d_002.png
@@ -140,7 +140,7 @@ The form of these kernels is as follows:
   :math:`K(x; h) \propto \cos(\frac{\pi x}{2h})` if :math:`x < h`
 
 The kernel density estimator can be used with any of the valid distance
-metrics (see :class:`~sklearn.metrics.DistanceMetric` for a list of
+metrics (see :class:`~sklearn_fork.metrics.DistanceMetric` for a list of
 available metrics), though the results are properly normalized only
 for the Euclidean metric.  One particularly useful metric is the
 `Haversine distance <https://en.wikipedia.org/wiki/Haversine_formula>`_

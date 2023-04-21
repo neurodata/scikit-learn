@@ -22,11 +22,11 @@ correspond to the scorer (key) that is set to the ``refit`` attribute.
 import numpy as np
 from matplotlib import pyplot as plt
 
-from sklearn.datasets import make_hastie_10_2
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import make_scorer
-from sklearn.metrics import accuracy_score
-from sklearn.tree import DecisionTreeClassifier
+from sklearn_fork.datasets import make_hastie_10_2
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork.metrics import make_scorer
+from sklearn_fork.metrics import accuracy_score
+from sklearn_fork.tree import DecisionTreeClassifier
 
 # %%
 # Running ``GridSearchCV`` using multiple evaluation metrics

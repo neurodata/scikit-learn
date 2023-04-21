@@ -3,7 +3,7 @@
 Map data to a normal distribution
 =================================
 
-.. currentmodule:: sklearn.preprocessing
+.. currentmodule:: sklearn_fork.preprocessing
 
 This example demonstrates the use of the Box-Cox and Yeo-Johnson transforms
 through :class:`~PowerTransformer` to map data from various
@@ -41,9 +41,9 @@ is prone to overfitting. The use of the power transform is then recommended.
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.preprocessing import PowerTransformer
-from sklearn.preprocessing import QuantileTransformer
-from sklearn.model_selection import train_test_split
+from sklearn_fork.preprocessing import PowerTransformer
+from sklearn_fork.preprocessing import QuantileTransformer
+from sklearn_fork.model_selection import train_test_split
 
 
 N_SAMPLES = 1000

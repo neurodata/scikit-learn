@@ -1,6 +1,6 @@
 .. include:: _contributors.rst
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 .. _changes_0_18_2:
 
@@ -92,12 +92,12 @@ Bug fixes
   has less number of classes than the total data. :issue:`7799` by
   `Srivatsan Ramesh`_
 
-- Fix a bug where :class:`sklearn.feature_selection.SelectFdr` did not
+- Fix a bug where :class:`sklearn_fork.feature_selection.SelectFdr` did not
   exactly implement Benjamini-Hochberg procedure. It formerly may have
   selected fewer features than it should.
   :issue:`7490` by :user:`Peng Meng <mpjlu>`.
 
-- :class:`sklearn.manifold.LocallyLinearEmbedding` now correctly handles
+- :class:`sklearn_fork.manifold.LocallyLinearEmbedding` now correctly handles
   integer inputs. :issue:`6282` by `Jake Vanderplas`_.
 
 - The ``min_weight_fraction_leaf`` parameter of tree-based classifiers and
@@ -116,23 +116,23 @@ Bug fixes
   attribute in `transform()`. :issue:`7553` by :user:`Ekaterina
   Krivich <kiote>`.
 
-- :class:`sklearn.linear_model.LogisticRegressionCV` now correctly handles
+- :class:`sklearn_fork.linear_model.LogisticRegressionCV` now correctly handles
   string labels. :issue:`5874` by `Raghav RV`_.
 
-- Fixed a bug where :func:`sklearn.model_selection.train_test_split` raised
+- Fixed a bug where :func:`sklearn_fork.model_selection.train_test_split` raised
   an error when ``stratify`` is a list of string labels. :issue:`7593` by
   `Raghav RV`_.
 
-- Fixed a bug where :class:`sklearn.model_selection.GridSearchCV` and
-  :class:`sklearn.model_selection.RandomizedSearchCV` were not pickleable
+- Fixed a bug where :class:`sklearn_fork.model_selection.GridSearchCV` and
+  :class:`sklearn_fork.model_selection.RandomizedSearchCV` were not pickleable
   because of a pickling bug in ``np.ma.MaskedArray``. :issue:`7594` by
   `Raghav RV`_.
 
-- All cross-validation utilities in :mod:`sklearn.model_selection` now
+- All cross-validation utilities in :mod:`sklearn_fork.model_selection` now
   permit one time cross-validation splitters for the ``cv`` parameter. Also
   non-deterministic cross-validation splitters (where multiple calls to
   ``split`` produce dissimilar splits) can be used as ``cv`` parameter.
-  The :class:`sklearn.model_selection.GridSearchCV` will cross-validate each
+  The :class:`sklearn_fork.model_selection.GridSearchCV` will cross-validate each
   parameter setting on the split produced by the first ``split`` call
   to the cross-validation splitter.  :issue:`7660` by `Raghav RV`_.
 
@@ -188,9 +188,9 @@ Model Selection Enhancements and API Changes
 
 - **The model_selection module**
 
-  The new module :mod:`sklearn.model_selection`, which groups together the
-  functionalities of formerly :mod:`sklearn.cross_validation`,
-  :mod:`sklearn.grid_search` and :mod:`sklearn.learning_curve`, introduces new
+  The new module :mod:`sklearn_fork.model_selection`, which groups together the
+  functionalities of formerly :mod:`sklearn_fork.cross_validation`,
+  :mod:`sklearn_fork.grid_search` and :mod:`sklearn_fork.learning_curve`, introduces new
   possibilities such as nested cross-validation and better manipulation of
   parameter searches with Pandas.
 
@@ -200,7 +200,7 @@ Model Selection Enhancements and API Changes
 - **Data-independent CV splitters enabling nested cross-validation**
 
   The new cross-validation splitters, defined in the
-  :mod:`sklearn.model_selection`, are no longer initialized with any
+  :mod:`sklearn_fork.model_selection`, are no longer initialized with any
   data-dependent parameters such as ``y``. Instead they expose a
   :func:`split` method that takes in the data and yields a generator for the
   different splits.
@@ -350,7 +350,7 @@ Model selection and evaluation
   :issue:`6586` by :user:`YenChen Lin <yenchenlin>`
 
 - The cross-validation iterators are replaced by cross-validation splitters
-  available from :mod:`sklearn.model_selection`, allowing for nested
+  available from :mod:`sklearn_fork.model_selection`, allowing for nested
   cross-validation. See :ref:`model_selection_changes` for more information.
   :issue:`4294` by `Raghav RV`_.
 
@@ -462,7 +462,7 @@ Model evaluation and meta-estimators
 
 - Added support for substituting or disabling :class:`pipeline.Pipeline`
   and :class:`pipeline.FeatureUnion` components using the ``set_params``
-  interface that powers :mod:`sklearn.grid_search`.
+  interface that powers :mod:`sklearn_fork.grid_search`.
   See :ref:`sphx_glr_auto_examples_compose_plot_compare_reduction.py`
   By `Joel Nothman`_ and :user:`Robert McGibbon <rmcgibbo>`.
 
@@ -629,7 +629,7 @@ Model evaluation and meta-estimators
   see :issue:`6121` for
   more details. By `Loic Esteve`_.
 
-- Fix in :class:`sklearn.model_selection.StratifiedShuffleSplit` to
+- Fix in :class:`sklearn_fork.model_selection.StratifiedShuffleSplit` to
   return splits of size ``train_size`` and ``test_size`` in all cases
   (:issue:`6472`). By `Andreas Müller`_.
 
@@ -721,9 +721,9 @@ Decomposition, manifold learning and clustering
 
 Model evaluation and meta-estimators
 
-- The :mod:`sklearn.cross_validation`, :mod:`sklearn.grid_search` and
-  :mod:`sklearn.learning_curve` have been deprecated and the classes and
-  functions have been reorganized into the :mod:`sklearn.model_selection`
+- The :mod:`sklearn_fork.cross_validation`, :mod:`sklearn_fork.grid_search` and
+  :mod:`sklearn_fork.learning_curve` have been deprecated and the classes and
+  functions have been reorganized into the :mod:`sklearn_fork.model_selection`
   module. Ref :ref:`model_selection_changes` for more information.
   :issue:`4294` by `Raghav RV`_.
 
@@ -806,7 +806,7 @@ Saiwing Yeung, Sam Shleifer, Samuel St-Jean, Sartaj Singh, Sasank Chilamkurthy,
 saurabh.bansod, Scott Andrews, Scott Lowe, seales, Sebastian Raschka, Sebastian
 Saeger, Sebastián Vanrell, Sergei Lebedev, shagun Sodhani, shanmuga cv,
 Shashank Shekhar, shawpan, shengxiduan, Shota, shuckle16, Skipper Seabold,
-sklearn-ci, SmedbergM, srvanrell, Sébastien Lerique, Taranjeet, themrmax,
+sklearn_fork-ci, SmedbergM, srvanrell, Sébastien Lerique, Taranjeet, themrmax,
 Thierry, Thierry Guillemot, Thomas, Thomas Hallock, Thomas Moreau, Tim Head,
 tKammy, toastedcornflakes, Tom, TomDLT, Toshihiro Kamishima, tracer0tong, Trent
 Hauck, trevorstephens, Tue Vo, Varun, Varun Jewalikar, Viacheslav, Vighnesh

@@ -44,8 +44,8 @@ curves.
 # Here we binarize the output and add noisy features to make the problem harder.
 
 import numpy as np
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.model_selection import train_test_split
 
 iris = load_iris()
 target_names = iris.target_names
@@ -64,11 +64,11 @@ X = np.concatenate([X, random_state.randn(n_samples, 200 * n_features)], axis=1)
 ) = train_test_split(X, y, test_size=0.5, stratify=y, random_state=0)
 
 # %%
-# We train a :class:`~sklearn.linear_model.LogisticRegression` model which can
+# We train a :class:`~sklearn_fork.linear_model.LogisticRegression` model which can
 # naturally handle multiclass problems, thanks to the use of the multinomial
 # formulation.
 
-from sklearn.linear_model import LogisticRegression
+from sklearn_fork.linear_model import LogisticRegression
 
 classifier = LogisticRegression()
 y_score = classifier.fit(X_train, y_train).predict_proba(X_test)
@@ -85,16 +85,16 @@ y_score = classifier.fit(X_train, y_train).predict_proba(X_test)
 # .. note:: One should not confuse the OvR strategy used for the **evaluation**
 #     of multiclass classifiers with the OvR strategy used to **train** a
 #     multiclass classifier by fitting a set of binary classifiers (for instance
-#     via the :class:`~sklearn.multiclass.OneVsRestClassifier` meta-estimator).
+#     via the :class:`~sklearn_fork.multiclass.OneVsRestClassifier` meta-estimator).
 #     The OvR ROC evaluation can be used to scrutinize any kind of classification
 #     models irrespectively of how they were trained (see :ref:`multiclass`).
 #
-# In this section we use a :class:`~sklearn.preprocessing.LabelBinarizer` to
+# In this section we use a :class:`~sklearn_fork.preprocessing.LabelBinarizer` to
 # binarize the target by one-hot-encoding in a OvR fashion. This means that the
 # target of shape (`n_samples`,) is mapped to a target of shape (`n_samples`,
 # `n_classes`).
 
-from sklearn.preprocessing import LabelBinarizer
+from sklearn_fork.preprocessing import LabelBinarizer
 
 label_binarizer = LabelBinarizer().fit(y_train)
 y_onehot_test = label_binarizer.transform(y_test)
@@ -118,7 +118,7 @@ class_id
 
 # %%
 import matplotlib.pyplot as plt
-from sklearn.metrics import RocCurveDisplay
+from sklearn_fork.metrics import RocCurveDisplay
 
 RocCurveDisplay.from_predictions(
     y_onehot_test[:, class_id],
@@ -173,9 +173,9 @@ plt.show()
 # %%
 # In the case where the main interest is not the plot but the ROC-AUC score
 # itself, we can reproduce the value shown in the plot using
-# :class:`~sklearn.metrics.roc_auc_score`.
+# :class:`~sklearn_fork.metrics.roc_auc_score`.
 
-from sklearn.metrics import roc_auc_score
+from sklearn_fork.metrics import roc_auc_score
 
 micro_roc_auc_ovr = roc_auc_score(
     y_test,
@@ -188,10 +188,10 @@ print(f"Micro-averaged One-vs-Rest ROC AUC score:\n{micro_roc_auc_ovr:.2f}")
 
 # %%
 # This is equivalent to computing the ROC curve with
-# :class:`~sklearn.metrics.roc_curve` and then the area under the curve with
-# :class:`~sklearn.metrics.auc` for the raveled true and predicted classes.
+# :class:`~sklearn_fork.metrics.roc_curve` and then the area under the curve with
+# :class:`~sklearn_fork.metrics.auc` for the raveled true and predicted classes.
 
-from sklearn.metrics import roc_curve, auc
+from sklearn_fork.metrics import roc_curve, auc
 
 # store the fpr, tpr, and roc_auc for all averaging strategies
 fpr, tpr, roc_auc = dict(), dict(), dict()
@@ -377,7 +377,7 @@ print(f"Macro-averaged One-vs-One ROC AUC score:\n{np.average(pair_scores):.2f}"
 # %%
 # One can also assert that the macro-average we computed "by hand" is equivalent
 # to the implemented `average="macro"` option of the
-# :class:`~sklearn.metrics.roc_auc_score` function.
+# :class:`~sklearn_fork.metrics.roc_auc_score` function.
 
 macro_roc_auc_ovo = roc_auc_score(
     y_test,

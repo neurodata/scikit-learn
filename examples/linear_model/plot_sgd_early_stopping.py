@@ -29,7 +29,7 @@ until the validation score did not improve by at least ``tol`` during the last
 at the attribute ``n_iter_``.
 
 This example illustrates how the early stopping can used in the
-:class:`~sklearn.linear_model.SGDClassifier` model to achieve almost the same
+:class:`~sklearn_fork.linear_model.SGDClassifier` model to achieve almost the same
 accuracy as compared to a model built without early stopping. This can
 significantly reduce training time. Note that scores differ between the
 stopping criteria even from early iterations because some of the training data
@@ -48,12 +48,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn import linear_model
-from sklearn.datasets import fetch_openml
-from sklearn.model_selection import train_test_split
-from sklearn.utils._testing import ignore_warnings
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.utils import shuffle
+from sklearn_fork import linear_model
+from sklearn_fork.datasets import fetch_openml
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork.utils import shuffle
 
 
 def load_mnist(n_samples=None, class_0="0", class_1="8"):

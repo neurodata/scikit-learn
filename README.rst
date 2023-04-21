@@ -49,7 +49,7 @@ Scikit-learn-tree
 =================
 
 ``scikit-learn-tree`` is an alias of scikit-learn. It is a maintained fork of scikit-learn, which advances the tree submodule, while staying in-line
-with changes from upstream scikit-learn. It is an exact stand-in for ``sklearn`` in package imports, but is
+with changes from upstream scikit-learn. It is an exact stand-in for ``sklearn_fork`` in package imports, but is
 released under the name ``scikit-learn-tree`` to avoid confusion.
 
 It is currently maintained by a team of volunteers.
@@ -74,7 +74,7 @@ An example of seamless integration would be `scikit-survival <https://github.com
 only needs to implement a subclass of the Cython ``Criterion`` oject in their code to enable survival trees.
 
 Maintaining a "soft-fork" of ``scikit-learn`` in the form of a repository fork allows us to develop
-a separate package that serves as a stand-in for ``sklearn`` in any package, extends the tree submodule
+a separate package that serves as a stand-in for ``sklearn_fork`` in any package, extends the tree submodule
 and can also be synced with upstream changes in ``scikit-learn``. This enables this fork to always
 take advantage of improvements made in ``scikit-learn`` main upstream, while providing a customizable
 tree API.
@@ -123,13 +123,13 @@ We release wheels for common distributions and this is thus installable via pip.
 
     pip install scikit-learn-tree
 
-This will install ``scikit-learn-tree`` under the namespace of ``sklearn``, which then
-can be used as a stand-in for any package that relies on the public API of ``sklearn``.
+This will install ``scikit-learn-tree`` under the namespace of ``sklearn_fork``, which then
+can be used as a stand-in for any package that relies on the public API of ``sklearn_fork``.
 
 For example, any usage of ``scikit-learn`` is preserved with ``scikit-learn-tree``
 
-  >>> # the sklearn installed is that of scikit-learn-tree and is equivalent to scikit-learn
-  >>> from sklearn.ensemble import RandomForestClassifier
+  >>> # the sklearn_fork installed is that of scikit-learn-tree and is equivalent to scikit-learn
+  >>> from sklearn_fork.ensemble import RandomForestClassifier
   >>> clf = RandomForestClassifier(random_state=0)
   >>> X = [[ 1,  2,  3],  # 2 samples, 3 features
   ...      [11, 12, 13]]
@@ -197,7 +197,7 @@ Candidate changes and PRs accepted into the fork are those that:
 Decision tree generalizations
 -----------------------------
 
-``Scikit-learn`` provides an axis-aligned `sklearn.tree.DecisionTreeClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html>`_
+``Scikit-learn`` provides an axis-aligned `sklearn_fork.tree.DecisionTreeClassifier <https://scikit-learn.org/stable/modules/generated/sklearn_fork.tree.DecisionTreeClassifier.html>`_
 decision tree model (classifier and regressor), which has a few fundamental limitations
 that prevent 3rd parties from utilizing the existing class, without forking a large
 amount of copy/pasted Python and Cython code. We highlight those limitations here
@@ -226,25 +226,25 @@ change without warning.
 
 Python API:
 
-- ``sklearn.tree.BaseDecisionTree`` assumes the underlying tree model is supervised: The ``y``
+- ``sklearn_fork.tree.BaseDecisionTree`` assumes the underlying tree model is supervised: The ``y``
   parameter is required to be passed in, which is not necessary for general tree-based models.
   For example, an unsupervised tree may pass in ``y=None``.
   - Our fix: We fix this API, so the ``BaseDecisionTree`` is subclassable by unsupervised tree models that do not require ``y`` to be defined.
-- ``sklearn.tree.BaseDecisionTree`` does not provide a way to generalize the ``Criterion``, ``Splitter``
+- ``sklearn_fork.tree.BaseDecisionTree`` does not provide a way to generalize the ``Criterion``, ``Splitter``
   and ``Tree`` Cython classes used: The current codebase requires users to define custom
   criterion and/or splitters outside the instantiation of the ``BaseDecisionTree``. This prevents
   users from generalizing the ``Criterion`` and ``Splitter`` and creating a neat Python API wrapper.
   Moreover, the ``Tree`` class is not customizable.
   - Our fix: We internally implement a private function to actually build the entire tree, ``BaseDecisionTree._build_tree``, which can be overridden in subclasses that customize the criterion, splitter, or tree, or any combination of them.
-- ``sklearn.ensemble.BaseForest`` and its subclass algorithms are slow when ``n_samples`` is very high. Binning
+- ``sklearn_fork.ensemble.BaseForest`` and its subclass algorithms are slow when ``n_samples`` is very high. Binning
   features into a histogram, which is the basis of "LightGBM" and "HistGradientBoostingClassifier" is a computational
   trick that can both significantly increase runtime efficiency, but also help prevent overfitting in trees, since
   the sorting in "BestSplitter" is done on bins rather than the continuous feature values. This would enable
   random forests and their variants to scale to millions of samples.
   - Our fix: We added a ``max_bins=None`` keyword argument to the ``BaseForest`` class, and all its subclasses. The default behavior is no binning. The current implementation is not necessarily efficient. There are several improvements to be made. See below.
 
-Overall, the existing tree models, such as `sklearn.tree.DecisionTreeClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html>`_
-and `sklearn.ensemble.RandomForestClassifier <https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html#sklearn.ensemble.RandomForestClassifier>`_ all work exactly the same as they
+Overall, the existing tree models, such as `sklearn_fork.tree.DecisionTreeClassifier <https://scikit-learn.org/stable/modules/generated/sklearn_fork.tree.DecisionTreeClassifier.html>`_
+and `sklearn_fork.ensemble.RandomForestClassifier <https://scikit-learn.org/stable/modules/generated/sklearn_fork.ensemble.RandomForestClassifier.html#sklearn_fork.ensemble.RandomForestClassifier>`_ all work exactly the same as they
 would in ``scikit-learn`` main, but these extensions enable 3rd-party packages to extend
 the Cython/Python API easily.
 

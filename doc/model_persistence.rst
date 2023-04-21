@@ -19,8 +19,8 @@ It is possible to save a model in scikit-learn by using Python's built-in
 persistence model, namely `pickle
 <https://docs.python.org/3/library/pickle.html>`_::
 
-  >>> from sklearn import svm
-  >>> from sklearn import datasets
+  >>> from sklearn_fork import svm
+  >>> from sklearn_fork import datasets
   >>> clf = svm.SVC()
   >>> X, y= datasets.load_iris(return_X_y=True)
   >>> clf.fit(X, y)
@@ -57,10 +57,10 @@ with::
 
 When an estimator is unpickled with a scikit-learn version that is inconsistent
 with the version the estimator was pickled with, a
-:class:`~sklearn.exceptions.InconsistentVersionWarning` is raised. This warning
+:class:`~sklearn_fork.exceptions.InconsistentVersionWarning` is raised. This warning
 can be caught to obtain the original version the estimator was pickled with:
 
-  from sklearn.exceptions import InconsistentVersionWarning
+  from sklearn_fork.exceptions import InconsistentVersionWarning
   warnings.simplefilter("error", InconsistentVersionWarning)
 
   try:
@@ -154,8 +154,8 @@ It aims to facilitate the conversion of the data
 models between different machine learning frameworks, and to improve their
 portability on different computing architectures. More details are available
 from the `ONNX tutorial <https://onnx.ai/get-started.html>`_.
-To convert scikit-learn model to ONNX a specific tool `sklearn-onnx
-<http://onnx.ai/sklearn-onnx/>`_ has been developed.
+To convert scikit-learn model to ONNX a specific tool `sklearn_fork-onnx
+<http://onnx.ai/sklearn_fork-onnx/>`_ has been developed.
 
 PMML is an implementation of the `XML
 <https://en.wikipedia.org/wiki/XML>`_ document standard

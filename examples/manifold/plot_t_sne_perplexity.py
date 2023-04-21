@@ -31,7 +31,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from matplotlib.ticker import NullFormatter
-from sklearn import manifold, datasets
+from sklearn_fork import manifold, datasets
 from time import time
 
 n_samples = 150

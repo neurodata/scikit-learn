@@ -30,10 +30,10 @@ therefore are not shown.
 
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import make_gaussian_quantiles
-from sklearn.ensemble import AdaBoostClassifier
-from sklearn.metrics import accuracy_score
-from sklearn.tree import DecisionTreeClassifier
+from sklearn_fork.datasets import make_gaussian_quantiles
+from sklearn_fork.ensemble import AdaBoostClassifier
+from sklearn_fork.metrics import accuracy_score
+from sklearn_fork.tree import DecisionTreeClassifier
 
 
 X, y = make_gaussian_quantiles(

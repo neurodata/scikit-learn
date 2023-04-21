@@ -6,7 +6,7 @@ Utilities useful during the build.
 
 
 import os
-import sklearn
+import sklearn_fork
 import contextlib
 
 from .pre_build_helpers import basic_check_build
@@ -15,7 +15,7 @@ from .._min_dependencies import CYTHON_MIN_VERSION
 from ..externals._packaging.version import parse
 
 
-DEFAULT_ROOT = "sklearn"
+DEFAULT_ROOT = "sklearn_fork"
 
 
 def _check_cython_version():
@@ -51,11 +51,11 @@ def cythonize_extensions(extension):
     # `check_openmp_support` compiles a small test program to see if the
     # compilers are properly configured to build with OpenMP. This is expensive
     # and we only want to call this function once.
-    # The result of this check is cached as a private attribute on the sklearn
+    # The result of this check is cached as a private attribute on the sklearn_fork
     # module (only at build-time) to be used in the build_ext subclass defined
     # in the top-level setup.py file to actually build the compiled extensions
     # with OpenMP flags if needed.
-    sklearn._OPENMP_SUPPORTED = check_openmp_support()
+    sklearn_fork._OPENMP_SUPPORTED = check_openmp_support()
 
     n_jobs = 1
     with contextlib.suppress(ImportError):

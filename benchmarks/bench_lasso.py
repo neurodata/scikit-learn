@@ -15,7 +15,7 @@ import gc
 from time import time
 import numpy as np
 
-from sklearn.datasets import make_regression
+from sklearn_fork.datasets import make_regression
 
 
 def compute_bench(alpha, n_samples, n_features, precompute):
@@ -59,7 +59,7 @@ def compute_bench(alpha, n_samples, n_features, precompute):
 
 
 if __name__ == "__main__":
-    from sklearn.linear_model import Lasso, LassoLars
+    from sklearn_fork.linear_model import Lasso, LassoLars
     import matplotlib.pyplot as plt
 
     alpha = 0.01  # regularization parameter

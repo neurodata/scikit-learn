@@ -17,8 +17,8 @@ feature for each :term:`sample` separately, with one line per sample.
 Only one feature of interest is supported for ICE plots.
 
 This example shows how to obtain partial dependence and ICE plots from a
-:class:`~sklearn.neural_network.MLPRegressor` and a
-:class:`~sklearn.ensemble.HistGradientBoostingRegressor` trained on the
+:class:`~sklearn_fork.neural_network.MLPRegressor` and a
+:class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor` trained on the
 bike sharing dataset. The example is inspired by [1]_.
 
 .. [1] `Molnar, Christoph. "Interpretable machine learning.
@@ -40,7 +40,7 @@ bike sharing dataset. The example is inspired by [1]_.
 #
 # We will use the bike sharing dataset. The goal is to predict the number of bike
 # rentals using weather and season data as well as the datetime information.
-from sklearn.datasets import fetch_openml
+from sklearn_fork.datasets import fetch_openml
 
 bikes = fetch_openml("Bike_Sharing_Demand", version=2, as_frame=True, parser="pandas")
 # Make an explicit copy to avoid "SettingWithCopyWarning" from pandas
@@ -146,19 +146,19 @@ for ax, (idx, df) in zip(axs, average_bike_rentals.groupby("year")):
 # ----------------------------------------
 #
 # Since we later use two different models, a
-# :class:`~sklearn.neural_network.MLPRegressor` and a
-# :class:`~sklearn.ensemble.HistGradientBoostingRegressor`, we create two different
+# :class:`~sklearn_fork.neural_network.MLPRegressor` and a
+# :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor`, we create two different
 # preprocessors, specific for each model.
 #
 # Preprocessor for the neural network model
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-# We will use a :class:`~sklearn.preprocessing.QuantileTransformer` to scale the
+# We will use a :class:`~sklearn_fork.preprocessing.QuantileTransformer` to scale the
 # numerical features and encode the categorical features with a
-# :class:`~sklearn.preprocessing.OneHotEncoder`.
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import QuantileTransformer
-from sklearn.preprocessing import OneHotEncoder
+# :class:`~sklearn_fork.preprocessing.OneHotEncoder`.
+from sklearn_fork.compose import ColumnTransformer
+from sklearn_fork.preprocessing import QuantileTransformer
+from sklearn_fork.preprocessing import OneHotEncoder
 
 mlp_preprocessor = ColumnTransformer(
     transformers=[
@@ -174,8 +174,8 @@ mlp_preprocessor
 #
 # For the gradient boosting model, we leave the numerical features as-is and only
 # encode the categorical features using a
-# :class:`~sklearn.preprocessing.OrdinalEncoder`.
-from sklearn.preprocessing import OrdinalEncoder
+# :class:`~sklearn_fork.preprocessing.OrdinalEncoder`.
+from sklearn_fork.preprocessing import OrdinalEncoder
 
 hgbdt_preprocessor = ColumnTransformer(
     transformers=[
@@ -200,11 +200,11 @@ hgbdt_preprocessor
 # Multi-layer perceptron
 # ~~~~~~~~~~~~~~~~~~~~~~
 #
-# Let's fit a :class:`~sklearn.neural_network.MLPRegressor` and compute
+# Let's fit a :class:`~sklearn_fork.neural_network.MLPRegressor` and compute
 # single-variable partial dependence plots.
 from time import time
-from sklearn.neural_network import MLPRegressor
-from sklearn.pipeline import make_pipeline
+from sklearn_fork.neural_network import MLPRegressor
+from sklearn_fork.pipeline import make_pipeline
 
 print("Training MLPRegressor...")
 tic = time()
@@ -242,7 +242,7 @@ print(f"Test R2 score: {mlp_model.score(X_test, y_test):.2f}")
 #
 # We will plot the averaged partial dependence.
 import matplotlib.pyplot as plt
-from sklearn.inspection import PartialDependenceDisplay
+from sklearn_fork.inspection import PartialDependenceDisplay
 
 common_params = {
     "subsample": 50,
@@ -282,10 +282,10 @@ _ = display.figure_.suptitle(
 # Gradient boosting
 # ~~~~~~~~~~~~~~~~~
 #
-# Let's now fit a :class:`~sklearn.ensemble.HistGradientBoostingRegressor` and
+# Let's now fit a :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor` and
 # compute the partial dependence on the same features. We also use the
 # specific preprocessor we created for this model.
-from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
 
 print("Training HistGradientBoostingRegressor...")
 tic = time()
@@ -342,8 +342,8 @@ _ = display.figure_.suptitle(
 # trend for the humidity features. The number of bike rentals is decreasing when the
 # humidity increases. Finally, we see the same trend for the wind speed feature. The
 # number of bike rentals is decreasing when the wind speed is increasing for both
-# models. We also observe that :class:`~sklearn.neural_network.MLPRegressor` has much
-# smoother predictions than :class:`~sklearn.ensemble.HistGradientBoostingRegressor`.
+# models. We also observe that :class:`~sklearn_fork.neural_network.MLPRegressor` has much
+# smoother predictions than :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor`.
 #
 # Now, we will look at the partial dependence plots for the categorical features.
 #
@@ -393,7 +393,7 @@ _ = display.figure_.suptitle("ICE and PDP representations", fontsize=16)
 # interactions between features. We can repeat the experiment by constraining the
 # gradient boosting model to not use any interactions between features using the
 # parameter `interaction_cst`:
-from sklearn.base import clone
+from sklearn_fork.base import clone
 
 interaction_cst = [[i] for i in range(X_train.shape[1])]
 hgbdt_model_without_interactions = (
@@ -423,7 +423,7 @@ _ = display.figure_.suptitle("ICE and PDP representations", fontsize=16)
 # PDPs with two features of interest enable us to visualize interactions among them.
 # However, ICEs cannot be plotted in an easy manner and thus interpreted. We will show
 # the representation of available in
-# :meth:`~sklearn.inspection.PartialDependenceDisplay.from_estimator` that is a 2D
+# :meth:`~sklearn_fork.inspection.PartialDependenceDisplay.from_estimator` that is a 2D
 # heatmap.
 print("Computing partial dependence plots...")
 features_info = {
@@ -534,7 +534,7 @@ import numpy as np
 # unused but required import for doing 3d projections with matplotlib < 3.2
 import mpl_toolkits.mplot3d  # noqa: F401
 
-from sklearn.inspection import partial_dependence
+from sklearn_fork.inspection import partial_dependence
 
 fig = plt.figure(figsize=(5.5, 5))
 

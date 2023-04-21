@@ -4,7 +4,7 @@
 Covariance estimation
 ===================================================
 
-.. currentmodule:: sklearn.covariance
+.. currentmodule:: sklearn_fork.covariance
 
 
 Many statistical problems require the estimation of a
@@ -12,7 +12,7 @@ population's covariance matrix, which can be seen as an estimation of
 data set scatter plot shape. Most of the time, such an estimation has
 to be done on a sample whose properties (size, structure, homogeneity)
 have a large influence on the estimation's quality. The
-:mod:`sklearn.covariance` package provides tools for accurately estimating
+:mod:`sklearn_fork.covariance` package provides tools for accurately estimating
 a population's covariance matrix under various settings.
 
 We assume that the observations are independent and identically
@@ -101,7 +101,7 @@ covariance matrix.
 
 The Ledoit-Wolf estimator of the covariance matrix can be computed on
 a sample with the :meth:`ledoit_wolf` function of the
-:mod:`sklearn.covariance` package, or it can be otherwise obtained by
+:mod:`sklearn_fork.covariance` package, or it can be otherwise obtained by
 fitting a :class:`LedoitWolf` object to the same sample.
 
 .. note:: **Case when population covariance matrix is isotropic**
@@ -146,7 +146,7 @@ Wolf's formula. The resulting estimator is known as the Oracle
 Shrinkage Approximating estimator of the covariance.
 
 The OAS estimator of the covariance matrix can be computed on a sample
-with the :meth:`oas` function of the :mod:`sklearn.covariance`
+with the :meth:`oas` function of the :mod:`sklearn_fork.covariance`
 package, or it can be otherwise obtained by fitting an :class:`OAS`
 object to the same sample.
 
@@ -286,7 +286,7 @@ sets. Alternatively, robust covariance estimators can be used to
 perform outlier detection and discard/downweight some observations
 according to further processing of the data.
 
-The ``sklearn.covariance`` package implements a robust estimator of covariance,
+The ``sklearn_fork.covariance`` package implements a robust estimator of covariance,
 the Minimum Covariance Determinant [3]_.
 
 

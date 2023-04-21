@@ -1,6 +1,6 @@
 .. include:: _contributors.rst
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 .. _changes_0_22_2:
 
@@ -17,14 +17,14 @@ following changes.
 Changelog
 ---------
 
-:mod:`sklearn.impute`
+:mod:`sklearn_fork.impute`
 .....................
 
 - |Efficiency| Reduce :func:`impute.KNNImputer` asymptotic memory usage by
   chunking pairwise distance computation.
   :pr:`16397` by `Joel Nothman`_.
 
-:mod:`sklearn.metrics`
+:mod:`sklearn_fork.metrics`
 ......................
 
 - |Fix| Fixed a bug in :func:`metrics.plot_roc_curve` where
@@ -40,7 +40,7 @@ Changelog
   :meth:`metrics.PrecisionRecallDisplay.plot` for the subsequent times.
   :pr:`16505` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.neighbors`
+:mod:`sklearn_fork.neighbors`
 ..............................
 
 - |Fix| Fix a bug which converted a list of arrays into a 2-D object 
@@ -63,14 +63,14 @@ Changelog
 ---------
 
 
-:mod:`sklearn.cluster`
+:mod:`sklearn_fork.cluster`
 ......................
 
 - |Fix| :class:`cluster.KMeans` with ``algorithm="elkan"`` now uses the same
   stopping criterion as with the default ``algorithm="full"``. :pr:`15930` by
   :user:`inder128`.
 
-:mod:`sklearn.inspection`
+:mod:`sklearn_fork.inspection`
 .........................
 
 - |Fix| :func:`inspection.permutation_importance` will return the same
@@ -86,7 +86,7 @@ Changelog
   :meth:`inspection.PartialDependenceDisplay.plot` now consistently checks
   the number of axes passed in. :pr:`15760` by `Thomas Fan`_.
 
-:mod:`sklearn.metrics`
+:mod:`sklearn_fork.metrics`
 ......................
 
 - |Fix| :func:`metrics.plot_confusion_matrix` now raises error when `normalize`
@@ -105,7 +105,7 @@ Changelog
   pass the `values_format` parameter to the :class:`ConfusionMatrixDisplay`
   plot() call. :pr:`15937` by :user:`Stephen Blystone <blynotes>`.
 
-:mod:`sklearn.model_selection`
+:mod:`sklearn_fork.model_selection`
 ..............................
 
 - |Fix| :class:`model_selection.GridSearchCV` and
@@ -114,7 +114,7 @@ Changelog
   :pr:`15863` by :user:`Adrin Jalali <adrinjalali>` and
   :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.naive_bayes`
+:mod:`sklearn_fork.naive_bayes`
 ..........................
 
 - |Fix| Removed `abstractmethod` decorator for the method `_check_X` in
@@ -122,14 +122,14 @@ Changelog
   from this deprecated public base class. :pr:`15996` by
   :user:`Brigitta Sipőcz <bsipocz>`.
 
-:mod:`sklearn.preprocessing`
+:mod:`sklearn_fork.preprocessing`
 ............................
 
 - |Fix| :class:`preprocessing.QuantileTransformer` now guarantees the
   `quantiles_` attribute to be completely sorted in non-decreasing manner.
   :pr:`15751` by :user:`Tirth Patel <tirthasheshpatel>`.
 
-:mod:`sklearn.semi_supervised`
+:mod:`sklearn_fork.semi_supervised`
 ..............................
 
 - |Fix| :class:`semi_supervised.LabelPropagation` and
@@ -137,7 +137,7 @@ Changelog
   return sparse weight matrix.
   :pr:`15868` by :user:`Niklas Smedemark-Margulies <nik-sm>`.
 
-:mod:`sklearn.utils`
+:mod:`sklearn_fork.utils`
 ....................
 
 - |Fix| :func:`utils.check_array` now correctly converts pandas DataFrame with
@@ -185,17 +185,17 @@ rely on its stability.
 A function or object is public if it is documented in the `API Reference
 <https://scikit-learn.org/dev/modules/classes.html>`_ and if it can be
 imported with an import path without leading underscores. For example
-``sklearn.pipeline.make_pipeline`` is public, while
-`sklearn.pipeline._name_estimators` is private.
-``sklearn.ensemble._gb.BaseEnsemble`` is private too because the whole `_gb`
+``sklearn_fork.pipeline.make_pipeline`` is public, while
+`sklearn_fork.pipeline._name_estimators` is private.
+``sklearn_fork.ensemble._gb.BaseEnsemble`` is private too because the whole `_gb`
 module is private.
 
 Up to 0.22, some tools were de-facto public (no leading underscore), while
 they should have been private in the first place. In version 0.22, these
 tools have been made properly private, and the public API space has been
 cleaned. In addition, importing from most sub-modules is now deprecated: you
-should for example use ``from sklearn.cluster import Birch`` instead of
-``from sklearn.cluster.birch import Birch`` (in practice, ``birch.py`` has
+should for example use ``from sklearn_fork.cluster import Birch`` instead of
+``from sklearn_fork.cluster.birch import Birch`` (in practice, ``birch.py`` has
 been moved to ``_birch.py``).
 
 .. note::
@@ -271,7 +271,7 @@ Changelog
     :pr:`123456` by :user:`Joe Bloggs <joeongithub>`.
     where 123456 is the *pull request* number, not the issue number.
 
-:mod:`sklearn.base`
+:mod:`sklearn_fork.base`
 ...................
 
 - |API| From version 0.24 :meth:`base.BaseEstimator.get_params` will raise an
@@ -279,7 +279,7 @@ Changelog
   estimator's constructor but not stored as attributes on the instance.
   :pr:`14464` by `Joel Nothman`_.
 
-:mod:`sklearn.calibration`
+:mod:`sklearn_fork.calibration`
 ..........................
 
 - |Fix| Fixed a bug that made :class:`calibration.CalibratedClassifierCV` fail when
@@ -287,7 +287,7 @@ Changelog
   `sample_weights` are not supported by the wrapped estimator). :pr:`13575`
   by :user:`William de Vazelhes <wdevazelhes>`.
 
-:mod:`sklearn.cluster`
+:mod:`sklearn_fork.cluster`
 ......................
 
 - |Feature| :class:`cluster.SpectralClustering` now accepts precomputed sparse
@@ -317,7 +317,7 @@ Changelog
   `affinity='cosine'` and `X` has samples that are all-zeros. :pr:`7943` by
   :user:`mthorrell`.
 
-:mod:`sklearn.compose`
+:mod:`sklearn_fork.compose`
 ......................
 
 - |Feature|  Adds :func:`compose.make_column_selector` which is used with
@@ -339,7 +339,7 @@ Changelog
   features isn't consistent and negative indexing is used, an error is
   raised. :pr:`14544` by `Adrin Jalali`_.
 
-:mod:`sklearn.cross_decomposition`
+:mod:`sklearn_fork.cross_decomposition`
 ..................................
 
 - |Feature| :class:`cross_decomposition.PLSCanonical` and
@@ -362,7 +362,7 @@ Changelog
 - |Fix| :class:`cross_decomposition.CCA` now produces the same results with
   scipy 1.3 and previous scipy versions. :pr:`15661` by `Thomas Fan`_.
 
-:mod:`sklearn.datasets`
+:mod:`sklearn_fork.datasets`
 .......................
 
 - |Feature| :func:`datasets.fetch_openml` now supports heterogeneous data using
@@ -387,7 +387,7 @@ Changelog
   an OpenML dataset that contains an ignored feature.
   :pr:`14623` by :user:`Sarra Habchi <HabchiSarra>`.
 
-:mod:`sklearn.decomposition`
+:mod:`sklearn_fork.decomposition`
 ............................
 
 - |Efficiency| :class:`decomposition.NMF(solver='mu')` fitted on sparse input
@@ -415,7 +415,7 @@ Changelog
   underlying :class:`linear_model.LassoLars` when `algorithm='lasso_lars'`.
   :issue:`12650` by `Adrin Jalali`_.
 
-:mod:`sklearn.dummy`
+:mod:`sklearn_fork.dummy`
 ....................
 
 - |Fix| :class:`dummy.DummyClassifier` now handles checking the existence
@@ -431,7 +431,7 @@ Changelog
   :class:`dummy.DummyClassifier` and :class:`dummy.DummyRegressor`. It is
   equivalent to ``n_outputs > 1``. :pr:`14933` by `Nicolas Hug`_
 
-:mod:`sklearn.ensemble`
+:mod:`sklearn_fork.ensemble`
 .......................
 
 - |MajorFeature| Added :class:`ensemble.StackingClassifier` and
@@ -518,7 +518,7 @@ Changelog
   and :class:`ensemble.HistGradientBoostingRegressor` instead.
   :pr:`14907` by `Adrin Jalali`_.
 
-:mod:`sklearn.feature_extraction`
+:mod:`sklearn_fork.feature_extraction`
 .................................
 
 - |Enhancement| A warning  will  now be raised  if a parameter choice means
@@ -545,7 +545,7 @@ Changelog
   removed in v0.24. :pr:`14520` by
   :user:`Guillem G. Subies <guillemgsubies>`.
 
-:mod:`sklearn.feature_selection`
+:mod:`sklearn_fork.feature_selection`
 ................................
 
 - |Enhancement| Updated the following :mod:`feature_selection` estimators to allow
@@ -562,7 +562,7 @@ Changelog
   by using range rather than variance in this case.
   :pr:`13704` by :user:`Roddy MacSween <rlms>`.
 
-:mod:`sklearn.gaussian_process`
+:mod:`sklearn_fork.gaussian_process`
 ...............................
 
 - |Feature| Gaussian process models on structured data: :class:`gaussian_process.GaussianProcessRegressor`
@@ -585,7 +585,7 @@ Changelog
   estimator's constructor but not stored as attributes on the instance.
   :pr:`14464` by `Joel Nothman`_.
 
-:mod:`sklearn.impute`
+:mod:`sklearn_fork.impute`
 .....................
 
 - |MajorFeature| Added :class:`impute.KNNImputer`, to impute missing values using
@@ -608,7 +608,7 @@ Changelog
   ``"ascending"`` or ``"descending"``. :pr:`15393` by
   :user:`Venkatachalam N <venkyyuvy>`.
 
-:mod:`sklearn.inspection`
+:mod:`sklearn_fork.inspection`
 .........................
 
 - |MajorFeature| :func:`inspection.permutation_importance` has been added to
@@ -631,14 +631,14 @@ Changelog
   names by default when a dataframe is passed.
   :pr:`14028` and :pr:`15429` by `Guillaume Lemaitre`_.
 
-:mod:`sklearn.kernel_approximation`
+:mod:`sklearn_fork.kernel_approximation`
 ...................................
 
 - |Fix| Fixed a bug where :class:`kernel_approximation.Nystroem` raised a
   `KeyError` when using `kernel="precomputed"`.
   :pr:`14706` by :user:`Venkatachalam N <venkyyuvy>`.
 
-:mod:`sklearn.linear_model`
+:mod:`sklearn_fork.linear_model`
 ...........................
 
 - |Efficiency| The 'liblinear' logistic regression solver is now faster and
@@ -678,7 +678,7 @@ Changelog
 - |Fix| The liblinear solver now supports ``sample_weight``.
   :pr:`15038` by `Guillaume Lemaitre`_.
 
-:mod:`sklearn.manifold`
+:mod:`sklearn_fork.manifold`
 .......................
 
 - |Feature| :class:`manifold.Isomap`, :class:`manifold.TSNE`, and
@@ -709,7 +709,7 @@ Changelog
 - |API| Deprecate ``training_data_`` unused attribute in
   :class:`manifold.Isomap`. :issue:`10482` by `Tom Dupre la Tour`_.
 
-:mod:`sklearn.metrics`
+:mod:`sklearn_fork.metrics`
 ......................
 
 - |MajorFeature| :func:`metrics.plot_roc_curve` has been added to plot roc
@@ -794,7 +794,7 @@ Changelog
   ``scoring="brier_score_loss"`` which is now deprecated.
   :pr:`14898` by :user:`Stefan Matcovici <stefan-matcovici>`.
 
-:mod:`sklearn.model_selection`
+:mod:`sklearn_fork.model_selection`
 ..............................
 
 - |Efficiency| Improved performance of multimetric scoring in
@@ -824,7 +824,7 @@ Changelog
   `random_state` is set but `shuffle` is False. This will raise an error in
   0.24.
 
-:mod:`sklearn.multioutput`
+:mod:`sklearn_fork.multioutput`
 ..........................
 
 - |Fix| :class:`multioutput.MultiOutputClassifier` now has attribute
@@ -834,7 +834,7 @@ Changelog
   as property and can be checked with `hasattr`.
   :issue:`15488` :pr:`15490` by :user:`Rebekah Kim <rebekahkim>`
 
-:mod:`sklearn.naive_bayes`
+:mod:`sklearn_fork.naive_bayes`
 ...............................
 
 - |MajorFeature| Added :class:`naive_bayes.CategoricalNB` that implements the
@@ -842,7 +842,7 @@ Changelog
   :pr:`12569` by :user:`Tim Bicker <timbicker>` and
   :user:`Florian Wilhelm <FlorianWilhelm>`.
 
-:mod:`sklearn.neighbors`
+:mod:`sklearn_fork.neighbors`
 ........................
 
 - |MajorFeature| Added :class:`neighbors.KNeighborsTransformer` and
@@ -873,7 +873,7 @@ Changelog
   `metric='precomputed'` and fit on non-square data.  :pr:`14336` by
   :user:`Gregory Dexter <gdex1>`.
 
-:mod:`sklearn.neural_network`
+:mod:`sklearn_fork.neural_network`
 .............................
 
 - |Feature| Add `max_fun` parameter in
@@ -883,7 +883,7 @@ Changelog
   maximum number of function evaluation to not meet ``tol`` improvement.
   :issue:`9274` by :user:`Daniel Perry <daniel-perry>`.
 
-:mod:`sklearn.pipeline`
+:mod:`sklearn_fork.pipeline`
 .......................
 
 - |Enhancement| :class:`pipeline.Pipeline` now supports :term:`score_samples` if
@@ -897,7 +897,7 @@ Changelog
   :class:`pipeline.FeatureUnion`. Please use `'drop'` instead. :pr:`15053` by
   `Thomas Fan`_.
 
-:mod:`sklearn.preprocessing`
+:mod:`sklearn_fork.preprocessing`
 ............................
 
 - |Efficiency| :class:`preprocessing.PolynomialFeatures` is now faster when
@@ -913,7 +913,7 @@ Changelog
   :class:`preprocessing.KernelCenterer`
   :pr:`14336` by :user:`Gregory Dexter <gdex1>`.
 
-:mod:`sklearn.model_selection`
+:mod:`sklearn_fork.model_selection`
 ..............................
 
 - |Fix| :class:`model_selection.GridSearchCV` and
@@ -925,7 +925,7 @@ Changelog
   :pr:`13925` by :user:`Isaac S. Robson <isrobson>` and :pr:`15524` by
   :user:`Xun Tang <xun-tang>`.
 
-:mod:`sklearn.svm`
+:mod:`sklearn_fork.svm`
 ..................
 
 - |Enhancement| :class:`svm.SVC` and :class:`svm.NuSVC` now accept a
@@ -956,7 +956,7 @@ Changelog
   :pr:`15038` by `Guillaume Lemaitre`_.
 
 
-:mod:`sklearn.tree`
+:mod:`sklearn_fork.tree`
 ...................
 
 - |Feature| Adds minimal cost complexity pruning, controlled by ``ccp_alpha``,
@@ -979,7 +979,7 @@ Changelog
   :class:`tree.DecisionTreeRegressor` are now deprecated. :pr:`15028` by
   :user:`Mei Guan <meiguan>`, `Nicolas Hug`_, and `Adrin Jalali`_.
 
-:mod:`sklearn.utils`
+:mod:`sklearn_fork.utils`
 ....................
 
 - |Feature| :func:`~utils.estimator_checks.check_estimator` can now generate
@@ -1039,7 +1039,7 @@ Changelog
   - All of ``utils.testing`` except for ``all_estimators`` which is now in
     ``utils``.
 
-:mod:`sklearn.isotonic`
+:mod:`sklearn_fork.isotonic`
 ..................................
 
 - |Fix| Fixed a bug where :class:`isotonic.IsotonicRegression.fit` raised error

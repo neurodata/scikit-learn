@@ -59,7 +59,7 @@ that are appropriate for each type of regularization.
 # We will demonstrate this effect by using a synthetic dataset. This
 # dataset will be sparse, meaning that only a few features will be informative
 # and useful for the model.
-from sklearn.datasets import make_classification
+from sklearn_fork.datasets import make_classification
 
 n_samples, n_features = 100, 300
 X, y = make_classification(
@@ -68,7 +68,7 @@ X, y = make_classification(
 
 # %%
 # Now, we can define a linear SVC with the `l1` penalty.
-from sklearn.svm import LinearSVC
+from sklearn_fork.svm import LinearSVC
 
 model_l1 = LinearSVC(penalty="l1", loss="squared_hinge", dual=False, tol=1e-3)
 
@@ -76,7 +76,7 @@ model_l1 = LinearSVC(penalty="l1", loss="squared_hinge", dual=False, tol=1e-3)
 # We will compute the mean test score for different values of `C`.
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import validation_curve, ShuffleSplit
+from sklearn_fork.model_selection import validation_curve, ShuffleSplit
 
 Cs = np.logspace(-2.3, -1.3, 10)
 train_sizes = np.linspace(0.3, 0.7, 3)

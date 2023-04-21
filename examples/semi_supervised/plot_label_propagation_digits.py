@@ -24,7 +24,7 @@ At the end, the top 10 most uncertain predictions will be shown.
 # ---------------
 #
 # We use the digits dataset. We only use a subset of randomly selected samples.
-from sklearn import datasets
+from sklearn_fork import datasets
 import numpy as np
 
 digits = datasets.load_digits()
@@ -57,10 +57,10 @@ y_train[unlabeled_set] = -1
 # Semi-supervised learning
 # ------------------------
 #
-# We fit a :class:`~sklearn.semi_supervised.LabelSpreading` and use it to predict
+# We fit a :class:`~sklearn_fork.semi_supervised.LabelSpreading` and use it to predict
 # the unknown labels.
-from sklearn.semi_supervised import LabelSpreading
-from sklearn.metrics import classification_report
+from sklearn_fork.semi_supervised import LabelSpreading
+from sklearn_fork.metrics import classification_report
 
 lp_model = LabelSpreading(gamma=0.25, max_iter=20)
 lp_model.fit(X, y_train)
@@ -78,7 +78,7 @@ print(classification_report(true_labels, predicted_labels))
 
 # %%
 # Confusion matrix
-from sklearn.metrics import ConfusionMatrixDisplay
+from sklearn_fork.metrics import ConfusionMatrixDisplay
 
 ConfusionMatrixDisplay.from_predictions(
     true_labels, predicted_labels, labels=lp_model.classes_

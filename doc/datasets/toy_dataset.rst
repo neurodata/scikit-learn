@@ -7,7 +7,7 @@
 Toy datasets
 ============
 
-.. currentmodule:: sklearn.datasets
+.. currentmodule:: sklearn_fork.datasets
 
 scikit-learn comes with a few small standard datasets that do not require to
 download any file from some external website.
@@ -27,14 +27,14 @@ These datasets are useful to quickly illustrate the behavior of the
 various algorithms implemented in scikit-learn. They are however often too
 small to be representative of real world machine learning tasks.
 
-.. include:: ../../sklearn/datasets/descr/iris.rst
+.. include:: ../../sklearn_fork/datasets/descr/iris.rst
 
-.. include:: ../../sklearn/datasets/descr/diabetes.rst
+.. include:: ../../sklearn_fork/datasets/descr/diabetes.rst
 
-.. include:: ../../sklearn/datasets/descr/digits.rst
+.. include:: ../../sklearn_fork/datasets/descr/digits.rst
 
-.. include:: ../../sklearn/datasets/descr/linnerud.rst
+.. include:: ../../sklearn_fork/datasets/descr/linnerud.rst
 
-.. include:: ../../sklearn/datasets/descr/wine_data.rst
+.. include:: ../../sklearn_fork/datasets/descr/wine_data.rst
 
-.. include:: ../../sklearn/datasets/descr/breast_cancer.rst
+.. include:: ../../sklearn_fork/datasets/descr/breast_cancer.rst

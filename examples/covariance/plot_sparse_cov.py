@@ -59,7 +59,7 @@ iteratively refined in the neighborhood of the maximum.
 # -----------------
 import numpy as np
 from scipy import linalg
-from sklearn.datasets import make_sparse_spd_matrix
+from sklearn_fork.datasets import make_sparse_spd_matrix
 
 n_samples = 60
 n_features = 20
@@ -81,7 +81,7 @@ X /= X.std(axis=0)
 # %%
 # Estimate the covariance
 # -----------------------
-from sklearn.covariance import GraphicalLassoCV, ledoit_wolf
+from sklearn_fork.covariance import GraphicalLassoCV, ledoit_wolf
 
 emp_cov = np.dot(X.T, X) / n_samples
 

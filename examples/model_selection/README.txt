@@ -3,4 +3,4 @@
 Model Selection
 -----------------------
 
-Examples related to the :mod:`sklearn.model_selection` module.
+Examples related to the :mod:`sklearn_fork.model_selection` module.

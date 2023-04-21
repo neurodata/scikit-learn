@@ -16,7 +16,7 @@ data-points are not linearly separable.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import svm
+from sklearn_fork import svm
 
 
 # Our dataset and targets

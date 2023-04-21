@@ -28,10 +28,10 @@ randomly) is also shown.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.cluster import KMeans
-from sklearn.metrics import pairwise_distances_argmin
-from sklearn.datasets import load_sample_image
-from sklearn.utils import shuffle
+from sklearn_fork.cluster import KMeans
+from sklearn_fork.metrics import pairwise_distances_argmin
+from sklearn_fork.datasets import load_sample_image
+from sklearn_fork.utils import shuffle
 from time import time
 
 n_colors = 64

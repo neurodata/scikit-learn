@@ -1,80 +1,80 @@
 module:cluster:
-- sklearn/cluster/**/*
+- sklearn_fork/cluster/**/*
 
 module:common:
-- sklearn/common/**/*
+- sklearn_fork/common/**/*
 
 module:compose:
-- sklearn/compose/**/*
+- sklearn_fork/compose/**/*
 
 module:covariance:
-- sklearn/covariance/**/*
+- sklearn_fork/covariance/**/*
 
 module:cross_decomposition:
-- sklearn/cross_decomposition/**/*
+- sklearn_fork/cross_decomposition/**/*
 
 module:datasets:
-- sklearn/datasets/**/*
+- sklearn_fork/datasets/**/*
 
 module:decomposition:
-- sklearn/decomposition/**/*
+- sklearn_fork/decomposition/**/*
 
 module:ensemble:
-- sklearn/ensemble/**/*
+- sklearn_fork/ensemble/**/*
 
 module:feature_extraction:
-- sklearn/feature_extraction/**/*
+- sklearn_fork/feature_extraction/**/*
 
 module:feature_selection:
-- sklearn/feature_selection/**/*
+- sklearn_fork/feature_selection/**/*
 
 module:gaussian_process:
-- sklearn/gaussian_process/**/*
+- sklearn_fork/gaussian_process/**/*
 
 module:impute:
-- sklearn/impute/**/*
+- sklearn_fork/impute/**/*
 
 module:inspection:
-- sklearn/inspection/**/*
+- sklearn_fork/inspection/**/*
 
 module:linear_model:
-- sklearn/linear_model/**/*
+- sklearn_fork/linear_model/**/*
 
 module:manifold:
-- sklearn/manifold/**/*
+- sklearn_fork/manifold/**/*
 
 module:metrics:
-- sklearn/metrics/**/*
+- sklearn_fork/metrics/**/*
 
 module:mixture:
-- sklearn/mixture/**/*
+- sklearn_fork/mixture/**/*
 
 module:model_selection:
-- sklearn/model_selection/**/*
+- sklearn_fork/model_selection/**/*
 
 module:naive_bayes:
-- sklearn/naive_bayes.py
+- sklearn_fork/naive_bayes.py
 
 module:neighbors:
-- sklearn/neighbors/**/*
+- sklearn_fork/neighbors/**/*
 
 module:neural_network:
-- sklearn/neural_network/**/*
+- sklearn_fork/neural_network/**/*
 
 module:pipeline:
-- sklearn/pipeline.py
+- sklearn_fork/pipeline.py
 
 module:preprocessing:
-- sklearn/preprocessing/**/*
+- sklearn_fork/preprocessing/**/*
 
 module:semi_supervised:
-- sklearn/semi_supervised/**/*
+- sklearn_fork/semi_supervised/**/*
 
 module:svm:
-- sklearn/svm/**/*
+- sklearn_fork/svm/**/*
 
 module:tree:
-- sklearn/tree/**/*
+- sklearn_fork/tree/**/*
 
 module:utils:
-- sklearn/utils/**/*
+- sklearn_fork/utils/**/*

@@ -21,8 +21,8 @@ weights.
 # --------------------
 #
 import numpy as np
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.model_selection import train_test_split
 
 # The iris dataset
 X, y = load_iris(return_X_y=True)
@@ -43,7 +43,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_sta
 # Univariate feature selection with F-test for feature scoring.
 # We use the default selection function to select
 # the four most significant features.
-from sklearn.feature_selection import SelectKBest, f_classif
+from sklearn_fork.feature_selection import SelectKBest, f_classif
 
 selector = SelectKBest(f_classif, k=4)
 selector.fit(X_train, y_train)
@@ -72,9 +72,9 @@ plt.show()
 # -----------------
 #
 # Without univariate feature selection
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.svm import LinearSVC
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import MinMaxScaler
+from sklearn_fork.svm import LinearSVC
 
 clf = make_pipeline(MinMaxScaler(), LinearSVC())
 clf.fit(X_train, y_train)

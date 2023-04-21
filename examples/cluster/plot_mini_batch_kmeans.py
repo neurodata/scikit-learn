@@ -21,7 +21,7 @@ algorithms.
 # We start by generating the blobs of data to be clustered.
 
 import numpy as np
-from sklearn.datasets import make_blobs
+from sklearn_fork.datasets import make_blobs
 
 np.random.seed(0)
 
@@ -35,7 +35,7 @@ X, labels_true = make_blobs(n_samples=3000, centers=centers, cluster_std=0.7)
 # ------------------------------
 
 import time
-from sklearn.cluster import KMeans
+from sklearn_fork.cluster import KMeans
 
 k_means = KMeans(init="k-means++", n_clusters=3, n_init=10)
 t0 = time.time()
@@ -46,7 +46,7 @@ t_batch = time.time() - t0
 # Compute clustering with MiniBatchKMeans
 # ---------------------------------------
 
-from sklearn.cluster import MiniBatchKMeans
+from sklearn_fork.cluster import MiniBatchKMeans
 
 mbk = MiniBatchKMeans(
     init="k-means++",
@@ -68,7 +68,7 @@ t_mini_batch = time.time() - t0
 # MiniBatchKMeans and the KMeans algorithm. Let's pair the cluster centers per
 # closest one.
 
-from sklearn.metrics.pairwise import pairwise_distances_argmin
+from sklearn_fork.metrics.pairwise import pairwise_distances_argmin
 
 k_means_cluster_centers = k_means.cluster_centers_
 order = pairwise_distances_argmin(k_means.cluster_centers_, mbk.cluster_centers_)

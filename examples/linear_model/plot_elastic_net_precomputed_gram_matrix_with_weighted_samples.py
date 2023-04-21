@@ -20,7 +20,7 @@ is computed.
 # %%
 # Let's start by loading the dataset and creating some sample weights.
 import numpy as np
-from sklearn.datasets import make_regression
+from sklearn_fork.datasets import make_regression
 
 rng = np.random.RandomState(0)
 
@@ -45,7 +45,7 @@ gram = np.dot(X_scaled.T, X_scaled)
 # `fit` otherwise the elastic net estimator will detect that it is uncentered
 # and discard the gram matrix we passed. However, if we pass the scaled design
 # matrix, the preprocessing code will incorrectly rescale it a second time.
-from sklearn.linear_model import ElasticNet
+from sklearn_fork.linear_model import ElasticNet
 
 lm = ElasticNet(alpha=0.01, precompute=gram)
 lm.fit(X_centered, y, sample_weight=normalized_weights)

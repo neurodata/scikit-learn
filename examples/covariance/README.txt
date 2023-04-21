@@ -3,4 +3,4 @@
 Covariance estimation
 ---------------------
 
-Examples concerning the :mod:`sklearn.covariance` module.
+Examples concerning the :mod:`sklearn_fork.covariance` module.

@@ -28,7 +28,7 @@ of the standard linear regression
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn import linear_model
+from sklearn_fork import linear_model
 
 X_train = np.c_[0.5, 1].T
 y_train = [0.5, 1]

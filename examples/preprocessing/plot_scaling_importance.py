@@ -17,9 +17,9 @@ example.
 
 On the second part of the example we show how Principle Component Analysis (PCA)
 is impacted by normalization of features. To illustrate this, we compare the
-principal components found using :class:`~sklearn.decomposition.PCA` on unscaled
+principal components found using :class:`~sklearn_fork.decomposition.PCA` on unscaled
 data with those obatined when using a
-:class:`~sklearn.preprocessing.StandardScaler` to scale data first.
+:class:`~sklearn_fork.preprocessing.StandardScaler` to scale data first.
 
 In the last part of the example we show the effect of the normalization on the
 accuracy of a model trained on PCA-reduced data.
@@ -39,9 +39,9 @@ accuracy of a model trained on PCA-reduced data.
 # continuous features that are heterogeneous in scale due to differing
 # properties that they measure (e.g. alcohol content and malic acid).
 
-from sklearn.datasets import load_wine
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+from sklearn_fork.datasets import load_wine
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.preprocessing import StandardScaler
 
 X, y = load_wine(return_X_y=True, as_frame=True)
 scaler = StandardScaler().set_output(transform="pandas")
@@ -56,7 +56,7 @@ scaled_X_train = scaler.fit_transform(X_train)
 # ===========================================
 #
 # For the sake of visualizing the decision boundary of a
-# :class:`~sklearn.neighbors.KNeighborsClassifier`, in this section we select a
+# :class:`~sklearn_fork.neighbors.KNeighborsClassifier`, in this section we select a
 # subset of 2 features that have values with different orders of magnitude.
 #
 # Keep in mind that using a subset of the features to train the model may likely
@@ -65,8 +65,8 @@ scaled_X_train = scaler.fit_transform(X_train)
 # of features.
 
 import matplotlib.pyplot as plt
-from sklearn.inspection import DecisionBoundaryDisplay
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn_fork.inspection import DecisionBoundaryDisplay
+from sklearn_fork.neighbors import KNeighborsClassifier
 
 
 X_plot = X[["proline", "hue"]]
@@ -106,23 +106,23 @@ _ = ax2.set_title("KNN with scaling")
 # between 1 and 10. Because of this, distances between samples are mostly
 # impacted by differences in values of "proline", while values of the "hue" will
 # be comparatively ignored. If one uses
-# :class:`~sklearn.preprocessing.StandardScaler` to normalize this database,
+# :class:`~sklearn_fork.preprocessing.StandardScaler` to normalize this database,
 # both scaled values lay approximately between -3 and 3 and the neighbors
 # structure will be impacted more or less equivalently by both variables.
 #
 # Effect of rescaling on a PCA dimensional reduction
 # ==================================================
 #
-# Dimensional reduction using :class:`~sklearn.decomposition.PCA` consists of
+# Dimensional reduction using :class:`~sklearn_fork.decomposition.PCA` consists of
 # finding the features that maximize the variance. If one feature varies more
 # than the others only because of their respective scales,
-# :class:`~sklearn.decomposition.PCA` would determine that such feature
+# :class:`~sklearn_fork.decomposition.PCA` would determine that such feature
 # dominates the direction of the principal components.
 #
 # We can inspect the first principal components using all the original features:
 
 import pandas as pd
-from sklearn.decomposition import PCA
+from sklearn_fork.decomposition import PCA
 
 pca = PCA(n_components=2).fit(X_train)
 scaled_pca = PCA(n_components=2).fit(scaled_X_train)
@@ -195,12 +195,12 @@ _ = plt.tight_layout()
 # ==========================================
 #
 # First we show how the optimal regularization of a
-# :class:`~sklearn.linear_model.LogisticRegressionCV` depends on the scaling or
+# :class:`~sklearn_fork.linear_model.LogisticRegressionCV` depends on the scaling or
 # non-scaling of the data:
 
 import numpy as np
-from sklearn.pipeline import make_pipeline
-from sklearn.linear_model import LogisticRegressionCV
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.linear_model import LogisticRegressionCV
 
 Cs = np.logspace(-5, 5, 20)
 
@@ -218,8 +218,8 @@ print(f"Optimal C for the standardized data with PCA: {scaled_clf[-1].C_[0]:.2f}
 # was not scaled before applying PCA. We now evaluate the effect of scaling on
 # the accuracy and the mean log-loss of the optimal models:
 
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import log_loss
+from sklearn_fork.metrics import accuracy_score
+from sklearn_fork.metrics import log_loss
 
 y_pred = unscaled_clf.predict(X_test)
 y_pred_scaled = scaled_clf.predict(X_test)
@@ -237,10 +237,10 @@ print(f"{log_loss(y_test, y_proba_scaled):.3}")
 
 # %%
 # A clear difference in prediction accuracies is observed when the data is
-# scaled before :class:`~sklearn.decomposition.PCA`, as it vastly outperforms
+# scaled before :class:`~sklearn_fork.decomposition.PCA`, as it vastly outperforms
 # the unscaled version. This corresponds to the intuition obtained from the plot
 # in the previous section, where the components become linearly separable when
-# scaling before using :class:`~sklearn.decomposition.PCA`.
+# scaling before using :class:`~sklearn_fork.decomposition.PCA`.
 #
 # Notice that in this case the models with scaled features perform better than
 # the models with non-scaled features because all the variables are expected to

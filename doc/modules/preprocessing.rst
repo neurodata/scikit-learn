@@ -4,9 +4,9 @@
 Preprocessing data
 ==================
 
-.. currentmodule:: sklearn.preprocessing
+.. currentmodule:: sklearn_fork.preprocessing
 
-The ``sklearn.preprocessing`` package provides several common
+The ``sklearn_fork.preprocessing`` package provides several common
 utility functions and transformer classes to change raw feature vectors
 into a representation that is more suitable for the downstream estimators.
 
@@ -41,12 +41,12 @@ than others, it might dominate the objective function and make the
 estimator unable to learn from other features correctly as expected.
 
 
-The :mod:`~sklearn.preprocessing` module provides the
+The :mod:`~sklearn_fork.preprocessing` module provides the
 :class:`StandardScaler` utility class, which is a quick and
 easy way to perform the following operation on an array-like
 dataset::
 
-  >>> from sklearn import preprocessing
+  >>> from sklearn_fork import preprocessing
   >>> import numpy as np
   >>> X_train = np.array([[ 1., -1.,  2.],
   ...                     [ 2.,  0.,  0.],
@@ -85,13 +85,13 @@ Scaled data has zero mean and unit variance::
 This class implements the ``Transformer`` API to compute the mean and
 standard deviation on a training set so as to be able to later re-apply the
 same transformation on the testing set. This class is hence suitable for
-use in the early steps of a :class:`~sklearn.pipeline.Pipeline`::
+use in the early steps of a :class:`~sklearn_fork.pipeline.Pipeline`::
 
-  >>> from sklearn.datasets import make_classification
-  >>> from sklearn.linear_model import LogisticRegression
-  >>> from sklearn.model_selection import train_test_split
-  >>> from sklearn.pipeline import make_pipeline
-  >>> from sklearn.preprocessing import StandardScaler
+  >>> from sklearn_fork.datasets import make_classification
+  >>> from sklearn_fork.linear_model import LogisticRegression
+  >>> from sklearn_fork.model_selection import train_test_split
+  >>> from sklearn_fork.pipeline import make_pipeline
+  >>> from sklearn_fork.preprocessing import StandardScaler
 
   >>> X, y = make_classification(random_state=42)
   >>> X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
@@ -231,7 +231,7 @@ more robust estimates for the center and range of your data.
   independently, since a downstream model can further make some assumption
   on the linear independence of the features.
 
-  To address this issue you can use :class:`~sklearn.decomposition.PCA` with
+  To address this issue you can use :class:`~sklearn_fork.decomposition.PCA` with
   ``whiten=True`` to further remove the linear correlation across features.
 
 .. _kernel_centering:
@@ -333,8 +333,8 @@ Mapping to a Uniform distribution
 transformation to map the data to a uniform distribution
 with values between 0 and 1::
 
-  >>> from sklearn.datasets import load_iris
-  >>> from sklearn.model_selection import train_test_split
+  >>> from sklearn_fork.datasets import load_iris
+  >>> from sklearn_fork.model_selection import train_test_split
   >>> X, y = load_iris(return_X_y=True)
   >>> X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
   >>> quantile_transformer = preprocessing.QuantileTransformer(random_state=0)
@@ -478,7 +478,7 @@ The ``preprocessing`` module further provides a utility class
 the class is stateless as this operation treats samples independently).
 
 This class is hence suitable for use in the early steps of a
-:class:`~sklearn.pipeline.Pipeline`::
+:class:`~sklearn_fork.pipeline.Pipeline`::
 
   >>> normalizer = preprocessing.Normalizer().fit(X)  # fit does nothing
   >>> normalizer
@@ -550,7 +550,7 @@ are indicated by `np.nan`.
 
 :class:`OrdinalEncoder` provides a parameter `encoded_missing_value` to encode
 the missing values without the need to create a pipeline and using
-:class:`~sklearn.impute.SimpleImputer`.
+:class:`~sklearn_fork.impute.SimpleImputer`.
 
     >>> enc = preprocessing.OrdinalEncoder(encoded_missing_value=-1)
     >>> X = [['male'], ['female'], [np.nan], ['female']]
@@ -562,8 +562,8 @@ the missing values without the need to create a pipeline and using
 
 The above processing is equivalent to the following pipeline::
 
-    >>> from sklearn.pipeline import Pipeline
-    >>> from sklearn.impute import SimpleImputer
+    >>> from sklearn_fork.pipeline import Pipeline
+    >>> from sklearn_fork.impute import SimpleImputer
     >>> enc = Pipeline(steps=[
     ...     ("encoder", preprocessing.OrdinalEncoder()),
     ...     ("imputer", SimpleImputer(strategy="constant", fill_value=-1)),
@@ -642,7 +642,7 @@ instead of ``n_categories`` columns by using the ``drop`` parameter. This
 parameter allows the user to specify a category for each feature to be dropped.
 This is useful to avoid co-linearity in the input matrix in some classifiers.
 Such functionality is useful, for example, when using non-regularized
-regression (:class:`LinearRegression <sklearn.linear_model.LinearRegression>`),
+regression (:class:`LinearRegression <sklearn_fork.linear_model.LinearRegression>`),
 since co-linearity would cause the covariance matrix to be non-invertible::
 
     >>> X = [['male', 'from US', 'uses Safari'],
@@ -872,7 +872,7 @@ lexicon order.
 Target Encoder
 --------------
 
-.. currentmodule:: sklearn.preprocessing
+.. currentmodule:: sklearn_fork.preprocessing
 
 The :class:`TargetEncoder` uses the target mean conditioned on the categorical
 feature for encoding unordered categories, i.e. nominal categories [PAR]_
@@ -1000,7 +1000,7 @@ Based on these bin intervals, ``X`` is transformed as follows::
          [ 2., 0., 0.]])
 
 The resulting dataset contains ordinal attributes which can be further used
-in a :class:`~sklearn.pipeline.Pipeline`.
+in a :class:`~sklearn_fork.pipeline.Pipeline`.
 
 Discretization is similar to constructing histograms for continuous data.
 However, histograms focus on counting features which fall into particular
@@ -1013,7 +1013,7 @@ equally populated bins in each feature. The 'kmeans' strategy defines bins based
 on a k-means clustering procedure performed on each feature independently.
 
 Be aware that one can specify custom bins by passing a callable defining the
-discretization strategy to :class:`~sklearn.preprocessing.FunctionTransformer`.
+discretization strategy to :class:`~sklearn_fork.preprocessing.FunctionTransformer`.
 For instance, we can use the Pandas function :func:`pandas.cut`::
 
   >>> import pandas as pd
@@ -1044,7 +1044,7 @@ features to get boolean values**. This can be useful for downstream
 probabilistic estimators that make assumption that the input data
 is distributed according to a multi-variate `Bernoulli distribution
 <https://en.wikipedia.org/wiki/Bernoulli_distribution>`_. For instance,
-this is the case for the :class:`~sklearn.neural_network.BernoulliRBM`.
+this is the case for the :class:`~sklearn_fork.neural_network.BernoulliRBM`.
 
 It is also common among the text processing community to use binary
 feature values (probably to simplify the probabilistic reasoning) even
@@ -1053,7 +1053,7 @@ often perform slightly better in practice.
 
 As for the :class:`Normalizer`, the utility class
 :class:`Binarizer` is meant to be used in the early stages of
-:class:`~sklearn.pipeline.Pipeline`. The ``fit`` method does nothing
+:class:`~sklearn_fork.pipeline.Pipeline`. The ``fit`` method does nothing
 as each sample is treated independently of others::
 
   >>> X = [[ 1., -1.,  2.],
@@ -1121,7 +1121,7 @@ features' high-order and interaction terms. It is implemented in
 :class:`PolynomialFeatures`::
 
     >>> import numpy as np
-    >>> from sklearn.preprocessing import PolynomialFeatures
+    >>> from sklearn_fork.preprocessing import PolynomialFeatures
     >>> X = np.arange(6).reshape(3, 2)
     >>> X
     array([[0, 1],
@@ -1154,8 +1154,8 @@ The features of X have been transformed from :math:`(X_1, X_2, X_3)` to
 :math:`(1, X_1, X_2, X_3, X_1X_2, X_1X_3, X_2X_3, X_1X_2X_3)`.
 
 Note that polynomial features are used implicitly in `kernel methods
-<https://en.wikipedia.org/wiki/Kernel_method>`_ (e.g., :class:`~sklearn.svm.SVC`,
-:class:`~sklearn.decomposition.KernelPCA`) when using polynomial :ref:`svm_kernels`.
+<https://en.wikipedia.org/wiki/Kernel_method>`_ (e.g., :class:`~sklearn_fork.svm.SVC`,
+:class:`~sklearn_fork.decomposition.KernelPCA`) when using polynomial :ref:`svm_kernels`.
 
 See :ref:`sphx_glr_auto_examples_linear_model_plot_polynomial_interpolation.py`
 for Ridge regression using created polynomial features.
@@ -1200,7 +1200,7 @@ Some of the advantages of splines over polynomials are:
 The following code snippet shows splines in action::
 
     >>> import numpy as np
-    >>> from sklearn.preprocessing import SplineTransformer
+    >>> from sklearn_fork.preprocessing import SplineTransformer
     >>> X = np.arange(5).reshape(5, 1)
     >>> X
     array([[0],
@@ -1221,7 +1221,7 @@ three middle diagonals are non-zero for ``degree=2``. The higher the degree,
 the more overlapping of the splines.
 
 Interestingly, a :class:`SplineTransformer` of ``degree=0`` is the same as
-:class:`~sklearn.preprocessing.KBinsDiscretizer` with
+:class:`~sklearn_fork.preprocessing.KBinsDiscretizer` with
 ``encode='onehot-dense'`` and ``n_bins = n_knots - 1`` if
 ``knots = strategy``.
 
@@ -1250,7 +1250,7 @@ an arbitrary function with :class:`FunctionTransformer`. For example, to build
 a transformer that applies a log transformation in a pipeline, do::
 
     >>> import numpy as np
-    >>> from sklearn.preprocessing import FunctionTransformer
+    >>> from sklearn_fork.preprocessing import FunctionTransformer
     >>> transformer = FunctionTransformer(np.log1p, validate=True)
     >>> X = np.array([[0, 1], [2, 3]])
     >>> # Since FunctionTransformer is no-op during fit, we can call transform directly

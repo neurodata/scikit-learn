@@ -11,12 +11,12 @@ on the hand-written digits dataset.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import datasets
+from sklearn_fork import datasets
 
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import SGDClassifier, Perceptron
-from sklearn.linear_model import PassiveAggressiveClassifier
-from sklearn.linear_model import LogisticRegression
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.linear_model import SGDClassifier, Perceptron
+from sklearn_fork.linear_model import PassiveAggressiveClassifier
+from sklearn_fork.linear_model import LogisticRegression
 
 heldout = [0.95, 0.90, 0.75, 0.50, 0.01]
 # Number of rounds to fit and evaluate an estimator.

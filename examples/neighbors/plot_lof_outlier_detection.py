@@ -48,7 +48,7 @@ ground_truth[-n_outliers:] = -1
 # (when LOF is used for outlier detection, the estimator has no `predict`,
 # `decision_function` and `score_samples` methods).
 
-from sklearn.neighbors import LocalOutlierFactor
+from sklearn_fork.neighbors import LocalOutlierFactor
 
 clf = LocalOutlierFactor(n_neighbors=20, contamination=0.1)
 y_pred = clf.fit_predict(X)

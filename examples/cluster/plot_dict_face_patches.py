@@ -10,7 +10,7 @@ to use the online API of the scikit-learn to process a very large
 dataset by chunks. The way we proceed is that we load an image at a time
 and extract randomly 50 patches from this image. Once we have accumulated
 500 of these patches (using 10 images), we run the
-:func:`~sklearn.cluster.MiniBatchKMeans.partial_fit` method
+:func:`~sklearn_fork.cluster.MiniBatchKMeans.partial_fit` method
 of the online KMeans object, MiniBatchKMeans.
 
 The verbose setting on the MiniBatchKMeans enables us to see that some
@@ -25,7 +25,7 @@ cluster.
 # Load the data
 # -------------
 
-from sklearn import datasets
+from sklearn_fork import datasets
 
 faces = datasets.fetch_olivetti_faces()
 
@@ -37,8 +37,8 @@ import time
 
 import numpy as np
 
-from sklearn.cluster import MiniBatchKMeans
-from sklearn.feature_extraction.image import extract_patches_2d
+from sklearn_fork.cluster import MiniBatchKMeans
+from sklearn_fork.feature_extraction.image import extract_patches_2d
 
 print("Learning the dictionary... ")
 rng = np.random.RandomState(0)

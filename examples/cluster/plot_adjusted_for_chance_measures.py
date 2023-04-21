@@ -55,7 +55,7 @@ experiments:
 #
 # For more information, see the :ref:`clustering_evaluation` module.
 
-from sklearn import metrics
+from sklearn_fork import metrics
 
 score_funcs = [
     ("V-measure", metrics.v_measure_score),

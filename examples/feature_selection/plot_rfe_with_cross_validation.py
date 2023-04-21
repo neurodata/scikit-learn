@@ -17,7 +17,7 @@ number of features selected with cross-validation.
 # selected features vary depending on the cross-validation fold. The remaining
 # features are non-informative as they are drawn at random.
 
-from sklearn.datasets import make_classification
+from sklearn_fork.datasets import make_classification
 
 X, y = make_classification(
     n_samples=500,
@@ -38,9 +38,9 @@ X, y = make_classification(
 # We create the RFE object and compute the cross-validated scores. The scoring
 # strategy "accuracy" optimizes the proportion of correctly classified samples.
 
-from sklearn.feature_selection import RFECV
-from sklearn.model_selection import StratifiedKFold
-from sklearn.linear_model import LogisticRegression
+from sklearn_fork.feature_selection import RFECV
+from sklearn_fork.model_selection import StratifiedKFold
+from sklearn_fork.linear_model import LogisticRegression
 
 min_features_to_select = 1  # Minimum number of features to consider
 clf = LogisticRegression()

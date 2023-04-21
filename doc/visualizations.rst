@@ -24,10 +24,10 @@ vector machine:
    :context: close-figs
    :align: center
 
-    from sklearn.model_selection import train_test_split
-    from sklearn.svm import SVC
-    from sklearn.metrics import RocCurveDisplay
-    from sklearn.datasets import load_wine
+    from sklearn_fork.model_selection import train_test_split
+    from sklearn_fork.svm import SVC
+    from sklearn_fork.metrics import RocCurveDisplay
+    from sklearn_fork.datasets import load_wine
 
     X, y = load_wine(return_X_y=True)
     y = y == 2  # make binary
@@ -39,7 +39,7 @@ vector machine:
 
 The returned `svc_disp` object allows us to continue using the already computed
 ROC curve for SVC in future plots. In this case, the `svc_disp` is a
-:class:`~sklearn.metrics.RocCurveDisplay` that stores the computed values as
+:class:`~sklearn_fork.metrics.RocCurveDisplay` that stores the computed values as
 attributes called `roc_auc`, `fpr`, and `tpr`. Be aware that we could get
 the predictions from the support vector machine and then use `from_predictions`
 instead of `from_estimator`. Next, we train a random forest classifier and plot
@@ -51,7 +51,7 @@ the previously computed roc curve again by using the `plot` method of the
    :align: center
 
     import matplotlib.pyplot as plt
-    from sklearn.ensemble import RandomForestClassifier
+    from sklearn_fork.ensemble import RandomForestClassifier
 
     rfc = RandomForestClassifier(n_estimators=10, random_state=42)
     rfc.fit(X_train, y_train)
@@ -76,7 +76,7 @@ Available Plotting Utilities
 Display Objects
 ---------------
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 .. autosummary::
 

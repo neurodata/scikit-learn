@@ -19,9 +19,9 @@ measured using the explained variance a.k.a. R^2.
 # Generate sample data
 # --------------------
 import numpy as np
-from sklearn import linear_model
-from sklearn.datasets import make_regression
-from sklearn.model_selection import train_test_split
+from sklearn_fork import linear_model
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.model_selection import train_test_split
 
 n_samples_train, n_samples_test, n_features = 75, 150, 500
 X, y, coef = make_regression(

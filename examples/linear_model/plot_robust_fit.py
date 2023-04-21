@@ -33,15 +33,15 @@ What we can see that:
 from matplotlib import pyplot as plt
 import numpy as np
 
-from sklearn.linear_model import (
+from sklearn_fork.linear_model import (
     LinearRegression,
     TheilSenRegressor,
     RANSACRegressor,
     HuberRegressor,
 )
-from sklearn.metrics import mean_squared_error
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.pipeline import make_pipeline
+from sklearn_fork.metrics import mean_squared_error
+from sklearn_fork.preprocessing import PolynomialFeatures
+from sklearn_fork.pipeline import make_pipeline
 
 np.random.seed(42)
 

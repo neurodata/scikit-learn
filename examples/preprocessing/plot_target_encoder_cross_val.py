@@ -3,7 +3,7 @@
 Target Encoder's Internal Cross Validation
 ==========================================
 
-.. currentmodule:: sklearn.preprocessing
+.. currentmodule:: sklearn_fork.preprocessing
 
 The :class:`TargetEnocoder` replaces each category of a categorical feature with
 the mean of the target variable for that category. This method is useful
@@ -21,7 +21,7 @@ procedure to prevent overfitting.
 # feature with medium cardinality, an uninformative feature with medium cardinality,
 # and an uninformative feature with high cardinality. First, we generate the informative
 # feature:
-from sklearn.preprocessing import KBinsDiscretizer
+from sklearn_fork.preprocessing import KBinsDiscretizer
 import numpy as np
 
 n_samples = 50_000
@@ -60,7 +60,7 @@ X_near_unique_categories = rng.choice(
 
 # %%
 # Finally, we assemble the dataset and perform a train test split:
-from sklearn.model_selection import train_test_split
+from sklearn_fork.model_selection import train_test_split
 import pandas as pd
 
 X = pd.DataFrame(
@@ -80,11 +80,11 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 # interval cross validation. First, we see the Ridge model trained on the
 # raw features will have low performance, because the order of the informative
 # feature is not informative:
-from sklearn.linear_model import Ridge
-import sklearn
+from sklearn_fork.linear_model import Ridge
+import sklearn_fork
 
 # Configure transformers to always output DataFrames
-sklearn.set_config(transform_output="pandas")
+sklearn_fork.set_config(transform_output="pandas")
 
 ridge = Ridge(alpha=1e-6, solver="lsqr", fit_intercept=False)
 
@@ -96,8 +96,8 @@ print("Raw Model score on test set: ", raw_model.score(X_test, y_test))
 # Next, we create a pipeline with the target encoder and ridge model. The pipeline
 # uses :meth:`TargetEncoder.fit_transform` which uses cross validation. We see that
 # the model fits the data well and generalizes to the test set:
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import TargetEncoder
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import TargetEncoder
 
 model_with_cv = make_pipeline(TargetEncoder(random_state=0), ridge)
 model_with_cv.fit(X_train, y_train)
@@ -155,6 +155,6 @@ _ = coefs_no_cv.plot(kind="barh")
 # This example demonstrates the importance of :class:`TargetEncoder`'s interval cross
 # validation. It is important to use :meth:`TargetEncoder.fit_transform` to encode
 # training data before passing it to a machine learning model. When a
-# :class:`TargetEncoder` is a part of a :class:`~sklearn.pipeline.Pipeline` and the
+# :class:`TargetEncoder` is a part of a :class:`~sklearn_fork.pipeline.Pipeline` and the
 # pipeline is fitted, the pipeline will correctly call
 # :meth:`TargetEncoder.fit_transform` and pass the encoding along.

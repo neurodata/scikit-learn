@@ -41,8 +41,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patheffects as PathEffects
 import numpy as np
 
-from sklearn.cluster import AgglomerativeClustering
-from sklearn.metrics import pairwise_distances
+from sklearn_fork.cluster import AgglomerativeClustering
+from sklearn_fork.metrics import pairwise_distances
 
 np.random.seed(0)
 

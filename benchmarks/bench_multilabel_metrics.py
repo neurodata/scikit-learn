@@ -13,14 +13,14 @@ import matplotlib.pyplot as plt
 import scipy.sparse as sp
 import numpy as np
 
-from sklearn.datasets import make_multilabel_classification
-from sklearn.metrics import (
+from sklearn_fork.datasets import make_multilabel_classification
+from sklearn_fork.metrics import (
     f1_score,
     accuracy_score,
     hamming_loss,
     jaccard_similarity_score,
 )
-from sklearn.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import ignore_warnings
 
 
 METRICS = {

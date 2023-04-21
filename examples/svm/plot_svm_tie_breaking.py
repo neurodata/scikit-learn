@@ -19,8 +19,8 @@ create a non-convex decision boundary in that area.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.svm import SVC
-from sklearn.datasets import make_blobs
+from sklearn_fork.svm import SVC
+from sklearn_fork.datasets import make_blobs
 
 X, y = make_blobs(random_state=27)
 

@@ -39,9 +39,9 @@ time to initialize and low number of GaussianMixture iterations to converge.
 
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.mixture import GaussianMixture
-from sklearn.utils.extmath import row_norms
-from sklearn.datasets._samples_generator import make_blobs
+from sklearn_fork.mixture import GaussianMixture
+from sklearn_fork.utils.extmath import row_norms
+from sklearn_fork.datasets._samples_generator import make_blobs
 from timeit import default_timer as timer
 
 print(__doc__)

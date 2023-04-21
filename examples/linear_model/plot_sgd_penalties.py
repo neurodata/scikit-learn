@@ -6,8 +6,8 @@ SGD: Penalties
 Contours of where the penalty is equal to 1
 for the three penalties L1, L2 and elastic-net.
 
-All of the above are supported by :class:`~sklearn.linear_model.SGDClassifier`
-and :class:`~sklearn.linear_model.SGDRegressor`.
+All of the above are supported by :class:`~sklearn_fork.linear_model.SGDClassifier`
+and :class:`~sklearn_fork.linear_model.SGDRegressor`.
 
 """
 

@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 
-from sklearn.utils.random import sample_without_replacement
+from sklearn_fork.utils.random import sample_without_replacement
 
 
 def compute_time(t_start, delta):

@@ -32,7 +32,7 @@ full-path.
 # Load data
 # ---------
 
-from sklearn import datasets
+from sklearn_fork import datasets
 
 iris = datasets.load_iris()
 X = iris.data
@@ -49,8 +49,8 @@ X /= X.max()  # Normalize X to speed-up convergence
 
 import numpy as np
 
-from sklearn import linear_model
-from sklearn.svm import l1_min_c
+from sklearn_fork import linear_model
+from sklearn_fork.svm import l1_min_c
 
 cs = l1_min_c(X, y, loss="log") * np.logspace(0, 10, 16)
 

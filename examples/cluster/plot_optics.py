@@ -3,7 +3,7 @@
 Demo of OPTICS clustering algorithm
 ===================================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 Finds core samples of high density and expands clusters from them.
 This example uses data that is generated so that the clusters have
@@ -20,7 +20,7 @@ thresholds in DBSCAN.
 #          Adrin Jalali <adrin.jalali@gmail.com>
 # License: BSD 3 clause
 
-from sklearn.cluster import OPTICS, cluster_optics_dbscan
+from sklearn_fork.cluster import OPTICS, cluster_optics_dbscan
 import matplotlib.gridspec as gridspec
 import matplotlib.pyplot as plt
 import numpy as np

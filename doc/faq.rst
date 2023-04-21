@@ -4,7 +4,7 @@
 Frequently Asked Questions
 ===========================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 Here we try to give some answers to questions that regularly pop up on the mailing list.
 
@@ -58,7 +58,7 @@ You can find more information about addition of gpu support at
 `Will you add GPU support?`_.
 
 Note that scikit-learn currently implements a simple multilayer perceptron
-in :mod:`sklearn.neural_network`. We will only accept bug fixes for this module.
+in :mod:`sklearn_fork.neural_network`. We will only accept bug fixes for this module.
 If you want to implement more complex deep learning models, please turn to
 popular deep learning frameworks such as
 `tensorflow <https://www.tensorflow.org/>`_,
@@ -127,11 +127,11 @@ to support Pandas categorical types. Restricting input to homogeneous
 types therefore reduces maintenance cost and encourages usage of efficient
 data structures.
 
-Note however that :class:`~sklearn.compose.ColumnTransformer` makes it
+Note however that :class:`~sklearn_fork.compose.ColumnTransformer` makes it
 convenient to handle heterogeneous pandas dataframes by mapping homogeneous subsets of
 dataframe columns selected by name or dtype to dedicated scikit-learn transformers.
 
-Therefore :class:`~sklearn.compose.ColumnTransformer` are often used in the first
+Therefore :class:`~sklearn_fork.compose.ColumnTransformer` are often used in the first
 step of scikit-learn pipelines when dealing
 with heterogeneous dataframes (see :ref:`pipeline` for more details).
 
@@ -299,7 +299,7 @@ with the ``[scikit-learn]`` and ``[python]`` tags. You can alternatively use the
 
 Please make sure to include a minimal reproduction code snippet (ideally shorter
 than 10 lines) that highlights your problem on a toy dataset (for instance from
-``sklearn.datasets`` or randomly generated with functions of ``numpy.random`` with
+``sklearn_fork.datasets`` or randomly generated with functions of ``numpy.random`` with
 a fixed random seed). Please remove any line of code that is not necessary to
 reproduce your problem.
 
@@ -376,7 +376,7 @@ DBSCAN with Levenshtein distances::
 
     >>> from leven import levenshtein       # doctest: +SKIP
     >>> import numpy as np
-    >>> from sklearn.cluster import dbscan
+    >>> from sklearn_fork.cluster import dbscan
     >>> data = ["ACCTCCTAGAAG", "ACCTACTAGAAGTT", "GAATATTAGGCCGA"]
     >>> def lev_metric(x, y):
     ...     i, j = int(x[0]), int(y[0])     # extract indices

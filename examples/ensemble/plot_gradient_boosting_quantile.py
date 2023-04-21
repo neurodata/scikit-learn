@@ -12,7 +12,7 @@ intervals.
 # Generate some data for a synthetic regression problem by applying the
 # function f to uniformly sampled random inputs.
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn_fork.model_selection import train_test_split
 
 
 def f(x):
@@ -55,8 +55,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 # The model trained with alpha=0.5 produces a regression of the median: on
 # average, there should be the same number of target observations above and
 # below the predicted values.
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.metrics import mean_pinball_loss, mean_squared_error
+from sklearn_fork.ensemble import GradientBoostingRegressor
+from sklearn_fork.metrics import mean_pinball_loss, mean_squared_error
 
 
 all_models = {}
@@ -72,8 +72,8 @@ for alpha in [0.05, 0.5, 0.95]:
     all_models["q %1.2f" % alpha] = gbr.fit(X_train, y_train)
 
 # %%
-# Notice that :class:`~sklearn.ensemble.HistGradientBoostingRegressor` is much
-# faster than :class:`~sklearn.ensemble.GradientBoostingRegressor` starting with
+# Notice that :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor` is much
+# faster than :class:`~sklearn_fork.ensemble.GradientBoostingRegressor` starting with
 # intermediate datasets (`n_samples >= 10_000`), which is not the case of the
 # present example.
 #
@@ -237,9 +237,9 @@ coverage_fraction(
 # cross-validation on the pinball loss with alpha=0.05:
 
 # %%
-from sklearn.experimental import enable_halving_search_cv  # noqa
-from sklearn.model_selection import HalvingRandomSearchCV
-from sklearn.metrics import make_scorer
+from sklearn_fork.experimental import enable_halving_search_cv  # noqa
+from sklearn_fork.model_selection import HalvingRandomSearchCV
+from sklearn_fork.metrics import make_scorer
 from pprint import pprint
 
 param_grid = dict(
@@ -276,7 +276,7 @@ pprint(search_05p.best_params_)
 # need to redefine the `scoring` metric used to select the best model, along
 # with adjusting the alpha parameter of the inner gradient boosting estimator
 # itself:
-from sklearn.base import clone
+from sklearn_fork.base import clone
 
 alpha = 0.95
 neg_mean_pinball_loss_95p_scorer = make_scorer(

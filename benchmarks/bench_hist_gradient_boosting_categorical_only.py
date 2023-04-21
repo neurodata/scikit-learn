@@ -1,10 +1,10 @@
 import argparse
 from time import time
 
-from sklearn.preprocessing import KBinsDiscretizer
-from sklearn.datasets import make_classification
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
+from sklearn_fork.preprocessing import KBinsDiscretizer
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
 
 
 parser = argparse.ArgumentParser()
@@ -69,7 +69,7 @@ est = HistGradientBoostingClassifier(
     verbose=verbose,
 )
 
-fit(est, X, y, "sklearn")
+fit(est, X, y, "sklearn_fork")
 predict(est, X)
 
 if args.lightgbm:

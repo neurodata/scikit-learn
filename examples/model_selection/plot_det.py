@@ -18,10 +18,10 @@ corner) is the "ideal" point.
 
 .. note::
 
-    - See :func:`sklearn.metrics.roc_curve` for further information about ROC
+    - See :func:`sklearn_fork.metrics.roc_curve` for further information about ROC
       curves.
 
-    - See :func:`sklearn.metrics.det_curve` for further information about
+    - See :func:`sklearn_fork.metrics.det_curve` for further information about
       DET curves.
 
     - This example is loosely based on
@@ -37,9 +37,9 @@ corner) is the "ideal" point.
 # Generate synthetic data
 # -----------------------
 
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.preprocessing import StandardScaler
 
 X, y = make_classification(
     n_samples=1_000,
@@ -61,9 +61,9 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_
 # is no particular reason why these classifiers are chosen other classifiers
 # available in scikit-learn.
 
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.pipeline import make_pipeline
-from sklearn.svm import LinearSVC
+from sklearn_fork.ensemble import RandomForestClassifier
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.svm import LinearSVC
 
 classifiers = {
     "Linear SVM": make_pipeline(StandardScaler(), LinearSVC(C=0.025)),
@@ -78,11 +78,11 @@ classifiers = {
 #
 # DET curves are commonly plotted in normal deviate scale. To achieve this the
 # DET display transforms the error rates as returned by the
-# :func:`~sklearn.metrics.det_curve` and the axis scale using
+# :func:`~sklearn_fork.metrics.det_curve` and the axis scale using
 # :func:`scipy.stats.norm`.
 
 import matplotlib.pyplot as plt
-from sklearn.metrics import DetCurveDisplay, RocCurveDisplay
+from sklearn_fork.metrics import DetCurveDisplay, RocCurveDisplay
 
 fig, [ax_roc, ax_det] = plt.subplots(1, 2, figsize=(11, 5))
 

@@ -5,7 +5,7 @@ Faces dataset decompositions
 
 This example applies to :ref:`olivetti_faces_dataset` different unsupervised
 matrix decomposition (dimension reduction) methods from the module
-:py:mod:`sklearn.decomposition` (see the documentation chapter
+:py:mod:`sklearn_fork.decomposition` (see the documentation chapter
 :ref:`decompositions`).
 
 
@@ -24,9 +24,9 @@ import logging
 from numpy.random import RandomState
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import fetch_olivetti_faces
-from sklearn import cluster
-from sklearn import decomposition
+from sklearn_fork.datasets import fetch_olivetti_faces
+from sklearn_fork import cluster
+from sklearn_fork import decomposition
 
 rng = RandomState(0)
 
@@ -104,7 +104,7 @@ plot_gallery("Faces from dataset", faces_centered[:n_components])
 #
 # .. note::
 #
-#     The Eigenfaces estimator, via the :py:mod:`sklearn.decomposition.PCA`,
+#     The Eigenfaces estimator, via the :py:mod:`sklearn_fork.decomposition.PCA`,
 #     also provides a scalar `noise_variance_` (the mean of pixelwise variance)
 #     that cannot be displayed as an image.
 
@@ -149,7 +149,7 @@ plot_gallery(
 #
 # Mini-batch sparse PCA (`MiniBatchSparsePCA`) extracts the set of sparse
 # components that best reconstruct the data. This variant is faster but
-# less accurate than the similar :py:mod:`sklearn.decomposition.SparsePCA`.
+# less accurate than the similar :py:mod:`sklearn_fork.decomposition.SparsePCA`.
 
 # %%
 batch_pca_estimator = decomposition.MiniBatchSparsePCA(

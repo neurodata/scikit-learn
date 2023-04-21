@@ -5,13 +5,13 @@ from pprint import pprint
 
 import numpy as np
 from threadpoolctl import threadpool_limits
-import sklearn
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.datasets import make_classification
-from sklearn.datasets import make_regression
-from sklearn.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
+import sklearn_fork
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
 
 
 parser = argparse.ArgumentParser()
@@ -150,9 +150,9 @@ def one_run(n_threads, n_samples):
         sample_weight_train = None
     assert X_train.shape[0] == n_samples
     assert X_test.shape[0] == n_samples
-    print("Fitting a sklearn model...")
+    print("Fitting a sklearn_fork model...")
     tic = time()
-    est = sklearn.base.clone(sklearn_est)
+    est = sklearn_fork.base.clone(sklearn_est)
 
     with threadpool_limits(n_threads, user_api="openmp"):
         est.fit(X_train, y_train, sample_weight=sample_weight_train)
@@ -295,7 +295,7 @@ if args.plot or args.plot_filename:
 
     fig, axs = plt.subplots(2, figsize=(12, 12))
 
-    label = f"sklearn {sklearn.__version__}"
+    label = f"sklearn_fork {sklearn_fork.__version__}"
     axs[0].plot(n_threads_list, sklearn_fit_durations, label=label)
     axs[1].plot(n_threads_list, sklearn_score_durations, label=label)
 

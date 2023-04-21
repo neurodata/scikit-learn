@@ -23,14 +23,14 @@ import gc
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from sklearn.datasets import make_regression
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import Ridge
-from sklearn.linear_model import SGDRegressor
-from sklearn.svm import SVR
-from sklearn.utils import shuffle
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.ensemble import RandomForestRegressor
+from sklearn_fork.linear_model import Ridge
+from sklearn_fork.linear_model import SGDRegressor
+from sklearn_fork.svm import SVR
+from sklearn_fork.utils import shuffle
 
 
 def _not_in_sphinx():

@@ -4,7 +4,7 @@
 Probability calibration
 =======================
 
-.. currentmodule:: sklearn.calibration
+.. currentmodule:: sklearn_fork.calibration
 
 
 When performing classification you often want not only to predict the class
@@ -12,7 +12,7 @@ label, but also obtain a probability of the respective label. This probability
 gives you some kind of confidence on the prediction. Some models can give you
 poor estimates of the class probabilities and some even do not support
 probability prediction (e.g., some instances of
-:class:`~sklearn.linear_model.SGDClassifier`).
+:class:`~sklearn_fork.linear_model.SGDClassifier`).
 The calibration module allows you to better calibrate
 the probabilities of a given model, or to add support for probability
 prediction.
@@ -29,8 +29,8 @@ good a classifier is calibrated.
 
 .. note::
     Strictly proper scoring rules for probabilistic predictions like
-    :func:`sklearn.metrics.brier_score_loss` and
-    :func:`sklearn.metrics.log_loss` assess calibration (reliability) and
+    :func:`sklearn_fork.metrics.brier_score_loss` and
+    :func:`sklearn_fork.metrics.log_loss` assess calibration (reliability) and
     discriminative power (resolution) of a model, as well as the randomness of the data
     (uncertainty) at the same time. This follows from the well-known Brier score
     decomposition of Murphy [1]_. As it is not clear which term dominates, the score is
@@ -72,7 +72,7 @@ by showing the number of samples in each predicted probability bin.
    :target: ../auto_examples/calibration/plot_compare_calibration.html
    :align: center
 
-.. currentmodule:: sklearn.linear_model
+.. currentmodule:: sklearn_fork.linear_model
 
 :class:`LogisticRegression` returns well calibrated predictions by default as it has a
 canonical link function for its loss, i.e. the logit-link for the :ref:`log_loss`.
@@ -81,14 +81,14 @@ This leads to the so-called **balance property**, see [8]_ and
 In contrast to that, the other shown models return biased probabilities; with
 different biases per model.
 
-.. currentmodule:: sklearn.naive_bayes
+.. currentmodule:: sklearn_fork.naive_bayes
 
 :class:`GaussianNB` (Naive Bayes) tends to push probabilities to 0 or 1 (note the counts
 in the histograms). This is mainly because it makes the assumption that
 features are conditionally independent given the class, which is not the
 case in this dataset which contains 2 redundant features.
 
-.. currentmodule:: sklearn.ensemble
+.. currentmodule:: sklearn_fork.ensemble
 
 :class:`RandomForestClassifier` shows the opposite behavior: the histograms
 show peaks at probabilities approximately 0.2 and 0.9, while probabilities
@@ -110,7 +110,7 @@ a result, the calibration curve shows a characteristic sigmoid shape, indicating
 the classifier could trust its "intuition" more and return probabilities closer
 to 0 or 1 typically.
 
-.. currentmodule:: sklearn.svm
+.. currentmodule:: sklearn_fork.svm
 
 :class:`LinearSVC` (SVC) shows an even more sigmoid curve than the random forest, which
 is typical for maximum-margin methods (compare Niculescu-Mizil and Caruana [3]_), which
@@ -120,7 +120,7 @@ support vectors).
 Calibrating a classifier
 ------------------------
 
-.. currentmodule:: sklearn.calibration
+.. currentmodule:: sklearn_fork.calibration
 
 Calibrating a classifier consists of fitting a regressor (called a
 *calibrator*) that maps the output of the classifier (as given by
@@ -160,7 +160,7 @@ probability.
 
 When `ensemble=False`, cross-validation is used to obtain 'unbiased'
 predictions for all the data, via
-:func:`~sklearn.model_selection.cross_val_predict`.
+:func:`~sklearn_fork.model_selection.cross_val_predict`.
 These unbiased predictions are then used to train the calibrator. The attribute
 `calibrated_classifiers_` consists of only one `(classifier, calibrator)`
 couple where the classifier is the `base_estimator` trained on all the data.
@@ -217,7 +217,7 @@ Isotonic
 ^^^^^^^^
 
 The `method="isotonic"` fits a non-parametric isotonic regressor, which outputs
-a step-wise non-decreasing function, see :mod:`sklearn.isotonic`. It minimizes:
+a step-wise non-decreasing function, see :mod:`sklearn_fork.isotonic`. It minimizes:
 
 .. math::
        \sum_{i=1}^{n} (y_i - \hat{f}_i)^2

@@ -6,7 +6,7 @@ Benchmark for explicit feature map approximation of polynomial kernels
 An example illustrating the approximation of the feature map
 of an Homogeneous Polynomial kernel.
 
-.. currentmodule:: sklearn.kernel_approximation
+.. currentmodule:: sklearn_fork.kernel_approximation
 
 It shows how to use :class:`PolynomialCountSketch` and :class:`Nystroem` to
 approximate the feature map of a polynomial kernel for
@@ -42,8 +42,8 @@ Programming (pp. 693-703). Springer, Berlin, Heidelberg.
 # License: BSD 3 clause
 
 # Load data manipulation functions
-from sklearn.datasets import load_digits
-from sklearn.model_selection import train_test_split
+from sklearn_fork.datasets import load_digits
+from sklearn_fork.model_selection import train_test_split
 
 # Some common libraries
 import matplotlib.pyplot as plt
@@ -53,9 +53,9 @@ import numpy as np
 from time import time
 
 # Import SVM classifiers and feature map approximation algorithms
-from sklearn.svm import LinearSVC, SVC
-from sklearn.kernel_approximation import Nystroem, PolynomialCountSketch
-from sklearn.pipeline import Pipeline
+from sklearn_fork.svm import LinearSVC, SVC
+from sklearn_fork.kernel_approximation import Nystroem, PolynomialCountSketch
+from sklearn_fork.pipeline import Pipeline
 
 # Split data in train and test sets
 X, y = load_digits()["data"], load_digits()["target"]

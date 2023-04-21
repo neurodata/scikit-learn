@@ -84,7 +84,7 @@ grid = sns.pairplot(df, diag_kind="kde", corner=True)
 # In the next section, we train predictive models and we therefore split the
 # target column from over features and we split the data into a training and a
 # testing set.
-from sklearn.model_selection import train_test_split
+from sklearn_fork.model_selection import train_test_split
 
 target_name = "hourly wage"
 X, y = df.drop(columns=target_name), df[target_name]
@@ -95,10 +95,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 # -----------------------------------------------
 #
 # First, we train a predictive model, a
-# :class:`~sklearn.linear_model.LinearRegression` model. In this experiment,
+# :class:`~sklearn_fork.linear_model.LinearRegression` model. In this experiment,
 # we assume that all variables used by the true generative model are available.
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.metrics import r2_score
 
 features_names = ["experience", "parent hourly wage", "college degree", "ability"]
 

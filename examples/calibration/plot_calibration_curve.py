@@ -25,8 +25,8 @@ classifier will also be demonstrated.
 # remaining 8 are uninformative (random numbers). Of the 100,000 samples, 1,000
 # will be used for model fitting and the rest for testing.
 
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.model_selection import train_test_split
 
 X, y = make_classification(
     n_samples=100_000, n_features=20, n_informative=2, n_redundant=10, random_state=42
@@ -45,11 +45,11 @@ X_train, X_test, y_train, y_test = train_test_split(
 #
 # First, we will compare:
 #
-# * :class:`~sklearn.linear_model.LogisticRegression` (used as baseline
+# * :class:`~sklearn_fork.linear_model.LogisticRegression` (used as baseline
 #   since very often, properly regularized logistic regression is well
 #   calibrated by default thanks to the use of the log-loss)
-# * Uncalibrated :class:`~sklearn.naive_bayes.GaussianNB`
-# * :class:`~sklearn.naive_bayes.GaussianNB` with isotonic and sigmoid
+# * Uncalibrated :class:`~sklearn_fork.naive_bayes.GaussianNB`
+# * :class:`~sklearn_fork.naive_bayes.GaussianNB` with isotonic and sigmoid
 #   calibration (see :ref:`User Guide <calibration>`)
 #
 # Calibration curves for all 4 conditions are plotted below, with the average
@@ -59,9 +59,9 @@ X_train, X_test, y_train, y_test = train_test_split(
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 
-from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
-from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import GaussianNB
+from sklearn_fork.calibration import CalibratedClassifierCV, CalibrationDisplay
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.naive_bayes import GaussianNB
 
 lr = LogisticRegression(C=1.0)
 gnb = GaussianNB()
@@ -117,12 +117,12 @@ plt.tight_layout()
 plt.show()
 
 # %%
-# Uncalibrated :class:`~sklearn.naive_bayes.GaussianNB` is poorly calibrated
+# Uncalibrated :class:`~sklearn_fork.naive_bayes.GaussianNB` is poorly calibrated
 # because of
 # the redundant features which violate the assumption of feature-independence
 # and result in an overly confident classifier, which is indicated by the
 # typical transposed-sigmoid curve. Calibration of the probabilities of
-# :class:`~sklearn.naive_bayes.GaussianNB` with :ref:`isotonic` can fix
+# :class:`~sklearn_fork.naive_bayes.GaussianNB` with :ref:`isotonic` can fix
 # this issue as can be seen from the nearly diagonal calibration curve.
 # :ref:`Sigmoid regression <sigmoid_regressor>` also improves calibration
 # slightly,
@@ -139,7 +139,7 @@ from collections import defaultdict
 
 import pandas as pd
 
-from sklearn.metrics import (
+from sklearn_fork.metrics import (
     precision_score,
     recall_score,
     f1_score,
@@ -187,16 +187,16 @@ score_df
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 # Next, we will compare:
 #
-# * :class:`~sklearn.linear_model.LogisticRegression` (baseline)
-# * Uncalibrated :class:`~sklearn.svm.LinearSVC`. Since SVC does not output
+# * :class:`~sklearn_fork.linear_model.LogisticRegression` (baseline)
+# * Uncalibrated :class:`~sklearn_fork.svm.LinearSVC`. Since SVC does not output
 #   probabilities by default, we naively scale the output of the
 #   :term:`decision_function` into [0, 1] by applying min-max scaling.
-# * :class:`~sklearn.svm.LinearSVC` with isotonic and sigmoid
+# * :class:`~sklearn_fork.svm.LinearSVC` with isotonic and sigmoid
 #   calibration (see :ref:`User Guide <calibration>`)
 
 import numpy as np
 
-from sklearn.svm import LinearSVC
+from sklearn_fork.svm import LinearSVC
 
 
 class NaivelyCalibratedLinearSVC(LinearSVC):
@@ -274,14 +274,14 @@ plt.tight_layout()
 plt.show()
 
 # %%
-# :class:`~sklearn.svm.LinearSVC` shows the opposite
-# behavior to :class:`~sklearn.naive_bayes.GaussianNB`; the calibration
+# :class:`~sklearn_fork.svm.LinearSVC` shows the opposite
+# behavior to :class:`~sklearn_fork.naive_bayes.GaussianNB`; the calibration
 # curve has a sigmoid shape, which is typical for an under-confident
-# classifier. In the case of :class:`~sklearn.svm.LinearSVC`, this is caused
+# classifier. In the case of :class:`~sklearn_fork.svm.LinearSVC`, this is caused
 # by the margin property of the hinge loss, which focuses on samples that are
 # close to the decision boundary (support vectors). Samples that are far
 # away from the decision boundary do not impact the hinge loss. It thus makes
-# sense that :class:`~sklearn.svm.LinearSVC` does not try to separate samples
+# sense that :class:`~sklearn_fork.svm.LinearSVC` does not try to separate samples
 # in the high confidence region regions. This leads to flatter calibration
 # curves near 0 and 1 and is empirically shown with a variety of datasets
 # in Niculescu-Mizil & Caruana [1]_.
@@ -314,7 +314,7 @@ for i, (clf, name) in enumerate(clf_list):
 score_df
 
 # %%
-# As with :class:`~sklearn.naive_bayes.GaussianNB` above, calibration improves
+# As with :class:`~sklearn_fork.naive_bayes.GaussianNB` above, calibration improves
 # both :ref:`brier_score_loss` and :ref:`log_loss` but does not alter the
 # prediction accuracy measures (precision, recall and F1 score) much.
 #
@@ -323,8 +323,8 @@ score_df
 #
 # Parametric sigmoid calibration can deal with situations where the calibration
 # curve of the base classifier is sigmoid (e.g., for
-# :class:`~sklearn.svm.LinearSVC`) but not where it is transposed-sigmoid
-# (e.g., :class:`~sklearn.naive_bayes.GaussianNB`). Non-parametric
+# :class:`~sklearn_fork.svm.LinearSVC`) but not where it is transposed-sigmoid
+# (e.g., :class:`~sklearn_fork.naive_bayes.GaussianNB`). Non-parametric
 # isotonic calibration can deal with both situations but may require more
 # data to produce good results.
 #

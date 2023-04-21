@@ -18,8 +18,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-from sklearn import decomposition
-from sklearn import datasets
+from sklearn_fork import decomposition
+from sklearn_fork import datasets
 
 # unused but required import for doing 3d projections with matplotlib < 3.2
 import mpl_toolkits.mplot3d  # noqa: F401

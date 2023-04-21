@@ -151,7 +151,7 @@ The following workflow [1]_ is a good way to approach issue triaging:
    straightforward, label the issue as “Good first issue”.
 
    An additional useful step can be to tag the corresponding module e.g.
-   `sklearn.linear_models` when relevant.
+   `sklearn_fork.linear_models` when relevant.
 
 #. Remove the "Needs Triage" label from the issue if the label exists.
 

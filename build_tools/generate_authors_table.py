@@ -75,7 +75,7 @@ def get_contributors():
     # add missing contributors without GitHub accounts
     members |= {"Angel Soler Gollonet"}
     # remove CI bots
-    members -= {"sklearn-ci", "sklearn-wheels", "sklearn-lgtm"}
+    members -= {"sklearn_fork-ci", "sklearn_fork-wheels", "sklearn_fork-lgtm"}
     contributor_experience_team -= (
         core_devs  # remove ogrisel from contributor_experience_team
     )

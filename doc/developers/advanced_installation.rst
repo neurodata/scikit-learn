@@ -68,8 +68,8 @@ feature, code or documentation improvement).
 
    .. prompt:: bash $
 
-     conda create -n sklearn-env -c conda-forge python=3.9 numpy scipy cython
-     conda activate sklearn-env
+     conda create -n sklearn_fork-env -c conda-forge python=3.9 numpy scipy cython
+     conda activate sklearn_fork-env
 
 #. **Alternative to conda:** If you run Linux or similar, you can instead use
    your system's Python provided it is recent enough (3.8 or higher
@@ -78,8 +78,8 @@ feature, code or documentation improvement).
 
    .. prompt:: bash $
 
-     python3 -m venv sklearn-env
-     source sklearn-env/bin/activate
+     python3 -m venv sklearn_fork-env
+     source sklearn_fork-env/bin/activate
      pip install wheel numpy scipy cython
 
 #. Install a compiler with OpenMP_ support for your platform. See instructions
@@ -97,7 +97,7 @@ feature, code or documentation improvement).
 
    .. prompt:: bash $
 
-     python -c "import sklearn; sklearn.show_versions()"
+     python -c "import sklearn_fork; sklearn_fork.show_versions()"
 
 #. Please refer to the :ref:`developers_guide` and :ref:`pytest_tips` to run
    the tests on the module of your choice.
@@ -133,7 +133,7 @@ Building Scikit-learn also requires:
 ..
     # The following places need to be in sync with regard to Cython version:
     # - .circleci config file
-    # - sklearn/_build_utils/__init__.py
+    # - sklearn_fork/_build_utils/__init__.py
     # - advanced installation guide
 
 - Cython >= |CythonMinVersion|
@@ -279,9 +279,9 @@ scikit-learn from source:
 
 .. prompt:: bash $
 
-    conda create -n sklearn-dev -c conda-forge python numpy scipy cython \
+    conda create -n sklearn_fork-dev -c conda-forge python numpy scipy cython \
         joblib threadpoolctl pytest compilers llvm-openmp
-    conda activate sklearn-dev
+    conda activate sklearn_fork-dev
     make clean
     pip install --verbose --no-build-isolation --editable .
 
@@ -318,9 +318,9 @@ variables:
     echo $CXXFLAGS
     echo $LDFLAGS
 
-They point to files and folders from your ``sklearn-dev`` conda environment
+They point to files and folders from your ``sklearn_fork-dev`` conda environment
 (in particular in the bin/, include/ and lib/ subfolders). For instance
-``-L/path/to/conda/envs/sklearn-dev/lib`` should appear in ``LDFLAGS``.
+``-L/path/to/conda/envs/sklearn_fork-dev/lib`` should appear in ``LDFLAGS``.
 
 In the log, you should see the compiled extension being built with the clang
 and clang++ compilers installed by conda with the ``-fopenmp`` command line
@@ -420,9 +420,9 @@ in the user folder using conda:
 
 .. prompt:: bash $
 
-    conda create -n sklearn-dev -c conda-forge python numpy scipy cython \
+    conda create -n sklearn_fork-dev -c conda-forge python numpy scipy cython \
         joblib threadpoolctl pytest compilers
-    conda activate sklearn-dev
+    conda activate sklearn_fork-dev
     pip install --verbose --no-build-isolation --editable .
 
 .. _compiler_freebsd:

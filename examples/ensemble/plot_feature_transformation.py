@@ -36,8 +36,8 @@ high-dimensional categorical embedding of the data.
 # It is important to split the data in such way to avoid overfitting by leaking
 # data.
 
-from sklearn.datasets import make_classification
-from sklearn.model_selection import train_test_split
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.model_selection import train_test_split
 
 X, y = make_classification(n_samples=80_000, random_state=10)
 
@@ -59,7 +59,7 @@ max_depth = 3
 # First, we will start by training the random forest and gradient boosting on
 # the separated training set
 
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+from sklearn_fork.ensemble import RandomForestClassifier, GradientBoostingClassifier
 
 random_forest = RandomForestClassifier(
     n_estimators=n_estimators, max_depth=max_depth, random_state=10
@@ -72,15 +72,15 @@ gradient_boosting = GradientBoostingClassifier(
 _ = gradient_boosting.fit(X_train_ensemble, y_train_ensemble)
 
 # %%
-# Notice that :class:`~sklearn.ensemble.HistGradientBoostingClassifier` is much
-# faster than :class:`~sklearn.ensemble.GradientBoostingClassifier` starting
+# Notice that :class:`~sklearn_fork.ensemble.HistGradientBoostingClassifier` is much
+# faster than :class:`~sklearn_fork.ensemble.GradientBoostingClassifier` starting
 # with intermediate datasets (`n_samples >= 10_000`), which is not the case of
 # the present example.
 #
-# The :class:`~sklearn.ensemble.RandomTreesEmbedding` is an unsupervised method
+# The :class:`~sklearn_fork.ensemble.RandomTreesEmbedding` is an unsupervised method
 # and thus does not required to be trained independently.
 
-from sklearn.ensemble import RandomTreesEmbedding
+from sklearn_fork.ensemble import RandomTreesEmbedding
 
 random_tree_embedding = RandomTreesEmbedding(
     n_estimators=n_estimators, max_depth=max_depth, random_state=0
@@ -93,8 +93,8 @@ random_tree_embedding = RandomTreesEmbedding(
 # The random trees embedding can be directly pipelined with the logistic
 # regression because it is a standard scikit-learn transformer.
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import make_pipeline
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.pipeline import make_pipeline
 
 rt_model = make_pipeline(random_tree_embedding, LogisticRegression(max_iter=1000))
 rt_model.fit(X_train_linear, y_train_linear)
@@ -105,8 +105,8 @@ rt_model.fit(X_train_linear, y_train_linear)
 # method `apply`. The pipeline in scikit-learn expects a call to `transform`.
 # Therefore, we wrapped the call to `apply` within a `FunctionTransformer`.
 
-from sklearn.preprocessing import FunctionTransformer
-from sklearn.preprocessing import OneHotEncoder
+from sklearn_fork.preprocessing import FunctionTransformer
+from sklearn_fork.preprocessing import OneHotEncoder
 
 
 def rf_apply(X, model):
@@ -143,7 +143,7 @@ gbdt_model.fit(X_train_linear, y_train_linear)
 # We can finally show the different ROC curves for all the models.
 
 import matplotlib.pyplot as plt
-from sklearn.metrics import RocCurveDisplay
+from sklearn_fork.metrics import RocCurveDisplay
 
 fig, ax = plt.subplots()
 

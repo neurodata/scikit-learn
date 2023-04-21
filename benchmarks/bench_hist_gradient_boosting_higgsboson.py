@@ -7,10 +7,10 @@ import argparse
 import numpy as np
 import pandas as pd
 from joblib import Memory
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, roc_auc_score
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.metrics import accuracy_score, roc_auc_score
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
 
 
 parser = argparse.ArgumentParser()
@@ -105,7 +105,7 @@ est = HistGradientBoostingClassifier(
     verbose=1,
     interaction_cst=interaction_cst,
 )
-fit(est, data_train, target_train, "sklearn")
+fit(est, data_train, target_train, "sklearn_fork")
 predict(est, data_test, target_test)
 
 if args.lightgbm:

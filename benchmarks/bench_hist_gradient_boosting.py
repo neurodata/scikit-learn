@@ -3,12 +3,12 @@ import argparse
 
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.datasets import make_classification
-from sklearn.datasets import make_regression
-from sklearn.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
 
 
 parser = argparse.ArgumentParser()
@@ -101,7 +101,7 @@ def one_run(n_samples):
     assert X_train.shape[0] == n_samples
     assert X_test.shape[0] == n_samples
     print("Data size: %d samples train, %d samples test." % (n_samples, n_samples))
-    print("Fitting a sklearn model...")
+    print("Fitting a sklearn_fork model...")
     tic = time()
     est = Estimator(
         learning_rate=lr,
@@ -253,9 +253,9 @@ for n_samples in n_samples_list:
 
 fig, axs = plt.subplots(3, sharex=True)
 
-axs[0].plot(n_samples_list, sklearn_scores, label="sklearn")
-axs[1].plot(n_samples_list, sklearn_fit_durations, label="sklearn")
-axs[2].plot(n_samples_list, sklearn_score_durations, label="sklearn")
+axs[0].plot(n_samples_list, sklearn_scores, label="sklearn_fork")
+axs[1].plot(n_samples_list, sklearn_fit_durations, label="sklearn_fork")
+axs[2].plot(n_samples_list, sklearn_score_durations, label="sklearn_fork")
 
 if args.lightgbm:
     axs[0].plot(n_samples_list, lightgbm_scores, label="lightgbm")

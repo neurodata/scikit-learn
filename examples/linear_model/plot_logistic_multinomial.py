@@ -14,9 +14,9 @@ are represented by the dashed lines.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.datasets import make_blobs
-from sklearn.linear_model import LogisticRegression
-from sklearn.inspection import DecisionBoundaryDisplay
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.inspection import DecisionBoundaryDisplay
 
 # make 3-class dataset for classification
 centers = [[-5, 0], [0, 1.5], [5, -1]]

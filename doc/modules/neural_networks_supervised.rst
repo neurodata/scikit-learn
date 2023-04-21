@@ -4,7 +4,7 @@
 Neural network models (supervised)
 ==================================
 
-.. currentmodule:: sklearn.neural_network
+.. currentmodule:: sklearn_fork.neural_network
 
 
 .. warning::
@@ -83,7 +83,7 @@ the training samples represented as floating point feature vectors; and array
 y of size (n_samples,), which holds the target values (class labels) for the
 training samples::
 
-    >>> from sklearn.neural_network import MLPClassifier
+    >>> from sklearn_fork.neural_network import MLPClassifier
     >>> X = [[0., 0.], [1., 1.]]
     >>> y = [0, 1]
     >>> clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
@@ -318,7 +318,7 @@ Tips on Practical Use
     scaling to the test set for meaningful results.
     You can use :class:`StandardScaler` for standardization.
 
-      >>> from sklearn.preprocessing import StandardScaler  # doctest: +SKIP
+      >>> from sklearn_fork.preprocessing import StandardScaler  # doctest: +SKIP
       >>> scaler = StandardScaler()  # doctest: +SKIP
       >>> # Don't cheat - fit only on training data
       >>> scaler.fit(X_train)  # doctest: +SKIP

@@ -13,7 +13,7 @@ The color map illustrates the decision function learned by the SVC.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import svm
+from sklearn_fork import svm
 
 xx, yy = np.meshgrid(np.linspace(-3, 3, 500), np.linspace(-3, 3, 500))
 np.random.seed(0)

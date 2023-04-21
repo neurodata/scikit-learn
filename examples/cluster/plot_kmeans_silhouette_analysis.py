@@ -31,9 +31,9 @@ verified from the labelled scatter plot on the right.
 
 """
 
-from sklearn.datasets import make_blobs
-from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_samples, silhouette_score
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.cluster import KMeans
+from sklearn_fork.metrics import silhouette_samples, silhouette_score
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm

@@ -3,7 +3,7 @@
 Plot individual and voting regression predictions
 =================================================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 A voting regressor is an ensemble meta-estimator that fits several base
 regressors, each on the whole dataset. Then it averages the individual
@@ -25,11 +25,11 @@ measure of disease progression one year after baseline.
 
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import load_diabetes
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import VotingRegressor
+from sklearn_fork.datasets import load_diabetes
+from sklearn_fork.ensemble import GradientBoostingRegressor
+from sklearn_fork.ensemble import RandomForestRegressor
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.ensemble import VotingRegressor
 
 # %%
 # Training classifiers

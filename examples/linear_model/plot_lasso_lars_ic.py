@@ -4,13 +4,13 @@ Lasso model selection via information criteria
 ==============================================
 
 This example reproduces the example of Fig. 2 of [ZHT2007]_. A
-:class:`~sklearn.linear_model.LassoLarsIC` estimator is fit on a
+:class:`~sklearn_fork.linear_model.LassoLarsIC` estimator is fit on a
 diabetes dataset and the AIC and the BIC criteria are used to select
 the best model.
 
 .. note::
     It is important to note that the optimization to find `alpha` with
-    :class:`~sklearn.linear_model.LassoLarsIC` relies on the AIC or BIC
+    :class:`~sklearn_fork.linear_model.LassoLarsIC` relies on the AIC or BIC
     criteria that are computed in-sample, thus on the training set directly.
     This approach differs from the cross-validation procedure. For a comparison
     of the two approaches, you can refer to the following example:
@@ -30,7 +30,7 @@ the best model.
 
 # %%
 # We will use the diabetes dataset.
-from sklearn.datasets import load_diabetes
+from sklearn_fork.datasets import load_diabetes
 
 X, y = load_diabetes(return_X_y=True, as_frame=True)
 n_samples = X.shape[0]
@@ -38,16 +38,16 @@ X.head()
 
 # %%
 # Scikit-learn provides an estimator called
-# :class:`~sklearn.linear_model.LinearLarsIC` that uses either Akaike's
+# :class:`~sklearn_fork.linear_model.LinearLarsIC` that uses either Akaike's
 # information criterion (AIC) or the Bayesian information criterion (BIC) to
 # select the best model. Before fitting
 # this model, we will scale the dataset.
 #
 # In the following, we are going to fit two models to compare the values
 # reported by AIC and BIC.
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LassoLarsIC
-from sklearn.pipeline import make_pipeline
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.linear_model import LassoLarsIC
+from sklearn_fork.pipeline import make_pipeline
 
 lasso_lars_ic = make_pipeline(StandardScaler(), LassoLarsIC(criterion="aic")).fit(X, y)
 

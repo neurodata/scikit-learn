@@ -1,4 +1,4 @@
-.. currentmodule:: sklearn.preprocessing
+.. currentmodule:: sklearn_fork.preprocessing
 
 .. _preprocessing_targets:
 
@@ -20,7 +20,7 @@ LabelBinarizer
 :class:`LabelBinarizer` is a utility class to help create a :term:`label
 indicator matrix` from a list of :term:`multiclass` labels::
 
-    >>> from sklearn import preprocessing
+    >>> from sklearn_fork import preprocessing
     >>> lb = preprocessing.LabelBinarizer()
     >>> lb.fit([1, 2, 6, 4, 2])
     LabelBinarizer()
@@ -53,11 +53,11 @@ first sample, labels 1 and 2 in the second sample, and no labels in the third
 sample.
 
 Producing multilabel data as a list of sets of labels may be more intuitive.
-The :class:`MultiLabelBinarizer <sklearn.preprocessing.MultiLabelBinarizer>`
+The :class:`MultiLabelBinarizer <sklearn_fork.preprocessing.MultiLabelBinarizer>`
 transformer can be used to convert between a collection of collections of
 labels and the indicator format::
 
-    >>> from sklearn.preprocessing import MultiLabelBinarizer
+    >>> from sklearn_fork.preprocessing import MultiLabelBinarizer
     >>> y = [[2, 3, 4], [2], [0, 1, 3], [0, 1, 2, 3, 4], [0, 1, 2]]
     >>> MultiLabelBinarizer().fit_transform(y)
     array([[0, 0, 1, 1, 1],
@@ -77,7 +77,7 @@ they contain only values between 0 and n_classes-1. This is sometimes useful
 for writing efficient Cython routines. :class:`LabelEncoder` can be used as
 follows::
 
-    >>> from sklearn import preprocessing
+    >>> from sklearn_fork import preprocessing
     >>> le = preprocessing.LabelEncoder()
     >>> le.fit([1, 2, 2, 6])
     LabelEncoder()

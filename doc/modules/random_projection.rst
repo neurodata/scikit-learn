@@ -3,9 +3,9 @@
 ==================
 Random Projection
 ==================
-.. currentmodule:: sklearn.random_projection
+.. currentmodule:: sklearn_fork.random_projection
 
-The :mod:`sklearn.random_projection` module implements a simple and
+The :mod:`sklearn_fork.random_projection` module implements a simple and
 computationally efficient way to reduce the dimensionality of the data by
 trading a controlled amount of accuracy (as additional variance) for faster
 processing times and smaller model sizes. This module implements two types of
@@ -56,7 +56,7 @@ Knowing only the number of samples, the
 conservatively the minimal size of the random subspace to guarantee a
 bounded distortion introduced by the random projection::
 
-  >>> from sklearn.random_projection import johnson_lindenstrauss_min_dim
+  >>> from sklearn_fork.random_projection import johnson_lindenstrauss_min_dim
   >>> johnson_lindenstrauss_min_dim(n_samples=1e6, eps=0.5)
   663
   >>> johnson_lindenstrauss_min_dim(n_samples=1e6, eps=[0.5, 0.1, 0.01])
@@ -99,7 +99,7 @@ Here a small excerpt which illustrates how to use the Gaussian random
 projection transformer::
 
   >>> import numpy as np
-  >>> from sklearn import random_projection
+  >>> from sklearn_fork import random_projection
   >>> X = np.random.rand(100, 10000)
   >>> transformer = random_projection.GaussianRandomProjection()
   >>> X_new = transformer.fit_transform(X)
@@ -140,7 +140,7 @@ Here a small excerpt which illustrates how to use the sparse random
 projection transformer::
 
   >>> import numpy as np
-  >>> from sklearn import random_projection
+  >>> from sklearn_fork import random_projection
   >>> X = np.random.rand(100, 10000)
   >>> transformer = random_projection.SparseRandomProjection()
   >>> X_new = transformer.fit_transform(X)
@@ -184,7 +184,7 @@ Here a small code example which illustrates how to use the inverse transform
 feature::
 
   >>> import numpy as np
-  >>> from sklearn.random_projection import SparseRandomProjection
+  >>> from sklearn_fork.random_projection import SparseRandomProjection
   >>> X = np.random.rand(100, 10000)
   >>> transformer = SparseRandomProjection(
   ...   compute_inverse_components=True

@@ -4,7 +4,7 @@
 Contributing
 ============
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 This project is a community effort, and everyone is welcome to
 contribute.
@@ -157,8 +157,8 @@ feedback:
   your **Python, scikit-learn, numpy, and scipy versions**. This information
   can be found by running the following code snippet::
 
-    >>> import sklearn
-    >>> sklearn.show_versions()  # doctest: +SKIP
+    >>> import sklearn_fork
+    >>> sklearn_fork.show_versions()  # doctest: +SKIP
 
 - Please ensure all **code snippets and error messages are formatted in
   appropriate code blocks**.  See `Creating and highlighting code blocks
@@ -201,7 +201,7 @@ latest up-to-date workflow.
 - Example of Submitting a Pull Request to scikit-learn:
   `Video <https://youtu.be/PU1WyDPGePI>`__,
   `Transcript
-  <https://github.com/data-umbrella/event-transcripts/blob/main/2020/06-reshama-shaikh-sklearn-pr.md>`__
+  <https://github.com/data-umbrella/event-transcripts/blob/main/2020/06-reshama-shaikh-sklearn_fork-pr.md>`__
 
 - Sprint-specific instructions and practical tips:
   `Video <https://youtu.be/p_2Uw2BxdhA>`__,
@@ -391,18 +391,18 @@ complies with the following rules before marking a PR as ``[MRG]``. The
    with `pytest`, but it is usually not recommended since it takes a long
    time. It is often enough to only run the test related to your changes:
    for example, if you changed something in
-   `sklearn/linear_model/_logistic.py`, running the following commands will
+   `sklearn_fork/linear_model/_logistic.py`, running the following commands will
    usually be enough:
 
-   - `pytest sklearn/linear_model/_logistic.py` to make sure the doctest
+   - `pytest sklearn_fork/linear_model/_logistic.py` to make sure the doctest
      examples are correct
-   - `pytest sklearn/linear_model/tests/test_logistic.py` to run the tests
+   - `pytest sklearn_fork/linear_model/tests/test_logistic.py` to run the tests
      specific to the file
-   - `pytest sklearn/linear_model` to test the whole
-     :mod:`~sklearn.linear_model` module
+   - `pytest sklearn_fork/linear_model` to test the whole
+     :mod:`~sklearn_fork.linear_model` module
    - `pytest doc/modules/linear_model.rst` to make sure the user guide
      examples are correct.
-   - `pytest sklearn/tests/test_common.py -k LogisticRegression` to run all our
+   - `pytest sklearn_fork/tests/test_common.py -k LogisticRegression` to run all our
      estimator checks (specifically for `LogisticRegression`, if that's the
      estimator you changed).
 
@@ -445,7 +445,7 @@ complies with the following rules before marking a PR as ``[MRG]``. The
 
 
 8. When applicable, use the validation tools and scripts in the
-   ``sklearn.utils`` submodule.  A list of utility routines available
+   ``sklearn_fork.utils`` submodule.  A list of utility routines available
    for developers can be found in the :ref:`developers-utils` page.
 
 9. Often pull requests resolve one or more other issues (or pull requests).
@@ -490,7 +490,7 @@ You can check for common programming errors with the following tools:
   .. prompt:: bash $
 
     pip install pytest pytest-cov
-    pytest --cov sklearn path/to/tests_for_package
+    pytest --cov sklearn_fork path/to/tests_for_package
 
   see also :ref:`testing_coverage`
 
@@ -498,7 +498,7 @@ You can check for common programming errors with the following tools:
 
   .. prompt:: bash $
 
-      mypy sklearn
+      mypy sklearn_fork
 
   must not produce new errors in your pull request. Using `# type: ignore`
   annotation can be a workaround for a few cases that are not supported by
@@ -675,7 +675,7 @@ We are glad to accept any sort of documentation:
 * **function/method/class docstrings** (also known as "API documentation") -
   these describe what the object does and details any parameters, attributes and
   methods. Docstrings live alongside the code in
-  `sklearn/ <https://github.com/scikit-learn/scikit-learn/tree/main/sklearn>`_.
+  `sklearn_fork/ <https://github.com/scikit-learn/scikit-learn/tree/main/sklearn_fork>`_.
 * **user guide** - these provide more detailed information about the algorithms
   implemented in scikit-learn and generally live in the root
   `doc/ <https://github.com/scikit-learn/scikit-learn/tree/main/doc>`_ directory
@@ -862,7 +862,7 @@ Finally, follow the formatting rules below to make it consistently good:
       use the sphinx directives `:arxiv:` or `:doi:`. For example, see references in
       :ref:`Spectral Clustering Graphs <spectral_clustering_graph>`.
     * For "References" in docstrings, see the Silhouette Coefficient
-      (:func:`sklearn.metrics.silhouette_score`).
+      (:func:`sklearn_fork.metrics.silhouette_score`).
 
 * When editing reStructuredText (``.rst``) files, try to keep line length under
   80 characters when possible (exceptions include links and tables).
@@ -913,7 +913,7 @@ syntax:
 
   .. code-block:: rst
 
-      :func:`~sklearn.model_selection.cross_val_score`
+      :func:`~sklearn_fork.model_selection.cross_val_score`
 
   However, if there is a 'currentmodule' directive above you in the document,
   you will only need to use the path to the function succeeding the current
@@ -921,7 +921,7 @@ syntax:
 
   .. code-block:: rst
 
-      .. currentmodule:: sklearn.model_selection
+      .. currentmodule:: sklearn_fork.model_selection
 
       :func:`cross_val_score`
 
@@ -931,7 +931,7 @@ syntax:
 
   .. code-block:: rst
 
-      :class:`~sklearn.preprocessing.StandardScaler`
+      :class:`~sklearn_fork.preprocessing.StandardScaler`
 
 .. _generated_doc_CI:
 
@@ -1174,7 +1174,7 @@ If any publicly accessible method, function, attribute or parameter
 is renamed, we still support the old one for two releases and issue
 a deprecation warning when it is called/passed/accessed.
 E.g., if the function ``zero_one`` is renamed to ``zero_one_loss``,
-we add the decorator ``deprecated`` (from ``sklearn.utils``)
+we add the decorator ``deprecated`` (from ``sklearn_fork.utils``)
 to ``zero_one`` and call ``zero_one_loss`` from that function::
 
     from ..utils import deprecated
@@ -1304,7 +1304,7 @@ not in other cases. The warning should be caught in all other tests
 (using e.g., ``@pytest.mark.filterwarnings``), and there should be no warning
 in the examples.
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 .. _code_review:
 

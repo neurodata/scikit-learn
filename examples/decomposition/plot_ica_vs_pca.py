@@ -37,7 +37,7 @@ identify the directions of largest non-Gaussianity (lower right).
 # --------------------
 import numpy as np
 
-from sklearn.decomposition import PCA, FastICA
+from sklearn_fork.decomposition import PCA, FastICA
 
 rng = np.random.RandomState(42)
 S = rng.standard_t(1.5, size=(20000, 2))

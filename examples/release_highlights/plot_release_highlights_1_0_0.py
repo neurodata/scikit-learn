@@ -4,7 +4,7 @@
 Release Highlights for scikit-learn 1.0
 =======================================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 We are very pleased to announce the release of scikit-learn 1.0! The library
 has been stable for quite some time, releasing version 1.0 is recognizing that
@@ -89,7 +89,7 @@ or with conda::
 # refer to the :ref:`User Guide <spline_transformer>`.
 
 import numpy as np
-from sklearn.preprocessing import SplineTransformer
+from sklearn_fork.preprocessing import SplineTransformer
 
 X = np.arange(5).reshape(5, 1)
 spline = SplineTransformer(degree=2, n_knots=3)
@@ -113,7 +113,7 @@ spline.fit_transform(X)
 #     \sum_i PB_q(y_i - X_i w) + \alpha ||w||_1}.
 #
 # This consists of the pinball loss (also known as linear loss),
-# see also :class:`~sklearn.metrics.mean_pinball_loss`,
+# see also :class:`~sklearn_fork.metrics.mean_pinball_loss`,
 #
 # .. math::
 #     PB_q(t) = q \max(t, 0) + (1 - q) \max(-t, 0) =
@@ -145,7 +145,7 @@ spline.fit_transform(X)
 # is used to check that the column names of the dataframe passed in
 # non-:term:`fit`, such as :term:`predict`, are consistent with features in
 # :term:`fit`:
-from sklearn.preprocessing import StandardScaler
+from sklearn_fork.preprocessing import StandardScaler
 import pandas as pd
 
 X = pd.DataFrame([[1, 2, 3], [4, 5, 6]], columns=["a", "b", "c"])
@@ -160,8 +160,8 @@ scalar.feature_names_in_
 # will be added to all other transformers in future releases. Additionally,
 # :meth:`compose.ColumnTransformer.get_feature_names_out` is available to
 # combine feature names of its transformers:
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder
+from sklearn_fork.compose import ColumnTransformer
+from sklearn_fork.preprocessing import OneHotEncoder
 import pandas as pd
 
 X = pd.DataFrame({"pet": ["dog", "cat", "fish"], "age": [3, 7, 1]})
@@ -179,8 +179,8 @@ preprocessor.get_feature_names_out()
 # When this ``preprocessor`` is used with a pipeline, the feature names used
 # by the classifier are obtained by slicing and calling
 # :term:`get_feature_names_out`:
-from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import make_pipeline
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.pipeline import make_pipeline
 
 y = [1, 0, 1]
 pipe = make_pipeline(preprocessor, LogisticRegression())
@@ -227,11 +227,11 @@ pipe[:-1].get_feature_names_out()
 ##############################################################################
 # Histogram-based Gradient Boosting Models are now stable
 # --------------------------------------------------------------------------
-# :class:`~sklearn.ensemble.HistGradientBoostingRegressor` and
+# :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor` and
 # :class:`~ensemble.HistGradientBoostingClassifier` are no longer experimental
 # and can simply be imported and used as::
 #
-#     from sklearn.ensemble import HistGradientBoostingClassifier
+#     from sklearn_fork.ensemble import HistGradientBoostingClassifier
 
 ##############################################################################
 # New documentation improvements

@@ -1,6 +1,6 @@
 .. include:: _contributors.rst
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 .. _changes_0_21_3:
 
@@ -28,7 +28,7 @@ random sampling procedures.
 Changelog
 ---------
 
-:mod:`sklearn.cluster`
+:mod:`sklearn_fork.cluster`
 ......................
 
 - |Fix| Fixed a bug in :class:`cluster.KMeans` where computation with
@@ -43,7 +43,7 @@ Changelog
 - |Fix| Fixed a bug in :class:`cluster.KMeans` where KMeans++ initialisation
   could rarely result in an IndexError. :issue:`11756` by `Joel Nothman`_.
 
-:mod:`sklearn.compose`
+:mod:`sklearn_fork.compose`
 ......................
 
 - |Fix| Fixed an issue in :class:`compose.ColumnTransformer` where using
@@ -52,7 +52,7 @@ Changelog
   ``remainder`` transformer.
   :pr:`14237` by `Andreas Schuderer <schuderer>`.
 
-:mod:`sklearn.datasets`
+:mod:`sklearn_fork.datasets`
 .......................
 
 - |Fix| :func:`datasets.fetch_california_housing`,
@@ -60,32 +60,32 @@ Changelog
   :func:`datasets.fetch_kddcup99`, :func:`datasets.fetch_olivetti_faces`,
   :func:`datasets.fetch_rcv1`, and :func:`datasets.fetch_species_distributions`
   try to persist the previously cache using the new ``joblib`` if the cached
-  data was persisted using the deprecated ``sklearn.externals.joblib``. This
+  data was persisted using the deprecated ``sklearn_fork.externals.joblib``. This
   behavior is set to be deprecated and removed in v0.23.
   :pr:`14197` by `Adrin Jalali`_.
 
-:mod:`sklearn.ensemble`
+:mod:`sklearn_fork.ensemble`
 .......................
 
 - |Fix| Fix zero division error in :func:`HistGradientBoostingClassifier` and
   :func:`HistGradientBoostingRegressor`.
   :pr:`14024` by `Nicolas Hug <NicolasHug>`.
 
-:mod:`sklearn.impute`
+:mod:`sklearn_fork.impute`
 .....................
 
 - |Fix| Fixed a bug in :class:`impute.SimpleImputer` and
   :class:`impute.IterativeImputer` so that no errors are thrown when there are
   missing values in training data. :pr:`13974` by `Frank Hoang <fhoang7>`.
 
-:mod:`sklearn.inspection`
+:mod:`sklearn_fork.inspection`
 .........................
 
 - |Fix| Fixed a bug in :func:`inspection.plot_partial_dependence` where 
   ``target`` parameter was not being taken into account for multiclass problems.
   :pr:`14393` by :user:`Guillem G. Subies <guillemgsubies>`.
 
-:mod:`sklearn.linear_model`
+:mod:`sklearn_fork.linear_model`
 ...........................
 
 - |Fix| Fixed a bug in :class:`linear_model.LogisticRegressionCV` where
@@ -98,7 +98,7 @@ Changelog
   threshold which otherwise results in poor accuracy in some cases.
   :pr:`14067` by :user:`Tim Staley <timstaley>`.
 
-:mod:`sklearn.neighbors`
+:mod:`sklearn_fork.neighbors`
 ........................
 
 - |Fix| Fixed a bug in :class:`neighbors.NeighborhoodComponentsAnalysis` where
@@ -106,7 +106,7 @@ Changelog
   ``tol`` required too strict types. :pr:`14092` by
   :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.tree`
+:mod:`sklearn_fork.tree`
 ...................
 
 - |Fix| Fixed bug in :func:`tree.export_text` when the tree has one feature and 
@@ -126,13 +126,13 @@ Version 0.21.2
 Changelog
 ---------
 
-:mod:`sklearn.decomposition`
+:mod:`sklearn_fork.decomposition`
 ............................
 
 - |Fix| Fixed a bug in :class:`cross_decomposition.CCA` improving numerical 
   stability when `Y` is close to zero. :pr:`13903` by `Thomas Fan`_.
 
-:mod:`sklearn.metrics`
+:mod:`sklearn_fork.metrics`
 ......................
 
 - |Fix| Fixed a bug in :func:`metrics.pairwise.euclidean_distances` where a
@@ -140,7 +140,7 @@ Changelog
   float32 datasets (regression introduced in 0.21). :pr:`13910` by
   :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.preprocessing`
+:mod:`sklearn_fork.preprocessing`
 ............................
 
 - |Fix| Fixed a bug in :class:`preprocessing.OneHotEncoder` where the new
@@ -148,7 +148,7 @@ Changelog
   by :user:`James Myatt <jamesmyatt>`.
 
 
-:mod:`sklearn.utils.sparsefuncs`
+:mod:`sklearn_fork.utils.sparsefuncs`
 ................................
 
 - |Fix| Fixed a bug where :func:`min_max_axis` would fail on 32-bit systems
@@ -169,14 +169,14 @@ This is a bug-fix release to primarily resolve some packaging issues in version
 Changelog
 ---------
 
-:mod:`sklearn.inspection`
+:mod:`sklearn_fork.inspection`
 .........................
 
 - |Fix| Fixed a bug in :func:`inspection.partial_dependence` to only check
   classifier and not regressor for the multiclass-multioutput case.
   :pr:`14309` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.metrics`
+:mod:`sklearn_fork.metrics`
 ......................
 
 - |Fix| Fixed a bug in :class:`metrics.pairwise_distances` where it would raise
@@ -190,7 +190,7 @@ Changelog
   metric when ``Y`` is ``X``. :issue:`13877` by
   :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.neighbors`
+:mod:`sklearn_fork.neighbors`
 ........................
 
 - |Fix| Fixed a bug in :class:`neighbors.KernelDensity` which could not be
@@ -223,9 +223,9 @@ random sampling procedures.
 - :class:`linear_model.LogisticRegression` and
   :class:`linear_model.LogisticRegressionCV` with 'saga' solver. |Fix|
 - :class:`ensemble.GradientBoostingClassifier` |Fix|
-- :class:`sklearn.feature_extraction.text.HashingVectorizer`,
-  :class:`sklearn.feature_extraction.text.TfidfVectorizer`, and
-  :class:`sklearn.feature_extraction.text.CountVectorizer` |Fix|
+- :class:`sklearn_fork.feature_extraction.text.HashingVectorizer`,
+  :class:`sklearn_fork.feature_extraction.text.TfidfVectorizer`, and
+  :class:`sklearn_fork.feature_extraction.text.CountVectorizer` |Fix|
 - :class:`neural_network.MLPClassifier` |Fix|
 - :func:`svm.SVC.decision_function` and
   :func:`multiclass.OneVsOneClassifier.decision_function`. |Fix|
@@ -269,7 +269,7 @@ Support for Python 3.4 and below has been officially dropped.
     :pr:`123456` by :user:`Joe Bloggs <joeongithub>`.
     where 123456 is the *pull request* number, not the issue number.
 
-:mod:`sklearn.base`
+:mod:`sklearn_fork.base`
 ...................
 
 - |API| The R2 score used when calling ``score`` on a regressor will use
@@ -279,7 +279,7 @@ Support for Python 3.4 and below has been officially dropped.
   :class:`multioutput.MultiOutputRegressor`).
   :pr:`13157` by :user:`Hanmin Qin <qinhanmin2014>`.
 
-:mod:`sklearn.calibration`
+:mod:`sklearn_fork.calibration`
 ..........................
 
 - |Enhancement| Added support to bin the data passed into
@@ -291,7 +291,7 @@ Support for Python 3.4 and below has been officially dropped.
   `calibration.CalibratedClassifierCV`. :pr:`13485` by
   :user:`William de Vazelhes <wdevazelhes>`.
 
-:mod:`sklearn.cluster`
+:mod:`sklearn_fork.cluster`
 ......................
 
 - |MajorFeature| A new clustering algorithm: :class:`cluster.OPTICS`: an
@@ -317,13 +317,13 @@ Support for Python 3.4 and below has been officially dropped.
   parameter which can be used to find the clusters instead of ``n_clusters``.
   :issue:`9069` by :user:`Vathsala Achar <VathsalaAchar>` and `Adrin Jalali`_.
 
-:mod:`sklearn.compose`
+:mod:`sklearn_fork.compose`
 ......................
 
 - |API| :class:`compose.ColumnTransformer` is no longer an experimental
   feature. :pr:`13835` by :user:`Hanmin Qin <qinhanmin2014>`.
 
-:mod:`sklearn.datasets`
+:mod:`sklearn_fork.datasets`
 .......................
 
 - |Fix| Added support for 64-bit group IDs and pointers in SVMLight files.
@@ -332,7 +332,7 @@ Support for Python 3.4 and below has been officially dropped.
 - |Fix| :func:`datasets.load_sample_images` returns images with a deterministic
   order. :pr:`13250` by :user:`Thomas Fan <thomasjpfan>`.
 
-:mod:`sklearn.decomposition`
+:mod:`sklearn_fork.decomposition`
 ............................
 
 - |Enhancement| :class:`decomposition.KernelPCA` now has deterministic output
@@ -360,7 +360,7 @@ Support for Python 3.4 and below has been officially dropped.
   the default value is used.
   :pr:`12988` by :user:`Zijie (ZJ) Poh <zjpoh>`.
 
-:mod:`sklearn.discriminant_analysis`
+:mod:`sklearn_fork.discriminant_analysis`
 ....................................
 
 - |Enhancement| :class:`discriminant_analysis.LinearDiscriminantAnalysis` now
@@ -384,7 +384,7 @@ Support for Python 3.4 and below has been officially dropped.
   solver. :pr:`11727`, by :user:`Agamemnon Krasoulis
   <agamemnonc>`.
 
-:mod:`sklearn.dummy`
+:mod:`sklearn_fork.dummy`
 ....................
 
 - |Fix| Fixed a bug in :class:`dummy.DummyClassifier` where the
@@ -397,7 +397,7 @@ Support for Python 3.4 and below has been officially dropped.
   ``shape=(n, 1)`` was given at ``fit`` time. :pr:`13545` by :user:`Nick
   Sorros <nsorros>` and `Adrin Jalali`_.
 
-:mod:`sklearn.ensemble`
+:mod:`sklearn_fork.ensemble`
 .......................
 
 - |MajorFeature| Add two new implementations of
@@ -417,13 +417,13 @@ Support for Python 3.4 and below has been officially dropped.
   need to explicitly import ``enable_hist_gradient_boosting``::
 
     >>> # explicitly require this experimental feature
-    >>> from sklearn.experimental import enable_hist_gradient_boosting  # noqa
-    >>> # now you can import normally from sklearn.ensemble
-    >>> from sklearn.ensemble import HistGradientBoostingClassifier
+    >>> from sklearn_fork.experimental import enable_hist_gradient_boosting  # noqa
+    >>> # now you can import normally from sklearn_fork.ensemble
+    >>> from sklearn_fork.ensemble import HistGradientBoostingClassifier
   
   .. note::
       Update: since version 1.0, these estimators are not experimental
-      anymore and you don't need to use `from sklearn.experimental import
+      anymore and you don't need to use `from sklearn_fork.experimental import
       enable_hist_gradient_boosting`.
 
   :pr:`12807` by :user:`Nicolas Hug<NicolasHug>`.
@@ -448,8 +448,8 @@ Support for Python 3.4 and below has been officially dropped.
   prediction step, thus capping the memory usage. :pr:`13283` by
   `Nicolas Goix`_.
 
-- |Efficiency| :class:`sklearn.ensemble.GradientBoostingClassifier` and
-  :class:`sklearn.ensemble.GradientBoostingRegressor` now keep the
+- |Efficiency| :class:`sklearn_fork.ensemble.GradientBoostingClassifier` and
+  :class:`sklearn_fork.ensemble.GradientBoostingRegressor` now keep the
   input ``y`` as ``float64`` to avoid it being copied internally by trees.
   :pr:`13524` by `Adrin Jalali`_.
 
@@ -516,16 +516,16 @@ Support for Python 3.4 and below has been officially dropped.
   :pr:`6463` by :user:`movelikeriver <movelikeriver>`.
 
 - |Fix| :func:`ensemble.partial_dependence` (and consequently the new
-  version :func:`sklearn.inspection.partial_dependence`) now takes sample
+  version :func:`sklearn_fork.inspection.partial_dependence`) now takes sample
   weights into account for the partial dependence computation when the
   gradient boosting model has been trained with sample weights.
   :pr:`13193` by :user:`Samuel O. Ronsin <samronsin>`.
 
 - |API| :func:`ensemble.partial_dependence` and
   :func:`ensemble.plot_partial_dependence` are now deprecated in favor of
-  :func:`inspection.partial_dependence<sklearn.inspection.partial_dependence>`
+  :func:`inspection.partial_dependence<sklearn_fork.inspection.partial_dependence>`
   and
-  :func:`inspection.plot_partial_dependence<sklearn.inspection.plot_partial_dependence>`.
+  :func:`inspection.plot_partial_dependence<sklearn_fork.inspection.plot_partial_dependence>`.
   :pr:`12599` by :user:`Trevor Stephens<trevorstephens>` and
   :user:`Nicolas Hug<NicolasHug>`.
 
@@ -540,24 +540,24 @@ Support for Python 3.4 and below has been officially dropped.
   :class:`pipeline.FeatureUnion` and :class:`compose.ColumnTransformer`).
   :pr:`13780` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.externals`
+:mod:`sklearn_fork.externals`
 ........................
 
 - |API| Deprecated :mod:`externals.six` since we have dropped support for
   Python 2.7. :pr:`12916` by :user:`Hanmin Qin <qinhanmin2014>`.
 
-:mod:`sklearn.feature_extraction`
+:mod:`sklearn_fork.feature_extraction`
 .................................
 
 - |Fix| If ``input='file'`` or ``input='filename'``, and a callable is given as
-  the ``analyzer``, :class:`sklearn.feature_extraction.text.HashingVectorizer`,
-  :class:`sklearn.feature_extraction.text.TfidfVectorizer`, and
-  :class:`sklearn.feature_extraction.text.CountVectorizer` now read the data
+  the ``analyzer``, :class:`sklearn_fork.feature_extraction.text.HashingVectorizer`,
+  :class:`sklearn_fork.feature_extraction.text.TfidfVectorizer`, and
+  :class:`sklearn_fork.feature_extraction.text.CountVectorizer` now read the data
   from the file(s) and then pass it to the given ``analyzer``, instead of
   passing the file name(s) or the file object(s) to the analyzer.
   :pr:`13641` by `Adrin Jalali`_.
 
-:mod:`sklearn.impute`
+:mod:`sklearn_fork.impute`
 .....................
 
 - |MajorFeature| Added :class:`impute.IterativeImputer`, which is a strategy
@@ -570,9 +570,9 @@ Support for Python 3.4 and below has been officially dropped.
   deprecation cycle. To use them, you need to explicitly import
   ``enable_iterative_imputer``::
 
-    >>> from sklearn.experimental import enable_iterative_imputer  # noqa
-    >>> # now you can import normally from sklearn.impute
-    >>> from sklearn.impute import IterativeImputer
+    >>> from sklearn_fork.experimental import enable_iterative_imputer  # noqa
+    >>> # now you can import normally from sklearn_fork.impute
+    >>> from sklearn_fork.impute import IterativeImputer
 
 
 - |Feature| The :class:`impute.SimpleImputer` and
@@ -593,7 +593,7 @@ Support for Python 3.4 and below has been officially dropped.
   missing values at all. :pr:`13562` by :user:`Jérémie du Boisberranger
   <jeremiedbb>`.
 
-:mod:`sklearn.inspection`
+:mod:`sklearn_fork.inspection`
 .........................
 
 (new subpackage)
@@ -604,14 +604,14 @@ Support for Python 3.4 and below has been officially dropped.
   method). :pr:`12599` by :user:`Trevor Stephens <trevorstephens>` and
   :user:`Nicolas Hug <NicolasHug>`.
 
-:mod:`sklearn.isotonic`
+:mod:`sklearn_fork.isotonic`
 .......................
 
 - |Feature| Allow different dtypes (such as float32) in
   :class:`isotonic.IsotonicRegression`.
   :pr:`8769` by :user:`Vlad Niculae <vene>`
 
-:mod:`sklearn.linear_model`
+:mod:`sklearn_fork.linear_model`
 ...........................
 
 - |Enhancement| :class:`linear_model.Ridge` now preserves ``float32`` and
@@ -716,7 +716,7 @@ Support for Python 3.4 and below has been officially dropped.
   now correctly fits an intercept when ``fit_intercept=True`` and the design
   matrix is sparse. :issue:`13350` by :user:`Jérôme Dockès <jeromedockes>`
 
-:mod:`sklearn.manifold`
+:mod:`sklearn_fork.manifold`
 .......................
 
 - |Efficiency| Make :func:`manifold.tsne.trustworthiness` use an inverted index
@@ -725,7 +725,7 @@ Support for Python 3.4 and below has been officially dropped.
   lots of neighbors and/or small datasets.
   :pr:`9907` by :user:`William de Vazelhes <wdevazelhes>`.
 
-:mod:`sklearn.metrics`
+:mod:`sklearn_fork.metrics`
 ......................
 
 - |Feature| Added the :func:`metrics.max_error` metric and a corresponding
@@ -800,7 +800,7 @@ Support for Python 3.4 and below has been officially dropped.
   binary and multiclass targets is broken.
   :pr:`13151` by `Joel Nothman`_.
 
-:mod:`sklearn.mixture`
+:mod:`sklearn_fork.mixture`
 ......................
 
 - |Fix| Fixed a bug in :class:`mixture.BaseMixture` and therefore on estimators
@@ -810,7 +810,7 @@ Support for Python 3.4 and below has been officially dropped.
   :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
 
-:mod:`sklearn.model_selection`
+:mod:`sklearn_fork.model_selection`
 ..............................
 
 - |Feature| Classes :class:`~model_selection.GridSearchCV` and
@@ -849,7 +849,7 @@ Support for Python 3.4 and below has been officially dropped.
   excluded in a cross-validation fold.
   :pr:`13366` by :user:`Guillaume Fournier <gfournier>`
 
-:mod:`sklearn.multiclass`
+:mod:`sklearn_fork.multiclass`
 .........................
 
 - |Fix| Fixed an issue in :func:`multiclass.OneVsOneClassifier.decision_function`
@@ -858,7 +858,7 @@ Support for Python 3.4 and below has been officially dropped.
   containing this same sample due to the scaling used in decision_function.
   :pr:`10440` by :user:`Jonathan Ohayon <Johayon>`.
 
-:mod:`sklearn.multioutput`
+:mod:`sklearn_fork.multioutput`
 ..........................
 
 - |Fix| Fixed a bug in :class:`multioutput.MultiOutputClassifier` where the
@@ -866,7 +866,7 @@ Support for Python 3.4 and below has been officially dropped.
   the estimator object.
   :pr:`12222` by :user:`Rebekah Kim <rebekahkim>`
   
-:mod:`sklearn.neighbors`
+:mod:`sklearn_fork.neighbors`
 ........................
 
 - |MajorFeature| Added :class:`neighbors.NeighborhoodComponentsAnalysis` for
@@ -883,7 +883,7 @@ Support for Python 3.4 and below has been officially dropped.
   when called before ``fit`` :pr:`12279` by :user:`Krishna Sangeeth
   <whiletruelearn>`.
 
-:mod:`sklearn.neural_network`
+:mod:`sklearn_fork.neural_network`
 .............................
 
 - |Fix| Fixed a bug in :class:`neural_network.MLPClassifier` and
@@ -895,7 +895,7 @@ Support for Python 3.4 and below has been officially dropped.
   the multilabel case however, splits are still not stratified.
   :pr:`13164` by :user:`Nicolas Hug<NicolasHug>`.
 
-:mod:`sklearn.pipeline`
+:mod:`sklearn_fork.pipeline`
 .......................
 
 - |Feature| :class:`pipeline.Pipeline` can now use indexing notation (e.g.
@@ -919,7 +919,7 @@ Support for Python 3.4 and below has been officially dropped.
   therefore ``len(pipeline)`` returns the number of steps in the pipeline.
   :pr:`13439` by :user:`Lakshya KD <LakshKD>`.
 
-:mod:`sklearn.preprocessing`
+:mod:`sklearn_fork.preprocessing`
 ............................
 
 - |Feature| :class:`preprocessing.OneHotEncoder` now supports dropping one
@@ -962,7 +962,7 @@ Support for Python 3.4 and below has been officially dropped.
   the value of `X` inplace.
   :pr:`13459` by :user:`Hunter McGushion <HunterMcGushion>`.
 
-:mod:`sklearn.svm`
+:mod:`sklearn_fork.svm`
 ..................
 
 - |Fix| Fixed an issue in :func:`svm.SVC.decision_function` when
@@ -972,7 +972,7 @@ Support for Python 3.4 and below has been officially dropped.
   scaling used in decision_function.
   :pr:`10440` by :user:`Jonathan Ohayon <Johayon>`.
 
-:mod:`sklearn.tree`
+:mod:`sklearn_fork.tree`
 ...................
 
 - |Feature| Decision Trees can now be plotted with matplotlib using
@@ -1004,7 +1004,7 @@ Support for Python 3.4 and below has been officially dropped.
   affects all ensemble methods using decision trees.
   :pr:`12344` by :user:`Adrin Jalali <adrinjalali>`.
 
-:mod:`sklearn.utils`
+:mod:`sklearn_fork.utils`
 ....................
 
 - |Feature| :func:`utils.resample` now accepts a ``stratify`` parameter for
@@ -1024,7 +1024,7 @@ Multiple modules
   `print(estimator)`) has been entirely re-written, building on Python's
   pretty printing standard library. All parameters are printed by default,
   but this can be altered with the ``print_changed_only`` option in
-  :func:`sklearn.set_config`. :pr:`11705` by :user:`Nicolas Hug
+  :func:`sklearn_fork.set_config`. :pr:`11705` by :user:`Nicolas Hug
   <NicolasHug>`.
 
 - |MajorFeature| Add estimators tags: these are annotations of estimators

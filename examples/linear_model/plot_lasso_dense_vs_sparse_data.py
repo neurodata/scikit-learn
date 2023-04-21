@@ -12,8 +12,8 @@ from time import time
 from scipy import sparse
 from scipy import linalg
 
-from sklearn.datasets import make_regression
-from sklearn.linear_model import Lasso
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.linear_model import Lasso
 
 
 # %%

@@ -4,13 +4,13 @@ from os.path import join
 from os import environ
 import warnings
 
-from sklearn.utils import IS_PYPY
-from sklearn.utils._testing import SkipTest
-from sklearn.utils._testing import check_skip_network
-from sklearn.utils.fixes import parse_version
-from sklearn.datasets import get_data_home
-from sklearn.datasets._base import _pkl_filepath
-from sklearn.datasets._twenty_newsgroups import CACHE_NAME
+from sklearn_fork.utils import IS_PYPY
+from sklearn_fork.utils._testing import SkipTest
+from sklearn_fork.utils._testing import check_skip_network
+from sklearn_fork.utils.fixes import parse_version
+from sklearn_fork.datasets import get_data_home
+from sklearn_fork.datasets._base import _pkl_filepath
+from sklearn_fork.datasets._twenty_newsgroups import CACHE_NAME
 
 
 def setup_labeled_faces():

@@ -7,18 +7,18 @@ This example plots several randomly generated classification datasets.
 For easy visualization, all datasets have 2 features, plotted on the x and y
 axis. The color of each point represents its class label.
 
-The first 4 plots use the :func:`~sklearn.datasets.make_classification` with
+The first 4 plots use the :func:`~sklearn_fork.datasets.make_classification` with
 different numbers of informative features, clusters per class and classes.
-The final 2 plots use :func:`~sklearn.datasets.make_blobs` and
-:func:`~sklearn.datasets.make_gaussian_quantiles`.
+The final 2 plots use :func:`~sklearn_fork.datasets.make_blobs` and
+:func:`~sklearn_fork.datasets.make_gaussian_quantiles`.
 
 """
 
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import make_classification
-from sklearn.datasets import make_blobs
-from sklearn.datasets import make_gaussian_quantiles
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.datasets import make_gaussian_quantiles
 
 plt.figure(figsize=(8, 8))
 plt.subplots_adjust(bottom=0.05, top=0.9, left=0.05, right=0.95)

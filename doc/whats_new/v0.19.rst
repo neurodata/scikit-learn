@@ -1,6 +1,6 @@
 .. include:: _contributors.rst
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 .. _changes_0_19:
 
@@ -804,7 +804,7 @@ Miscellaneous
   documentation build with Sphinx>1.5 :issue:`8010`, :issue:`7986` by
   :user:`Oscar Najera <Titan-C>`
 
-- Add ``data_home`` parameter to :func:`sklearn.datasets.fetch_kddcup99`.
+- Add ``data_home`` parameter to :func:`sklearn_fork.datasets.fetch_kddcup99`.
   :issue:`9289` by `Loic Esteve`_.
 
 - Fix dataset loaders using Python 3 version of makedirs to also work in

@@ -17,7 +17,7 @@ give us much regarding `y` when compared to just feature 1.
 # %%
 # First we load the diabetes dataset.
 
-from sklearn import datasets
+from sklearn_fork import datasets
 import numpy as np
 
 X, y = datasets.load_diabetes(return_X_y=True)
@@ -31,7 +31,7 @@ y_test = y[-20:]
 # %%
 # Next we fit a linear regression model.
 
-from sklearn import linear_model
+from sklearn_fork import linear_model
 
 ols = linear_model.LinearRegression()
 _ = ols.fit(X_train, y_train)

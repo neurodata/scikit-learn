@@ -30,8 +30,8 @@ import matplotlib.pyplot as plt
 # for 3D projection to work with matplotlib < 3.2
 import mpl_toolkits.mplot3d  # noqa: F401
 
-from sklearn.cluster import KMeans
-from sklearn import datasets
+from sklearn_fork.cluster import KMeans
+from sklearn_fork import datasets
 
 np.random.seed(5)
 

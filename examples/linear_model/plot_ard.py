@@ -35,7 +35,7 @@ non-linear relationship between `X` and `y`.
 # potentially to arbitrary large weights. Having a prior on the weights and a
 # penalty alleviates the problem. Finally, gaussian noise is added.
 
-from sklearn.datasets import make_regression
+from sklearn_fork.datasets import make_regression
 
 X, y, true_weights = make_regression(
     n_samples=100,
@@ -54,7 +54,7 @@ X, y, true_weights = make_regression(
 # coefficients.
 
 import pandas as pd
-from sklearn.linear_model import ARDRegression, LinearRegression, BayesianRidge
+from sklearn_fork.linear_model import ARDRegression, LinearRegression, BayesianRidge
 
 olr = LinearRegression().fit(X, y)
 brr = BayesianRidge(compute_score=True, n_iter=30).fit(X, y)
@@ -125,8 +125,8 @@ _ = plt.title("Models log-likelihood")
 # We create a target that is a non-linear function of the input feature.
 # Noise following a standard uniform distribution is added.
 
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import PolynomialFeatures, StandardScaler
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import PolynomialFeatures, StandardScaler
 
 rng = np.random.RandomState(0)
 n_samples = 110
@@ -151,9 +151,9 @@ y_plot = np.concatenate((y - noise, y_plot))
 # Here we try a degree 10 polynomial to potentially overfit, though the bayesian
 # linear models regularize the size of the polynomial coefficients. As
 # `fit_intercept=True` by default for
-# :class:`~sklearn.linear_model.ARDRegression` and
-# :class:`~sklearn.linear_model.BayesianRidge`, then
-# :class:`~sklearn.preprocessing.PolynomialFeatures` should not introduce an
+# :class:`~sklearn_fork.linear_model.ARDRegression` and
+# :class:`~sklearn_fork.linear_model.BayesianRidge`, then
+# :class:`~sklearn_fork.preprocessing.PolynomialFeatures` should not introduce an
 # additional bias feature. By setting `return_std=True`, the bayesian regressors
 # return the standard deviation of the posterior distribution for the model
 # parameters.

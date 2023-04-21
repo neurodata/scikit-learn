@@ -3,7 +3,7 @@
 Comparing Target Encoder with Other Encoders
 ============================================
 
-.. currentmodule:: sklearn.preprocessing
+.. currentmodule:: sklearn_fork.preprocessing
 
 The :class:`TargetEncoder` uses the value of the target to encode each
 categorical feature. In this example, we will compare three different approaches
@@ -21,7 +21,7 @@ for handling categorical features: :class:`TargetEncoder`,
 # ========================
 # First, we load the wine reviews dataset, where the target is the points given
 # be a reviewer:
-from sklearn.datasets import fetch_openml
+from sklearn_fork.datasets import fetch_openml
 
 wine_reviews = fetch_openml(data_id=42074, as_frame=True, parser="pandas")
 
@@ -51,13 +51,13 @@ _ = y.hist()
 # Training and Evaluating Pipelines with Different Encoders
 # =========================================================
 # In this section, we will evaluate pipelines with
-# :class:`~sklearn.ensemble.HistGradientBoostingRegressor` with different encoding
+# :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor` with different encoding
 # strategies. First, we list out the encoders we will be using to preprocess
 # the categorical features:
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OrdinalEncoder
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.preprocessing import TargetEncoder
+from sklearn_fork.compose import ColumnTransformer
+from sklearn_fork.preprocessing import OrdinalEncoder
+from sklearn_fork.preprocessing import OneHotEncoder
+from sklearn_fork.preprocessing import TargetEncoder
 
 categorical_preprocessors = [
     ("drop", "drop"),
@@ -71,9 +71,9 @@ categorical_preprocessors = [
 
 # %%
 # Next, we evaluate the models using cross validation and record the results:
-from sklearn.pipeline import make_pipeline
-from sklearn.model_selection import cross_validate
-from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.model_selection import cross_validate
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
 
 n_cv_folds = 3
 max_iter = 20
@@ -119,7 +119,7 @@ for name, categorical_preprocessor in categorical_preprocessors:
 # Native Categorical Feature Support
 # ==================================
 # In this section, we build and evaluate a pipeline that uses native categorical
-# feature support in :class:`~sklearn.ensemble.HistGradientBoostingRegressor`,
+# feature support in :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor`,
 # which only supports up to 255 unique categories. In our dataset, the most of
 # the categorical features have more than 255 unique categories:
 n_unique_categories = df[categorical_features].nunique().sort_values(ascending=False)
@@ -216,12 +216,12 @@ for subset, ax in zip(["test", "train"], [ax1, ax2]):
 #   set only);
 # - The ordinal encoding imposes an arbitrary order to the features which are then
 #   treated as numerical values by the
-#   :class:`~sklearn.ensemble.HistGradientBoostingRegressor`. Since this
+#   :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor`. Since this
 #   model groups numerical features in 256 bins per feature, many unrelated categories
 #   can be grouped together and as a result overall pipeline can underfit;
 # - When using the target encoder, the same binning happens, but since the encoded
 #   values are statistically ordered by marginal association with the target variable,
-#   the binning use by the :class:`~sklearn.ensemble.HistGradientBoostingRegressor`
+#   the binning use by the :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor`
 #   makes sense and leads to good results: the combination of smoothed target
 #   encoding and binning works as a good regularizing strategy against
 #   overfitting while not limiting the expressiveness of the pipeline too much.

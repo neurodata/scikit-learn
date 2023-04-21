@@ -4,8 +4,8 @@ Permutation Importance with Multicollinear or Correlated Features
 =================================================================
 
 In this example, we compute the permutation importance on the Wisconsin
-breast cancer dataset using :func:`~sklearn.inspection.permutation_importance`.
-The :class:`~sklearn.ensemble.RandomForestClassifier` can easily get about 97%
+breast cancer dataset using :func:`~sklearn_fork.inspection.permutation_importance`.
+The :class:`~sklearn_fork.ensemble.RandomForestClassifier` can easily get about 97%
 accuracy on a test dataset. Because this dataset contains multicollinear
 features, the permutation importance will show that none of the features are
 important. One approach to handling multicollinearity is by performing
@@ -26,10 +26,10 @@ from scipy.stats import spearmanr
 from scipy.cluster import hierarchy
 from scipy.spatial.distance import squareform
 
-from sklearn.datasets import load_breast_cancer
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.inspection import permutation_importance
-from sklearn.model_selection import train_test_split
+from sklearn_fork.datasets import load_breast_cancer
+from sklearn_fork.ensemble import RandomForestClassifier
+from sklearn_fork.inspection import permutation_importance
+from sklearn_fork.model_selection import train_test_split
 
 # %%
 # Random Forest Feature Importance on Breast Cancer Data

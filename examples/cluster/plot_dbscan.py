@@ -16,10 +16,10 @@ for a demo of different clustering algorithms on 2D datasets.
 # Data generation
 # ---------------
 #
-# We use :class:`~sklearn.datasets.make_blobs` to create 3 synthetic clusters.
+# We use :class:`~sklearn_fork.datasets.make_blobs` to create 3 synthetic clusters.
 
-from sklearn.datasets import make_blobs
-from sklearn.preprocessing import StandardScaler
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.preprocessing import StandardScaler
 
 centers = [[1, 1], [-1, -1], [1, -1]]
 X, labels_true = make_blobs(
@@ -40,12 +40,12 @@ plt.show()
 # Compute DBSCAN
 # --------------
 #
-# One can access the labels assigned by :class:`~sklearn.cluster.DBSCAN` using
+# One can access the labels assigned by :class:`~sklearn_fork.cluster.DBSCAN` using
 # the `labels_` attribute. Noisy samples are given the label math:`-1`.
 
 import numpy as np
-from sklearn.cluster import DBSCAN
-from sklearn import metrics
+from sklearn_fork.cluster import DBSCAN
+from sklearn_fork import metrics
 
 db = DBSCAN(eps=0.3, min_samples=10).fit(X)
 labels = db.labels_
@@ -59,7 +59,7 @@ print("Estimated number of noise points: %d" % n_noise_)
 
 # %%
 # Clustering algorithms are fundamentally unsupervised learning methods.
-# However, since :class:`~sklearn.datasets.make_blobs` gives access to the true
+# However, since :class:`~sklearn_fork.datasets.make_blobs` gives access to the true
 # labels of the synthetic clusters, it is possible to use evaluation metrics
 # that leverage this "supervised" ground truth information to quantify the
 # quality of the resulting clusters. Examples of such metrics are the

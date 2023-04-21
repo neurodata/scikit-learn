@@ -32,13 +32,13 @@ meaningful despite the large reduction in dimension.
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn import datasets
-from sklearn.model_selection import train_test_split
-from sklearn.decomposition import PCA
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.neighbors import KNeighborsClassifier, NeighborhoodComponentsAnalysis
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn_fork import datasets
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.decomposition import PCA
+from sklearn_fork.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn_fork.neighbors import KNeighborsClassifier, NeighborhoodComponentsAnalysis
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import StandardScaler
 
 n_neighbors = 3
 random_state = 0

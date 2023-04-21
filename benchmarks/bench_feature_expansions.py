@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.sparse as sparse
-from sklearn.preprocessing import PolynomialFeatures
+from sklearn_fork.preprocessing import PolynomialFeatures
 from time import time
 
 degree = 2

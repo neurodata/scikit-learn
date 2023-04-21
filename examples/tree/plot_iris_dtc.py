@@ -12,7 +12,7 @@ We also show the tree structure of a model built on all of the features.
 """
 # %%
 # First load the copy of the Iris dataset shipped with scikit-learn:
-from sklearn.datasets import load_iris
+from sklearn_fork.datasets import load_iris
 
 iris = load_iris()
 
@@ -22,9 +22,9 @@ iris = load_iris()
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import load_iris
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.inspection import DecisionBoundaryDisplay
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.tree import DecisionTreeClassifier
+from sklearn_fork.inspection import DecisionBoundaryDisplay
 
 
 # Parameters
@@ -74,7 +74,7 @@ _ = plt.axis("tight")
 # %%
 # Display the structure of a single decision tree trained on all the features
 # together.
-from sklearn.tree import plot_tree
+from sklearn_fork.tree import plot_tree
 
 plt.figure()
 clf = DecisionTreeClassifier().fit(iris.data, iris.target)

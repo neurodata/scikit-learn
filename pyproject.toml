@@ -34,7 +34,7 @@ exclude = '''
   | doc/tutorial
   | doc/_build
   | doc/auto_examples
-  | sklearn/externals
+  | sklearn_fork/externals
   | asv_benchmarks/env
 )/
 '''
@@ -62,25 +62,25 @@ ignore = [
 # Exclude files are generated from tempita templates
 exclude= '''
 (
-    sklearn/_loss/_loss.pyx
-  | sklearn/linear_model/_sag_fast.pyx
-  | sklearn/linear_model/_sgd_fast.pyx
-  | sklearn/utils/_seq_dataset.pyx
-  | sklearn/utils/_seq_dataset.pxd
-  | sklearn/utils/_weight_vector.pyx
-  | sklearn/utils/_weight_vector.pxd
-  | sklearn/metrics/_dist_metrics.pyx
-  | sklearn/metrics/_dist_metrics.pxd
-  | sklearn/metrics/_pairwise_distances_reduction/_argkmin.pxd
-  | sklearn/metrics/_pairwise_distances_reduction/_argkmin.pyx
-  | sklearn/metrics/_pairwise_distances_reduction/_argkmin_classmode.pyx
-  | sklearn/metrics/_pairwise_distances_reduction/_base.pxd
-  | sklearn/metrics/_pairwise_distances_reduction/_base.pyx
-  | sklearn/metrics/_pairwise_distances_reduction/_datasets_pair.pxd
-  | sklearn/metrics/_pairwise_distances_reduction/_datasets_pair.pyx
-  | sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.pxd
-  | sklearn/metrics/_pairwise_distances_reduction/_middle_term_computer.pyx
-  | sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors.pxd
-  | sklearn/metrics/_pairwise_distances_reduction/_radius_neighbors.pyx
+    sklearn_fork/_loss/_loss.pyx
+  | sklearn_fork/linear_model/_sag_fast.pyx
+  | sklearn_fork/linear_model/_sgd_fast.pyx
+  | sklearn_fork/utils/_seq_dataset.pyx
+  | sklearn_fork/utils/_seq_dataset.pxd
+  | sklearn_fork/utils/_weight_vector.pyx
+  | sklearn_fork/utils/_weight_vector.pxd
+  | sklearn_fork/metrics/_dist_metrics.pyx
+  | sklearn_fork/metrics/_dist_metrics.pxd
+  | sklearn_fork/metrics/_pairwise_distances_reduction/_argkmin.pxd
+  | sklearn_fork/metrics/_pairwise_distances_reduction/_argkmin.pyx
+  | sklearn_fork/metrics/_pairwise_distances_reduction/_argkmin_classmode.pyx
+  | sklearn_fork/metrics/_pairwise_distances_reduction/_base.pxd
+  | sklearn_fork/metrics/_pairwise_distances_reduction/_base.pyx
+  | sklearn_fork/metrics/_pairwise_distances_reduction/_datasets_pair.pxd
+  | sklearn_fork/metrics/_pairwise_distances_reduction/_datasets_pair.pyx
+  | sklearn_fork/metrics/_pairwise_distances_reduction/_middle_term_computer.pxd
+  | sklearn_fork/metrics/_pairwise_distances_reduction/_middle_term_computer.pyx
+  | sklearn_fork/metrics/_pairwise_distances_reduction/_radius_neighbors.pxd
+  | sklearn_fork/metrics/_pairwise_distances_reduction/_radius_neighbors.pyx
 )
 '''

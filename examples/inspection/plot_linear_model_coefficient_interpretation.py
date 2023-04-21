@@ -54,7 +54,7 @@ import seaborn as sns
 # Note that setting the parameter `as_frame` to True will retrieve the data
 # as a pandas dataframe.
 
-from sklearn.datasets import fetch_openml
+from sklearn_fork.datasets import fetch_openml
 
 survey = fetch_openml(data_id=534, as_frame=True, parser="pandas")
 
@@ -87,7 +87,7 @@ survey.target.head()
 # an unknown target, and we don't want our analysis and decisions to be biased
 # by our knowledge of the test data.
 
-from sklearn.model_selection import train_test_split
+from sklearn_fork.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
 
@@ -138,8 +138,8 @@ survey.data.info()
 # - as a first approach (we will see after how the normalisation of numerical
 #   values will affect our discussion), keep numerical values as they are.
 
-from sklearn.compose import make_column_transformer
-from sklearn.preprocessing import OneHotEncoder
+from sklearn_fork.compose import make_column_transformer
+from sklearn_fork.preprocessing import OneHotEncoder
 
 categorical_columns = ["RACE", "OCCUPATION", "SECTOR", "MARR", "UNION", "SEX", "SOUTH"]
 numerical_columns = ["EDUCATION", "EXPERIENCE", "AGE"]
@@ -154,9 +154,9 @@ preprocessor = make_column_transformer(
 # To describe the dataset as a linear model we use a ridge regressor
 # with a very small regularization and to model the logarithm of the WAGE.
 
-from sklearn.pipeline import make_pipeline
-from sklearn.linear_model import Ridge
-from sklearn.compose import TransformedTargetRegressor
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.linear_model import Ridge
+from sklearn_fork.compose import TransformedTargetRegressor
 
 model = make_pipeline(
     preprocessor,
@@ -178,8 +178,8 @@ model.fit(X_train, y_train)
 # on the test set and computing,
 # for example, the median absolute error of the model.
 
-from sklearn.metrics import median_absolute_error
-from sklearn.metrics import PredictionErrorDisplay
+from sklearn_fork.metrics import median_absolute_error
+from sklearn_fork.metrics import PredictionErrorDisplay
 
 mae_train = median_absolute_error(y_train, model.predict(X_train))
 y_pred = model.predict(X_test)
@@ -319,8 +319,8 @@ plt.subplots_adjust(left=0.3)
 # their robustness is not guaranteed, and they should probably be interpreted
 # with caution.
 
-from sklearn.model_selection import cross_validate
-from sklearn.model_selection import RepeatedKFold
+from sklearn_fork.model_selection import cross_validate
+from sklearn_fork.model_selection import RepeatedKFold
 
 cv = RepeatedKFold(n_splits=5, n_repeats=5, random_state=0)
 cv_model = cross_validate(
@@ -426,7 +426,7 @@ plt.subplots_adjust(left=0.3)
 # The preprocessor is redefined in order to subtract the mean and scale
 # variables to unit variance.
 
-from sklearn.preprocessing import StandardScaler
+from sklearn_fork.preprocessing import StandardScaler
 
 preprocessor = make_column_transformer(
     (OneHotEncoder(drop="if_binary"), categorical_columns),
@@ -519,11 +519,11 @@ plt.subplots_adjust(left=0.3)
 #
 # Above, we limited this regularization to a very little amount. Regularization
 # improves the conditioning of the problem and reduces the variance of the
-# estimates. :class:`~sklearn.linear_model.RidgeCV` applies cross validation
+# estimates. :class:`~sklearn_fork.linear_model.RidgeCV` applies cross validation
 # in order to determine which value of the regularization parameter (`alpha`)
 # is best suited for prediction.
 
-from sklearn.linear_model import RidgeCV
+from sklearn_fork.linear_model import RidgeCV
 
 alphas = np.logspace(-10, 10, 21)  # alpha values to be chosen from by cross-validation
 model = make_pipeline(
@@ -621,11 +621,11 @@ _ = plt.title("Co-variations of coefficients for AGE and EXPERIENCE across folds
 # when we dropped the AGE column in a previous ridge estimation.
 #
 # Lasso models (see the :ref:`lasso` User Guide section) estimates sparse
-# coefficients. :class:`~sklearn.linear_model.LassoCV` applies cross
+# coefficients. :class:`~sklearn_fork.linear_model.LassoCV` applies cross
 # validation in order to determine which value of the regularization parameter
 # (`alpha`) is best suited for the model estimation.
 
-from sklearn.linear_model import LassoCV
+from sklearn_fork.linear_model import LassoCV
 
 alphas = np.logspace(-10, 10, 21)  # alpha values to be chosen from by cross-validation
 model = make_pipeline(

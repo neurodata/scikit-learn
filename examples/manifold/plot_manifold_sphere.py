@@ -33,8 +33,8 @@ from time import time
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import NullFormatter
-from sklearn import manifold
-from sklearn.utils import check_random_state
+from sklearn_fork import manifold
+from sklearn_fork.utils import check_random_state
 
 # Unused but required import for doing 3d projections with matplotlib < 3.2
 import mpl_toolkits.mplot3d  # noqa: F401

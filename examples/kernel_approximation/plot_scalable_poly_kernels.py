@@ -8,7 +8,7 @@ efficiently generate polynomial kernel feature-space approximations.
 This is used to train linear classifiers that approximate the accuracy
 of kernelized ones.
 
-.. currentmodule:: sklearn.kernel_approximation
+.. currentmodule:: sklearn_fork.kernel_approximation
 
 We use the Covtype dataset [2], trying to reproduce the experiments on the
 original paper of Tensor Sketch [1], i.e. the algorithm implemented by
@@ -35,7 +35,7 @@ approximating the accuracy of a kernelized classifier in a scalable manner.
 # classification problem to match the version of the dataset in the
 # LIBSVM webpage [2], which was the one used in [1].
 
-from sklearn.datasets import fetch_covtype
+from sklearn_fork.datasets import fetch_covtype
 
 X, y = fetch_covtype(return_X_y=True)
 
@@ -50,7 +50,7 @@ y[y == 2] = 1  # We will try to separate class 2 from the other 6 classes.
 # To actually reproduce the results in the original Tensor Sketch paper,
 # select 100,000 for training.
 
-from sklearn.model_selection import train_test_split
+from sklearn_fork.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, train_size=5_000, test_size=10_000, random_state=42
@@ -64,8 +64,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 # the LIBSVM webpage, and then normalize to unit length as done in the
 # original Tensor Sketch paper [1].
 
-from sklearn.preprocessing import MinMaxScaler, Normalizer
-from sklearn.pipeline import make_pipeline
+from sklearn_fork.preprocessing import MinMaxScaler, Normalizer
+from sklearn_fork.pipeline import make_pipeline
 
 mm = make_pipeline(MinMaxScaler(), Normalizer())
 X_train = mm.fit_transform(X_train)
@@ -80,7 +80,7 @@ X_test = mm.transform(X_test)
 # plot them later.
 
 import time
-from sklearn.svm import LinearSVC
+from sklearn_fork.svm import LinearSVC
 
 results = {}
 
@@ -114,7 +114,7 @@ print(f"Linear SVM score on raw features: {lsvm_score:.2f}%")
 # (`n_runs` = 1) in this example, in practice one should repeat the experiment several
 # times to compensate for the stochastic nature of :class:`PolynomialCountSketch`.
 
-from sklearn.kernel_approximation import PolynomialCountSketch
+from sklearn_fork.kernel_approximation import PolynomialCountSketch
 
 n_runs = 1
 N_COMPONENTS = [250, 500, 1000, 2000]
@@ -154,7 +154,7 @@ for n_components in N_COMPONENTS:
 # some time, as the SVC class has a relatively poor scalability. This is the
 # reason why kernel approximators are so useful:
 
-from sklearn.svm import SVC
+from sklearn_fork.svm import SVC
 
 ksvm = SVC(C=500.0, kernel="poly", degree=4, coef0=0, gamma=1.0)
 

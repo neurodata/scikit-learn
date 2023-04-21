@@ -4,7 +4,7 @@ Imputing missing values before building an estimator
 ====================================================
 
 Missing values can be replaced by the mean, the median or the most frequent
-value using the basic :class:`~sklearn.impute.SimpleImputer`.
+value using the basic :class:`~sklearn_fork.impute.SimpleImputer`.
 
 In this example we will investigate different imputation techniques:
 
@@ -22,7 +22,7 @@ house value for California districts.
 As neither of these datasets have missing values, we will remove some
 values to create new versions with artificially missing data. The performance
 of
-:class:`~sklearn.ensemble.RandomForestRegressor` on the full original dataset
+:class:`~sklearn_fork.ensemble.RandomForestRegressor` on the full original dataset
 is then compared the performance on the altered datasets with the artificially
 missing values imputed using different techniques.
 
@@ -44,8 +44,8 @@ missing values imputed using different techniques.
 
 import numpy as np
 
-from sklearn.datasets import fetch_california_housing
-from sklearn.datasets import load_diabetes
+from sklearn_fork.datasets import fetch_california_housing
+from sklearn_fork.datasets import load_diabetes
 
 
 rng = np.random.RandomState(42)
@@ -91,13 +91,13 @@ X_miss_diabetes, y_miss_diabetes = add_missing_values(X_diabetes, y_diabetes)
 
 rng = np.random.RandomState(0)
 
-from sklearn.ensemble import RandomForestRegressor
+from sklearn_fork.ensemble import RandomForestRegressor
 
 # To use the experimental IterativeImputer, we need to explicitly ask for it:
-from sklearn.experimental import enable_iterative_imputer  # noqa
-from sklearn.impute import SimpleImputer, KNNImputer, IterativeImputer
-from sklearn.model_selection import cross_val_score
-from sklearn.pipeline import make_pipeline
+from sklearn_fork.experimental import enable_iterative_imputer  # noqa
+from sklearn_fork.impute import SimpleImputer, KNNImputer, IterativeImputer
+from sklearn_fork.model_selection import cross_val_score
+from sklearn_fork.pipeline import make_pipeline
 
 
 N_SPLITS = 4
@@ -176,7 +176,7 @@ x_labels.append("Zero imputation")
 # kNN-imputation of the missing values
 # ------------------------------------
 #
-# :class:`~sklearn.impute.KNNImputer` imputes missing values using the weighted
+# :class:`~sklearn_fork.impute.KNNImputer` imputes missing values using the weighted
 # or unweighted mean of the desired number of nearest neighbors.
 
 
@@ -218,7 +218,7 @@ x_labels.append("Mean Imputation")
 # Iterative imputation of the missing values
 # ------------------------------------------
 #
-# Another option is the :class:`~sklearn.impute.IterativeImputer`. This uses
+# Another option is the :class:`~sklearn_fork.impute.IterativeImputer`. This uses
 # round-robin linear regression, modeling each feature with missing values as a
 # function of other features, in turn.
 # The version implemented assumes Gaussian (output) variables. If your features

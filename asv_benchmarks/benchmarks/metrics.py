@@ -1,4 +1,4 @@
-from sklearn.metrics.pairwise import pairwise_distances
+from sklearn_fork.metrics.pairwise import pairwise_distances
 
 from .common import Benchmark
 from .datasets import _random_dataset

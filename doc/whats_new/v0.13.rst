@@ -1,6 +1,6 @@
 .. include:: _contributors.rst
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 .. _changes_0_13_1:
 
@@ -203,10 +203,10 @@ Changelog
   positives of a given class in earlier releases.
 
 - Improve narrative documentation and consistency in
-  :mod:`sklearn.metrics` for regression and classification metrics
+  :mod:`sklearn_fork.metrics` for regression and classification metrics
   by `Arnaud Joly`_.
 
-- Fixed a bug in :class:`sklearn.svm.SVC` when using csr-matrices with
+- Fixed a bug in :class:`sklearn_fork.svm.SVC` when using csr-matrices with
   unsorted indices by Xinfan Meng and `Andreas Müller`_.
 
 - :class:`MiniBatchKMeans`: Add random reassignment of cluster centers
@@ -228,10 +228,10 @@ API changes summary
   consistency in :class:`ensemble.BaseGradientBoosting` and
   :class:`ensemble.GradientBoostingRegressor`.
 
-- The module ``sklearn.linear_model.sparse`` is gone. Sparse matrix support
+- The module ``sklearn_fork.linear_model.sparse`` is gone. Sparse matrix support
   was already integrated into the "regular" linear models.
 
-- :func:`sklearn.metrics.mean_square_error`, which incorrectly returned the
+- :func:`sklearn_fork.metrics.mean_square_error`, which incorrectly returned the
   accumulated error, was removed. Use ``mean_squared_error`` instead.
 
 - Passing ``class_weight`` parameters to ``fit`` methods is no longer
@@ -304,10 +304,10 @@ API changes summary
   :class:`cross_validation.ShuffleSplit` and
   :class:`cross_validation.StratifiedShuffleSplit`.
 
-- Renamed function :func:`sklearn.metrics.zero_one` to
-  :func:`sklearn.metrics.zero_one_loss`. Be aware that the default behavior
-  in :func:`sklearn.metrics.zero_one_loss` is different from
-  :func:`sklearn.metrics.zero_one`: ``normalize=False`` is changed to
+- Renamed function :func:`sklearn_fork.metrics.zero_one` to
+  :func:`sklearn_fork.metrics.zero_one_loss`. Be aware that the default behavior
+  in :func:`sklearn_fork.metrics.zero_one_loss` is different from
+  :func:`sklearn_fork.metrics.zero_one`: ``normalize=False`` is changed to
   ``normalize=True``.
 
 - Renamed function :func:`metrics.zero_one_score` to

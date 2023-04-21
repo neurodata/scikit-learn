@@ -6,9 +6,9 @@
 Gaussian mixture models
 =======================
 
-.. currentmodule:: sklearn.mixture
+.. currentmodule:: sklearn_fork.mixture
 
-``sklearn.mixture`` is a package which enables one to learn
+``sklearn_fork.mixture`` is a package which enables one to learn
 Gaussian Mixture Models (diagonal, spherical, tied and full covariance
 matrices supported), sample them, and estimate them from
 data. Facilities to help determine the appropriate number of

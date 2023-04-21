@@ -5,7 +5,7 @@
 Decomposing signals in components (matrix factorization problems)
 =================================================================
 
-.. currentmodule:: sklearn.decomposition
+.. currentmodule:: sklearn_fork.decomposition
 
 
 .. _PCA:
@@ -376,8 +376,8 @@ Truncated singular value decomposition and latent semantic analysis
 where :math:`k` is a user-specified parameter.
 
 When truncated SVD is applied to term-document matrices
-(as returned by :class:`~sklearn.feature_extraction.text.CountVectorizer` or
-:class:`~sklearn.feature_extraction.text.TfidfVectorizer`),
+(as returned by :class:`~sklearn_fork.feature_extraction.text.CountVectorizer` or
+:class:`~sklearn_fork.feature_extraction.text.TfidfVectorizer`),
 this transformation is known as
 `latent semantic analysis <https://nlp.stanford.edu/IR-book/pdf/18lsi.pdf>`_
 (LSA), because it transforms such matrices
@@ -608,7 +608,7 @@ iterating only once over a mini-batch. This can be used for online learning
 when the data is not readily available from the start, or for when the data
 does not fit into the memory.
 
-.. currentmodule:: sklearn.cluster
+.. currentmodule:: sklearn_fork.cluster
 
 .. image:: ../auto_examples/cluster/images/sphx_glr_plot_dict_face_patches_001.png
     :target: ../auto_examples/cluster/plot_dict_face_patches.html
@@ -625,7 +625,7 @@ does not fit into the memory.
 
     Example: :ref:`sphx_glr_auto_examples_cluster_plot_dict_face_patches.py`
 
-.. currentmodule:: sklearn.decomposition
+.. currentmodule:: sklearn_fork.decomposition
 
 .. _FA:
 
@@ -907,7 +907,7 @@ stored components::
 
     >>> import numpy as np
     >>> X = np.array([[1, 1], [2, 1], [3, 1.2], [4, 1], [5, 0.8], [6, 1]])
-    >>> from sklearn.decomposition import NMF
+    >>> from sklearn_fork.decomposition import NMF
     >>> model = NMF(n_components=2, init='random', random_state=0)
     >>> W = model.fit_transform(X)
     >>> H = model.components_
@@ -925,7 +925,7 @@ Mini-batch Non Negative Matrix Factorization
 --------------------------------------------
 
 :class:`MiniBatchNMF` [7]_ implements a faster, but less accurate version of the
-non negative matrix factorization (i.e. :class:`~sklearn.decomposition.NMF`),
+non negative matrix factorization (i.e. :class:`~sklearn_fork.decomposition.NMF`),
 better suited for large datasets.
 
 By default, :class:`MiniBatchNMF` divides the data into mini-batches and

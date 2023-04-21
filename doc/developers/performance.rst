@@ -26,7 +26,7 @@ code for the scikit-learn project.
 Python, Cython or C/C++?
 ========================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 In general, the scikit-learn project emphasizes the **readability** of
 the source code to make it easy for the project users to dive into the
@@ -99,9 +99,9 @@ Suppose we want to profile the Non Negative Matrix Factorization module
 of scikit-learn. Let us setup a new IPython session and load the digits
 dataset and as in the :ref:`sphx_glr_auto_examples_classification_plot_digits_classification.py` example::
 
-  In [1]: from sklearn.decomposition import NMF
+  In [1]: from sklearn_fork.decomposition import NMF
 
-  In [2]: from sklearn.datasets import load_digits
+  In [2]: from sklearn_fork.datasets import load_digits
 
   In [3]: X, _ = load_digits(return_X_y=True)
 
@@ -203,17 +203,17 @@ This will register the ``%lprun`` magic command in the IPython terminal applicat
 
 Now restart IPython and let us use this new toy::
 
-  In [1]: from sklearn.datasets import load_digits
+  In [1]: from sklearn_fork.datasets import load_digits
 
-  In [2]: from sklearn.decomposition import NMF
-    ... : from sklearn.decomposition._nmf import _nls_subproblem
+  In [2]: from sklearn_fork.decomposition import NMF
+    ... : from sklearn_fork.decomposition._nmf import _nls_subproblem
 
   In [3]: X, _ = load_digits(return_X_y=True)
 
   In [4]: %lprun -f _nls_subproblem NMF(n_components=16, tol=1e-2).fit(X)
   Timer unit: 1e-06 s
 
-  File: sklearn/decomposition/nmf.py
+  File: sklearn_fork/decomposition/nmf.py
   Function: _nls_subproblem at line 137
   Total time: 1.73153 s
 

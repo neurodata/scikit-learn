@@ -24,11 +24,11 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
-from sklearn.datasets import fetch_openml
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.utils import check_random_state
+from sklearn_fork.datasets import fetch_openml
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.utils import check_random_state
 
 # Turn down for faster convergence
 t0 = time.time()

@@ -29,10 +29,10 @@ original data.
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import make_circles
-from sklearn.ensemble import RandomTreesEmbedding, ExtraTreesClassifier
-from sklearn.decomposition import TruncatedSVD
-from sklearn.naive_bayes import BernoulliNB
+from sklearn_fork.datasets import make_circles
+from sklearn_fork.ensemble import RandomTreesEmbedding, ExtraTreesClassifier
+from sklearn_fork.decomposition import TruncatedSVD
+from sklearn_fork.naive_bayes import BernoulliNB
 
 # make a synthetic dataset
 X, y = make_circles(factor=0.5, random_state=0, noise=0.05)

@@ -4,13 +4,13 @@ from time import time
 import numpy as np
 import pandas as pd
 
-from sklearn.model_selection import train_test_split
-from sklearn.compose import make_column_transformer, make_column_selector
-from sklearn.datasets import fetch_openml
-from sklearn.metrics import accuracy_score, roc_auc_score
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
-from sklearn.preprocessing import OrdinalEncoder
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.compose import make_column_transformer, make_column_selector
+from sklearn_fork.datasets import fetch_openml
+from sklearn_fork.metrics import accuracy_score, roc_auc_score
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
+from sklearn_fork.preprocessing import OrdinalEncoder
 
 
 parser = argparse.ArgumentParser()
@@ -88,7 +88,7 @@ est = HistGradientBoostingClassifier(
     verbose=verbose,
 )
 
-fit(est, X_train, y_train, "sklearn")
+fit(est, X_train, y_train, "sklearn_fork")
 predict(est, X_test, y_test)
 
 if args.lightgbm:

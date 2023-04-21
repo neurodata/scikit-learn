@@ -8,7 +8,7 @@ for a bike sharing demand regression task that is highly dependent on business
 cycles (days, weeks, months) and yearly season cycles.
 
 In the process, we introduce how to perform periodic feature engineering using
-the :class:`sklearn.preprocessing.SplineTransformer` class and its
+the :class:`sklearn_fork.preprocessing.SplineTransformer` class and its
 `extrapolation="periodic"` option.
 
 """
@@ -18,7 +18,7 @@ the :class:`sklearn.preprocessing.SplineTransformer` class and its
 # ---------------------------------------------------
 #
 # We start by loading the data from the OpenML repository.
-from sklearn.datasets import fetch_openml
+from sklearn_fork.datasets import fetch_openml
 
 bike_sharing = fetch_openml(
     "Bike_Sharing_Demand", version=2, as_frame=True, parser="pandas"
@@ -130,7 +130,7 @@ X["season"].value_counts()
 # model. This represents a bit less than a month and a half of contiguous test
 # data:
 
-from sklearn.model_selection import TimeSeriesSplit
+from sklearn_fork.model_selection import TimeSeriesSplit
 
 ts_cv = TimeSeriesSplit(
     n_splits=5,
@@ -181,11 +181,11 @@ X.iloc[train_4]
 #
 # The numerical variables need no preprocessing and, for the sake of simplicity,
 # we only try the default hyper-parameters for this model:
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import OrdinalEncoder
-from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.model_selection import cross_validate
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import OrdinalEncoder
+from sklearn_fork.compose import ColumnTransformer
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.model_selection import cross_validate
 
 
 categorical_columns = [
@@ -260,11 +260,11 @@ evaluate(gbrt_pipeline, X, y, cv=ts_cv)
 #
 # As usual for linear models, categorical variables need to be one-hot encoded.
 # For consistency, we scale the numerical features to the same 0-1 range using
-# class:`sklearn.preprocessing.MinMaxScaler`, although in this case it does not
+# class:`sklearn_fork.preprocessing.MinMaxScaler`, although in this case it does not
 # impact the results much because they are already on comparable scales:
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.linear_model import RidgeCV
+from sklearn_fork.preprocessing import OneHotEncoder
+from sklearn_fork.preprocessing import MinMaxScaler
+from sklearn_fork.linear_model import RidgeCV
 import numpy as np
 
 
@@ -335,7 +335,7 @@ evaluate(one_hot_linear_pipeline, X, y, cv=ts_cv)
 # the day was represented in minutes since the start of the day instead of
 # hours, one-hot encoding would have introduced 1440 features instead of 24.
 # This could cause some significant overfitting. To avoid this we could use
-# :func:`sklearn.preprocessing.KBinsDiscretizer` instead to re-bin the number
+# :func:`sklearn_fork.preprocessing.KBinsDiscretizer` instead to re-bin the number
 # of levels of fine-grained ordinal or numerical variables while still
 # benefitting from the non-monotonic expressivity advantages of one-hot
 # encoding.
@@ -355,7 +355,7 @@ evaluate(one_hot_linear_pipeline, X, y, cv=ts_cv)
 # Each ordinal time feature is transformed into 2 features that together encode
 # equivalent information in a non-monotonic way, and more importantly without
 # any jump between the first and the last value of the periodic range.
-from sklearn.preprocessing import FunctionTransformer
+from sklearn_fork.preprocessing import FunctionTransformer
 
 
 def sin_transformer(period):
@@ -432,7 +432,7 @@ evaluate(cyclic_cossin_linear_pipeline, X, y, cv=ts_cv)
 # using spline transformations with a large enough number of splines, and as a
 # result a larger number of expanded features compared to the sine/cosine
 # transformation:
-from sklearn.preprocessing import SplineTransformer
+from sklearn_fork.preprocessing import SplineTransformer
 
 
 def periodic_spline_transformer(period, n_splines=None, degree=3):
@@ -619,8 +619,8 @@ cyclic_spline_linear_pipeline[:-1].transform(X).shape
 # However, it is possible to use the `PolynomialFeatures` class on coarse
 # grained spline encoded hours to model the "workingday"/"hours" interaction
 # explicitly without introducing too many new variables:
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.pipeline import FeatureUnion
+from sklearn_fork.preprocessing import PolynomialFeatures
+from sklearn_fork.pipeline import FeatureUnion
 
 
 hour_workday_interaction = make_pipeline(
@@ -666,7 +666,7 @@ evaluate(cyclic_spline_interactions_pipeline, X, y, cv=ts_cv)
 #
 # Alternatively, we can use the Nyström method to compute an approximate
 # polynomial kernel expansion. Let us try the latter:
-from sklearn.kernel_approximation import Nystroem
+from sklearn_fork.kernel_approximation import Nystroem
 
 
 cyclic_spline_poly_pipeline = make_pipeline(
@@ -775,7 +775,7 @@ _ = ax.legend()
 #
 # Let us finally get a more quantative look at the prediction errors of those
 # three models using the true vs predicted demand scatter plots:
-from sklearn.metrics import PredictionErrorDisplay
+from sklearn_fork.metrics import PredictionErrorDisplay
 
 fig, axes = plt.subplots(nrows=2, ncols=3, figsize=(13, 7), sharex=True, sharey="row")
 fig.suptitle("Non-linear regression models", y=1.0)
@@ -830,7 +830,7 @@ plt.show()
 # features.
 #
 # The `Nystroem` + `RidgeCV` regressor could also have been replaced by
-# :class:`~sklearn.neural_network.MLPRegressor` with one or two hidden layers
+# :class:`~sklearn_fork.neural_network.MLPRegressor` with one or two hidden layers
 # and we would have obtained quite similar results.
 #
 # The dataset we used in this case study is sampled on a hourly basis. However

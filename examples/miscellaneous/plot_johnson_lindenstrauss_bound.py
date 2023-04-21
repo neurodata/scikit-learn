@@ -17,11 +17,11 @@ import sys
 from time import time
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.random_projection import johnson_lindenstrauss_min_dim
-from sklearn.random_projection import SparseRandomProjection
-from sklearn.datasets import fetch_20newsgroups_vectorized
-from sklearn.datasets import load_digits
-from sklearn.metrics.pairwise import euclidean_distances
+from sklearn_fork.random_projection import johnson_lindenstrauss_min_dim
+from sklearn_fork.random_projection import SparseRandomProjection
+from sklearn_fork.datasets import fetch_20newsgroups_vectorized
+from sklearn_fork.datasets import load_digits
+from sklearn_fork.metrics.pairwise import euclidean_distances
 
 # %%
 # Theoretical bounds

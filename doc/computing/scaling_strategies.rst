@@ -44,9 +44,9 @@ vectorizer if making multiple passes over the data is reasonable from an
 application point of view. Otherwise, one can turn up the difficulty by using
 a stateless feature extractor. Currently the preferred way to do this is to
 use the so-called :ref:`hashing trick<feature_hashing>` as implemented by
-:class:`sklearn.feature_extraction.FeatureHasher` for datasets with categorical
+:class:`sklearn_fork.feature_extraction.FeatureHasher` for datasets with categorical
 variables represented as list of Python dicts or
-:class:`sklearn.feature_extraction.text.HashingVectorizer` for text documents.
+:class:`sklearn_fork.feature_extraction.text.HashingVectorizer` for text documents.
 
 Incremental learning
 .....................
@@ -63,28 +63,28 @@ balances relevancy and memory footprint could involve some tuning [1]_.
 Here is a list of incremental estimators for different tasks:
 
   - Classification
-      + :class:`sklearn.naive_bayes.MultinomialNB`
-      + :class:`sklearn.naive_bayes.BernoulliNB`
-      + :class:`sklearn.linear_model.Perceptron`
-      + :class:`sklearn.linear_model.SGDClassifier`
-      + :class:`sklearn.linear_model.PassiveAggressiveClassifier`
-      + :class:`sklearn.neural_network.MLPClassifier`
+      + :class:`sklearn_fork.naive_bayes.MultinomialNB`
+      + :class:`sklearn_fork.naive_bayes.BernoulliNB`
+      + :class:`sklearn_fork.linear_model.Perceptron`
+      + :class:`sklearn_fork.linear_model.SGDClassifier`
+      + :class:`sklearn_fork.linear_model.PassiveAggressiveClassifier`
+      + :class:`sklearn_fork.neural_network.MLPClassifier`
   - Regression
-      + :class:`sklearn.linear_model.SGDRegressor`
-      + :class:`sklearn.linear_model.PassiveAggressiveRegressor`
-      + :class:`sklearn.neural_network.MLPRegressor`
+      + :class:`sklearn_fork.linear_model.SGDRegressor`
+      + :class:`sklearn_fork.linear_model.PassiveAggressiveRegressor`
+      + :class:`sklearn_fork.neural_network.MLPRegressor`
   - Clustering
-      + :class:`sklearn.cluster.MiniBatchKMeans`
-      + :class:`sklearn.cluster.Birch`
+      + :class:`sklearn_fork.cluster.MiniBatchKMeans`
+      + :class:`sklearn_fork.cluster.Birch`
   - Decomposition / feature Extraction
-      + :class:`sklearn.decomposition.MiniBatchDictionaryLearning`
-      + :class:`sklearn.decomposition.IncrementalPCA`
-      + :class:`sklearn.decomposition.LatentDirichletAllocation`
-      + :class:`sklearn.decomposition.MiniBatchNMF`
+      + :class:`sklearn_fork.decomposition.MiniBatchDictionaryLearning`
+      + :class:`sklearn_fork.decomposition.IncrementalPCA`
+      + :class:`sklearn_fork.decomposition.LatentDirichletAllocation`
+      + :class:`sklearn_fork.decomposition.MiniBatchNMF`
   - Preprocessing
-      + :class:`sklearn.preprocessing.StandardScaler`
-      + :class:`sklearn.preprocessing.MinMaxScaler`
-      + :class:`sklearn.preprocessing.MaxAbsScaler`
+      + :class:`sklearn_fork.preprocessing.StandardScaler`
+      + :class:`sklearn_fork.preprocessing.MinMaxScaler`
+      + :class:`sklearn_fork.preprocessing.MaxAbsScaler`
 
 For classification, a somewhat important thing to note is that although a
 stateless feature extraction routine may be able to cope with new/unseen

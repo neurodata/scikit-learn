@@ -4,7 +4,7 @@
 Validation curves: plotting scores to evaluate models
 =====================================================
 
-.. currentmodule:: sklearn.model_selection
+.. currentmodule:: sklearn_fork.model_selection
 
 Every estimator has its advantages and drawbacks. Its generalization error
 can be decomposed in terms of bias, variance and noise. The **bias** of an
@@ -69,9 +69,9 @@ values.
 The function :func:`validation_curve` can help in this case::
 
   >>> import numpy as np
-  >>> from sklearn.model_selection import validation_curve
-  >>> from sklearn.datasets import load_iris
-  >>> from sklearn.linear_model import Ridge
+  >>> from sklearn_fork.model_selection import validation_curve
+  >>> from sklearn_fork.datasets import load_iris
+  >>> from sklearn_fork.linear_model import Ridge
 
   >>> np.random.seed(0)
   >>> X, y = load_iris(return_X_y=True)
@@ -133,8 +133,8 @@ that are required to plot such a learning curve (number of samples
 that have been used, the average scores on the training sets and the
 average scores on the validation sets)::
 
-  >>> from sklearn.model_selection import learning_curve
-  >>> from sklearn.svm import SVC
+  >>> from sklearn_fork.model_selection import learning_curve
+  >>> from sklearn_fork.svm import SVC
 
   >>> train_sizes, train_scores, valid_scores = learning_curve(
   ...     SVC(kernel='linear'), X, y, train_sizes=[50, 80, 110], cv=5)
@@ -150,19 +150,19 @@ average scores on the validation sets)::
          [1. ,  0.96...,  1. ,  1. ,  0.96...]])
 
 If you intend to plot the learning curves only, the class
-:class:`~sklearn.model_selection.LearningCurveDisplay` will be easier to use.
+:class:`~sklearn_fork.model_selection.LearningCurveDisplay` will be easier to use.
 You can use the method
-:meth:`~sklearn.model_selection.LearningCurveDisplay.from_estimator` similarly
+:meth:`~sklearn_fork.model_selection.LearningCurveDisplay.from_estimator` similarly
 to :func:`learning_curve` to generate and plot the learning curve:
 
 .. plot::
    :context: close-figs
    :align: center
 
-      from sklearn.datasets import load_iris
-      from sklearn.model_selection import LearningCurveDisplay
-      from sklearn.svm import SVC
-      from sklearn.utils import shuffle
+      from sklearn_fork.datasets import load_iris
+      from sklearn_fork.model_selection import LearningCurveDisplay
+      from sklearn_fork.svm import SVC
+      from sklearn_fork.utils import shuffle
       X, y = load_iris(return_X_y=True)
       X, y = shuffle(X, y, random_state=0)
       LearningCurveDisplay.from_estimator(

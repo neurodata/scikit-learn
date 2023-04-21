@@ -12,7 +12,7 @@ for comparison.
 
 """
 
-from sklearn.model_selection import (
+from sklearn_fork.model_selection import (
     TimeSeriesSplit,
     KFold,
     ShuffleSplit,
@@ -142,7 +142,7 @@ def plot_cv_indices(cv, X, y, group, ax, n_splits, lw=10):
 
 
 # %%
-# Let's see how it looks for the :class:`~sklearn.model_selection.KFold`
+# Let's see how it looks for the :class:`~sklearn_fork.model_selection.KFold`
 # cross-validation object:
 
 fig, ax = plt.subplots()

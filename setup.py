@@ -23,7 +23,7 @@ except ImportError:
     import __builtin__ as builtins
 
 # This is a bit (!) hackish: we are setting a global variable so that the main
-# sklearn __init__ can detect if it is being loaded by the setup routine, to
+# sklearn_fork __init__ can detect if it is being loaded by the setup routine, to
 # avoid attempting to load components that aren't built yet.
 # TODO: can this be simplified or removed since the switch to setuptools
 # away from numpy.distutils?
@@ -45,15 +45,15 @@ PROJECT_URLS = {
     "Source Code": "https://github.com/neurodata/scikit-learn",
 }
 
-# We can actually import a restricted version of sklearn that
+# We can actually import a restricted version of sklearn_fork that
 # does not need the compiled code
-import sklearn  # noqa
-import sklearn._min_dependencies as min_deps  # noqa
-from sklearn._build_utils import _check_cython_version  # noqa
-from sklearn.externals._packaging.version import parse as parse_version  # noqa
+import sklearn_fork  # noqa
+import sklearn_fork._min_dependencies as min_deps  # noqa
+from sklearn_fork._build_utils import _check_cython_version  # noqa
+from sklearn_fork.externals._packaging.version import parse as parse_version  # noqa
 
 
-VERSION = sklearn.__version__
+VERSION = sklearn_fork.__version__
 
 # Custom clean command to remove build artifacts
 
@@ -77,7 +77,7 @@ class CleanCommand(Command):
             print("Will remove generated .c files")
         if os.path.exists("build"):
             shutil.rmtree("build")
-        for dirpath, dirnames, filenames in os.walk("sklearn"):
+        for dirpath, dirnames, filenames in os.walk("sklearn_fork"):
             for filename in filenames:
                 root, extension = os.path.splitext(filename)
 
@@ -118,7 +118,7 @@ class build_ext_subclass(build_ext):
             print("setting parallel=%d " % self.parallel)
 
     def build_extensions(self):
-        from sklearn._build_utils.openmp_helpers import get_openmp_flag
+        from sklearn_fork._build_utils.openmp_helpers import get_openmp_flag
 
         # Always use NumPy 1.7 C API for all compiled extensions.
         # See: https://numpy.org/doc/stable/reference/c-api/deprecations.html
@@ -129,7 +129,7 @@ class build_ext_subclass(build_ext):
         for ext in self.extensions:
             ext.define_macros.append(DEFINE_MACRO_NUMPY_C_API)
 
-        if sklearn._OPENMP_SUPPORTED:
+        if sklearn_fork._OPENMP_SUPPORTED:
             openmp_flag = get_openmp_flag()
 
             for e in self.extensions:
@@ -425,12 +425,12 @@ libraries = [
         "libsvm-skl",
         {
             "sources": [
-                join("sklearn", "svm", "src", "libsvm", "libsvm_template.cpp"),
+                join("sklearn_fork", "svm", "src", "libsvm", "libsvm_template.cpp"),
             ],
             "depends": [
-                join("sklearn", "svm", "src", "libsvm", "svm.cpp"),
-                join("sklearn", "svm", "src", "libsvm", "svm.h"),
-                join("sklearn", "svm", "src", "newrand", "newrand.h"),
+                join("sklearn_fork", "svm", "src", "libsvm", "svm.cpp"),
+                join("sklearn_fork", "svm", "src", "libsvm", "svm.h"),
+                join("sklearn_fork", "svm", "src", "newrand", "newrand.h"),
             ],
             # Use C++11 to use the random number generator fix
             "extra_compiler_args": ["-std=c++11"],
@@ -441,13 +441,13 @@ libraries = [
         "liblinear-skl",
         {
             "sources": [
-                join("sklearn", "svm", "src", "liblinear", "linear.cpp"),
-                join("sklearn", "svm", "src", "liblinear", "tron.cpp"),
+                join("sklearn_fork", "svm", "src", "liblinear", "linear.cpp"),
+                join("sklearn_fork", "svm", "src", "liblinear", "tron.cpp"),
             ],
             "depends": [
-                join("sklearn", "svm", "src", "liblinear", "linear.h"),
-                join("sklearn", "svm", "src", "liblinear", "tron.h"),
-                join("sklearn", "svm", "src", "newrand", "newrand.h"),
+                join("sklearn_fork", "svm", "src", "liblinear", "linear.h"),
+                join("sklearn_fork", "svm", "src", "liblinear", "tron.h"),
+                join("sklearn_fork", "svm", "src", "newrand", "newrand.h"),
             ],
             # Use C++11 to use the random number generator fix
             "extra_compiler_args": ["-std=c++11"],
@@ -464,8 +464,8 @@ def configure_extension_modules():
     if "sdist" in sys.argv or "--help" in sys.argv:
         return []
 
-    from sklearn._build_utils import cythonize_extensions
-    from sklearn._build_utils import gen_from_templates
+    from sklearn_fork._build_utils import cythonize_extensions
+    from sklearn_fork._build_utils import gen_from_templates
     import numpy
 
     is_pypy = platform.python_implementation() == "PyPy"
@@ -491,7 +491,7 @@ def configure_extension_modules():
     cython_exts = []
     for submodule, extensions in extension_config.items():
         submodule_parts = submodule.split(".")
-        parent_dir = join("sklearn", *submodule_parts)
+        parent_dir = join("sklearn_fork", *submodule_parts)
         for extension in extensions:
             if is_pypy and not extension.get("compile_for_pypy", True):
                 continue
@@ -520,9 +520,9 @@ def configure_extension_modules():
             # By convention, our extensions always use the name of the first source
             source_name = os.path.splitext(os.path.basename(sources[0]))[0]
             if submodule:
-                name_parts = ["sklearn", submodule, source_name]
+                name_parts = ["sklearn_fork", submodule, source_name]
             else:
-                name_parts = ["sklearn", source_name]
+                name_parts = ["sklearn_fork", source_name]
             name = ".".join(name_parts)
 
             # Make paths start from the root directory

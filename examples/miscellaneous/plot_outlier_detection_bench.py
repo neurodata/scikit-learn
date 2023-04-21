@@ -11,7 +11,7 @@ is assessed in an outlier detection context:
 1. The algorithms are trained on the whole dataset which is assumed to
 contain outliers.
 
-2. The ROC curve from :class:`~sklearn.metrics.RocCurveDisplay` is computed
+2. The ROC curve from :class:`~sklearn_fork.metrics.RocCurveDisplay` is computed
 on the same dataset using the knowledge of the labels.
 
 """
@@ -26,14 +26,14 @@ print(__doc__)
 # ------------------------------------
 #
 # The example uses real-world datasets available in
-# :class:`sklearn.datasets` and the sample size of some datasets is reduced
+# :class:`sklearn_fork.datasets` and the sample size of some datasets is reduced
 # to speed up computation. After the data preprocessing, the datasets' targets
 # will have two classes, 0 representing inliers and 1 representing outliers.
 # The `preprocess_dataset` function returns data and target.
 
 import numpy as np
-from sklearn.datasets import fetch_kddcup99, fetch_covtype, fetch_openml
-from sklearn.preprocessing import LabelBinarizer
+from sklearn_fork.datasets import fetch_kddcup99, fetch_covtype, fetch_openml
+from sklearn_fork.preprocessing import LabelBinarizer
 import pandas as pd
 
 rng = np.random.RandomState(42)
@@ -111,14 +111,14 @@ def preprocess_dataset(dataset_name):
 # Define an outlier prediction function
 # -------------------------------------
 # There is no particular reason to choose algorithms
-# :class:`~sklearn.neighbors.LocalOutlierFactor` and
-# :class:`~sklearn.ensemble.IsolationForest`. The goal is to show that
+# :class:`~sklearn_fork.neighbors.LocalOutlierFactor` and
+# :class:`~sklearn_fork.ensemble.IsolationForest`. The goal is to show that
 # different algorithm performs well on different datasets. The following
 # `compute_prediction` function returns average outlier score of X.
 
 
-from sklearn.neighbors import LocalOutlierFactor
-from sklearn.ensemble import IsolationForest
+from sklearn_fork.neighbors import LocalOutlierFactor
+from sklearn_fork.ensemble import IsolationForest
 
 
 def compute_prediction(X, model_name):
@@ -146,7 +146,7 @@ def compute_prediction(X, model_name):
 
 import math
 import matplotlib.pyplot as plt
-from sklearn.metrics import RocCurveDisplay
+from sklearn_fork.metrics import RocCurveDisplay
 
 datasets_name = [
     "http",

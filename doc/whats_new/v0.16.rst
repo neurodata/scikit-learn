@@ -1,6 +1,6 @@
 .. include:: _contributors.rst
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 .. _changes_0_16_1:
 
@@ -294,7 +294,7 @@ Documentation improvements
 - More explicit documentation of sample generators and of data
   transformation. By `Joel Nothman`_.
 
-- :class:`sklearn.neighbors.BallTree` and :class:`sklearn.neighbors.KDTree`
+- :class:`sklearn_fork.neighbors.BallTree` and :class:`sklearn_fork.neighbors.KDTree`
   used to point to empty pages stating that they are aliases of BinaryTree.
   This has been fixed to show the correct class docs. By `Manoj Kumar`_.
 
@@ -372,8 +372,8 @@ Bug fixes
   constraints. By :user:`Cathy Deng <cathydeng>`
 
 - Correct ``partial_fit`` handling of ``class_prior`` for
-  :class:`sklearn.naive_bayes.MultinomialNB` and
-  :class:`sklearn.naive_bayes.BernoulliNB`. By `Trevor Stephens`_.
+  :class:`sklearn_fork.naive_bayes.MultinomialNB` and
+  :class:`sklearn_fork.naive_bayes.BernoulliNB`. By `Trevor Stephens`_.
 
 - Fixed a crash in :func:`metrics.precision_recall_fscore_support`
   when using unsorted ``labels`` in the multi-label setting.
@@ -381,7 +381,7 @@ Bug fixes
 
 - Avoid skipping the first nearest neighbor in the methods ``radius_neighbors``,
   ``kneighbors``, ``kneighbors_graph`` and ``radius_neighbors_graph`` in
-  :class:`sklearn.neighbors.NearestNeighbors` and family, when the query
+  :class:`sklearn_fork.neighbors.NearestNeighbors` and family, when the query
   data is not the same as fit data. By `Manoj Kumar`_.
 
 - Fix log-density calculation in the :class:`mixture.GMM` with
@@ -452,9 +452,9 @@ API changes summary
   positive. By `Manoj Kumar`_.
 
 - Users should now supply an explicit ``average`` parameter to
-  :func:`sklearn.metrics.f1_score`, :func:`sklearn.metrics.fbeta_score`,
-  :func:`sklearn.metrics.recall_score` and
-  :func:`sklearn.metrics.precision_score` when performing multiclass
+  :func:`sklearn_fork.metrics.f1_score`, :func:`sklearn_fork.metrics.fbeta_score`,
+  :func:`sklearn_fork.metrics.recall_score` and
+  :func:`sklearn_fork.metrics.precision_score` when performing multiclass
   or multilabel (i.e. not binary) classification. By `Joel Nothman`_.
 
 - `scoring` parameter for cross validation now accepts `'f1_micro'`,
@@ -476,7 +476,7 @@ API changes summary
 
 - Allow ``X=None`` in the methods ``radius_neighbors``, ``kneighbors``,
   ``kneighbors_graph`` and ``radius_neighbors_graph`` in
-  :class:`sklearn.neighbors.NearestNeighbors` and family. If set to None,
+  :class:`sklearn_fork.neighbors.NearestNeighbors` and family. If set to None,
   then for every sample this avoids setting the sample itself as the
   first nearest neighbor. By `Manoj Kumar`_.
 

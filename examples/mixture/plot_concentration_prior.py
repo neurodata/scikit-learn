@@ -37,7 +37,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
-from sklearn.mixture import BayesianGaussianMixture
+from sklearn_fork.mixture import BayesianGaussianMixture
 
 
 def plot_ellipses(ax, weights, means, covars):

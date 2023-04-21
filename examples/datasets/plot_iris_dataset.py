@@ -25,8 +25,8 @@ import matplotlib.pyplot as plt
 # unused but required import for doing 3d projections with matplotlib < 3.2
 import mpl_toolkits.mplot3d  # noqa: F401
 
-from sklearn import datasets
-from sklearn.decomposition import PCA
+from sklearn_fork import datasets
+from sklearn_fork.decomposition import PCA
 
 # import some data to play with
 iris = datasets.load_iris()

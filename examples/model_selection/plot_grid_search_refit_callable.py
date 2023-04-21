@@ -23,11 +23,11 @@ NY, USA: Springer New York Inc..
 import numpy as np
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import load_digits
-from sklearn.decomposition import PCA
-from sklearn.model_selection import GridSearchCV
-from sklearn.pipeline import Pipeline
-from sklearn.svm import LinearSVC
+from sklearn_fork.datasets import load_digits
+from sklearn_fork.decomposition import PCA
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork.pipeline import Pipeline
+from sklearn_fork.svm import LinearSVC
 
 
 def lower_bound(cv_results):

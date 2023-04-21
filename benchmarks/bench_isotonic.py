@@ -13,7 +13,7 @@ visualized and understood.
 import numpy as np
 import gc
 from datetime import datetime
-from sklearn.isotonic import isotonic_regression
+from sklearn_fork.isotonic import isotonic_regression
 from scipy.special import expit
 import matplotlib.pyplot as plt
 import argparse

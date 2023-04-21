@@ -24,10 +24,10 @@ larger, or when the grid of parameter to search is large.
 from tempfile import TemporaryDirectory
 import matplotlib.pyplot as plt
 
-from sklearn.neighbors import KNeighborsTransformer, KNeighborsClassifier
-from sklearn.model_selection import GridSearchCV
-from sklearn.datasets import load_digits
-from sklearn.pipeline import Pipeline
+from sklearn_fork.neighbors import KNeighborsTransformer, KNeighborsClassifier
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork.datasets import load_digits
+from sklearn_fork.pipeline import Pipeline
 
 X, y = load_digits(return_X_y=True)
 n_neighbors_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]

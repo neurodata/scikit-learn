@@ -102,19 +102,19 @@ one step. In particular:
     X = df[["feature_name"]]
     y = df["target"]
 
-    from sklearn.model_selection import train_test_split
+    from sklearn_fork.model_selection import train_test_split
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.33, random_state=42
     )
 
-    from sklearn.preprocessing import StandardScaler
+    from sklearn_fork.preprocessing import StandardScaler
 
     scaler = StandardScaler(with_mean=False)
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    from sklearn.ensemble import GradientBoostingRegressor
+    from sklearn_fork.ensemble import GradientBoostingRegressor
 
     gbdt = GradientBoostingRegressor(random_state=0)
     gbdt.fit(X_train, y_train)  # no warning
@@ -154,7 +154,7 @@ In particular, for this specific example:
     X = df[["feature_name"]]
     y = df["target"]
 
-    from sklearn.ensemble import GradientBoostingRegressor
+    from sklearn_fork.ensemble import GradientBoostingRegressor
 
     gbdt = GradientBoostingRegressor()
     gbdt.fit(X, y)  # no warning
@@ -168,7 +168,7 @@ In particular, for this specific example:
 
 The idea is to make the code as self-contained as possible. For doing so, you
 can use a :ref:`synth_data`. It can be generated using numpy, pandas or the
-:mod:`sklearn.datasets` module. Most of the times the bug is not related to a
+:mod:`sklearn_fork.datasets` module. Most of the times the bug is not related to a
 particular structure of your data. Even if it is, try to find an available
 dataset that has similar characteristics to yours and that reproduces the
 problem. In this particular case, we are interested in data that has labeled
@@ -179,7 +179,7 @@ feature names.
 .. code-block:: python
 
     import pandas as pd
-    from sklearn.ensemble import GradientBoostingRegressor
+    from sklearn_fork.ensemble import GradientBoostingRegressor
 
     df = pd.DataFrame(
         {
@@ -226,7 +226,7 @@ supports an optional language identifier to enable syntax highlighting in your
 fenced code block. For example::
 
     ```python
-    from sklearn.datasets import make_blobs
+    from sklearn_fork.datasets import make_blobs
 
     n_samples = 100
     n_components = 3
@@ -237,7 +237,7 @@ will render a python formatted snippet as follows
 
 .. code-block:: python
 
-    from sklearn.datasets import make_blobs
+    from sklearn_fork.datasets import make_blobs
 
     n_samples = 100
     n_components = 3
@@ -317,7 +317,7 @@ can be used to create dummy numeric data.
         y = rng.randn(n_samples)
 
 A similar snippet can be used as synthetic data when testing scaling tools such
-as :class:`sklearn.preprocessing.StandardScaler`.
+as :class:`sklearn_fork.preprocessing.StandardScaler`.
 
 - classification
 
@@ -381,26 +381,26 @@ used to build artificial datasets of controlled size and complexity.
 `make_regression`
 -----------------
 
-As hinted by the name, :class:`sklearn.datasets.make_regression` produces
+As hinted by the name, :class:`sklearn_fork.datasets.make_regression` produces
 regression targets with noise as an optionally-sparse random linear combination
 of random features.
 
 .. code-block:: python
 
-    from sklearn.datasets import make_regression
+    from sklearn_fork.datasets import make_regression
 
     X, y = make_regression(n_samples=1000, n_features=20)
 
 `make_classification`
 ---------------------
 
-:class:`sklearn.datasets.make_classification` creates multiclass datasets with multiple Gaussian
+:class:`sklearn_fork.datasets.make_classification` creates multiclass datasets with multiple Gaussian
 clusters per class. Noise can be introduced by means of correlated, redundant or
 uninformative features.
 
 .. code-block:: python
 
-    from sklearn.datasets import make_classification
+    from sklearn_fork.datasets import make_classification
 
     X, y = make_classification(
         n_features=2, n_redundant=0, n_informative=2, n_clusters_per_class=1
@@ -409,14 +409,14 @@ uninformative features.
 `make_blobs`
 ------------
 
-Similarly to `make_classification`, :class:`sklearn.datasets.make_blobs` creates
+Similarly to `make_classification`, :class:`sklearn_fork.datasets.make_blobs` creates
 multiclass datasets using normally-distributed clusters of points. It provides
 greater control regarding the centers and standard deviations of each cluster,
 and therefore it is useful to demonstrate clustering.
 
 .. code-block:: python
 
-    from sklearn.datasets import make_blobs
+    from sklearn_fork.datasets import make_blobs
 
     X, y = make_blobs(n_samples=10, centers=3, n_features=2)
 
@@ -429,6 +429,6 @@ of the data, e.g. dealing with missing values or image recognition.
 
 .. code-block:: python
 
-    from sklearn.datasets import load_breast_cancer
+    from sklearn_fork.datasets import load_breast_cancer
 
     X, y = load_breast_cancer(return_X_y=True)

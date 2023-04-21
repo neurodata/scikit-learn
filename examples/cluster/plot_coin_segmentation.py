@@ -33,8 +33,8 @@ import matplotlib.pyplot as plt
 from skimage.data import coins
 from skimage.transform import rescale
 
-from sklearn.feature_extraction import image
-from sklearn.cluster import spectral_clustering
+from sklearn_fork.feature_extraction import image
+from sklearn_fork.cluster import spectral_clustering
 
 
 # load the coins as a numpy array

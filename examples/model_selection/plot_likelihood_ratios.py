@@ -3,7 +3,7 @@
 Class Likelihood Ratios to measure classification performance
 =============================================================
 
-This example demonstrates the :func:`~sklearn.metrics.class_likelihood_ratios`
+This example demonstrates the :func:`~sklearn_fork.metrics.class_likelihood_ratios`
 function, which computes the positive and negative likelihood ratios (`LR+`,
 `LR-`) to assess the predictive power of a binary classifier. As we will see,
 these metrics are independent of the proportion between classes in the test set,
@@ -36,7 +36,7 @@ prevalence of the positive class.
 # disease indicators `y` (ground truth). Most of the people in the population do
 # not carry the disease but a minority (in this case around 10%) does:
 
-from sklearn.datasets import make_classification
+from sklearn_fork.datasets import make_classification
 
 X, y = make_classification(n_samples=10_000, weights=[0.9, 0.1], random_state=0)
 print(f"Percentage of people carrying the disease: {100*y.mean():.2f}%")
@@ -46,7 +46,7 @@ print(f"Percentage of people carrying the disease: {100*y.mean():.2f}%")
 # physiological measurements is likely to carry the disease of interest. To
 # evaluate the model, we need to assess its performance on a held-out test set:
 
-from sklearn.model_selection import train_test_split
+from sklearn_fork.model_selection import train_test_split
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
@@ -55,8 +55,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 # ratio to evaluate the usefulness of this classifier as a disease diagnosis
 # tool:
 
-from sklearn.metrics import class_likelihood_ratios
-from sklearn.linear_model import LogisticRegression
+from sklearn_fork.metrics import class_likelihood_ratios
+from sklearn_fork.linear_model import LogisticRegression
 
 estimator = LogisticRegression().fit(X_train, y_train)
 y_pred = estimator.predict(X_test)
@@ -95,10 +95,10 @@ def extract_score(cv_results):
 
 
 # %%
-# We first validate the :class:`~sklearn.linear_model.LogisticRegression` model
+# We first validate the :class:`~sklearn_fork.linear_model.LogisticRegression` model
 # with default hyperparameters as used in the previous section.
 
-from sklearn.model_selection import cross_validate
+from sklearn_fork.model_selection import cross_validate
 
 estimator = LogisticRegression()
 extract_score(cross_validate(estimator, X, y, scoring=scoring, cv=10))
@@ -111,7 +111,7 @@ extract_score(cross_validate(estimator, X, y, scoring=scoring, cv=10))
 # predictions with similar odds as the average disease prevalence in the
 # training set:
 
-from sklearn.dummy import DummyClassifier
+from sklearn_fork.dummy import DummyClassifier
 
 estimator = DummyClassifier(strategy="stratified", random_state=1234)
 extract_score(cross_validate(estimator, X, y, scoring=scoring, cv=10))
@@ -131,7 +131,7 @@ extract_score(cross_validate(estimator, X, y, scoring=scoring, cv=10))
 # false positives, leading to an undefined `LR+` that by no means should be
 # interpreted as an infinite `LR+` (the classifier perfectly identifying
 # positive cases). In such situation the
-# :func:`~sklearn.metrics.class_likelihood_ratios` function returns `nan` and
+# :func:`~sklearn_fork.metrics.class_likelihood_ratios` function returns `nan` and
 # raises a warning by default. Indeed, the value of `LR-` helps us discard this
 # model.
 #
@@ -158,17 +158,17 @@ extract_score(cross_validate(estimator, X, y, scoring=scoring, cv=10))
 # :ref:`sphx_glr_auto_examples_svm_plot_separating_hyperplane_unbalanced.py` for
 # a study of the boundary decision for unbalanced classes).
 #
-# Here we train a :class:`~sklearn.linear_model.LogisticRegression` base model
+# Here we train a :class:`~sklearn_fork.linear_model.LogisticRegression` base model
 # on a case-control study with a prevalence of 50%. It is then evaluated over
 # populations with varying prevalence. We use the
-# :func:`~sklearn.datasets.make_classification` function to ensure the
+# :func:`~sklearn_fork.datasets.make_classification` function to ensure the
 # data-generating process is always the same as shown in the plots below. The
 # label `1` corresponds to the positive class "disease", whereas the label `0`
 # stands for "no-disease".
 
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.inspection import DecisionBoundaryDisplay
+from sklearn_fork.inspection import DecisionBoundaryDisplay
 from collections import defaultdict
 
 populations = defaultdict(list)

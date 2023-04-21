@@ -3,7 +3,7 @@
 Categorical Feature Support in Gradient Boosting
 ================================================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 In this example, we will compare the training times and prediction
 performances of :class:`~ensemble.HistGradientBoostingRegressor` with
@@ -28,7 +28,7 @@ and categorical features, where the houses' sales prices is the target.
 # -------------------------
 # First, we load the Ames Housing data as a pandas dataframe. The features
 # are either categorical or numerical:
-from sklearn.datasets import fetch_openml
+from sklearn_fork.datasets import fetch_openml
 
 X, y = fetch_openml(data_id=42165, as_frame=True, return_X_y=True, parser="pandas")
 
@@ -77,10 +77,10 @@ print(f"Number of numerical features: {n_numerical_features}")
 # As a baseline, we create an estimator where the categorical features are
 # dropped:
 
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.pipeline import make_pipeline
-from sklearn.compose import make_column_transformer
-from sklearn.compose import make_column_selector
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.compose import make_column_transformer
+from sklearn_fork.compose import make_column_selector
 
 dropper = make_column_transformer(
     ("drop", make_column_selector(dtype_include="category")), remainder="passthrough"
@@ -93,7 +93,7 @@ hist_dropped = make_pipeline(dropper, HistGradientBoostingRegressor(random_state
 # Next, we create a pipeline that will one-hot encode the categorical features
 # and let the rest of the numerical data to passthrough:
 
-from sklearn.preprocessing import OneHotEncoder
+from sklearn_fork.preprocessing import OneHotEncoder
 
 one_hot_encoder = make_column_transformer(
     (
@@ -114,7 +114,7 @@ hist_one_hot = make_pipeline(
 # were ordered quantities, i.e. the categories will be encoded as 0, 1, 2,
 # etc., and treated as continuous features.
 
-from sklearn.preprocessing import OrdinalEncoder
+from sklearn_fork.preprocessing import OrdinalEncoder
 import numpy as np
 
 ordinal_encoder = make_column_transformer(
@@ -166,7 +166,7 @@ hist_native = make_pipeline(
 # models performance in terms of
 # :func:`~metrics.mean_absolute_percentage_error` and fit times.
 
-from sklearn.model_selection import cross_validate
+from sklearn_fork.model_selection import cross_validate
 import matplotlib.pyplot as plt
 
 scoring = "neg_mean_absolute_percentage_error"

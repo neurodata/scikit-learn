@@ -3,7 +3,7 @@
 IsolationForest example
 =======================
 
-An example using :class:`~sklearn.ensemble.IsolationForest` for anomaly
+An example using :class:`~sklearn_fork.ensemble.IsolationForest` for anomaly
 detection.
 
 The :ref:`isolation_forest` is an ensemble of "Isolation Trees" that "isolate"
@@ -25,13 +25,13 @@ Isolation Forest trained on a toy dataset.
 # :func:`numpy.random.randn`. One of them is spherical and the other one is
 # slightly deformed.
 #
-# For consistency with the :class:`~sklearn.ensemble.IsolationForest` notation,
+# For consistency with the :class:`~sklearn_fork.ensemble.IsolationForest` notation,
 # the inliers (i.e. the gaussian clusters) are assigned a ground truth label `1`
 # whereas the outliers (created with :func:`numpy.random.uniform`) are assigned
 # the label `-1`.
 
 import numpy as np
-from sklearn.model_selection import train_test_split
+from sklearn_fork.model_selection import train_test_split
 
 n_samples, n_outliers = 120, 40
 rng = np.random.RandomState(0)
@@ -63,7 +63,7 @@ plt.show()
 # Training of the model
 # ---------------------
 
-from sklearn.ensemble import IsolationForest
+from sklearn_fork.ensemble import IsolationForest
 
 clf = IsolationForest(max_samples=100, random_state=0)
 clf.fit(X_train)
@@ -72,13 +72,13 @@ clf.fit(X_train)
 # Plot discrete decision boundary
 # -------------------------------
 #
-# We use the class :class:`~sklearn.inspection.DecisionBoundaryDisplay` to
+# We use the class :class:`~sklearn_fork.inspection.DecisionBoundaryDisplay` to
 # visualize a discrete decision boundary. The background color represents
 # whether a sample in that given area is predicted to be an outlier
 # or not. The scatter plot displays the true labels.
 
 import matplotlib.pyplot as plt
-from sklearn.inspection import DecisionBoundaryDisplay
+from sklearn_fork.inspection import DecisionBoundaryDisplay
 
 disp = DecisionBoundaryDisplay.from_estimator(
     clf,
@@ -97,7 +97,7 @@ plt.show()
 # ----------------------------------
 #
 # By setting the `response_method="decision_function"`, the background of the
-# :class:`~sklearn.inspection.DecisionBoundaryDisplay` represents the measure of
+# :class:`~sklearn_fork.inspection.DecisionBoundaryDisplay` represents the measure of
 # normality of an observation. Such score is given by the path length averaged
 # over a forest of random trees, which itself is given by the depth of the leaf
 # (or equivalently the number of splits) required to isolate a given sample.

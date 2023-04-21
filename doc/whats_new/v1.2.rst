@@ -1,6 +1,6 @@
 .. include:: _contributors.rst
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 .. _changes_1_2_2:
 
@@ -12,35 +12,35 @@ Version 1.2.2
 Changelog
 ---------
 
-:mod:`sklearn.base`
+:mod:`sklearn_fork.base`
 ...................
 
 - |Fix| When `set_output(transform="pandas")`, :class:`base.TransformerMixin` maintains
   the index if the :term:`transform` output is already a DataFrame. :pr:`25747` by
   `Thomas Fan`_.
 
-:mod:`sklearn.calibration`
+:mod:`sklearn_fork.calibration`
 ..........................
 
 - |Fix| A deprecation warning is raised when using the `base_estimator__` prefix to
   set parameters of the estimator used in :class:`calibration.CalibratedClassifierCV`.
   :pr:`25477` by :user:`Tim Head <betatim>`.
 
-:mod:`sklearn.cluster`
+:mod:`sklearn_fork.cluster`
 ......................
 
 - |Fix| Fixed a bug in :class:`cluster.BisectingKMeans`, preventing `fit` to randomly
   fail due to a permutation of the labels when running multiple inits.
   :pr:`25563` by :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.compose`
+:mod:`sklearn_fork.compose`
 ......................
 
 - |Fix| Fixes a bug in :class:`compose.ColumnTransformer` which now supports
   empty selection of columns when `set_output(transform="pandas")`.
   :pr:`25570` by `Thomas Fan`_.
 
-:mod:`sklearn.ensemble`
+:mod:`sklearn_fork.ensemble`
 .......................
 
 - |Fix| A deprecation warning is raised when using the `base_estimator__` prefix
@@ -49,14 +49,14 @@ Changelog
   and :class:`ensemble.BaggingRegressor`.
   :pr:`25477` by :user:`Tim Head <betatim>`.
 
-:mod:`sklearn.feature_selection`
+:mod:`sklearn_fork.feature_selection`
 ................................
 
 - |Fix| Fixed a regression where a negative `tol` would not be accepted any more by
   :class:`feature_selection.SequentialFeatureSelector`.
   :pr:`25664` by :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.inspection`
+:mod:`sklearn_fork.inspection`
 .........................
 
 - |Fix| Raise a more informative error message in :func:`inspection.partial_dependence`
@@ -65,7 +65,7 @@ Changelog
   missing values are present using `np.nan`.
   :pr:`25774` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.isotonic`
+:mod:`sklearn_fork.isotonic`
 .......................
 
 - |Fix| Fixes a bug in :class:`isotonic.IsotonicRegression` where
@@ -73,7 +73,7 @@ Changelog
   when the global configuration sets `transform_output="pandas"`.
   :pr:`25500` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.preprocessing`
+:mod:`sklearn_fork.preprocessing`
 ............................
 
 - |Fix| :attr:`preprocessing.OneHotEncoder.drop_idx_` now properly 
@@ -84,7 +84,7 @@ Changelog
   `encoded_missing_value` or `unknown_value` set to a categories' cardinality
   when there is missing values in the training data. :pr:`25704` by `Thomas Fan`_.
 
-:mod:`sklearn.tree`
+:mod:`sklearn_fork.tree`
 ...................
 
 - |Fix| Fixed a regression in :class:`tree.DecisionTreeClassifier`,
@@ -93,7 +93,7 @@ Changelog
   1.2 when `min_sample_split=1`.
   :pr:`25744` by :user:`Jérémie du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.utils`
+:mod:`sklearn_fork.utils`
 ....................
 
 - |Fix| Fixes a bug in :func:`utils.check_array` which now correctly performs
@@ -139,7 +139,7 @@ Changes impacting all modules
 
 - |Fix| Fix a bug where the current configuration was ignored in estimators using
   `n_jobs > 1`. This bug was triggered for tasks dispatched by the auxillary
-  thread of `joblib` as :func:`sklearn.get_config` used to access an empty thread
+  thread of `joblib` as :func:`sklearn_fork.get_config` used to access an empty thread
   local configuration instead of the configuration visible from the thread where
   `joblib.Parallel` was first called.
   :pr:`25363` by :user:`Guillaume Lemaitre <glemaitre>`.
@@ -147,7 +147,7 @@ Changes impacting all modules
 Changelog
 ---------
 
-:mod:`sklearn.base`
+:mod:`sklearn_fork.base`
 ...................
 
 - |Fix| Fix a regression in `BaseEstimator.__getstate__` that would prevent
@@ -157,7 +157,7 @@ Changelog
 - |Fix| Inheriting from :class:`base.TransformerMixin` will only wrap the `transform`
   method if the class defines `transform` itself. :pr:`25295` by `Thomas Fan`_.
 
-:mod:`sklearn.datasets`
+:mod:`sklearn_fork.datasets`
 .......................
 
 - |Fix| Fixes an inconsistency in :func:`datasets.fetch_openml` between liac-arff
@@ -169,7 +169,7 @@ Changelog
   where single quote and backslash escape characters were not properly handled.
   :pr:`25511` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.decomposition`
+:mod:`sklearn_fork.decomposition`
 ............................
 
 - |Fix| Fixed a bug in :class:`decomposition.MiniBatchDictionaryLearning` where the
@@ -182,7 +182,7 @@ Changelog
   when it is used with coordinate descent algorithms (i.e. when `fit_algorithm='cd'`).
   :pr:`25172` by :user:`Julien Jerphanion <jjerphan>`.
 
-:mod:`sklearn.ensemble`
+:mod:`sklearn_fork.ensemble`
 .......................
 
 - |Fix| :class:`ensemble.RandomForestClassifier`,
@@ -190,13 +190,13 @@ Changelog
   and :class:`ensemble.ExtraTreesRegressor` now support sparse readonly datasets.
   :pr:`25341` by :user:`Julien Jerphanion <jjerphan>`
 
-:mod:`sklearn.feature_extraction`
+:mod:`sklearn_fork.feature_extraction`
 .................................
 
 - |Fix| :class:`feature_extraction.FeatureHasher` raises an informative error
   when the input is a list of strings. :pr:`25094` by `Thomas Fan`_.
 
-:mod:`sklearn.linear_model`
+:mod:`sklearn_fork.linear_model`
 ...........................
 
 - |Fix| Fix a regression in :class:`linear_model.SGDClassifier` and
@@ -204,13 +204,13 @@ Changelog
   `verbose` parameter set to a value greater than 0.
   :pr:`25250` by :user:`Jérémie Du Boisberranger <jeremiedbb>`.
 
-:mod:`sklearn.manifold`
+:mod:`sklearn_fork.manifold`
 .......................
 
 - |Fix| :class:`manifold.TSNE` now works correctly when output type is
   set to pandas :pr:`25370` by :user:`Tim Head <betatim>`.
 
-:mod:`sklearn.model_selection`
+:mod:`sklearn_fork.model_selection`
 ..............................
 
 - |Fix| :func:`model_selection.cross_validate` with multimetric scoring in
@@ -218,7 +218,7 @@ Changelog
   scores instead of `error_score` values.
   :pr:`23101` by :user:`András Simon <simonandras>` and `Thomas Fan`_.
 
-:mod:`sklearn.neural_network`
+:mod:`sklearn_fork.neural_network`
 .............................
 
 - |Fix| :class:`neural_network.MLPClassifier` and :class:`neural_network.MLPRegressor`
@@ -229,7 +229,7 @@ Changelog
   :class:`neural_network.MLPRegressor`, when `early_stopping=True` and
   :meth:`partial_fit` is called. :pr:`25694` by `Thomas Fan`_.
 
-:mod:`sklearn.preprocessing`
+:mod:`sklearn_fork.preprocessing`
 ............................
 
 - |Fix| :meth:`preprocessing.FunctionTransformer.inverse_transform` correctly
@@ -240,7 +240,7 @@ Changelog
   returns feature names when `extrapolations="periodic"`. :pr:`25296` by
   `Thomas Fan`_.
 
-:mod:`sklearn.tree`
+:mod:`sklearn_fork.tree`
 ...................
 
 - |Fix| :class:`tree.DecisionTreeClassifier`, :class:`tree.DecisionTreeRegressor`
@@ -248,7 +248,7 @@ Changelog
   now support sparse readonly datasets.
   :pr:`25341` by :user:`Julien Jerphanion <jjerphan>`
 
-:mod:`sklearn.utils`
+:mod:`sklearn_fork.utils`
 ....................
 
 - |Fix| Restore :func:`utils.check_array`'s behaviour for pandas Series of type
@@ -337,29 +337,29 @@ Changes impacting all modules
   and estimators now benefit from improved performances in terms of hardware
   scalability and speed-ups:
 
-  - :func:`sklearn.metrics.pairwise_distances_argmin`
-  - :func:`sklearn.metrics.pairwise_distances_argmin_min`
-  - :class:`sklearn.cluster.AffinityPropagation`
-  - :class:`sklearn.cluster.Birch`
-  - :class:`sklearn.cluster.MeanShift`
-  - :class:`sklearn.cluster.OPTICS`
-  - :class:`sklearn.cluster.SpectralClustering`
-  - :func:`sklearn.feature_selection.mutual_info_regression`
-  - :class:`sklearn.neighbors.KNeighborsClassifier`
-  - :class:`sklearn.neighbors.KNeighborsRegressor`
-  - :class:`sklearn.neighbors.RadiusNeighborsClassifier`
-  - :class:`sklearn.neighbors.RadiusNeighborsRegressor`
-  - :class:`sklearn.neighbors.LocalOutlierFactor`
-  - :class:`sklearn.neighbors.NearestNeighbors`
-  - :class:`sklearn.manifold.Isomap`
-  - :class:`sklearn.manifold.LocallyLinearEmbedding`
-  - :class:`sklearn.manifold.TSNE`
-  - :func:`sklearn.manifold.trustworthiness`
-  - :class:`sklearn.semi_supervised.LabelPropagation`
-  - :class:`sklearn.semi_supervised.LabelSpreading`
+  - :func:`sklearn_fork.metrics.pairwise_distances_argmin`
+  - :func:`sklearn_fork.metrics.pairwise_distances_argmin_min`
+  - :class:`sklearn_fork.cluster.AffinityPropagation`
+  - :class:`sklearn_fork.cluster.Birch`
+  - :class:`sklearn_fork.cluster.MeanShift`
+  - :class:`sklearn_fork.cluster.OPTICS`
+  - :class:`sklearn_fork.cluster.SpectralClustering`
+  - :func:`sklearn_fork.feature_selection.mutual_info_regression`
+  - :class:`sklearn_fork.neighbors.KNeighborsClassifier`
+  - :class:`sklearn_fork.neighbors.KNeighborsRegressor`
+  - :class:`sklearn_fork.neighbors.RadiusNeighborsClassifier`
+  - :class:`sklearn_fork.neighbors.RadiusNeighborsRegressor`
+  - :class:`sklearn_fork.neighbors.LocalOutlierFactor`
+  - :class:`sklearn_fork.neighbors.NearestNeighbors`
+  - :class:`sklearn_fork.manifold.Isomap`
+  - :class:`sklearn_fork.manifold.LocallyLinearEmbedding`
+  - :class:`sklearn_fork.manifold.TSNE`
+  - :func:`sklearn_fork.manifold.trustworthiness`
+  - :class:`sklearn_fork.semi_supervised.LabelPropagation`
+  - :class:`sklearn_fork.semi_supervised.LabelSpreading`
 
-  For instance :class:`sklearn.neighbors.NearestNeighbors.kneighbors` and
-  :class:`sklearn.neighbors.NearestNeighbors.radius_neighbors`
+  For instance :class:`sklearn_fork.neighbors.NearestNeighbors.kneighbors` and
+  :class:`sklearn_fork.neighbors.NearestNeighbors.radius_neighbors`
   can respectively be up to ×20 and ×5 faster than previously on a laptop.
 
   Moreover, implementations of those two algorithms are now suitable
@@ -382,20 +382,20 @@ Changes impacting all modules
   for all distance metrics and for float32 and float64 datasets has been added
   or has seen its performance improved for the following estimators:
 
-  - :func:`sklearn.metrics.pairwise_distances_argmin`
-  - :func:`sklearn.metrics.pairwise_distances_argmin_min`
-  - :class:`sklearn.cluster.AffinityPropagation`
-  - :class:`sklearn.cluster.Birch`
-  - :class:`sklearn.cluster.SpectralClustering`
-  - :class:`sklearn.neighbors.KNeighborsClassifier`
-  - :class:`sklearn.neighbors.KNeighborsRegressor`
-  - :class:`sklearn.neighbors.RadiusNeighborsClassifier`
-  - :class:`sklearn.neighbors.RadiusNeighborsRegressor`
-  - :class:`sklearn.neighbors.LocalOutlierFactor`
-  - :class:`sklearn.neighbors.NearestNeighbors`
-  - :class:`sklearn.manifold.Isomap`
-  - :class:`sklearn.manifold.TSNE`
-  - :func:`sklearn.manifold.trustworthiness`
+  - :func:`sklearn_fork.metrics.pairwise_distances_argmin`
+  - :func:`sklearn_fork.metrics.pairwise_distances_argmin_min`
+  - :class:`sklearn_fork.cluster.AffinityPropagation`
+  - :class:`sklearn_fork.cluster.Birch`
+  - :class:`sklearn_fork.cluster.SpectralClustering`
+  - :class:`sklearn_fork.neighbors.KNeighborsClassifier`
+  - :class:`sklearn_fork.neighbors.KNeighborsRegressor`
+  - :class:`sklearn_fork.neighbors.RadiusNeighborsClassifier`
+  - :class:`sklearn_fork.neighbors.RadiusNeighborsRegressor`
+  - :class:`sklearn_fork.neighbors.LocalOutlierFactor`
+  - :class:`sklearn_fork.neighbors.NearestNeighbors`
+  - :class:`sklearn_fork.manifold.Isomap`
+  - :class:`sklearn_fork.manifold.TSNE`
+  - :func:`sklearn_fork.manifold.trustworthiness`
 
   :pr:`23604` and :pr:`23585` by :user:`Julien Jerphanion <jjerphan>`,
   :user:`Olivier Grisel <ogrisel>`, and `Thomas Fan`_,
@@ -420,7 +420,7 @@ Changelog
     :pr:`123456` by :user:`Joe Bloggs <joeongithub>`.
     where 123456 is the *pull request* number, not the issue number.
 
-:mod:`sklearn.base`
+:mod:`sklearn_fork.base`
 ...................
 
 - |Enhancement| Introduces :class:`base.ClassNamePrefixFeaturesOutMixin` and
@@ -428,7 +428,7 @@ Changelog
   :term:`get_feature_names_out` for common transformer uses cases.
   :pr:`24688` by `Thomas Fan`_.
 
-:mod:`sklearn.calibration`
+:mod:`sklearn_fork.calibration`
 ..........................
 
 - |API| Rename `base_estimator` to `estimator` in
@@ -436,7 +436,7 @@ Changelog
   The parameter `base_estimator` is deprecated and will be removed in 1.4.
   :pr:`22054` by :user:`Kevin Roice <kevroi>`.
 
-:mod:`sklearn.cluster`
+:mod:`sklearn_fork.cluster`
 ......................
 
 - |Efficiency| :class:`cluster.KMeans` with `algorithm="lloyd"` is now faster
@@ -472,7 +472,7 @@ Changelog
   :class:`cluster.AgglomerativeClustering` and will be renamed to `metric` in v1.4.
   :pr:`23470` by :user:`Meekail Zain <micky774>`.
 
-:mod:`sklearn.datasets`
+:mod:`sklearn_fork.datasets`
 .......................
 
 - |Enhancement| Introduce the new parameter `parser` in
@@ -500,7 +500,7 @@ Changelog
   `slice_` parameter.
   :pr:`24951` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.decomposition`
+:mod:`sklearn_fork.decomposition`
 ............................
 
 - |Efficiency| :func:`decomposition.FastICA.fit` has been optimised w.r.t
@@ -538,7 +538,7 @@ Changelog
   `n_features_in_` and will be removed in 1.4. :pr:`24421` by
   :user:`Kshitij Mathur <Kshitij68>`.
 
-:mod:`sklearn.discriminant_analysis`
+:mod:`sklearn_fork.discriminant_analysis`
 ....................................
 
 - |MajorFeature| :class:`discriminant_analysis.LinearDiscriminantAnalysis` now
@@ -551,7 +551,7 @@ Changelog
   for :class:`discriminant_analysis.QuadraticDiscriminantAnalysis`.
   :pr:`24218` by :user:`Stefanie Molin <stefmolin>`.
 
-:mod:`sklearn.ensemble`
+:mod:`sklearn_fork.ensemble`
 .......................
 
 - |MajorFeature| :class:`ensemble.HistGradientBoostingClassifier` and
@@ -638,7 +638,7 @@ Changelog
   :pr:`23819` by :user:`Adrian Trujillo <trujillo9616>` and
   :user:`Edoardo Abati <EdAbati>`.
 
-:mod:`sklearn.feature_selection`
+:mod:`sklearn_fork.feature_selection`
 ................................
 
 - |Fix| Fix a bug in :func:`feature_selection.mutual_info_regression` and
@@ -647,7 +647,7 @@ Changelog
   continuous or discrete.
   :pr:`24747` by :user:`Guillaume Lemaitre <glemaitre>`
 
-:mod:`sklearn.gaussian_process`
+:mod:`sklearn_fork.gaussian_process`
 ...............................
 
 - |Fix| Fix :class:`gaussian_process.kernels.Matern` gradient computation with
@@ -659,7 +659,7 @@ Changelog
   method that returns part of the input X. :pr:`24405`
   by :user:`Omar Salman <OmarManzoor>`.
 
-:mod:`sklearn.impute`
+:mod:`sklearn_fork.impute`
 .....................
 
 - |Enhancement| Added `keep_empty_features` parameter to
@@ -668,7 +668,7 @@ Changelog
   containing only missing values when transforming.
   :pr:`16695` by :user:`Vitor Santa Rosa <vitorsrg>`.
 
-:mod:`sklearn.inspection`
+:mod:`sklearn_fork.inspection`
 .........................
 
 - |MajorFeature| Extended :func:`inspection.partial_dependence` and
@@ -680,7 +680,7 @@ Changelog
   data is not 2-dimensional.
   :pr:`25077` by :user:`Arturo Amor <ArturoAmorQ>`.
 
-:mod:`sklearn.kernel_approximation`
+:mod:`sklearn_fork.kernel_approximation`
 ...................................
 
 - |Enhancement| :class:`kernel_approximation.RBFSampler` now preserves
@@ -693,7 +693,7 @@ Changelog
   `'scale'` option for parameter `gamma`.
   :pr:`24755` by :user:`Gleb Levitski <GLevV>`.
 
-:mod:`sklearn.linear_model`
+:mod:`sklearn_fork.linear_model`
 ...........................
 
 - |Enhancement| :class:`linear_model.LogisticRegression`,
@@ -742,7 +742,7 @@ Changelog
   :class:`linear_model.RidgeClassifier`.
   :pr:`24465` by :user:`Christian Lorentzen <lorentzenchr>`.
 
-:mod:`sklearn.manifold`
+:mod:`sklearn_fork.manifold`
 .......................
 
 - |Feature| Adds option to use the normalized stress in :class:`manifold.MDS`. This is
@@ -772,7 +772,7 @@ Changelog
   in version 1.4.
   :pr:`23834` by :user:`Meekail Zain <micky774>`
 
-:mod:`sklearn.metrics`
+:mod:`sklearn_fork.metrics`
 ......................
 
 - |Feature| :func:`metrics.ConfusionMatrixDisplay.from_estimator`,
@@ -822,7 +822,7 @@ Changelog
   :func:`metrics.pairwise.manhattan_distances` is deprecated and will be removed in 1.4.
   :pr:`24630` by :user:`Rushil Desai <rusdes>`.
 
-:mod:`sklearn.model_selection`
+:mod:`sklearn_fork.model_selection`
 ..............................
 
 - |Feature| Added the class :class:`model_selection.LearningCurveDisplay`
@@ -844,7 +844,7 @@ Changelog
   scores will all be set to the maximum possible rank.
   :pr:`24543` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.multioutput`
+:mod:`sklearn_fork.multioutput`
 ..........................
 
 - |Feature| Added boolean `verbose` flag to classes:
@@ -854,7 +854,7 @@ Changelog
   :user:`Lucy Liu <lucyleeow>`, and
   :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.naive_bayes`
+:mod:`sklearn_fork.naive_bayes`
 ..........................
 
 - |Feature| Add methods `predict_joint_log_proba` to all naive Bayes classifiers.
@@ -869,7 +869,7 @@ Changelog
   :pr:`18805` by :user:`hongshaoyang`,
   :pr:`22269` by :user:`Meekail Zain <micky774>`.
 
-:mod:`sklearn.neighbors`
+:mod:`sklearn_fork.neighbors`
 ........................
 
 - |Feature| Adds new function :func:`neighbors.sort_graph_by_row_values` to
@@ -905,7 +905,7 @@ Changelog
   dtype for `numpy.float32` inputs.
   :pr:`22665` by :user:`Julien Jerphanion <jjerphan>`.
 
-:mod:`sklearn.neural_network`
+:mod:`sklearn_fork.neural_network`
 .............................
 
 - |Fix| :class:`neural_network.MLPClassifier` and
@@ -915,7 +915,7 @@ Changelog
   `best_validation_score_` are set to `None` when `early_stopping=False`.
   :pr:`24683` by :user:`Guillaume Lemaitre <glemaitre>`.
 
-:mod:`sklearn.pipeline`
+:mod:`sklearn_fork.pipeline`
 .......................
 
 - |Enhancement| :meth:`pipeline.FeatureUnion.get_feature_names_out` can now
@@ -926,7 +926,7 @@ Changelog
   attribute for accessing transformers by name.
   :pr:`20331` by :user:`Christopher Flynn <crflynn>`.
 
-:mod:`sklearn.preprocessing`
+:mod:`sklearn_fork.preprocessing`
 ............................
 
 - |Enhancement| :class:`preprocessing.FunctionTransformer` will always try to set
@@ -940,20 +940,20 @@ Changelog
   is now deprecated and will be removed in version 1.4. Use `sparse_output` instead.
   :pr:`24412` by :user:`Rushil Desai <rusdes>`.
 
-:mod:`sklearn.svm`
+:mod:`sklearn_fork.svm`
 ..................
 
 - |API| The `class_weight_` attribute is now deprecated for
   :class:`svm.NuSVR`, :class:`svm.SVR`, :class:`svm.OneClassSVM`.
   :pr:`22898` by :user:`Meekail Zain <micky774>`.
 
-:mod:`sklearn.tree`
+:mod:`sklearn_fork.tree`
 ...................
 
 - |Enhancement| :func:`tree.plot_tree`, :func:`tree.export_graphviz` now uses
   a lower case `x[i]` to represent feature `i`. :pr:`23480` by `Thomas Fan`_.
 
-:mod:`sklearn.utils`
+:mod:`sklearn_fork.utils`
 ....................
 
 - |Feature| A new module exposes development tools to discover estimators (i.e.

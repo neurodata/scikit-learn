@@ -1,6 +1,6 @@
 .. include:: _contributors.rst
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 .. _changes_0_12.1:
 
@@ -130,7 +130,7 @@ API changes summary
 -------------------
 
 - The old ``scikits.learn`` package has disappeared; all code should import
-  from ``sklearn`` instead, which was introduced in 0.9.
+  from ``sklearn_fork`` instead, which was introduced in 0.9.
 
 - In :func:`metrics.roc_curve`, the ``thresholds`` array is now returned
   with it's order reversed, in order to keep it consistent with the order
@@ -282,11 +282,11 @@ Highlights
 - Added BIC/AIC model selection to classical :ref:`gmm` and unified
   the API with the remainder of scikit-learn, by `Bertrand Thirion`_
 
-- Added :class:`~sklearn.cross_validation.StratifiedShuffleSplit`, which is
-  a :class:`~sklearn.cross_validation.ShuffleSplit` with balanced splits,
+- Added :class:`~sklearn_fork.cross_validation.StratifiedShuffleSplit`, which is
+  a :class:`~sklearn_fork.cross_validation.ShuffleSplit` with balanced splits,
   by Yannick Schwartz.
 
-- :class:`~sklearn.neighbors.NearestCentroid` classifier added, along with a
+- :class:`~sklearn_fork.neighbors.NearestCentroid` classifier added, along with a
   ``shrink_threshold`` parameter, which implements **shrunken centroid
   classification**, by `Robert Layton`_.
 
@@ -508,7 +508,7 @@ Changelog
 - Faster tests by `Fabian Pedregosa`_ and others.
 
 - Silhouette Coefficient cluster analysis evaluation metric added as
-  :func:`~sklearn.metrics.silhouette_score` by Robert Layton.
+  :func:`~sklearn_fork.metrics.silhouette_score` by Robert Layton.
 
 - Fixed a bug in :ref:`k_means` in the handling of the ``n_init`` parameter:
   the clustering algorithm used to be run ``n_init`` times but the last
@@ -519,7 +519,7 @@ Changelog
   parameters to fortran-style arrays after fitting (only multi-class).
 
 - Adjusted Mutual Information metric added as
-  :func:`~sklearn.metrics.adjusted_mutual_info_score` by Robert Layton.
+  :func:`~sklearn_fork.metrics.adjusted_mutual_info_score` by Robert Layton.
 
 - Models like SVC/SVR/LinearSVC/LogisticRegression from libsvm/liblinear
   now support scaling of C regularization parameter by the number of
@@ -544,11 +544,11 @@ Changelog
 
 - :ref:`k_means` support for sparse matrices by `Mathieu Blondel`_.
 
-- Improved documentation for developers and for the :mod:`sklearn.utils`
+- Improved documentation for developers and for the :mod:`sklearn_fork.utils`
   module, by `Jake Vanderplas`_.
 
 - Vectorized 20newsgroups dataset loader
-  (:func:`~sklearn.datasets.fetch_20newsgroups_vectorized`) by
+  (:func:`~sklearn_fork.datasets.fetch_20newsgroups_vectorized`) by
   `Mathieu Blondel`_.
 
 - :ref:`multiclass` by `Lars Buitinck`_.
@@ -556,8 +556,8 @@ Changelog
 - Utilities for fast computation of mean and variance for sparse matrices
   by `Mathieu Blondel`_.
 
-- Make :func:`~sklearn.preprocessing.scale` and
-  :class:`~sklearn.preprocessing.Scaler` work on sparse matrices by
+- Make :func:`~sklearn_fork.preprocessing.scale` and
+  :class:`~sklearn_fork.preprocessing.Scaler` work on sparse matrices by
   `Olivier Grisel`_
 
 - Feature importances using decision trees and/or forest of trees,
@@ -566,7 +566,7 @@ Changelog
 - Parallel implementation of forests of randomized trees by
   `Gilles Louppe`_.
 
-- :class:`~sklearn.cross_validation.ShuffleSplit` can subsample the train
+- :class:`~sklearn_fork.cross_validation.ShuffleSplit` can subsample the train
   sets as well as the test sets by `Olivier Grisel`_.
 
 - Errors in the build of the documentation fixed by `Andreas Müller`_.
@@ -585,7 +585,7 @@ version 0.9:
   This particularly affects some of the estimators in :mod:`linear_model`.
   The default behavior is still to copy everything passed in.
 
-- The SVMlight dataset loader :func:`~sklearn.datasets.load_svmlight_file` no
+- The SVMlight dataset loader :func:`~sklearn_fork.datasets.load_svmlight_file` no
   longer supports loading two files at once; use ``load_svmlight_files``
   instead. Also, the (unused) ``buffer_mb`` parameter is gone.
 
@@ -611,19 +611,19 @@ version 0.9:
 
 - The functions used for sparse coding, ``sparse_encode`` and
   ``sparse_encode_parallel`` have been combined into
-  :func:`~sklearn.decomposition.sparse_encode`, and the shapes of the arrays
+  :func:`~sklearn_fork.decomposition.sparse_encode`, and the shapes of the arrays
   have been transposed for consistency with the matrix factorization setting,
   as opposed to the regression setting.
 
 - Fixed an off-by-one error in the SVMlight/LibSVM file format handling;
-  files generated using :func:`~sklearn.datasets.dump_svmlight_file` should be
+  files generated using :func:`~sklearn_fork.datasets.dump_svmlight_file` should be
   re-generated. (They should continue to work, but accidentally had one
   extra column of zeros prepended.)
 
 - ``BaseDictionaryLearning`` class replaced by ``SparseCodingMixin``.
 
-- :func:`~sklearn.utils.extmath.fast_svd` has been renamed
-  :func:`~sklearn.utils.extmath.randomized_svd` and the default
+- :func:`~sklearn_fork.utils.extmath.fast_svd` has been renamed
+  :func:`~sklearn_fork.utils.extmath.randomized_svd` and the default
   oversampling is now fixed to 10 additional random vectors instead
   of doubling the number of components to extract. The new behavior
   follows the reference paper.
@@ -794,14 +794,14 @@ API changes summary
 Here are the code migration instructions when upgrading from scikit-learn
 version 0.8:
 
-- The ``scikits.learn`` package was renamed ``sklearn``. There is
+- The ``scikits.learn`` package was renamed ``sklearn_fork``. There is
   still a ``scikits.learn`` package alias for backward compatibility.
 
   Third-party projects with a dependency on scikit-learn 0.9+ should
   upgrade their codebase. For instance, under Linux / MacOSX just run
   (make a backup first!)::
 
-      find -name "*.py" | xargs sed -i 's/\bscikits.learn\b/sklearn/g'
+      find -name "*.py" | xargs sed -i 's/\bscikits.learn\b/sklearn_fork/g'
 
 - Estimators no longer accept model parameters as ``fit`` arguments:
   instead all parameters must be only be passed as constructor
@@ -823,7 +823,7 @@ version 0.8:
       find -name "*.py" | xargs sed -i 's/\bcross_val\b/cross_validation/g'
 
 - The ``score_func`` argument of the
-  ``sklearn.cross_validation.cross_val_score`` function is now expected
+  ``sklearn_fork.cross_validation.cross_val_score`` function is now expected
   to accept ``y_test`` and ``y_predicted`` as only arguments for
   classification and regression tasks or ``X_test`` for unsupervised
   estimators.
@@ -831,12 +831,12 @@ version 0.8:
 - ``gamma`` parameter for support vector machine algorithms is set
   to ``1 / n_features`` by default, instead of ``1 / n_samples``.
 
-- The ``sklearn.hmm`` has been marked as orphaned: it will be removed
+- The ``sklearn_fork.hmm`` has been marked as orphaned: it will be removed
   from scikit-learn in version 0.11 unless someone steps up to
   contribute documentation, examples and fix lurking numerical
   stability issues.
 
-- ``sklearn.neighbors`` has been made into a submodule.  The two previously
+- ``sklearn_fork.neighbors`` has been made into a submodule.  The two previously
   available estimators, ``NeighborsClassifier`` and ``NeighborsRegressor``
   have been marked as deprecated.  Their functionality has been divided
   among five new classes: ``NearestNeighbors`` for unsupervised neighbors
@@ -844,19 +844,19 @@ version 0.8:
   for supervised classification problems, and ``KNeighborsRegressor``
   & ``RadiusNeighborsRegressor`` for supervised regression problems.
 
-- ``sklearn.ball_tree.BallTree`` has been moved to
-  ``sklearn.neighbors.BallTree``.  Using the former will generate a warning.
+- ``sklearn_fork.ball_tree.BallTree`` has been moved to
+  ``sklearn_fork.neighbors.BallTree``.  Using the former will generate a warning.
 
-- ``sklearn.linear_model.LARS()`` and related classes (LassoLARS,
+- ``sklearn_fork.linear_model.LARS()`` and related classes (LassoLARS,
   LassoLARSCV, etc.) have been renamed to
-  ``sklearn.linear_model.Lars()``.
+  ``sklearn_fork.linear_model.Lars()``.
 
-- All distance metrics and kernels in ``sklearn.metrics.pairwise`` now have a Y
+- All distance metrics and kernels in ``sklearn_fork.metrics.pairwise`` now have a Y
   parameter, which by default is None. If not given, the result is the distance
   (or kernel similarity) between each sample in Y. If given, the result is the
   pairwise distance (or kernel similarity) between samples in X to Y.
 
-- ``sklearn.metrics.pairwise.l1_distance`` is now called ``manhattan_distance``,
+- ``sklearn_fork.metrics.pairwise.l1_distance`` is now called ``manhattan_distance``,
   and by default returns the pairwise distance. For the component wise distance,
   set the parameter ``sum_over_features`` to ``False``.
 
@@ -1142,7 +1142,7 @@ Changelog
 
 - Improved sparse matrix support, both in main classes
   (:class:`~grid_search.GridSearchCV`) as in modules
-  sklearn.svm.sparse and sklearn.linear_model.sparse.
+  sklearn_fork.svm.sparse and sklearn_fork.linear_model.sparse.
 
 - Lots of cool new examples and a new section that uses real-world
   datasets was created. These include:
@@ -1243,7 +1243,7 @@ New classes
 - New module feature_extraction (see :ref:`class reference
   <feature_extraction_ref>`)
 
-- New FastICA algorithm in module sklearn.fastica
+- New FastICA algorithm in module sklearn_fork.fastica
 
 
 Documentation
@@ -1284,7 +1284,7 @@ External dependencies
 ---------------------
 
 - Joblib is now a dependency of this package, although it is
-  shipped with (sklearn.externals.joblib).
+  shipped with (sklearn_fork.externals.joblib).
 
 Removed modules
 ---------------

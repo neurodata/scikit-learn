@@ -4,7 +4,7 @@
 Imputation of missing values
 ============================
 
-.. currentmodule:: sklearn.impute
+.. currentmodule:: sklearn_fork.impute
 
 For various reasons, many real world datasets contain missing values, often
 encoded as blanks, NaNs or other placeholders. Such datasets however are
@@ -43,7 +43,7 @@ encoded as ``np.nan``, using the mean value of the columns (axis 0)
 that contain the missing values::
 
     >>> import numpy as np
-    >>> from sklearn.impute import SimpleImputer
+    >>> from sklearn_fork.impute import SimpleImputer
     >>> imp = SimpleImputer(missing_values=np.nan, strategy='mean')
     >>> imp.fit([[1, 2], [np.nan, 3], [7, 6]])
     SimpleImputer()
@@ -115,8 +115,8 @@ imputation round are returned.
 ::
 
     >>> import numpy as np
-    >>> from sklearn.experimental import enable_iterative_imputer
-    >>> from sklearn.impute import IterativeImputer
+    >>> from sklearn_fork.experimental import enable_iterative_imputer
+    >>> from sklearn_fork.impute import IterativeImputer
     >>> imp = IterativeImputer(max_iter=10, random_state=0)
     >>> imp.fit([[1, 2], [3, 6], [4, 8], [np.nan, 3], [7, np.nan]])
     IterativeImputer(random_state=0)
@@ -190,7 +190,7 @@ Nearest neighbors imputation
 
 The :class:`KNNImputer` class provides imputation for filling in missing values
 using the k-Nearest Neighbors approach. By default, a euclidean distance metric
-that supports missing values, :func:`~sklearn.metrics.nan_euclidean_distances`,
+that supports missing values, :func:`~sklearn_fork.metrics.nan_euclidean_distances`,
 is used to find the nearest neighbors. Each missing feature is imputed using
 values from ``n_neighbors`` nearest neighbors that have a value for the
 feature. The feature of the neighbors are averaged uniformly or weighted by
@@ -209,7 +209,7 @@ encoded as ``np.nan``, using the mean feature value of the two nearest
 neighbors of samples with missing values::
 
     >>> import numpy as np
-    >>> from sklearn.impute import KNNImputer
+    >>> from sklearn_fork.impute import KNNImputer
     >>> nan = np.nan
     >>> X = [[1, 2, nan], [3, 4, 3], [nan, 6, 5], [8, 8, 7]]
     >>> imputer = KNNImputer(n_neighbors=2, weights="uniform")
@@ -273,7 +273,7 @@ enforces the data type to be float. The parameter ``missing_values`` allows to
 specify other placeholder such as integer. In the following example, we will
 use ``-1`` as missing values::
 
-  >>> from sklearn.impute import MissingIndicator
+  >>> from sklearn_fork.impute import MissingIndicator
   >>> X = np.array([[-1, -1, 1, 3],
   ...               [4, -1, 0, -1],
   ...               [8, -1, 1, 0]])
@@ -308,11 +308,11 @@ the :class:`FeatureUnion` or :class:`ColumnTransformer` to add the indicator
 features to the regular features. First we obtain the `iris` dataset, and add
 some missing values to it.
 
-  >>> from sklearn.datasets import load_iris
-  >>> from sklearn.impute import SimpleImputer, MissingIndicator
-  >>> from sklearn.model_selection import train_test_split
-  >>> from sklearn.pipeline import FeatureUnion, make_pipeline
-  >>> from sklearn.tree import DecisionTreeClassifier
+  >>> from sklearn_fork.datasets import load_iris
+  >>> from sklearn_fork.impute import SimpleImputer, MissingIndicator
+  >>> from sklearn_fork.model_selection import train_test_split
+  >>> from sklearn_fork.pipeline import FeatureUnion, make_pipeline
+  >>> from sklearn_fork.tree import DecisionTreeClassifier
   >>> X, y = load_iris(return_X_y=True)
   >>> mask = np.random.randint(0, 2, size=X.shape).astype(bool)
   >>> X[mask] = np.nan

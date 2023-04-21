@@ -34,7 +34,7 @@ silhouette   silhouette coefficient
 # to group images such that the handwritten digits on the image are the same.
 
 import numpy as np
-from sklearn.datasets import load_digits
+from sklearn_fork.datasets import load_digits
 
 data, labels = load_digits(return_X_y=True)
 (n_samples, n_features), n_digits = data.shape, np.unique(labels).size
@@ -49,13 +49,13 @@ print(f"# digits: {n_digits}; # samples: {n_samples}; # features {n_features}")
 # compare different initialization methods for KMeans. Our benchmark will:
 #
 # * create a pipeline which will scale the data using a
-#   :class:`~sklearn.preprocessing.StandardScaler`;
+#   :class:`~sklearn_fork.preprocessing.StandardScaler`;
 # * train and time the pipeline fitting;
 # * measure the performance of the clustering obtained via different metrics.
 from time import time
-from sklearn import metrics
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn_fork import metrics
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import StandardScaler
 
 
 def bench_k_means(kmeans, name, data, labels):
@@ -64,7 +64,7 @@ def bench_k_means(kmeans, name, data, labels):
     Parameters
     ----------
     kmeans : KMeans instance
-        A :class:`~sklearn.cluster.KMeans` instance with the initialization
+        A :class:`~sklearn_fork.cluster.KMeans` instance with the initialization
         already set.
     name : str
         Name given to the strategy. It will be used to show the results in a
@@ -118,12 +118,12 @@ def bench_k_means(kmeans, name, data, labels):
 #   run the initialization 4 times;
 # * a random initialization. This method is stochastic as well and we will run
 #   the initialization 4 times;
-# * an initialization based on a :class:`~sklearn.decomposition.PCA`
+# * an initialization based on a :class:`~sklearn_fork.decomposition.PCA`
 #   projection. Indeed, we will use the components of the
-#   :class:`~sklearn.decomposition.PCA` to initialize KMeans. This method is
+#   :class:`~sklearn_fork.decomposition.PCA` to initialize KMeans. This method is
 #   deterministic and a single initialization suffice.
-from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
+from sklearn_fork.cluster import KMeans
+from sklearn_fork.decomposition import PCA
 
 print(82 * "_")
 print("init\t\ttime\tinertia\thomo\tcompl\tv-meas\tARI\tAMI\tsilhouette")
@@ -144,9 +144,9 @@ print(82 * "_")
 # Visualize the results on PCA-reduced data
 # -----------------------------------------
 #
-# :class:`~sklearn.decomposition.PCA` allows to project the data from the
+# :class:`~sklearn_fork.decomposition.PCA` allows to project the data from the
 # original 64-dimensional space into a lower dimensional space. Subsequently,
-# we can use :class:`~sklearn.decomposition.PCA` to project into a
+# we can use :class:`~sklearn_fork.decomposition.PCA` to project into a
 # 2-dimensional space and plot the data and the clusters in this new space.
 import matplotlib.pyplot as plt
 

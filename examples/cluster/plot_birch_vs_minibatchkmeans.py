@@ -32,8 +32,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 
-from sklearn.cluster import Birch, MiniBatchKMeans
-from sklearn.datasets import make_blobs
+from sklearn_fork.cluster import Birch, MiniBatchKMeans
+from sklearn_fork.datasets import make_blobs
 
 
 # Generate centers for the blobs so that it forms a 10 X 10 grid.

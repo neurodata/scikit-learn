@@ -20,8 +20,8 @@ This example was inspired by the `XGBoost documentation
 
 """
 # %%
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.inspection import PartialDependenceDisplay
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.inspection import PartialDependenceDisplay
 import numpy as np
 import matplotlib.pyplot as plt
 

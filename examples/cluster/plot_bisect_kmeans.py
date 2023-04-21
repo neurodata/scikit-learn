@@ -15,8 +15,8 @@ present for regular K-Means.
 """
 import matplotlib.pyplot as plt
 
-from sklearn.datasets import make_blobs
-from sklearn.cluster import BisectingKMeans, KMeans
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.cluster import BisectingKMeans, KMeans
 
 
 print(__doc__)

@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import ticker
 
-from sklearn import neighbors, datasets
+from sklearn_fork import neighbors, datasets
 
 
 def get_data(N, D, dataset="dense"):

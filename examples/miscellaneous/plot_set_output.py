@@ -3,7 +3,7 @@
 Introducing the `set_output` API
 ================================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 This example will demonstrate the `set_output` API to configure transformers to
 output pandas DataFrames. `set_output` can be configured per estimator by calling
@@ -14,8 +14,8 @@ For details, see
 
 # %%
 # First, we load the iris dataset as a DataFrame to demonstrate the `set_output` API.
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.model_selection import train_test_split
 
 X, y = load_iris(as_frame=True, return_X_y=True)
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=0)
@@ -25,7 +25,7 @@ X_train.head()
 # To configure an estimator such as :class:`preprocessing.StandardScaler` to return
 # DataFrames, call `set_output`. This feature requires pandas to be installed.
 
-from sklearn.preprocessing import StandardScaler
+from sklearn_fork.preprocessing import StandardScaler
 
 scaler = StandardScaler().set_output(transform="pandas")
 
@@ -48,9 +48,9 @@ print(f"Configured pandas output type: {type(X_test_df).__name__}")
 # %%
 # In a :class:`pipeline.Pipeline`, `set_output` configures all steps to output
 # DataFrames.
-from sklearn.pipeline import make_pipeline
-from sklearn.linear_model import LogisticRegression
-from sklearn.feature_selection import SelectPercentile
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.feature_selection import SelectPercentile
 
 clf = make_pipeline(
     StandardScaler(), SelectPercentile(percentile=75), LogisticRegression()
@@ -66,7 +66,7 @@ clf[-1].feature_names_in_
 # %%
 # Next we load the titanic dataset to demonstrate `set_output` with
 # :class:`compose.ColumnTransformer` and heterogenous data.
-from sklearn.datasets import fetch_openml
+from sklearn_fork.datasets import fetch_openml
 
 X, y = fetch_openml(
     "titanic", version=1, as_frame=True, return_X_y=True, parser="pandas"
@@ -76,10 +76,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y)
 # %%
 # The `set_output` API can be configured globally by using :func:`set_config` and
 # setting `transform_output` to `"pandas"`.
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.impute import SimpleImputer
-from sklearn import set_config
+from sklearn_fork.compose import ColumnTransformer
+from sklearn_fork.preprocessing import OneHotEncoder, StandardScaler
+from sklearn_fork.impute import SimpleImputer
+from sklearn_fork import set_config
 
 set_config(transform_output="pandas")
 
@@ -121,7 +121,7 @@ set_config(transform_output="default")
 # configuration at the time when `transform` or `fit_transform` are
 # called is what counts. Setting these only when you construct or fit
 # the transformer has no effect.
-from sklearn import config_context
+from sklearn_fork import config_context
 
 scaler = StandardScaler()
 scaler.fit(X_train[num_cols])

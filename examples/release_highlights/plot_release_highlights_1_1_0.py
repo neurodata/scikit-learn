@@ -4,7 +4,7 @@
 Release Highlights for scikit-learn 1.1
 =======================================
 
-.. currentmodule:: sklearn
+.. currentmodule:: sklearn_fork
 
 We are pleased to announce the release of scikit-learn 1.1! Many bug fixes
 and improvements were added, as well as some new key features. We detail
@@ -26,7 +26,7 @@ or with conda::
 # ----------------------------------------------------------------
 # :class:`ensemble.HistGradientBoostingRegressor` can model quantiles with
 # `loss="quantile"` and the new parameter `quantile`.
-from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -58,13 +58,13 @@ _ = ax.legend(loc="lower left")
 # :term:`get_feature_names_out` is now available in all Transformers. This enables
 # :class:`pipeline.Pipeline` to construct the output feature names for more complex
 # pipelines:
-from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from sklearn.pipeline import make_pipeline
-from sklearn.impute import SimpleImputer
-from sklearn.feature_selection import SelectKBest
-from sklearn.datasets import fetch_openml
-from sklearn.linear_model import LogisticRegression
+from sklearn_fork.compose import ColumnTransformer
+from sklearn_fork.preprocessing import OneHotEncoder, StandardScaler
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.impute import SimpleImputer
+from sklearn_fork.feature_selection import SelectKBest
+from sklearn_fork.datasets import fetch_openml
+from sklearn_fork.linear_model import LogisticRegression
 
 X, y = fetch_openml(
     "titanic", version=1, as_frame=True, return_X_y=True, parser="pandas"
@@ -107,7 +107,7 @@ plt.tight_layout()
 # output for each feature. The parameters to enable the gathering of infrequent
 # categories are `min_frequency` and `max_categories`. See the
 # :ref:`User Guide <one_hot_encoder_infrequent_categories>` for more details.
-from sklearn.preprocessing import OneHotEncoder
+from sklearn_fork.preprocessing import OneHotEncoder
 import numpy as np
 
 X = np.array(
@@ -175,7 +175,7 @@ pd.DataFrame(encoded, columns=enc.get_feature_names_out())
 # online learning when the data is not readily available from the start, or when the
 # data does not fit into memory.
 import numpy as np
-from sklearn.decomposition import MiniBatchNMF
+from sklearn_fork.decomposition import MiniBatchNMF
 
 rng = np.random.RandomState(0)
 n_samples, n_features, n_components = 10, 10, 5
@@ -205,8 +205,8 @@ print(
 # are picked progressively based on a previous clustering: a cluster is split into two
 # new clusters repeatedly until the target number of clusters is reached, giving a
 # hierarchical structure to the clustering.
-from sklearn.datasets import make_blobs
-from sklearn.cluster import KMeans, BisectingKMeans
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.cluster import KMeans, BisectingKMeans
 import matplotlib.pyplot as plt
 
 X, _ = make_blobs(n_samples=1000, centers=2, random_state=0)

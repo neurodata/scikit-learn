@@ -12,10 +12,10 @@ target is strongly correlated with some directions in the data that have a
 low variance.
 
 PCR is a regressor composed of two steps: first,
-:class:`~sklearn.decomposition.PCA` is applied to the training data, possibly
+:class:`~sklearn_fork.decomposition.PCA` is applied to the training data, possibly
 performing dimensionality reduction; then, a regressor (e.g. a linear
 regressor) is trained on the transformed samples. In
-:class:`~sklearn.decomposition.PCA`, the transformation is purely
+:class:`~sklearn_fork.decomposition.PCA`, the transformation is purely
 unsupervised, meaning that no information about the targets is used. As a
 result, PCR may perform poorly in some datasets where the target is strongly
 correlated with *directions* that have low variance. Indeed, the
@@ -43,7 +43,7 @@ example, it does not suffer from the issue we just mentioned.
 # variance in the data.
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
+from sklearn_fork.decomposition import PCA
 
 rng = np.random.RandomState(0)
 n_samples = 500
@@ -99,12 +99,12 @@ plt.show()
 # For both models, we plot the projected data onto the first component against
 # the target. In both cases, this projected data is what the regressors will
 # use as training data.
-from sklearn.model_selection import train_test_split
-from sklearn.pipeline import make_pipeline
-from sklearn.linear_model import LinearRegression
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cross_decomposition import PLSRegression
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.decomposition import PCA
+from sklearn_fork.cross_decomposition import PLSRegression
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=rng)
 

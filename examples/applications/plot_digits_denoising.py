@@ -3,12 +3,12 @@
 Image denoising using kernel PCA
 ================================
 
-This example shows how to use :class:`~sklearn.decomposition.KernelPCA` to
+This example shows how to use :class:`~sklearn_fork.decomposition.KernelPCA` to
 denoise images. In short, we take advantage of the approximation function
 learned during `fit` to reconstruct the original image.
 
 We will compare the results with an exact reconstruction using
-:class:`~sklearn.decomposition.PCA`.
+:class:`~sklearn_fork.decomposition.PCA`.
 
 We will use USPS digits dataset to reproduce presented in Sect. 4 of [1]_.
 
@@ -29,12 +29,12 @@ We will use USPS digits dataset to reproduce presented in Sect. 4 of [1]_.
 # ---------------------------
 #
 # The USPS digits datasets is available in OpenML. We use
-# :func:`~sklearn.datasets.fetch_openml` to get this dataset. In addition, we
+# :func:`~sklearn_fork.datasets.fetch_openml` to get this dataset. In addition, we
 # normalize the dataset such that all pixel values are in the range (0, 1).
 import numpy as np
-from sklearn.datasets import fetch_openml
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import train_test_split
+from sklearn_fork.datasets import fetch_openml
+from sklearn_fork.preprocessing import MinMaxScaler
+from sklearn_fork.model_selection import train_test_split
 
 X, y = fetch_openml(data_id=41082, as_frame=False, return_X_y=True, parser="pandas")
 X = MinMaxScaler().fit_transform(X)
@@ -96,7 +96,7 @@ plot_digits(
 #
 # We can now learn our PCA basis using both a linear PCA and a kernel PCA that
 # uses a radial basis function (RBF) kernel.
-from sklearn.decomposition import PCA, KernelPCA
+from sklearn_fork.decomposition import PCA, KernelPCA
 
 pca = PCA(n_components=32, random_state=42)
 kernel_pca = KernelPCA(
