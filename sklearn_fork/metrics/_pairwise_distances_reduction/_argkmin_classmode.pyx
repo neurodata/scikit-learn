@@ -11,7 +11,7 @@ from ...utils._typedefs cimport intp_t, float64_t
 
 import numpy as np
 from scipy.sparse import issparse
-from sklearn.utils.fixes import threadpool_limits
+from sklearn_fork.utils.fixes import threadpool_limits
 
 cpdef enum WeightingStrategy:
     uniform = 0

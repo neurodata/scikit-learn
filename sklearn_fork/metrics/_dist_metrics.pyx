@@ -112,7 +112,7 @@ cdef class DistanceMetric:
 
     Examples
     --------
-    >>> from sklearn.metrics import DistanceMetric
+    >>> from sklearn_fork.metrics import DistanceMetric
     >>> dist = DistanceMetric.get_metric('euclidean')
     >>> X = [[0, 1, 2],
              [3, 4, 5]]
@@ -1152,7 +1152,7 @@ cdef class ChebyshevDistance(DistanceMetric):
 
     Examples
     --------
-    >>> from sklearn.metrics.dist_metrics import DistanceMetric
+    >>> from sklearn_fork.metrics.dist_metrics import DistanceMetric
     >>> dist = DistanceMetric.get_metric('chebyshev')
     >>> X = [[0, 1, 2],
     ...      [3, 4, 5]]
@@ -2847,7 +2847,7 @@ cdef class DistanceMetric32:
 
     Examples
     --------
-    >>> from sklearn.metrics import DistanceMetric
+    >>> from sklearn_fork.metrics import DistanceMetric
     >>> dist = DistanceMetric.get_metric('euclidean')
     >>> X = [[0, 1, 2],
              [3, 4, 5]]
@@ -3887,7 +3887,7 @@ cdef class ChebyshevDistance32(DistanceMetric32):
 
     Examples
     --------
-    >>> from sklearn.metrics.dist_metrics import DistanceMetric
+    >>> from sklearn_fork.metrics.dist_metrics import DistanceMetric
     >>> dist = DistanceMetric.get_metric('chebyshev')
     >>> X = [[0, 1, 2],
     ...      [3, 4, 5]]

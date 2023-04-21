@@ -78,7 +78,9 @@ def _get_threadpool_controller():
         return None
 
     if not hasattr(sklearn_fork, "_sklearn_threadpool_controller"):
-        sklearn_fork._sklearn_threadpool_controller = threadpoolctl.ThreadpoolController()
+        sklearn_fork._sklearn_threadpool_controller = (
+            threadpoolctl.ThreadpoolController()
+        )
 
     return sklearn_fork._sklearn_threadpool_controller
 

@@ -29,7 +29,7 @@ cdef class DatasetsPair64:
     in subclasses.
 
     This class avoids the overhead of dispatching distance computations
-    to :class:`sklearn.metrics.DistanceMetric` based on the physical
+    to :class:`sklearn_fork.metrics.DistanceMetric` based on the physical
     representation of the vectors (sparse vs. dense). It makes use of
     cython.final to remove the overhead of dispatching method calls.
 
@@ -66,7 +66,7 @@ cdef class DatasetsPair64:
             The distance metric to compute between rows of X and Y.
             The default metric is a fast implementation of the Euclidean
             metric. For a list of available metrics, see the documentation
-            of :class:`~sklearn.metrics.DistanceMetric`.
+            of :class:`~sklearn_fork.metrics.DistanceMetric`.
 
         metric_kwargs : dict, default=None
             Keyword arguments to pass to specified metric function.
@@ -405,7 +405,7 @@ cdef class DatasetsPair32:
     in subclasses.
 
     This class avoids the overhead of dispatching distance computations
-    to :class:`sklearn.metrics.DistanceMetric` based on the physical
+    to :class:`sklearn_fork.metrics.DistanceMetric` based on the physical
     representation of the vectors (sparse vs. dense). It makes use of
     cython.final to remove the overhead of dispatching method calls.
 
@@ -442,7 +442,7 @@ cdef class DatasetsPair32:
             The distance metric to compute between rows of X and Y.
             The default metric is a fast implementation of the Euclidean
             metric. For a list of available metrics, see the documentation
-            of :class:`~sklearn.metrics.DistanceMetric`.
+            of :class:`~sklearn_fork.metrics.DistanceMetric`.
 
         metric_kwargs : dict, default=None
             Keyword arguments to pass to specified metric function.

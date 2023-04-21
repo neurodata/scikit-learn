@@ -1251,7 +1251,9 @@ def test_lassoCV_does_not_set_precompute(monkeypatch, precompute, inner_precompu
             calls += 1
             assert self.precompute == inner_precompute
 
-    monkeypatch.setattr("sklearn_fork.linear_model._coordinate_descent.Lasso", LassoMock)
+    monkeypatch.setattr(
+        "sklearn_fork.linear_model._coordinate_descent.Lasso", LassoMock
+    )
     clf = LassoCV(precompute=precompute)
     clf.fit(X, y)
     assert calls > 0

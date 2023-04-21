@@ -232,11 +232,13 @@ def test_all_tests_are_importable():
     # Ensure that for each contentful subpackage, there is a test directory
     # within it that is also a subpackage (i.e. a directory with __init__.py)
 
-    HAS_TESTS_EXCEPTIONS = re.compile(r"""(?x)
+    HAS_TESTS_EXCEPTIONS = re.compile(
+        r"""(?x)
                                       \.externals(\.|$)|
                                       \.tests(\.|$)|
                                       \._
-                                      """)
+                                      """
+    )
     resource_modules = {
         "sklearn_fork.datasets.data",
         "sklearn_fork.datasets.descr",
@@ -244,7 +246,9 @@ def test_all_tests_are_importable():
     }
     lookup = {
         name: ispkg
-        for _, name, ispkg in pkgutil.walk_packages(sklearn_fork.__path__, prefix="sklearn_fork.")
+        for _, name, ispkg in pkgutil.walk_packages(
+            sklearn_fork.__path__, prefix="sklearn_fork."
+        )
     }
     missing_tests = [
         name

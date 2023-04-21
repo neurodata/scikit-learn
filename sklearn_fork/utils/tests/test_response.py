@@ -11,7 +11,10 @@ from sklearn_fork.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn_fork.utils._mocking import _MockEstimatorOnOffPrediction
 from sklearn_fork.utils._testing import assert_allclose, assert_array_equal
 
-from sklearn_fork.utils._response import _get_response_values, _get_response_values_binary
+from sklearn_fork.utils._response import (
+    _get_response_values,
+    _get_response_values_binary,
+)
 
 
 X, y = load_iris(return_X_y=True)

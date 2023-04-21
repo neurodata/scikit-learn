@@ -15,7 +15,11 @@ from sklearn_fork.utils._testing import assert_array_almost_equal, assert_allclo
 from sklearn_fork.utils._testing import fails_if_pypy
 
 import sklearn_fork
-from sklearn_fork.datasets import load_svmlight_file, load_svmlight_files, dump_svmlight_file
+from sklearn_fork.datasets import (
+    load_svmlight_file,
+    load_svmlight_files,
+    dump_svmlight_file,
+)
 
 
 TEST_DATA_MODULE = "sklearn_fork.datasets.tests.data"

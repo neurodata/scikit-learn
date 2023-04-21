@@ -14,7 +14,9 @@ from sklearn_fork.tree import DecisionTreeRegressor
 from sklearn_fork.tree import DecisionTreeClassifier
 
 from sklearn_fork.inspection import DecisionBoundaryDisplay
-from sklearn_fork.inspection._plot.decision_boundary import _check_boundary_response_method
+from sklearn_fork.inspection._plot.decision_boundary import (
+    _check_boundary_response_method,
+)
 
 
 # TODO: Remove when https://github.com/numpy/numpy/issues/14397 is resolved

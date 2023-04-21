@@ -13,7 +13,9 @@ from sklearn_fork.exceptions import ConvergenceWarning, NotFittedError
 from sklearn_fork.utils._testing import assert_array_equal, assert_allclose
 
 from sklearn_fork.cluster import AffinityPropagation
-from sklearn_fork.cluster._affinity_propagation import _equal_similarities_and_preferences
+from sklearn_fork.cluster._affinity_propagation import (
+    _equal_similarities_and_preferences,
+)
 from sklearn_fork.cluster import affinity_propagation
 from sklearn_fork.datasets import make_blobs
 from sklearn_fork.metrics import euclidean_distances

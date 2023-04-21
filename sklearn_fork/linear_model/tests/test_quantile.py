@@ -296,7 +296,9 @@ def test_error_interior_point_future(X_y_data, monkeypatch):
     import sklearn_fork.linear_model._quantile
 
     with monkeypatch.context() as m:
-        m.setattr(sklearn_fork.linear_model._quantile, "sp_version", parse_version("1.11.0"))
+        m.setattr(
+            sklearn_fork.linear_model._quantile, "sp_version", parse_version("1.11.0")
+        )
         err_msg = "Solver interior-point is not anymore available in SciPy >= 1.11.0."
         with pytest.raises(ValueError, match=err_msg):
             QuantileRegressor(solver="interior-point").fit(X, y)

@@ -279,22 +279,46 @@ def test_function_param_validation(func_module):
 
 
 PARAM_VALIDATION_CLASS_WRAPPER_LIST = [
-    ("sklearn_fork.cluster.affinity_propagation", "sklearn_fork.cluster.AffinityPropagation"),
+    (
+        "sklearn_fork.cluster.affinity_propagation",
+        "sklearn_fork.cluster.AffinityPropagation",
+    ),
     ("sklearn_fork.cluster.mean_shift", "sklearn_fork.cluster.MeanShift"),
-    ("sklearn_fork.cluster.spectral_clustering", "sklearn_fork.cluster.SpectralClustering"),
-    ("sklearn_fork.covariance.graphical_lasso", "sklearn_fork.covariance.GraphicalLasso"),
+    (
+        "sklearn_fork.cluster.spectral_clustering",
+        "sklearn_fork.cluster.SpectralClustering",
+    ),
+    (
+        "sklearn_fork.covariance.graphical_lasso",
+        "sklearn_fork.covariance.GraphicalLasso",
+    ),
     ("sklearn_fork.covariance.ledoit_wolf", "sklearn_fork.covariance.LedoitWolf"),
     ("sklearn_fork.covariance.oas", "sklearn_fork.covariance.OAS"),
-    ("sklearn_fork.decomposition.dict_learning", "sklearn_fork.decomposition.DictionaryLearning"),
+    (
+        "sklearn_fork.decomposition.dict_learning",
+        "sklearn_fork.decomposition.DictionaryLearning",
+    ),
     ("sklearn_fork.decomposition.fastica", "sklearn_fork.decomposition.FastICA"),
-    ("sklearn_fork.decomposition.non_negative_factorization", "sklearn_fork.decomposition.NMF"),
-    ("sklearn_fork.preprocessing.minmax_scale", "sklearn_fork.preprocessing.MinMaxScaler"),
-    ("sklearn_fork.preprocessing.power_transform", "sklearn_fork.preprocessing.PowerTransformer"),
+    (
+        "sklearn_fork.decomposition.non_negative_factorization",
+        "sklearn_fork.decomposition.NMF",
+    ),
+    (
+        "sklearn_fork.preprocessing.minmax_scale",
+        "sklearn_fork.preprocessing.MinMaxScaler",
+    ),
+    (
+        "sklearn_fork.preprocessing.power_transform",
+        "sklearn_fork.preprocessing.PowerTransformer",
+    ),
     (
         "sklearn_fork.preprocessing.quantile_transform",
         "sklearn_fork.preprocessing.QuantileTransformer",
     ),
-    ("sklearn_fork.preprocessing.robust_scale", "sklearn_fork.preprocessing.RobustScaler"),
+    (
+        "sklearn_fork.preprocessing.robust_scale",
+        "sklearn_fork.preprocessing.RobustScaler",
+    ),
 ]
 
 

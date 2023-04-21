@@ -538,7 +538,8 @@ def test_check_docstring_parameters():
             "--------- in ",
         ],
         [
-            "In function: " + f"sklearn_fork.utils.tests.test_testing.{mock_meta_name}.fit",
+            "In function: "
+            + f"sklearn_fork.utils.tests.test_testing.{mock_meta_name}.fit",
             (
                 "Parameters in function docstring have less items w.r.t. function"
                 " signature, first missing item: X"
