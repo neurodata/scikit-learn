@@ -54,7 +54,9 @@ mlp = MLPClassifier(
 # our Continuous Integration infrastructure, so we catch the warning and
 # ignore it here
 with warnings.catch_warnings():
-    warnings.filterwarnings("ignore", category=ConvergenceWarning, module="sklearn_fork")
+    warnings.filterwarnings(
+        "ignore", category=ConvergenceWarning, module="sklearn_fork"
+    )
     mlp.fit(X_train, y_train)
 
 print("Training set score: %f" % mlp.score(X_train, y_train))

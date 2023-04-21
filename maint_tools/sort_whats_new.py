@@ -23,7 +23,8 @@ bucketed = defaultdict(list)
 
 for entry in re.split("\n(?=- )", text.strip()):
     modules = re.findall(
-        r":(?:func|meth|mod|class):" r"`(?:[^<`]*<|~)?(?:sklearn_fork.)?([a-z]\w+)", entry
+        r":(?:func|meth|mod|class):" r"`(?:[^<`]*<|~)?(?:sklearn_fork.)?([a-z]\w+)",
+        entry,
     )
     modules = set(modules)
     if len(modules) > 1:

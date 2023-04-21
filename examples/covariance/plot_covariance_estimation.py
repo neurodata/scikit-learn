@@ -37,7 +37,11 @@ X_test = np.dot(base_X_test, coloring_matrix)
 # Compute the likelihood on test data
 # -----------------------------------
 
-from sklearn_fork.covariance import ShrunkCovariance, empirical_covariance, log_likelihood
+from sklearn_fork.covariance import (
+    ShrunkCovariance,
+    empirical_covariance,
+    log_likelihood,
+)
 from scipy import linalg
 
 # spanning a range of possible shrinkage coefficient values
