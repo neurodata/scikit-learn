@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.feature_selection` module implements feature selection
+The :mod:`sklearn_fork.feature_selection` module implements feature selection
 algorithms. It currently includes univariate filter selection methods and the
 recursive feature elimination algorithm.
 """

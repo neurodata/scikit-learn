@@ -32,7 +32,7 @@ class TruncatedSVD(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstima
     efficiently.
 
     In particular, truncated SVD works on term count/tf-idf matrices as
-    returned by the vectorizers in :mod:`sklearn.feature_extraction.text`. In
+    returned by the vectorizers in :mod:`sklearn_fork.feature_extraction.text`. In
     that context, it is known as latent semantic analysis (LSA).
 
     This estimator supports two algorithms: a fast randomized SVD solver, and
@@ -58,19 +58,19 @@ class TruncatedSVD(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstima
     n_iter : int, default=5
         Number of iterations for randomized SVD solver. Not used by ARPACK. The
         default is larger than the default in
-        :func:`~sklearn.utils.extmath.randomized_svd` to handle sparse
+        :func:`~sklearn_fork.utils.extmath.randomized_svd` to handle sparse
         matrices that may have large slowly decaying spectrum.
 
     n_oversamples : int, default=10
         Number of oversamples for randomized SVD solver. Not used by ARPACK.
-        See :func:`~sklearn.utils.extmath.randomized_svd` for a complete
+        See :func:`~sklearn_fork.utils.extmath.randomized_svd` for a complete
         description.
 
         .. versionadded:: 1.1
 
     power_iteration_normalizer : {'auto', 'QR', 'LU', 'none'}, default='auto'
         Power iteration normalizer for randomized SVD solver.
-        Not used by ARPACK. See :func:`~sklearn.utils.extmath.randomized_svd`
+        Not used by ARPACK. See :func:`~sklearn_fork.utils.extmath.randomized_svd`
         for more details.
 
         .. versionadded:: 1.1
@@ -137,7 +137,7 @@ class TruncatedSVD(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstima
 
     Examples
     --------
-    >>> from sklearn.decomposition import TruncatedSVD
+    >>> from sklearn_fork.decomposition import TruncatedSVD
     >>> from scipy.sparse import csr_matrix
     >>> import numpy as np
     >>> np.random.seed(0)

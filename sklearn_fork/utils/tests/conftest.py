@@ -1,10 +1,10 @@
 import pytest
 
-import sklearn
+import sklearn_fork
 
 
 @pytest.fixture
 def print_changed_only_false():
-    sklearn.set_config(print_changed_only=False)
+    sklearn_fork.set_config(print_changed_only=False)
     yield
-    sklearn.set_config(print_changed_only=True)  # reset to default
+    sklearn_fork.set_config(print_changed_only=True)  # reset to default

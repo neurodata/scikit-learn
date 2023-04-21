@@ -57,7 +57,7 @@ class KernelDensity(BaseEstimator):
         documentation of `scipy.spatial.distance
         <https://docs.scipy.org/doc/scipy/reference/spatial.distance.html>`_ and
         the metrics listed in
-        :class:`~sklearn.metrics.pairwise.distance_metrics` for valid metric
+        :class:`~sklearn_fork.metrics.pairwise.distance_metrics` for valid metric
         values.
 
         Not all metrics are valid with all algorithms: refer to the
@@ -108,16 +108,16 @@ class KernelDensity(BaseEstimator):
 
     See Also
     --------
-    sklearn.neighbors.KDTree : K-dimensional tree for fast generalized N-point
+    sklearn_fork.neighbors.KDTree : K-dimensional tree for fast generalized N-point
         problems.
-    sklearn.neighbors.BallTree : Ball tree for fast generalized N-point
+    sklearn_fork.neighbors.BallTree : Ball tree for fast generalized N-point
         problems.
 
     Examples
     --------
     Compute a gaussian kernel density estimate with a fixed bandwidth.
 
-    >>> from sklearn.neighbors import KernelDensity
+    >>> from sklearn_fork.neighbors import KernelDensity
     >>> import numpy as np
     >>> rng = np.random.RandomState(42)
     >>> X = rng.random_sample((100, 3))
@@ -196,7 +196,7 @@ class KernelDensity(BaseEstimator):
 
         y : None
             Ignored. This parameter exists only for compatibility with
-            :class:`~sklearn.pipeline.Pipeline`.
+            :class:`~sklearn_fork.pipeline.Pipeline`.
 
         sample_weight : array-like of shape (n_samples,), default=None
             List of sample weights attached to the data X.
@@ -290,7 +290,7 @@ class KernelDensity(BaseEstimator):
 
         y : None
             Ignored. This parameter exists only for compatibility with
-            :class:`~sklearn.pipeline.Pipeline`.
+            :class:`~sklearn_fork.pipeline.Pipeline`.
 
         Returns
         -------

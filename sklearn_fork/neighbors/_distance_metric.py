@@ -9,8 +9,8 @@ class DistanceMetric(_DistanceMetric):
     def _warn(cls):
         warnings.warn(
             (
-                "sklearn.neighbors.DistanceMetric has been moved "
-                "to sklearn.metrics.DistanceMetric in 1.0. "
+                "sklearn_fork.neighbors.DistanceMetric has been moved "
+                "to sklearn_fork.metrics.DistanceMetric in 1.0. "
                 "This import path will be removed in 1.3"
             ),
             category=FutureWarning,

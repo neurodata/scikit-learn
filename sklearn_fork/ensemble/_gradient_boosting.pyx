@@ -51,10 +51,10 @@ cdef void _predict_regression_tree_inplace_fast_dense(
         The memory view on the data ndarray of the input ``X``.
         Assumes that the array is c-continuous.
     root_node : tree Node pointer
-        Pointer to the main node array of the :class:``sklearn.tree.Tree``.
+        Pointer to the main node array of the :class:``sklearn_fork.tree.Tree``.
     value : np.float64_t pointer
         The pointer to the data array of the ``value`` array attribute
-        of the :class:``sklearn.tree.Tree``.
+        of the :class:``sklearn_fork.tree.Tree``.
     scale : double
         A constant to scale the predictions.
     k : int

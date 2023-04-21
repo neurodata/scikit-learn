@@ -59,14 +59,14 @@ class NeighborhoodComponentsAnalysis(
         - `'pca'`
             `n_components` principal components of the inputs passed
             to :meth:`fit` will be used to initialize the transformation.
-            (See :class:`~sklearn.decomposition.PCA`)
+            (See :class:`~sklearn_fork.decomposition.PCA`)
 
         - `'lda'`
             `min(n_components, n_classes)` most discriminative
             components of the inputs passed to :meth:`fit` will be used to
             initialize the transformation. (If `n_components > n_classes`,
             the rest of the components will be zero.) (See
-            :class:`~sklearn.discriminant_analysis.LinearDiscriminantAnalysis`)
+            :class:`~sklearn_fork.discriminant_analysis.LinearDiscriminantAnalysis`)
 
         - `'identity'`
             If `n_components` is strictly smaller than the
@@ -140,9 +140,9 @@ class NeighborhoodComponentsAnalysis(
 
     See Also
     --------
-    sklearn.discriminant_analysis.LinearDiscriminantAnalysis : Linear
+    sklearn_fork.discriminant_analysis.LinearDiscriminantAnalysis : Linear
         Discriminant Analysis.
-    sklearn.decomposition.PCA : Principal component analysis (PCA).
+    sklearn_fork.decomposition.PCA : Principal component analysis (PCA).
 
     References
     ----------
@@ -156,10 +156,10 @@ class NeighborhoodComponentsAnalysis(
 
     Examples
     --------
-    >>> from sklearn.neighbors import NeighborhoodComponentsAnalysis
-    >>> from sklearn.neighbors import KNeighborsClassifier
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.model_selection import train_test_split
+    >>> from sklearn_fork.neighbors import NeighborhoodComponentsAnalysis
+    >>> from sklearn_fork.neighbors import KNeighborsClassifier
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.model_selection import train_test_split
     >>> X, y = load_iris(return_X_y=True)
     >>> X_train, X_test, y_train, y_test = train_test_split(X, y,
     ... stratify=y, test_size=0.7, random_state=42)

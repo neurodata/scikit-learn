@@ -48,20 +48,20 @@ from numpy.testing import assert_array_less
 import numpy as np
 import joblib
 
-import sklearn
-from sklearn.utils import (
+import sklearn_fork
+from sklearn_fork.utils import (
     IS_PYPY,
     _IS_32BIT,
     _in_unstable_openblas_configuration,
 )
-from sklearn.utils._array_api import _check_array_api_dispatch
-from sklearn.utils.multiclass import check_classification_targets
-from sklearn.utils.validation import (
+from sklearn_fork.utils._array_api import _check_array_api_dispatch
+from sklearn_fork.utils.multiclass import check_classification_targets
+from sklearn_fork.utils.validation import (
     check_array,
     check_is_fitted,
     check_X_y,
 )
-from sklearn.utils.fixes import threadpool_info
+from sklearn_fork.utils.fixes import threadpool_info
 
 
 __all__ = [
@@ -132,7 +132,7 @@ def ignore_warnings(obj=None, category=Warning):
     Examples
     --------
     >>> import warnings
-    >>> from sklearn.utils._testing import ignore_warnings
+    >>> from sklearn_fork.utils._testing import ignore_warnings
     >>> with ignore_warnings():
     ...     warnings.warn('buhuhuhu')
 
@@ -304,7 +304,7 @@ def assert_allclose(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.utils._testing import assert_allclose
+    >>> from sklearn_fork.utils._testing import assert_allclose
     >>> x = [1e-5, 1e-3, 1e-1]
     >>> y = np.arccos(np.cos(x))
     >>> assert_allclose(x, y, rtol=1e-5, atol=0)
@@ -631,8 +631,8 @@ def check_docstring_parameters(func, doc=None, ignore=None):
     ignore = [] if ignore is None else ignore
 
     func_name = _get_func_name(func)
-    if not func_name.startswith("sklearn.") or func_name.startswith(
-        "sklearn.externals"
+    if not func_name.startswith("sklearn_fork.") or func_name.startswith(
+        "sklearn_fork.externals"
     ):
         return incorrect
     # Don't check docstring for property-functions
@@ -776,7 +776,7 @@ def assert_run_python_script(source_code, timeout=60):
         with open(source_file, "wb") as f:
             f.write(source_code.encode("utf-8"))
         cmd = [sys.executable, source_file]
-        cwd = op.normpath(op.join(op.dirname(sklearn.__file__), ".."))
+        cwd = op.normpath(op.join(op.dirname(sklearn_fork.__file__), ".."))
         env = os.environ.copy()
         try:
             env["PYTHONPATH"] = os.pathsep.join([cwd, env["PYTHONPATH"]])
@@ -987,7 +987,7 @@ class MinimalClassifier:
         return self.classes_[y_pred]
 
     def score(self, X, y):
-        from sklearn.metrics import accuracy_score
+        from sklearn_fork.metrics import accuracy_score
 
         return accuracy_score(y, self.predict(X))
 
@@ -1027,7 +1027,7 @@ class MinimalRegressor:
         return np.ones(shape=(X.shape[0],)) * self._mean
 
     def score(self, X, y):
-        from sklearn.metrics import r2_score
+        from sklearn_fork.metrics import r2_score
 
         return r2_score(y, self.predict(X))
 

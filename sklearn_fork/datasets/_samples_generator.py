@@ -633,7 +633,7 @@ def make_regression(
 
     Examples
     --------
-    >>> from sklearn.datasets import make_regression
+    >>> from sklearn_fork.datasets import make_regression
     >>> X, y = make_regression(n_samples=5, n_features=2, noise=1, random_state=42)
     >>> X
     array([[ 0.4967..., -0.1382... ],
@@ -940,7 +940,7 @@ def make_blobs(
 
     Examples
     --------
-    >>> from sklearn.datasets import make_blobs
+    >>> from sklearn_fork.datasets import make_blobs
     >>> X, y = make_blobs(n_samples=10, centers=3, n_features=2,
     ...                   random_state=0)
     >>> print(X.shape)

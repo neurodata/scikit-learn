@@ -3,14 +3,14 @@ import scipy.sparse as sp
 
 import pytest
 
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.base import ClassifierMixin
-from sklearn.utils import check_random_state
-from sklearn.datasets import load_iris
-from sklearn.linear_model import PassiveAggressiveClassifier
-from sklearn.linear_model import PassiveAggressiveRegressor
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.base import ClassifierMixin
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.linear_model import PassiveAggressiveClassifier
+from sklearn_fork.linear_model import PassiveAggressiveRegressor
 
 iris = load_iris()
 random_state = check_random_state(12)

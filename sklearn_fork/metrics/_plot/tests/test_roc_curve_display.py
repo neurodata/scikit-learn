@@ -3,22 +3,22 @@ import numpy as np
 from numpy.testing import assert_allclose
 
 
-from sklearn.compose import make_column_transformer
-from sklearn.datasets import load_iris
+from sklearn_fork.compose import make_column_transformer
+from sklearn_fork.datasets import load_iris
 
-from sklearn.datasets import load_breast_cancer
-from sklearn.exceptions import NotFittedError
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_curve
-from sklearn.metrics import auc
+from sklearn_fork.datasets import load_breast_cancer
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.metrics import roc_curve
+from sklearn_fork.metrics import auc
 
-from sklearn.model_selection import train_test_split
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.utils import shuffle
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.utils import shuffle
 
 
-from sklearn.metrics import RocCurveDisplay
+from sklearn_fork.metrics import RocCurveDisplay
 
 
 @pytest.fixture(scope="module")

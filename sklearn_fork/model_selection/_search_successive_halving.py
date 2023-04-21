@@ -228,7 +228,7 @@ class BaseSuccessiveHalving(BaseSearchCV):
         groups : array-like of shape (n_samples,), default=None
             Group labels for the samples used while splitting the dataset into
             train/test set. Only used in conjunction with a "Group" :term:`cv`
-            instance (e.g., :class:`~sklearn.model_selection.GroupKFold`).
+            instance (e.g., :class:`~sklearn_fork.model_selection.GroupKFold`).
 
         **fit_params : dict of string -> object
             Parameters passed to the ``fit`` method of the estimator.
@@ -400,9 +400,9 @@ class HalvingGridSearchCV(BaseSuccessiveHalving):
       you need to explicitly import ``enable_halving_search_cv``::
 
         >>> # explicitly require this experimental feature
-        >>> from sklearn.experimental import enable_halving_search_cv # noqa
+        >>> from sklearn_fork.experimental import enable_halving_search_cv # noqa
         >>> # now you can import normally from model_selection
-        >>> from sklearn.model_selection import HalvingGridSearchCV
+        >>> from sklearn_fork.model_selection import HalvingGridSearchCV
 
     Parameters
     ----------
@@ -652,10 +652,10 @@ class HalvingGridSearchCV(BaseSuccessiveHalving):
     Examples
     --------
 
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.ensemble import RandomForestClassifier
-    >>> from sklearn.experimental import enable_halving_search_cv  # noqa
-    >>> from sklearn.model_selection import HalvingGridSearchCV
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.ensemble import RandomForestClassifier
+    >>> from sklearn_fork.experimental import enable_halving_search_cv  # noqa
+    >>> from sklearn_fork.model_selection import HalvingGridSearchCV
     ...
     >>> X, y = load_iris(return_X_y=True)
     >>> clf = RandomForestClassifier(random_state=0)
@@ -736,9 +736,9 @@ class HalvingRandomSearchCV(BaseSuccessiveHalving):
       you need to explicitly import ``enable_halving_search_cv``::
 
         >>> # explicitly require this experimental feature
-        >>> from sklearn.experimental import enable_halving_search_cv # noqa
+        >>> from sklearn_fork.experimental import enable_halving_search_cv # noqa
         >>> # now you can import normally from model_selection
-        >>> from sklearn.model_selection import HalvingRandomSearchCV
+        >>> from sklearn_fork.model_selection import HalvingRandomSearchCV
 
     Parameters
     ----------
@@ -996,10 +996,10 @@ class HalvingRandomSearchCV(BaseSuccessiveHalving):
     Examples
     --------
 
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.ensemble import RandomForestClassifier
-    >>> from sklearn.experimental import enable_halving_search_cv  # noqa
-    >>> from sklearn.model_selection import HalvingRandomSearchCV
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.ensemble import RandomForestClassifier
+    >>> from sklearn_fork.experimental import enable_halving_search_cv  # noqa
+    >>> from sklearn_fork.model_selection import HalvingRandomSearchCV
     >>> from scipy.stats import randint
     >>> import numpy as np
     ...

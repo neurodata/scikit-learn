@@ -4,12 +4,12 @@ from numpy.testing import assert_allclose
 
 import pytest
 
-from sklearn.base import clone
-from sklearn.datasets import make_classification, make_regression
+from sklearn_fork.base import clone
+from sklearn_fork.datasets import make_classification, make_regression
 
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.metrics import check_scoring
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.metrics import check_scoring
 
 
 X_classification, y_classification = make_classification(random_state=0)

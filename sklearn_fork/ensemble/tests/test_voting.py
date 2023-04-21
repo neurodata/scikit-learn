@@ -4,27 +4,27 @@ import pytest
 import re
 import numpy as np
 
-from sklearn.utils._testing import assert_almost_equal, assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.exceptions import NotFittedError
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import GaussianNB
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import VotingClassifier, VotingRegressor
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.model_selection import GridSearchCV
-from sklearn import datasets
-from sklearn.model_selection import cross_val_score, train_test_split
-from sklearn.datasets import make_multilabel_classification
-from sklearn.svm import SVC
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.base import BaseEstimator, ClassifierMixin, clone
-from sklearn.dummy import DummyRegressor
-from sklearn.preprocessing import StandardScaler
+from sklearn_fork.utils._testing import assert_almost_equal, assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.naive_bayes import GaussianNB
+from sklearn_fork.ensemble import RandomForestClassifier
+from sklearn_fork.ensemble import RandomForestRegressor
+from sklearn_fork.ensemble import VotingClassifier, VotingRegressor
+from sklearn_fork.tree import DecisionTreeClassifier
+from sklearn_fork.tree import DecisionTreeRegressor
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork import datasets
+from sklearn_fork.model_selection import cross_val_score, train_test_split
+from sklearn_fork.datasets import make_multilabel_classification
+from sklearn_fork.svm import SVC
+from sklearn_fork.multiclass import OneVsRestClassifier
+from sklearn_fork.neighbors import KNeighborsClassifier
+from sklearn_fork.base import BaseEstimator, ClassifierMixin, clone
+from sklearn_fork.dummy import DummyRegressor
+from sklearn_fork.preprocessing import StandardScaler
 
 # Load datasets
 iris = datasets.load_iris()

@@ -4,15 +4,15 @@ import numpy as np
 from numpy.testing import assert_array_equal
 import pytest
 
-from sklearn.ensemble import StackingClassifier
-from sklearn.exceptions import NotFittedError
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
-from sklearn.model_selection import train_test_split
-from sklearn.datasets import load_iris, make_blobs
-from sklearn.metrics import accuracy_score
+from sklearn_fork.ensemble import StackingClassifier
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.neighbors import KNeighborsClassifier
+from sklearn_fork.svm import SVC
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.datasets import load_iris, make_blobs
+from sklearn_fork.metrics import accuracy_score
 
-from sklearn.semi_supervised import SelfTrainingClassifier
+from sklearn_fork.semi_supervised import SelfTrainingClassifier
 
 # Author: Oliver Rausch <rauscho@ethz.ch>
 # License: BSD 3 clause

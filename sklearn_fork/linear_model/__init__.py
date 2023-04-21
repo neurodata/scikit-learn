@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.linear_model` module implements a variety of linear models.
+The :mod:`sklearn_fork.linear_model` module implements a variety of linear models.
 """
 
 # See http://scikit-learn.sourceforge.net/modules/sgd.html and

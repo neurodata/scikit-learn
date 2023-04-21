@@ -1,8 +1,8 @@
-from sklearn.utils.fixes import threadpool_info
-from sklearn.utils._show_versions import _get_sys_info
-from sklearn.utils._show_versions import _get_deps_info
-from sklearn.utils._show_versions import show_versions
-from sklearn.utils._testing import ignore_warnings
+from sklearn_fork.utils.fixes import threadpool_info
+from sklearn_fork.utils._show_versions import _get_sys_info
+from sklearn_fork.utils._show_versions import _get_deps_info
+from sklearn_fork.utils._show_versions import show_versions
+from sklearn_fork.utils._testing import ignore_warnings
 
 
 def test_get_sys_info():
@@ -19,7 +19,7 @@ def test_get_deps_info():
 
     assert "pip" in deps_info
     assert "setuptools" in deps_info
-    assert "sklearn" in deps_info
+    assert "sklearn_fork" in deps_info
     assert "numpy" in deps_info
     assert "scipy" in deps_info
     assert "Cython" in deps_info

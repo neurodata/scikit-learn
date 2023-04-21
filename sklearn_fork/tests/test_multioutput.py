@@ -4,38 +4,38 @@ import scipy.sparse as sp
 from joblib import cpu_count
 import re
 
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn import datasets
-from sklearn.base import clone
-from sklearn.datasets import make_classification
-from sklearn.datasets import load_linnerud
-from sklearn.datasets import make_multilabel_classification
-from sklearn.datasets import make_regression
-from sklearn.ensemble import GradientBoostingRegressor, RandomForestClassifier
-from sklearn.exceptions import NotFittedError
-from sklearn.linear_model import Lasso
-from sklearn.linear_model import LogisticRegression
-from sklearn.linear_model import OrthogonalMatchingPursuit
-from sklearn.linear_model import Ridge
-from sklearn.linear_model import SGDClassifier
-from sklearn.linear_model import SGDRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import jaccard_score, mean_squared_error
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.multioutput import ClassifierChain, RegressorChain
-from sklearn.multioutput import MultiOutputClassifier
-from sklearn.multioutput import MultiOutputRegressor
-from sklearn.svm import LinearSVC
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.base import ClassifierMixin
-from sklearn.utils import shuffle
-from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn.dummy import DummyRegressor, DummyClassifier
-from sklearn.pipeline import make_pipeline
-from sklearn.impute import SimpleImputer
-from sklearn.ensemble import StackingRegressor
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork import datasets
+from sklearn_fork.base import clone
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.datasets import load_linnerud
+from sklearn_fork.datasets import make_multilabel_classification
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.ensemble import GradientBoostingRegressor, RandomForestClassifier
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.linear_model import Lasso
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.linear_model import OrthogonalMatchingPursuit
+from sklearn_fork.linear_model import Ridge
+from sklearn_fork.linear_model import SGDClassifier
+from sklearn_fork.linear_model import SGDRegressor
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.metrics import jaccard_score, mean_squared_error
+from sklearn_fork.multiclass import OneVsRestClassifier
+from sklearn_fork.multioutput import ClassifierChain, RegressorChain
+from sklearn_fork.multioutput import MultiOutputClassifier
+from sklearn_fork.multioutput import MultiOutputRegressor
+from sklearn_fork.svm import LinearSVC
+from sklearn_fork.tree import DecisionTreeClassifier
+from sklearn_fork.base import ClassifierMixin
+from sklearn_fork.utils import shuffle
+from sklearn_fork.model_selection import GridSearchCV, train_test_split
+from sklearn_fork.dummy import DummyRegressor, DummyClassifier
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.impute import SimpleImputer
+from sklearn_fork.ensemble import StackingRegressor
 
 
 def test_multi_target_regression():

@@ -65,7 +65,7 @@ def unique_labels(*ys):
 
     Examples
     --------
-    >>> from sklearn.utils.multiclass import unique_labels
+    >>> from sklearn_fork.utils.multiclass import unique_labels
     >>> unique_labels([3, 5, 5, 5, 7, 7])
     array([3, 5, 7])
     >>> unique_labels([1, 2, 3, 4], [2, 2, 3, 4])
@@ -139,7 +139,7 @@ def is_multilabel(y):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.utils.multiclass import is_multilabel
+    >>> from sklearn_fork.utils.multiclass import is_multilabel
     >>> is_multilabel([0, 1, 0, 1])
     False
     >>> is_multilabel([[1], [0, 2], []])
@@ -265,7 +265,7 @@ def type_of_target(y, input_name=""):
 
     Examples
     --------
-    >>> from sklearn.utils.multiclass import type_of_target
+    >>> from sklearn_fork.utils.multiclass import type_of_target
     >>> import numpy as np
     >>> type_of_target([0.1, 0.6])
     'continuous'

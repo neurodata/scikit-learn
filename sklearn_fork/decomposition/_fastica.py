@@ -475,8 +475,8 @@ class FastICA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_digits
-    >>> from sklearn.decomposition import FastICA
+    >>> from sklearn_fork.datasets import load_digits
+    >>> from sklearn_fork.decomposition import FastICA
     >>> X, _ = load_digits(return_X_y=True)
     >>> transformer = FastICA(n_components=7,
     ...         random_state=0,

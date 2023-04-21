@@ -187,7 +187,7 @@ def mean_absolute_error(
 
     Examples
     --------
-    >>> from sklearn.metrics import mean_absolute_error
+    >>> from sklearn_fork.metrics import mean_absolute_error
     >>> y_true = [3, -0.5, 2, 7]
     >>> y_pred = [2.5, 0.0, 2, 8]
     >>> mean_absolute_error(y_true, y_pred)
@@ -271,7 +271,7 @@ def mean_pinball_loss(
 
     Examples
     --------
-    >>> from sklearn.metrics import mean_pinball_loss
+    >>> from sklearn_fork.metrics import mean_pinball_loss
     >>> y_true = [1, 2, 3]
     >>> mean_pinball_loss(y_true, [0, 2, 3], alpha=0.1)
     0.03...
@@ -364,7 +364,7 @@ def mean_absolute_percentage_error(
 
     Examples
     --------
-    >>> from sklearn.metrics import mean_absolute_percentage_error
+    >>> from sklearn_fork.metrics import mean_absolute_percentage_error
     >>> y_true = [3, -0.5, 2, 7]
     >>> y_pred = [2.5, 0.0, 2, 8]
     >>> mean_absolute_percentage_error(y_true, y_pred)
@@ -448,7 +448,7 @@ def mean_squared_error(
 
     Examples
     --------
-    >>> from sklearn.metrics import mean_squared_error
+    >>> from sklearn_fork.metrics import mean_squared_error
     >>> y_true = [3, -0.5, 2, 7]
     >>> y_pred = [2.5, 0.0, 2, 8]
     >>> mean_squared_error(y_true, y_pred)
@@ -538,7 +538,7 @@ def mean_squared_log_error(
 
     Examples
     --------
-    >>> from sklearn.metrics import mean_squared_log_error
+    >>> from sklearn_fork.metrics import mean_squared_log_error
     >>> y_true = [3, 5, 2.5, 7]
     >>> y_pred = [2.5, 5, 4, 8]
     >>> mean_squared_log_error(y_true, y_pred)
@@ -624,7 +624,7 @@ def median_absolute_error(
 
     Examples
     --------
-    >>> from sklearn.metrics import median_absolute_error
+    >>> from sklearn_fork.metrics import median_absolute_error
     >>> y_true = [3, -0.5, 2, 7]
     >>> y_pred = [2.5, 0.0, 2, 8]
     >>> median_absolute_error(y_true, y_pred)
@@ -795,7 +795,7 @@ def explained_variance_score(
 
     Examples
     --------
-    >>> from sklearn.metrics import explained_variance_score
+    >>> from sklearn_fork.metrics import explained_variance_score
     >>> y_true = [3, -0.5, 2, 7]
     >>> y_pred = [2.5, 0.0, 2, 8]
     >>> explained_variance_score(y_true, y_pred)
@@ -944,7 +944,7 @@ def r2_score(
 
     Examples
     --------
-    >>> from sklearn.metrics import r2_score
+    >>> from sklearn_fork.metrics import r2_score
     >>> y_true = [3, -0.5, 2, 7]
     >>> y_pred = [2.5, 0.0, 2, 8]
     >>> r2_score(y_true, y_pred)
@@ -1036,7 +1036,7 @@ def max_error(y_true, y_pred):
 
     Examples
     --------
-    >>> from sklearn.metrics import max_error
+    >>> from sklearn_fork.metrics import max_error
     >>> y_true = [3, 2, 7, 1]
     >>> y_pred = [4, 2, 7, 1]
     >>> max_error(y_true, y_pred)
@@ -1130,7 +1130,7 @@ def mean_tweedie_deviance(y_true, y_pred, *, sample_weight=None, power=0):
 
     Examples
     --------
-    >>> from sklearn.metrics import mean_tweedie_deviance
+    >>> from sklearn_fork.metrics import mean_tweedie_deviance
     >>> y_true = [2, 0, 1, 4]
     >>> y_pred = [0.5, 0.5, 2., 2.]
     >>> mean_tweedie_deviance(y_true, y_pred, power=1)
@@ -1205,7 +1205,7 @@ def mean_poisson_deviance(y_true, y_pred, *, sample_weight=None):
 
     Examples
     --------
-    >>> from sklearn.metrics import mean_poisson_deviance
+    >>> from sklearn_fork.metrics import mean_poisson_deviance
     >>> y_true = [2, 0, 1, 4]
     >>> y_pred = [0.5, 0.5, 2., 2.]
     >>> mean_poisson_deviance(y_true, y_pred)
@@ -1248,7 +1248,7 @@ def mean_gamma_deviance(y_true, y_pred, *, sample_weight=None):
 
     Examples
     --------
-    >>> from sklearn.metrics import mean_gamma_deviance
+    >>> from sklearn_fork.metrics import mean_gamma_deviance
     >>> y_true = [2, 0.5, 1, 4]
     >>> y_pred = [0.5, 0.5, 2., 2.]
     >>> mean_gamma_deviance(y_true, y_pred)
@@ -1332,7 +1332,7 @@ def d2_tweedie_score(y_true, y_pred, *, sample_weight=None, power=0):
 
     Examples
     --------
-    >>> from sklearn.metrics import d2_tweedie_score
+    >>> from sklearn_fork.metrics import d2_tweedie_score
     >>> y_true = [0.5, 1, 2.5, 7]
     >>> y_pred = [1, 1, 5, 3.5]
     >>> d2_tweedie_score(y_true, y_pred)
@@ -1447,7 +1447,7 @@ def d2_pinball_score(
 
     Examples
     --------
-    >>> from sklearn.metrics import d2_pinball_score
+    >>> from sklearn_fork.metrics import d2_pinball_score
     >>> y_true = [1, 2, 3]
     >>> y_pred = [1, 3, 3]
     >>> d2_pinball_score(y_true, y_pred)
@@ -1589,7 +1589,7 @@ def d2_absolute_error_score(
 
     Examples
     --------
-    >>> from sklearn.metrics import d2_absolute_error_score
+    >>> from sklearn_fork.metrics import d2_absolute_error_score
     >>> y_true = [3, -0.5, 2, 7]
     >>> y_pred = [2.5, 0.0, 2, 8]
     >>> d2_absolute_error_score(y_true, y_pred)

@@ -1,5 +1,5 @@
 """
-Testing for the gradient boosting module (sklearn.ensemble.gradient_boosting).
+Testing for the gradient boosting module (sklearn_fork.ensemble.gradient_boosting).
 """
 import re
 import warnings
@@ -13,27 +13,27 @@ from scipy.special import expit
 
 import pytest
 
-from sklearn import datasets
-from sklearn.base import clone
-from sklearn.datasets import make_classification, make_regression
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.ensemble._gradient_boosting import predict_stages
-from sklearn.preprocessing import scale
-from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split
-from sklearn.utils import check_random_state, tosequence
-from sklearn.utils._mocking import NoSampleWeightWrapper
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import skip_if_32bit
-from sklearn.utils._param_validation import InvalidParameterError
-from sklearn.exceptions import DataConversionWarning
-from sklearn.exceptions import NotFittedError
-from sklearn.dummy import DummyClassifier, DummyRegressor
-from sklearn.pipeline import make_pipeline
-from sklearn.linear_model import LinearRegression
-from sklearn.svm import NuSVR
+from sklearn_fork import datasets
+from sklearn_fork.base import clone
+from sklearn_fork.datasets import make_classification, make_regression
+from sklearn_fork.ensemble import GradientBoostingClassifier
+from sklearn_fork.ensemble import GradientBoostingRegressor
+from sklearn_fork.ensemble._gradient_boosting import predict_stages
+from sklearn_fork.preprocessing import scale
+from sklearn_fork.metrics import mean_squared_error
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.utils import check_random_state, tosequence
+from sklearn_fork.utils._mocking import NoSampleWeightWrapper
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import skip_if_32bit
+from sklearn_fork.utils._param_validation import InvalidParameterError
+from sklearn_fork.exceptions import DataConversionWarning
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.dummy import DummyClassifier, DummyRegressor
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.svm import NuSVR
 
 
 GRADIENT_BOOSTING_ESTIMATORS = [GradientBoostingClassifier, GradientBoostingRegressor]
@@ -1015,7 +1015,7 @@ def test_monitor_early_stopping(Cls):
 
 def test_complete_classification():
     # Test greedy trees with max_depth + 1 leafs.
-    from sklearn.tree._tree import TREE_LEAF
+    from sklearn_fork.tree._tree import TREE_LEAF
 
     X, y = datasets.make_hastie_10_2(n_samples=100, random_state=1)
     k = 4
@@ -1032,7 +1032,7 @@ def test_complete_classification():
 
 def test_complete_regression():
     # Test greedy trees with max_depth + 1 leafs.
-    from sklearn.tree._tree import TREE_LEAF
+    from sklearn_fork.tree._tree import TREE_LEAF
 
     k = 4
 
@@ -1344,7 +1344,7 @@ def _make_multiclass():
 def test_gradient_boosting_with_init(
     gb, dataset_maker, init_estimator, global_random_seed
 ):
-    # Check that GradientBoostingRegressor works when init is a sklearn
+    # Check that GradientBoostingRegressor works when init is a sklearn_fork
     # estimator.
     # Check that an error is raised if trying to fit with sample weight but
     # initial estimator does not support sample weight

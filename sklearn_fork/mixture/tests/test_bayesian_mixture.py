@@ -7,19 +7,19 @@ import numpy as np
 from scipy.special import gammaln
 import pytest
 
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
 
-from sklearn.metrics.cluster import adjusted_rand_score
+from sklearn_fork.metrics.cluster import adjusted_rand_score
 
-from sklearn.mixture._bayesian_mixture import _log_dirichlet_norm
-from sklearn.mixture._bayesian_mixture import _log_wishart_norm
+from sklearn_fork.mixture._bayesian_mixture import _log_dirichlet_norm
+from sklearn_fork.mixture._bayesian_mixture import _log_wishart_norm
 
-from sklearn.mixture import BayesianGaussianMixture
+from sklearn_fork.mixture import BayesianGaussianMixture
 
-from sklearn.mixture.tests.test_gaussian_mixture import RandomData
-from sklearn.exceptions import ConvergenceWarning, NotFittedError
-from sklearn.utils._testing import ignore_warnings
+from sklearn_fork.mixture.tests.test_gaussian_mixture import RandomData
+from sklearn_fork.exceptions import ConvergenceWarning, NotFittedError
+from sklearn_fork.utils._testing import ignore_warnings
 
 
 COVARIANCE_TYPE = ["full", "tied", "diag", "spherical"]

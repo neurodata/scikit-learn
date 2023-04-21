@@ -5,7 +5,7 @@ from numbers import Integral, Real
 import numpy as np
 import scipy.sparse as sp
 
-# mypy error: error: Module 'sklearn.svm' has no attribute '_libsvm'
+# mypy error: error: Module 'sklearn_fork.svm' has no attribute '_libsvm'
 # (and same for other imports)
 from . import _libsvm as libsvm  # type: ignore
 from . import _liblinear as liblinear  # type: ignore

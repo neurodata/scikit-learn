@@ -4,32 +4,32 @@ import numpy as np
 from scipy.sparse import csr_matrix
 import pytest
 
-from sklearn.base import BaseEstimator
-from sklearn.model_selection import LeaveOneOut
-from sklearn.utils import deprecated
-from sklearn.utils._param_validation import Hidden
-from sklearn.utils._param_validation import Interval
-from sklearn.utils._param_validation import Options
-from sklearn.utils._param_validation import StrOptions
-from sklearn.utils._param_validation import _ArrayLikes
-from sklearn.utils._param_validation import _Booleans
-from sklearn.utils._param_validation import _Callables
-from sklearn.utils._param_validation import _CVObjects
-from sklearn.utils._param_validation import _InstancesOf
-from sklearn.utils._param_validation import MissingValues
-from sklearn.utils._param_validation import _PandasNAConstraint
-from sklearn.utils._param_validation import _IterablesNotString
-from sklearn.utils._param_validation import _NoneConstraint
-from sklearn.utils._param_validation import _RandomStates
-from sklearn.utils._param_validation import _SparseMatrices
-from sklearn.utils._param_validation import _VerboseHelper
-from sklearn.utils._param_validation import HasMethods
-from sklearn.utils._param_validation import make_constraint
-from sklearn.utils._param_validation import generate_invalid_param_val
-from sklearn.utils._param_validation import generate_valid_param
-from sklearn.utils._param_validation import validate_params
-from sklearn.utils._param_validation import InvalidParameterError
-from sklearn.utils._param_validation import RealNotInt
+from sklearn_fork.base import BaseEstimator
+from sklearn_fork.model_selection import LeaveOneOut
+from sklearn_fork.utils import deprecated
+from sklearn_fork.utils._param_validation import Hidden
+from sklearn_fork.utils._param_validation import Interval
+from sklearn_fork.utils._param_validation import Options
+from sklearn_fork.utils._param_validation import StrOptions
+from sklearn_fork.utils._param_validation import _ArrayLikes
+from sklearn_fork.utils._param_validation import _Booleans
+from sklearn_fork.utils._param_validation import _Callables
+from sklearn_fork.utils._param_validation import _CVObjects
+from sklearn_fork.utils._param_validation import _InstancesOf
+from sklearn_fork.utils._param_validation import MissingValues
+from sklearn_fork.utils._param_validation import _PandasNAConstraint
+from sklearn_fork.utils._param_validation import _IterablesNotString
+from sklearn_fork.utils._param_validation import _NoneConstraint
+from sklearn_fork.utils._param_validation import _RandomStates
+from sklearn_fork.utils._param_validation import _SparseMatrices
+from sklearn_fork.utils._param_validation import _VerboseHelper
+from sklearn_fork.utils._param_validation import HasMethods
+from sklearn_fork.utils._param_validation import make_constraint
+from sklearn_fork.utils._param_validation import generate_invalid_param_val
+from sklearn_fork.utils._param_validation import generate_valid_param
+from sklearn_fork.utils._param_validation import validate_params
+from sklearn_fork.utils._param_validation import InvalidParameterError
+from sklearn_fork.utils._param_validation import RealNotInt
 
 
 # Some helpers for the tests

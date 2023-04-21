@@ -8,27 +8,27 @@ import pytest
 import warnings
 from numpy.testing import assert_allclose
 
-import sklearn
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_no_warnings
-from sklearn.utils._testing import ignore_warnings
+import sklearn_fork
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_no_warnings
+from sklearn_fork.utils._testing import ignore_warnings
 
-from sklearn.base import BaseEstimator, clone, is_classifier
-from sklearn.svm import SVC
-from sklearn.preprocessing import StandardScaler
-from sklearn.utils._set_output import _get_output_config
-from sklearn.pipeline import Pipeline
-from sklearn.decomposition import PCA
-from sklearn.model_selection import GridSearchCV
+from sklearn_fork.base import BaseEstimator, clone, is_classifier
+from sklearn_fork.svm import SVC
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.utils._set_output import _get_output_config
+from sklearn_fork.pipeline import Pipeline
+from sklearn_fork.decomposition import PCA
+from sklearn_fork.model_selection import GridSearchCV
 
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.tree import DecisionTreeRegressor
-from sklearn import datasets
-from sklearn.exceptions import InconsistentVersionWarning
+from sklearn_fork.tree import DecisionTreeClassifier
+from sklearn_fork.tree import DecisionTreeRegressor
+from sklearn_fork import datasets
+from sklearn_fork.exceptions import InconsistentVersionWarning
 
-from sklearn.base import TransformerMixin
-from sklearn.utils._mocking import MockDataFrame
-from sklearn import config_context
+from sklearn_fork.base import TransformerMixin
+from sklearn_fork.utils._mocking import MockDataFrame
+from sklearn_fork import config_context
 import pickle
 
 
@@ -121,7 +121,7 @@ def test_clone():
     # (which, in this case, is the current state of the estimator),
     # and check that the obtained copy is a correct deep copy.
 
-    from sklearn.feature_selection import SelectFpr, f_classif
+    from sklearn_fork.feature_selection import SelectFpr, f_classif
 
     selector = SelectFpr(f_classif, alpha=0.1)
     new_selector = clone(selector)
@@ -139,7 +139,7 @@ def test_clone_2():
     # make a copy of its original state. Then we check that the copy doesn't
     # have the specific attribute we manually added to the initial estimator.
 
-    from sklearn.feature_selection import SelectFpr, f_classif
+    from sklearn_fork.feature_selection import SelectFpr, f_classif
 
     selector = SelectFpr(f_classif, alpha=0.1)
     selector.own_attribute = "test"
@@ -442,7 +442,7 @@ def test_pickle_version_warning_is_issued_upon_different_version():
     message = pickle_error_message.format(
         estimator="TreeBadVersion",
         old_version="something",
-        current_version=sklearn.__version__,
+        current_version=sklearn_fork.__version__,
     )
     with pytest.warns(UserWarning, match=message) as warning_record:
         pickle.loads(tree_pickle_other)
@@ -451,7 +451,7 @@ def test_pickle_version_warning_is_issued_upon_different_version():
     assert isinstance(message, InconsistentVersionWarning)
     assert message.estimator_name == "TreeBadVersion"
     assert message.original_sklearn_version == "something"
-    assert message.current_sklearn_version == sklearn.__version__
+    assert message.current_sklearn_version == sklearn_fork.__version__
 
 
 class TreeNoVersion(DecisionTreeClassifier):
@@ -469,7 +469,7 @@ def test_pickle_version_warning_is_issued_when_no_version_info_in_pickle():
     message = pickle_error_message.format(
         estimator="TreeNoVersion",
         old_version="pre-0.18",
-        current_version=sklearn.__version__,
+        current_version=sklearn_fork.__version__,
     )
     # check we got the warning about using pre-0.18 pickle
     with pytest.warns(UserWarning, match=message):
@@ -747,7 +747,7 @@ def test_estimator_empty_instance_dict(estimator):
     ``AttributeError``. Non-regression test for gh-25188.
     """
     state = estimator.__getstate__()
-    expected = {"_sklearn_version": sklearn.__version__}
+    expected = {"_sklearn_version": sklearn_fork.__version__}
     assert state == expected
 
     # this should not raise
@@ -765,7 +765,7 @@ def test_estimator_getstate_using_slots_error_message():
 
     msg = (
         "You cannot use `__slots__` in objects inheriting from "
-        "`sklearn.base.BaseEstimator`"
+        "`sklearn_fork.base.BaseEstimator`"
     )
 
     with pytest.raises(TypeError, match=msg):

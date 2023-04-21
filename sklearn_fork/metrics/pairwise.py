@@ -293,7 +293,7 @@ def euclidean_distances(
 
     Examples
     --------
-    >>> from sklearn.metrics.pairwise import euclidean_distances
+    >>> from sklearn_fork.metrics.pairwise import euclidean_distances
     >>> X = [[0, 1], [1, 1]]
     >>> # distance between rows of X
     >>> euclidean_distances(X, X)
@@ -460,7 +460,7 @@ def nan_euclidean_distances(
 
     Examples
     --------
-    >>> from sklearn.metrics.pairwise import nan_euclidean_distances
+    >>> from sklearn_fork.metrics.pairwise import nan_euclidean_distances
     >>> nan = float("NaN")
     >>> X = [[0, 1], [1, nan]]
     >>> nan_euclidean_distances(X, X) # distance between rows of X
@@ -888,7 +888,7 @@ def haversine_distances(X, Y=None):
     (Buenos Aires, Argentina) and the Charles de Gaulle Airport (Paris,
     France).
 
-    >>> from sklearn.metrics.pairwise import haversine_distances
+    >>> from sklearn_fork.metrics.pairwise import haversine_distances
     >>> from math import radians
     >>> bsas = [-34.83333, -58.5166646]
     >>> paris = [49.0083899664, 2.53844117956]
@@ -948,7 +948,7 @@ def manhattan_distances(X, Y=None, *, sum_over_features="deprecated"):
 
     Examples
     --------
-    >>> from sklearn.metrics.pairwise import manhattan_distances
+    >>> from sklearn_fork.metrics.pairwise import manhattan_distances
     >>> manhattan_distances([[3]], [[3]])
     array([[0.]])
     >>> manhattan_distances([[3]], [[2]])
@@ -1095,7 +1095,7 @@ def paired_manhattan_distances(X, Y):
 
     Examples
     --------
-    >>> from sklearn.metrics.pairwise import paired_manhattan_distances
+    >>> from sklearn_fork.metrics.pairwise import paired_manhattan_distances
     >>> import numpy as np
     >>> X = np.array([[1, 1, 0], [0, 1, 0], [0, 0, 1]])
     >>> Y = np.array([[0, 1, 0], [0, 0, 1], [0, 0, 0]])
@@ -1195,7 +1195,7 @@ def paired_distances(X, Y, *, metric="euclidean", **kwds):
 
     Examples
     --------
-    >>> from sklearn.metrics.pairwise import paired_distances
+    >>> from sklearn_fork.metrics.pairwise import paired_distances
     >>> X = [[0, 1], [1, 1]]
     >>> Y = [[0, 1], [2, 1]]
     >>> paired_distances(X, Y)
@@ -1539,7 +1539,7 @@ def additive_chi2_kernel(X, Y=None):
     --------
     chi2_kernel : The exponentiated version of the kernel, which is usually
         preferable.
-    sklearn.kernel_approximation.AdditiveChi2Sampler : A Fourier approximation
+    sklearn_fork.kernel_approximation.AdditiveChi2Sampler : A Fourier approximation
         to this kernel.
 
     Notes
@@ -1600,7 +1600,7 @@ def chi2_kernel(X, Y=None, gamma=1.0):
     See Also
     --------
     additive_chi2_kernel : The additive version of this kernel.
-    sklearn.kernel_approximation.AdditiveChi2Sampler : A Fourier approximation
+    sklearn_fork.kernel_approximation.AdditiveChi2Sampler : A Fourier approximation
         to the additive version of this kernel.
 
     References
@@ -1875,7 +1875,7 @@ def pairwise_distances_chunked(
     working_memory : int, default=None
         The sought maximum memory for temporary distance matrix chunks.
         When None (default), the value of
-        ``sklearn.get_config()['working_memory']`` is used.
+        ``sklearn_fork.get_config()['working_memory']`` is used.
 
     **kwds : optional keyword parameters
         Any further parameters are passed directly to the distance function.
@@ -1893,7 +1893,7 @@ def pairwise_distances_chunked(
     Without reduce_func:
 
     >>> import numpy as np
-    >>> from sklearn.metrics import pairwise_distances_chunked
+    >>> from sklearn_fork.metrics import pairwise_distances_chunked
     >>> X = np.random.RandomState(0).rand(5, 3)
     >>> D_chunk = next(pairwise_distances_chunked(X))
     >>> D_chunk
@@ -2019,7 +2019,7 @@ def pairwise_distances(
     valid scipy.spatial.distance metrics), the scikit-learn implementation
     will be used, which is faster and has support for sparse matrices (except
     for 'cityblock'). For a verbose description of the metrics from
-    scikit-learn, see :func:`sklearn.metrics.pairwise.distance_metrics`
+    scikit-learn, see :func:`sklearn_fork.metrics.pairwise.distance_metrics`
     function.
 
     Read more in the :ref:`User Guide <metrics>`.
@@ -2188,15 +2188,15 @@ def kernel_metrics():
       ===============   ========================================
       metric            Function
       ===============   ========================================
-      'additive_chi2'   sklearn.pairwise.additive_chi2_kernel
-      'chi2'            sklearn.pairwise.chi2_kernel
-      'linear'          sklearn.pairwise.linear_kernel
-      'poly'            sklearn.pairwise.polynomial_kernel
-      'polynomial'      sklearn.pairwise.polynomial_kernel
-      'rbf'             sklearn.pairwise.rbf_kernel
-      'laplacian'       sklearn.pairwise.laplacian_kernel
-      'sigmoid'         sklearn.pairwise.sigmoid_kernel
-      'cosine'          sklearn.pairwise.cosine_similarity
+      'additive_chi2'   sklearn_fork.pairwise.additive_chi2_kernel
+      'chi2'            sklearn_fork.pairwise.chi2_kernel
+      'linear'          sklearn_fork.pairwise.linear_kernel
+      'poly'            sklearn_fork.pairwise.polynomial_kernel
+      'polynomial'      sklearn_fork.pairwise.polynomial_kernel
+      'rbf'             sklearn_fork.pairwise.rbf_kernel
+      'laplacian'       sklearn_fork.pairwise.laplacian_kernel
+      'sigmoid'         sklearn_fork.pairwise.sigmoid_kernel
+      'cosine'          sklearn_fork.pairwise.cosine_similarity
       ===============   ========================================
 
     Read more in the :ref:`User Guide <metrics>`.
@@ -2263,7 +2263,7 @@ def pairwise_kernels(
         pair of instances (rows) and the resulting value recorded. The callable
         should take two rows from X as input and return the corresponding
         kernel value as a single number. This means that callables from
-        :mod:`sklearn.metrics.pairwise` are not allowed, as they operate on
+        :mod:`sklearn_fork.metrics.pairwise` are not allowed, as they operate on
         matrices, not single samples. Use the string identifying the kernel
         instead.
 

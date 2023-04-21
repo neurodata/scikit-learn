@@ -5,23 +5,23 @@ from inspect import signature
 import numpy as np
 import pytest
 
-from sklearn.base import BaseEstimator
-from sklearn.base import is_regressor
-from sklearn.datasets import make_classification
-from sklearn.utils import all_estimators
-from sklearn.utils.estimator_checks import _enforce_estimator_tags_X
-from sklearn.utils.estimator_checks import _enforce_estimator_tags_y
-from sklearn.utils.validation import check_is_fitted
-from sklearn.utils._testing import set_random_state
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_selection import RFE, RFECV
-from sklearn.ensemble import BaggingClassifier
-from sklearn.exceptions import NotFittedError
-from sklearn.semi_supervised import SelfTrainingClassifier
-from sklearn.linear_model import Ridge, LogisticRegression
-from sklearn.preprocessing import StandardScaler, MaxAbsScaler
+from sklearn_fork.base import BaseEstimator
+from sklearn_fork.base import is_regressor
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.utils import all_estimators
+from sklearn_fork.utils.estimator_checks import _enforce_estimator_tags_X
+from sklearn_fork.utils.estimator_checks import _enforce_estimator_tags_y
+from sklearn_fork.utils.validation import check_is_fitted
+from sklearn_fork.utils._testing import set_random_state
+from sklearn_fork.pipeline import Pipeline, make_pipeline
+from sklearn_fork.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn_fork.feature_extraction.text import TfidfVectorizer
+from sklearn_fork.feature_selection import RFE, RFECV
+from sklearn_fork.ensemble import BaggingClassifier
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.semi_supervised import SelfTrainingClassifier
+from sklearn_fork.linear_model import Ridge, LogisticRegression
+from sklearn_fork.preprocessing import StandardScaler, MaxAbsScaler
 
 
 class DelegatorData:

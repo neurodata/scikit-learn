@@ -7,20 +7,20 @@ import numpy as np
 from scipy import linalg
 
 from numpy.testing import assert_allclose
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_less
-from sklearn.utils._testing import _convert_container
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_less
+from sklearn_fork.utils._testing import _convert_container
 
-from sklearn.covariance import (
+from sklearn_fork.covariance import (
     graphical_lasso,
     GraphicalLasso,
     GraphicalLassoCV,
     empirical_covariance,
 )
-from sklearn.datasets import make_sparse_spd_matrix
+from sklearn_fork.datasets import make_sparse_spd_matrix
 from io import StringIO
-from sklearn.utils import check_random_state
-from sklearn import datasets
+from sklearn_fork.utils import check_random_state
+from sklearn_fork import datasets
 
 
 def test_graphical_lasso(random_state=0):

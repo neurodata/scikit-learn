@@ -7,8 +7,8 @@ from ...utils._plotting import _BinaryClassifierCurveDisplayMixin
 class DetCurveDisplay(_BinaryClassifierCurveDisplayMixin):
     """DET curve visualization.
 
-    It is recommend to use :func:`~sklearn.metrics.DetCurveDisplay.from_estimator`
-    or :func:`~sklearn.metrics.DetCurveDisplay.from_predictions` to create a
+    It is recommend to use :func:`~sklearn_fork.metrics.DetCurveDisplay.from_estimator`
+    or :func:`~sklearn_fork.metrics.DetCurveDisplay.from_predictions` to create a
     visualizer. All parameters are stored as attributes.
 
     Read more in the :ref:`User Guide <visualizations>`.
@@ -51,10 +51,10 @@ class DetCurveDisplay(_BinaryClassifierCurveDisplayMixin):
     Examples
     --------
     >>> import matplotlib.pyplot as plt
-    >>> from sklearn.datasets import make_classification
-    >>> from sklearn.metrics import det_curve, DetCurveDisplay
-    >>> from sklearn.model_selection import train_test_split
-    >>> from sklearn.svm import SVC
+    >>> from sklearn_fork.datasets import make_classification
+    >>> from sklearn_fork.metrics import det_curve, DetCurveDisplay
+    >>> from sklearn_fork.model_selection import train_test_split
+    >>> from sklearn_fork.svm import SVC
     >>> X, y = make_classification(n_samples=1000, random_state=0)
     >>> X_train, X_test, y_train, y_test = train_test_split(
     ...     X, y, test_size=0.4, random_state=0)
@@ -98,7 +98,7 @@ class DetCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         Parameters
         ----------
         estimator : estimator instance
-            Fitted classifier or a fitted :class:`~sklearn.pipeline.Pipeline`
+            Fitted classifier or a fitted :class:`~sklearn_fork.pipeline.Pipeline`
             in which the last estimator is a classifier.
 
         X : {array-like, sparse matrix} of shape (n_samples, n_features)
@@ -135,7 +135,7 @@ class DetCurveDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.DetCurveDisplay`
+        display : :class:`~sklearn_fork.metrics.DetCurveDisplay`
             Object that stores computed values.
 
         See Also
@@ -147,10 +147,10 @@ class DetCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import make_classification
-        >>> from sklearn.metrics import DetCurveDisplay
-        >>> from sklearn.model_selection import train_test_split
-        >>> from sklearn.svm import SVC
+        >>> from sklearn_fork.datasets import make_classification
+        >>> from sklearn_fork.metrics import DetCurveDisplay
+        >>> from sklearn_fork.model_selection import train_test_split
+        >>> from sklearn_fork.svm import SVC
         >>> X, y = make_classification(n_samples=1000, random_state=0)
         >>> X_train, X_test, y_train, y_test = train_test_split(
         ...     X, y, test_size=0.4, random_state=0)
@@ -228,7 +228,7 @@ class DetCurveDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.DetCurveDisplay`
+        display : :class:`~sklearn_fork.metrics.DetCurveDisplay`
             Object that stores computed values.
 
         See Also
@@ -240,10 +240,10 @@ class DetCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import make_classification
-        >>> from sklearn.metrics import DetCurveDisplay
-        >>> from sklearn.model_selection import train_test_split
-        >>> from sklearn.svm import SVC
+        >>> from sklearn_fork.datasets import make_classification
+        >>> from sklearn_fork.metrics import DetCurveDisplay
+        >>> from sklearn_fork.model_selection import train_test_split
+        >>> from sklearn_fork.svm import SVC
         >>> X, y = make_classification(n_samples=1000, random_state=0)
         >>> X_train, X_test, y_train, y_test = train_test_split(
         ...     X, y, test_size=0.4, random_state=0)
@@ -292,7 +292,7 @@ class DetCurveDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.plot.DetCurveDisplay`
+        display : :class:`~sklearn_fork.metrics.plot.DetCurveDisplay`
             Object that stores computed values.
         """
         self.ax_, self.figure_, name = self._validate_plot_params(ax=ax, name=name)

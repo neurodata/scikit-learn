@@ -1,8 +1,8 @@
 import pytest
 import numpy as np
 
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils.arrayfuncs import min_pos
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils.arrayfuncs import min_pos
 
 
 def test_min_pos():

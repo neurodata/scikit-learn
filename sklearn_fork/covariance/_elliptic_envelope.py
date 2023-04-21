@@ -122,7 +122,7 @@ class EllipticEnvelope(OutlierMixin, MinCovDet):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.covariance import EllipticEnvelope
+    >>> from sklearn_fork.covariance import EllipticEnvelope
     >>> true_cov = np.array([[.8, .3],
     ...                      [.3, .4]])
     >>> X = np.random.RandomState(0).multivariate_normal(mean=[0, 0],

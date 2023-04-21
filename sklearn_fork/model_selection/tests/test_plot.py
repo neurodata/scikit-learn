@@ -1,12 +1,12 @@
 import pytest
 
-from sklearn.datasets import load_iris
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.utils import shuffle
-from sklearn.utils._testing import assert_allclose, assert_array_equal
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.tree import DecisionTreeClassifier
+from sklearn_fork.utils import shuffle
+from sklearn_fork.utils._testing import assert_allclose, assert_array_equal
 
-from sklearn.model_selection import learning_curve
-from sklearn.model_selection import LearningCurveDisplay
+from sklearn_fork.model_selection import learning_curve
+from sklearn_fork.model_selection import LearningCurveDisplay
 
 
 @pytest.fixture

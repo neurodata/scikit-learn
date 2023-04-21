@@ -12,7 +12,7 @@ from .common cimport Y_DTYPE_C
 def get_equivalent_estimator(estimator, lib='lightgbm', n_classes=None):
     """Return an unfitted estimator from another lib with matching hyperparams.
 
-    This utility function takes care of renaming the sklearn parameters into
+    This utility function takes care of renaming the sklearn_fork parameters into
     their LightGBM, XGBoost or CatBoost equivalent parameters.
 
     # unmapped XGB parameters:

@@ -13,7 +13,7 @@ import numpy as np
 import scipy.sparse as sp
 import pytest
 
-from sklearn.utils._testing import (
+from sklearn_fork.utils._testing import (
     assert_array_equal,
     assert_array_almost_equal,
     assert_allclose,
@@ -23,53 +23,53 @@ from sklearn.utils._testing import (
     MinimalRegressor,
     MinimalTransformer,
 )
-from sklearn.utils._mocking import CheckingClassifier, MockDataFrame
+from sklearn_fork.utils._mocking import CheckingClassifier, MockDataFrame
 
 from scipy.stats import bernoulli, expon, uniform
 
-from sklearn.base import BaseEstimator, ClassifierMixin
-from sklearn.base import is_classifier
-from sklearn.datasets import make_classification
-from sklearn.datasets import make_blobs
-from sklearn.datasets import make_multilabel_classification
+from sklearn_fork.base import BaseEstimator, ClassifierMixin
+from sklearn_fork.base import is_classifier
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.datasets import make_multilabel_classification
 
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import KFold
-from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.model_selection import LeaveOneGroupOut
-from sklearn.model_selection import LeavePGroupsOut
-from sklearn.model_selection import GroupKFold
-from sklearn.model_selection import GroupShuffleSplit
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.model_selection import ParameterGrid
-from sklearn.model_selection import ParameterSampler
-from sklearn.model_selection._search import BaseSearchCV
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.model_selection import KFold
+from sklearn_fork.model_selection import StratifiedKFold
+from sklearn_fork.model_selection import StratifiedShuffleSplit
+from sklearn_fork.model_selection import LeaveOneGroupOut
+from sklearn_fork.model_selection import LeavePGroupsOut
+from sklearn_fork.model_selection import GroupKFold
+from sklearn_fork.model_selection import GroupShuffleSplit
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork.model_selection import RandomizedSearchCV
+from sklearn_fork.model_selection import ParameterGrid
+from sklearn_fork.model_selection import ParameterSampler
+from sklearn_fork.model_selection._search import BaseSearchCV
 
-from sklearn.model_selection._validation import FitFailedWarning
+from sklearn_fork.model_selection._validation import FitFailedWarning
 
-from sklearn.svm import LinearSVC, SVC
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.cluster import KMeans
-from sklearn.neighbors import KernelDensity
-from sklearn.neighbors import LocalOutlierFactor
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import f1_score
-from sklearn.metrics import recall_score
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import make_scorer
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import r2_score
-from sklearn.metrics.pairwise import euclidean_distances
-from sklearn.impute import SimpleImputer
-from sklearn.pipeline import Pipeline
-from sklearn.linear_model import Ridge, SGDClassifier, LinearRegression
-from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.svm import LinearSVC, SVC
+from sklearn_fork.tree import DecisionTreeRegressor
+from sklearn_fork.tree import DecisionTreeClassifier
+from sklearn_fork.cluster import KMeans
+from sklearn_fork.neighbors import KernelDensity
+from sklearn_fork.neighbors import LocalOutlierFactor
+from sklearn_fork.neighbors import KNeighborsClassifier
+from sklearn_fork.metrics import f1_score
+from sklearn_fork.metrics import recall_score
+from sklearn_fork.metrics import accuracy_score
+from sklearn_fork.metrics import make_scorer
+from sklearn_fork.metrics import roc_auc_score
+from sklearn_fork.metrics import confusion_matrix
+from sklearn_fork.metrics import r2_score
+from sklearn_fork.metrics.pairwise import euclidean_distances
+from sklearn_fork.impute import SimpleImputer
+from sklearn_fork.pipeline import Pipeline
+from sklearn_fork.linear_model import Ridge, SGDClassifier, LinearRegression
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
 
-from sklearn.model_selection.tests.common import OneTimeSplitter
+from sklearn_fork.model_selection.tests.common import OneTimeSplitter
 
 
 # Neither of the following two estimators inherit from BaseEstimator,
@@ -204,7 +204,7 @@ def test_grid_search():
     grid_search.transform(X)
 
     # Test exception handling on scoring
-    grid_search.scoring = "sklearn"
+    grid_search.scoring = "sklearn_fork"
     with pytest.raises(ValueError):
         grid_search.fit(X, y)
 

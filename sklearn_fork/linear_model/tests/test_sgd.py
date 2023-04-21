@@ -6,24 +6,24 @@ import numpy as np
 import scipy.sparse as sp
 from unittest.mock import Mock
 
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import ignore_warnings
 
-from sklearn import linear_model, datasets, metrics
-from sklearn.base import clone, is_classifier
-from sklearn.svm import OneClassSVM
-from sklearn.preprocessing import LabelEncoder, scale, MinMaxScaler
-from sklearn.preprocessing import StandardScaler
-from sklearn.kernel_approximation import Nystroem
-from sklearn.pipeline import make_pipeline
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.model_selection import StratifiedShuffleSplit, ShuffleSplit
-from sklearn.linear_model import _sgd_fast as sgd_fast
-from sklearn.linear_model import _stochastic_gradient
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn_fork import linear_model, datasets, metrics
+from sklearn_fork.base import clone, is_classifier
+from sklearn_fork.svm import OneClassSVM
+from sklearn_fork.preprocessing import LabelEncoder, scale, MinMaxScaler
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.kernel_approximation import Nystroem
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork.model_selection import StratifiedShuffleSplit, ShuffleSplit
+from sklearn_fork.linear_model import _sgd_fast as sgd_fast
+from sklearn_fork.linear_model import _stochastic_gradient
+from sklearn_fork.model_selection import RandomizedSearchCV
 
 
 def _update_kwargs(kwargs):

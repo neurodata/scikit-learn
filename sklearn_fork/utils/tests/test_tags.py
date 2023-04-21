@@ -1,7 +1,7 @@
 import pytest
 
-from sklearn.base import BaseEstimator
-from sklearn.utils._tags import (
+from sklearn_fork.base import BaseEstimator
+from sklearn_fork.utils._tags import (
     _DEFAULT_TAGS,
     _safe_tags,
 )

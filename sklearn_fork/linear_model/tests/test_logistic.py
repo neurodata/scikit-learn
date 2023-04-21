@@ -9,25 +9,25 @@ from scipy import sparse
 
 import pytest
 
-from sklearn.base import clone
-from sklearn.datasets import load_iris, make_classification
-from sklearn.metrics import log_loss
-from sklearn.metrics import get_scorer
-from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import cross_val_score
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.utils import compute_class_weight, _IS_32BIT
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils import shuffle
-from sklearn.linear_model import SGDClassifier
-from sklearn.preprocessing import scale
-from sklearn.utils._testing import skip_if_no_parallel
-from sklearn.svm import l1_min_c
+from sklearn_fork.base import clone
+from sklearn_fork.datasets import load_iris, make_classification
+from sklearn_fork.metrics import log_loss
+from sklearn_fork.metrics import get_scorer
+from sklearn_fork.model_selection import StratifiedKFold
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.model_selection import cross_val_score
+from sklearn_fork.preprocessing import LabelEncoder, StandardScaler
+from sklearn_fork.utils import compute_class_weight, _IS_32BIT
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils import shuffle
+from sklearn_fork.linear_model import SGDClassifier
+from sklearn_fork.preprocessing import scale
+from sklearn_fork.utils._testing import skip_if_no_parallel
+from sklearn_fork.svm import l1_min_c
 
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.linear_model._logistic import (
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork.linear_model._logistic import (
     _log_reg_scoring_path,
     _logistic_regression_path,
     LogisticRegression as LogisticRegressionDefault,
@@ -35,7 +35,7 @@ from sklearn.linear_model._logistic import (
 )
 
 pytestmark = pytest.mark.filterwarnings(
-    "error::sklearn.exceptions.ConvergenceWarning:sklearn.*"
+    "error::sklearn_fork.exceptions.ConvergenceWarning:sklearn_fork.*"
 )
 # Fixing random_state helps prevent ConvergenceWarnings
 LogisticRegression = partial(LogisticRegressionDefault, random_state=0)

@@ -136,9 +136,9 @@ class SequentialFeatureSelector(SelectorMixin, MetaEstimatorMixin, BaseEstimator
 
     Examples
     --------
-    >>> from sklearn.feature_selection import SequentialFeatureSelector
-    >>> from sklearn.neighbors import KNeighborsClassifier
-    >>> from sklearn.datasets import load_iris
+    >>> from sklearn_fork.feature_selection import SequentialFeatureSelector
+    >>> from sklearn_fork.neighbors import KNeighborsClassifier
+    >>> from sklearn_fork.datasets import load_iris
     >>> X, y = load_iris(return_X_y=True)
     >>> knn = KNeighborsClassifier(n_neighbors=3)
     >>> sfs = SequentialFeatureSelector(knn, n_features_to_select=3)

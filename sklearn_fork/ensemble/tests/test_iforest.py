@@ -1,5 +1,5 @@
 """
-Testing for Isolation Forest algorithm (sklearn.ensemble.iforest).
+Testing for Isolation Forest algorithm (sklearn_fork.ensemble.iforest).
 """
 
 # Authors: Nicolas Goix <nicolas.goix@telecom-paristech.fr>
@@ -11,18 +11,18 @@ import warnings
 
 import numpy as np
 
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import assert_allclose
 
-from sklearn.model_selection import ParameterGrid
-from sklearn.ensemble import IsolationForest
-from sklearn.ensemble._iforest import _average_path_length
-from sklearn.model_selection import train_test_split
-from sklearn.datasets import load_diabetes, load_iris, make_classification
-from sklearn.utils import check_random_state
-from sklearn.metrics import roc_auc_score
+from sklearn_fork.model_selection import ParameterGrid
+from sklearn_fork.ensemble import IsolationForest
+from sklearn_fork.ensemble._iforest import _average_path_length
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.datasets import load_diabetes, load_iris, make_classification
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.metrics import roc_auc_score
 
 from scipy.sparse import csc_matrix, csr_matrix
 from unittest.mock import Mock, patch
@@ -258,7 +258,7 @@ def test_iforest_warm_start():
 # mock get_chunk_n_rows to actually test more than one chunk (here one
 # chunk has 3 rows):
 @patch(
-    "sklearn.ensemble._iforest.get_chunk_n_rows",
+    "sklearn_fork.ensemble._iforest.get_chunk_n_rows",
     side_effect=Mock(**{"return_value": 3}),
 )
 @pytest.mark.parametrize("contamination, n_predict_calls", [(0.25, 3), ("auto", 2)])
@@ -271,7 +271,7 @@ def test_iforest_chunks_works1(
 
 # idem with chunk_size = 10 rows
 @patch(
-    "sklearn.ensemble._iforest.get_chunk_n_rows",
+    "sklearn_fork.ensemble._iforest.get_chunk_n_rows",
     side_effect=Mock(**{"return_value": 10}),
 )
 @pytest.mark.parametrize("contamination, n_predict_calls", [(0.25, 3), ("auto", 2)])

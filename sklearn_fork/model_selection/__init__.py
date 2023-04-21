@@ -84,6 +84,6 @@ def __getattr__(name):
             f"{name} is experimental and the API might change without any "
             "deprecation cycle. To use it, you need to explicitly import "
             "enable_halving_search_cv:\n"
-            "from sklearn.experimental import enable_halving_search_cv"
+            "from sklearn_fork.experimental import enable_halving_search_cv"
         )
     raise AttributeError(f"module {__name__} has no attribute {name}")

@@ -3,7 +3,7 @@ import warnings
 import numpy as np
 import pytest
 
-from sklearn.utils import Bunch
+from sklearn_fork.utils import Bunch
 
 
 def test_bunch_attribute_deprecation():

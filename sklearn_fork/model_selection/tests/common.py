@@ -4,7 +4,7 @@ Common utilities for testing model selection.
 
 import numpy as np
 
-from sklearn.model_selection import KFold
+from sklearn_fork.model_selection import KFold
 
 
 class OneTimeSplitter:

@@ -12,23 +12,23 @@ from inspect import signature
 import numpy as np
 
 # make it possible to discover experimental estimators when calling `all_estimators`
-from sklearn.experimental import enable_iterative_imputer  # noqa
-from sklearn.experimental import enable_halving_search_cv  # noqa
+from sklearn_fork.experimental import enable_iterative_imputer  # noqa
+from sklearn_fork.experimental import enable_halving_search_cv  # noqa
 
-import sklearn
-from sklearn.utils import IS_PYPY
-from sklearn.utils._testing import check_docstring_parameters
-from sklearn.utils._testing import _get_func_name
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils import all_estimators
-from sklearn.utils.estimator_checks import _enforce_estimator_tags_y
-from sklearn.utils.estimator_checks import _enforce_estimator_tags_X
-from sklearn.utils.estimator_checks import _construct_instance
-from sklearn.utils.fixes import sp_version, parse_version
-from sklearn.utils.deprecation import _is_deprecated
-from sklearn.datasets import make_classification
-from sklearn.linear_model import LogisticRegression
-from sklearn.preprocessing import FunctionTransformer
+import sklearn_fork
+from sklearn_fork.utils import IS_PYPY
+from sklearn_fork.utils._testing import check_docstring_parameters
+from sklearn_fork.utils._testing import _get_func_name
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils import all_estimators
+from sklearn_fork.utils.estimator_checks import _enforce_estimator_tags_y
+from sklearn_fork.utils.estimator_checks import _enforce_estimator_tags_X
+from sklearn_fork.utils.estimator_checks import _construct_instance
+from sklearn_fork.utils.fixes import sp_version, parse_version
+from sklearn_fork.utils.deprecation import _is_deprecated
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.preprocessing import FunctionTransformer
 
 import pytest
 
@@ -38,22 +38,22 @@ import pytest
 with warnings.catch_warnings():
     warnings.simplefilter("ignore", FutureWarning)
     # mypy error: Module has no attribute "__path__"
-    sklearn_path = sklearn.__path__  # type: ignore  # mypy issue #1422
+    sklearn_path = sklearn_fork.__path__  # type: ignore  # mypy issue #1422
     PUBLIC_MODULES = set(
         [
             pckg[1]
-            for pckg in walk_packages(prefix="sklearn.", path=sklearn_path)
+            for pckg in walk_packages(prefix="sklearn_fork.", path=sklearn_path)
             if not ("._" in pckg[1] or ".tests." in pckg[1])
         ]
     )
 
 # functions to ignore args / docstring of
 _DOCSTRING_IGNORES = [
-    "sklearn.utils.deprecation.load_mlcomp",
-    "sklearn.pipeline.make_pipeline",
-    "sklearn.pipeline.make_union",
-    "sklearn.utils.extmath.safe_sparse_dot",
-    "sklearn.utils._joblib",
+    "sklearn_fork.utils.deprecation.load_mlcomp",
+    "sklearn_fork.pipeline.make_pipeline",
+    "sklearn_fork.pipeline.make_union",
+    "sklearn_fork.utils.extmath.safe_sparse_dot",
+    "sklearn_fork.utils._joblib",
 ]
 
 # Methods where y param should be ignored if y=None by default
@@ -88,14 +88,14 @@ def test_docstring_parameters():
         if name.endswith(".conftest"):
             # pytest tooling, not part of the scikit-learn API
             continue
-        if name == "sklearn.utils.fixes":
+        if name == "sklearn_fork.utils.fixes":
             # We cannot always control these docstrings
             continue
         with warnings.catch_warnings(record=True):
             module = importlib.import_module(name)
         classes = inspect.getmembers(module, inspect.isclass)
         # Exclude non-scikit-learn classes
-        classes = [cls for cls in classes if cls[1].__module__.startswith("sklearn")]
+        classes = [cls for cls in classes if cls[1].__module__.startswith("sklearn_fork")]
         for cname, cls in classes:
             this_incorrect = []
             if cname in _DOCSTRING_IGNORES or cname.startswith("_"):
@@ -154,7 +154,7 @@ def test_docstring_parameters():
 @ignore_warnings(category=FutureWarning)
 def test_tabs():
     # Test that there are no tabs in our source files
-    for importer, modname, ispkg in walk_packages(sklearn.__path__, prefix="sklearn."):
+    for importer, modname, ispkg in walk_packages(sklearn_fork.__path__, prefix="sklearn_fork."):
         if IS_PYPY and (
             "_svmlight_format_io" in modname
             or "feature_extraction._hashing_fast" in modname

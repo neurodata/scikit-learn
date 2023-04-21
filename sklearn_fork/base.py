@@ -72,7 +72,7 @@ def clone(estimator, *, safe=True):
 
 
 def _clone_parametrized(estimator, *, safe=True):
-    """Default implementation of clone. See :func:`sklearn.base.clone` for details."""
+    """Default implementation of clone. See :func:`sklearn_fork.base.clone` for details."""
 
     estimator_type = type(estimator)
     # XXX: not handling dictionaries
@@ -191,7 +191,7 @@ class BaseEstimator:
         """Set the parameters of this estimator.
 
         The method works on simple estimators as well as on nested objects
-        (such as :class:`~sklearn.pipeline.Pipeline`). The latter have
+        (such as :class:`~sklearn_fork.pipeline.Pipeline`). The latter have
         parameters of the form ``<component>__<parameter>`` so that it's
         possible to update each component of a nested object.
 
@@ -236,7 +236,7 @@ class BaseEstimator:
             if (
                 key == "base_estimator"
                 and valid_params[key] == "deprecated"
-                and self.__module__.startswith("sklearn.")
+                and self.__module__.startswith("sklearn_fork.")
             ):
                 warnings.warn(
                     (
@@ -311,7 +311,7 @@ class BaseEstimator:
         if getattr(self, "__slots__", None):
             raise TypeError(
                 "You cannot use `__slots__` in objects inheriting from "
-                "`sklearn.base.BaseEstimator`."
+                "`sklearn_fork.base.BaseEstimator`."
             )
 
         try:
@@ -324,13 +324,13 @@ class BaseEstimator:
             # Python < 3.11
             state = self.__dict__.copy()
 
-        if type(self).__module__.startswith("sklearn."):
+        if type(self).__module__.startswith("sklearn_fork."):
             return dict(state.items(), _sklearn_version=__version__)
         else:
             return state
 
     def __setstate__(self, state):
-        if type(self).__module__.startswith("sklearn."):
+        if type(self).__module__.startswith("sklearn_fork."):
             pickle_version = state.pop("_sklearn_version", "pre-0.18")
             if pickle_version != __version__:
                 warnings.warn(
@@ -552,8 +552,8 @@ class BaseEstimator:
             `n_features_in_` are checked.
 
         **check_params : kwargs
-            Parameters passed to :func:`sklearn.utils.check_array` or
-            :func:`sklearn.utils.check_X_y`. Ignored if validate_separately
+            Parameters passed to :func:`sklearn_fork.utils.check_array` or
+            :func:`sklearn_fork.utils.check_X_y`. Ignored if validate_separately
             is not False.
 
             `estimator=self` is automatically added to these params to generate
@@ -733,10 +733,10 @@ class RegressorMixin:
         -----
         The :math:`R^2` score used when calling ``score`` on a regressor uses
         ``multioutput='uniform_average'`` from version 0.23 to keep consistent
-        with default value of :func:`~sklearn.metrics.r2_score`.
+        with default value of :func:`~sklearn_fork.metrics.r2_score`.
         This influences the ``score`` method of all the multioutput
         regressors (except for
-        :class:`~sklearn.multioutput.MultiOutputRegressor`).
+        :class:`~sklearn_fork.multioutput.MultiOutputRegressor`).
         """
 
         from .metrics import r2_score

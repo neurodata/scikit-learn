@@ -4,31 +4,31 @@ import re
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose, assert_array_equal
-from sklearn._loss.loss import (
+from sklearn_fork._loss.loss import (
     AbsoluteError,
     HalfBinomialLoss,
     HalfSquaredError,
     PinballLoss,
 )
-from sklearn.datasets import make_classification, make_regression
-from sklearn.datasets import make_low_rank_matrix
-from sklearn.preprocessing import KBinsDiscretizer, MinMaxScaler, OneHotEncoder
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.base import clone, BaseEstimator, TransformerMixin
-from sklearn.base import is_regressor
-from sklearn.pipeline import make_pipeline
-from sklearn.metrics import mean_gamma_deviance, mean_poisson_deviance
-from sklearn.dummy import DummyRegressor
-from sklearn.exceptions import NotFittedError
-from sklearn.compose import make_column_transformer
+from sklearn_fork.datasets import make_classification, make_regression
+from sklearn_fork.datasets import make_low_rank_matrix
+from sklearn_fork.preprocessing import KBinsDiscretizer, MinMaxScaler, OneHotEncoder
+from sklearn_fork.model_selection import train_test_split, cross_val_score
+from sklearn_fork.base import clone, BaseEstimator, TransformerMixin
+from sklearn_fork.base import is_regressor
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.metrics import mean_gamma_deviance, mean_poisson_deviance
+from sklearn_fork.dummy import DummyRegressor
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.compose import make_column_transformer
 
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.ensemble._hist_gradient_boosting.grower import TreeGrower
-from sklearn.ensemble._hist_gradient_boosting.binning import _BinMapper
-from sklearn.ensemble._hist_gradient_boosting.common import G_H_DTYPE
-from sklearn.utils import shuffle
-from sklearn.utils._openmp_helpers import _openmp_effective_n_threads
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.ensemble._hist_gradient_boosting.grower import TreeGrower
+from sklearn_fork.ensemble._hist_gradient_boosting.binning import _BinMapper
+from sklearn_fork.ensemble._hist_gradient_boosting.common import G_H_DTYPE
+from sklearn_fork.utils import shuffle
+from sklearn_fork.utils._openmp_helpers import _openmp_effective_n_threads
 
 
 n_threads = _openmp_effective_n_threads()

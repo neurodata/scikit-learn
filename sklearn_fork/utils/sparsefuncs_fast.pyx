@@ -13,7 +13,7 @@ import numpy as np
 from cython cimport floating
 from cython.parallel cimport prange
 
-from sklearn.utils._openmp_helpers import _openmp_effective_n_threads
+from sklearn_fork.utils._openmp_helpers import _openmp_effective_n_threads
 
 cnp.import_array()
 

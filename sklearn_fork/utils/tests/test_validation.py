@@ -13,34 +13,34 @@ from pytest import importorskip
 import numpy as np
 import scipy.sparse as sp
 
-from sklearn._config import config_context
-from sklearn.utils._testing import assert_no_warnings
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils._testing import SkipTest
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_allclose_dense_sparse
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import _convert_container
-from sklearn.utils import as_float_array, check_array, check_symmetric
-from sklearn.utils import check_X_y
-from sklearn.utils import deprecated
+from sklearn_fork._config import config_context
+from sklearn_fork.utils._testing import assert_no_warnings
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import SkipTest
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_allclose_dense_sparse
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import _convert_container
+from sklearn_fork.utils import as_float_array, check_array, check_symmetric
+from sklearn_fork.utils import check_X_y
+from sklearn_fork.utils import deprecated
 
 # TODO: add this estimator into the _mocking module in a further refactoring
-from sklearn.metrics.tests.test_score_objects import EstimatorWithFit
-from sklearn.utils._mocking import (
+from sklearn_fork.metrics.tests.test_score_objects import EstimatorWithFit
+from sklearn_fork.utils._mocking import (
     MockDataFrame,
     _MockEstimatorOnOffPrediction,
 )
-from sklearn.utils.fixes import parse_version
-from sklearn.utils.estimator_checks import _NotAnArray
-from sklearn.random_projection import _sparse_random_matrix
-from sklearn.linear_model import ARDRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.svm import SVR
-from sklearn.datasets import make_blobs
-from sklearn.utils import _safe_indexing
-from sklearn.utils.validation import (
+from sklearn_fork.utils.fixes import parse_version
+from sklearn_fork.utils.estimator_checks import _NotAnArray
+from sklearn_fork.random_projection import _sparse_random_matrix
+from sklearn_fork.linear_model import ARDRegression
+from sklearn_fork.neighbors import KNeighborsClassifier
+from sklearn_fork.ensemble import RandomForestRegressor
+from sklearn_fork.svm import SVR
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.utils import _safe_indexing
+from sklearn_fork.utils.validation import (
     has_fit_parameter,
     check_is_fitted,
     check_consistent_length,
@@ -61,13 +61,13 @@ from sklearn.utils.validation import (
     _check_fit_params,
     _check_response_method,
 )
-from sklearn.base import BaseEstimator
-import sklearn
+from sklearn_fork.base import BaseEstimator
+import sklearn_fork
 
-from sklearn.exceptions import NotFittedError, PositiveSpectrumWarning
+from sklearn_fork.exceptions import NotFittedError, PositiveSpectrumWarning
 
-from sklearn.utils._testing import TempMemmap
-from sklearn.utils._testing import skip_if_array_api_compat_not_configured
+from sklearn_fork.utils._testing import TempMemmap
+from sklearn_fork.utils._testing import skip_if_array_api_compat_not_configured
 
 
 def test_as_float_array():
@@ -133,7 +133,7 @@ def test_memmap():
 
     asflt = lambda x: as_float_array(x, copy=False)
 
-    with NamedTemporaryFile(prefix="sklearn-test") as tmp:
+    with NamedTemporaryFile(prefix="sklearn_fork-test") as tmp:
         M = np.memmap(tmp, shape=(10, 10), dtype=np.float32)
         M[:] = 0
 
@@ -217,7 +217,7 @@ def test_check_array_links_to_imputer_doc_only_for_X(input_name, retype):
     extended_msg = (
         f"\n{estimator.__class__.__name__} does not accept missing values"
         " encoded as NaN natively. For supervised learning, you might want"
-        " to consider sklearn.ensemble.HistGradientBoostingClassifier and Regressor"
+        " to consider sklearn_fork.ensemble.HistGradientBoostingClassifier and Regressor"
         " which accept missing values encoded as NaNs natively."
         " Alternatively, it is possible to preprocess the"
         " data, for instance by using an imputer transformer in a pipeline"
@@ -923,9 +923,9 @@ def test_suppress_validation():
     X = np.array([0, np.inf])
     with pytest.raises(ValueError):
         assert_all_finite(X)
-    sklearn.set_config(assume_finite=True)
+    sklearn_fork.set_config(assume_finite=True)
     assert_all_finite(X)
-    sklearn.set_config(assume_finite=False)
+    sklearn_fork.set_config(assume_finite=False)
     with pytest.raises(ValueError):
         assert_all_finite(X)
 

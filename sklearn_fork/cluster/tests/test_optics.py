@@ -6,18 +6,18 @@ import pytest
 from scipy import sparse
 import warnings
 
-from sklearn.datasets import make_blobs
-from sklearn.cluster import OPTICS
-from sklearn.cluster._optics import _extend_region, _extract_xi_labels
-from sklearn.exceptions import DataConversionWarning
-from sklearn.metrics.cluster import contingency_matrix
-from sklearn.metrics.pairwise import pairwise_distances
-from sklearn.cluster import DBSCAN
-from sklearn.utils import shuffle
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_allclose
-from sklearn.exceptions import EfficiencyWarning
-from sklearn.cluster.tests.common import generate_clustered_data
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.cluster import OPTICS
+from sklearn_fork.cluster._optics import _extend_region, _extract_xi_labels
+from sklearn_fork.exceptions import DataConversionWarning
+from sklearn_fork.metrics.cluster import contingency_matrix
+from sklearn_fork.metrics.pairwise import pairwise_distances
+from sklearn_fork.cluster import DBSCAN
+from sklearn_fork.utils import shuffle
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.exceptions import EfficiencyWarning
+from sklearn_fork.cluster.tests.common import generate_clustered_data
 
 
 rng = np.random.RandomState(0)
@@ -577,7 +577,7 @@ def test_compare_to_ELKI():
     ]
 
     # Tests against known extraction array
-    # Does NOT work with metric='euclidean', because sklearn euclidean has
+    # Does NOT work with metric='euclidean', because sklearn_fork euclidean has
     # worse numeric precision. 'minkowski' is slower but more accurate.
     clust1 = OPTICS(min_samples=5).fit(X)
 

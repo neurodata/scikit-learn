@@ -235,7 +235,7 @@ class SpectralCoclustering(BaseSpectral):
     svd_method : {'randomized', 'arpack'}, default='randomized'
         Selects the algorithm for finding singular vectors. May be
         'randomized' or 'arpack'. If 'randomized', use
-        :func:`sklearn.utils.extmath.randomized_svd`, which may be faster
+        :func:`sklearn_fork.utils.extmath.randomized_svd`, which may be faster
         for large matrices. If 'arpack', use
         :func:`scipy.sparse.linalg.svds`, which is more accurate, but
         possibly slower in some cases.
@@ -309,7 +309,7 @@ class SpectralCoclustering(BaseSpectral):
 
     Examples
     --------
-    >>> from sklearn.cluster import SpectralCoclustering
+    >>> from sklearn_fork.cluster import SpectralCoclustering
     >>> import numpy as np
     >>> X = np.array([[1, 1], [2, 1], [1, 0],
     ...               [4, 7], [3, 5], [3, 6]])
@@ -405,7 +405,7 @@ class SpectralBiclustering(BaseSpectral):
     svd_method : {'randomized', 'arpack'}, default='randomized'
         Selects the algorithm for finding singular vectors. May be
         'randomized' or 'arpack'. If 'randomized', uses
-        :func:`~sklearn.utils.extmath.randomized_svd`, which may be faster
+        :func:`~sklearn_fork.utils.extmath.randomized_svd`, which may be faster
         for large matrices. If 'arpack', uses
         `scipy.sparse.linalg.svds`, which is more accurate, but
         possibly slower in some cases.
@@ -479,7 +479,7 @@ class SpectralBiclustering(BaseSpectral):
 
     Examples
     --------
-    >>> from sklearn.cluster import SpectralBiclustering
+    >>> from sklearn_fork.cluster import SpectralBiclustering
     >>> import numpy as np
     >>> X = np.array([[1, 1], [2, 1], [1, 0],
     ...               [4, 7], [3, 5], [3, 6]])

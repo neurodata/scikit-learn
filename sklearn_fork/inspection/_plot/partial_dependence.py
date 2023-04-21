@@ -26,8 +26,8 @@ class PartialDependenceDisplay:
     referred to as: Individual Condition Expectation (ICE).
 
     It is recommended to use
-    :func:`~sklearn.inspection.PartialDependenceDisplay.from_estimator` to create a
-    :class:`~sklearn.inspection.PartialDependenceDisplay`. All parameters are
+    :func:`~sklearn_fork.inspection.PartialDependenceDisplay.from_estimator` to create a
+    :class:`~sklearn_fork.inspection.PartialDependenceDisplay`. All parameters are
     stored as attributes.
 
     Read more in
@@ -39,7 +39,7 @@ class PartialDependenceDisplay:
     Parameters
     ----------
     pd_results : list of Bunch
-        Results of :func:`~sklearn.inspection.partial_dependence` for
+        Results of :func:`~sklearn_fork.inspection.partial_dependence` for
         ``features``.
 
     features : list of (int,) or list of (int, int)
@@ -72,7 +72,7 @@ class PartialDependenceDisplay:
 
         .. deprecated:: 1.1
            Pass the parameter `pdp_lim` to
-           :meth:`~sklearn.inspection.PartialDependenceDisplay.plot` instead.
+           :meth:`~sklearn_fork.inspection.PartialDependenceDisplay.plot` instead.
            It will be removed in 1.3.
 
     kind : {'average', 'individual', 'both'} or list of such str, \
@@ -209,10 +209,10 @@ class PartialDependenceDisplay:
     --------
     >>> import numpy as np
     >>> import matplotlib.pyplot as plt
-    >>> from sklearn.datasets import make_friedman1
-    >>> from sklearn.ensemble import GradientBoostingRegressor
-    >>> from sklearn.inspection import PartialDependenceDisplay
-    >>> from sklearn.inspection import partial_dependence
+    >>> from sklearn_fork.datasets import make_friedman1
+    >>> from sklearn_fork.ensemble import GradientBoostingRegressor
+    >>> from sklearn_fork.inspection import PartialDependenceDisplay
+    >>> from sklearn_fork.inspection import partial_dependence
     >>> X, y = make_friedman1()
     >>> clf = GradientBoostingRegressor(n_estimators=10).fit(X, y)
     >>> features, feature_names = [(0,)], [f"Features #{i}" for i in range(X.shape[1])]
@@ -299,10 +299,10 @@ class PartialDependenceDisplay:
             multiple estimators, please pass the axes created by the first call to the
             second call::
 
-               >>> from sklearn.inspection import PartialDependenceDisplay
-               >>> from sklearn.datasets import make_friedman1
-               >>> from sklearn.linear_model import LinearRegression
-               >>> from sklearn.ensemble import RandomForestRegressor
+               >>> from sklearn_fork.inspection import PartialDependenceDisplay
+               >>> from sklearn_fork.datasets import make_friedman1
+               >>> from sklearn_fork.linear_model import LinearRegression
+               >>> from sklearn_fork.ensemble import RandomForestRegressor
                >>> X, y = make_friedman1()
                >>> est1 = LinearRegression().fit(X, y)
                >>> est2 = RandomForestRegressor().fit(X, y)
@@ -313,8 +313,8 @@ class PartialDependenceDisplay:
 
         .. warning::
 
-            For :class:`~sklearn.ensemble.GradientBoostingClassifier` and
-            :class:`~sklearn.ensemble.GradientBoostingRegressor`, the
+            For :class:`~sklearn_fork.ensemble.GradientBoostingClassifier` and
+            :class:`~sklearn_fork.ensemble.GradientBoostingRegressor`, the
             `'recursion'` method (used by default) will not account for the `init`
             predictor of the boosting process. In practice, this will produce
             the same values as `'brute'` up to a constant offset in the target
@@ -323,10 +323,10 @@ class PartialDependenceDisplay:
             partial dependence values are incorrect for `'recursion'` because the
             offset will be sample-dependent. It is preferable to use the `'brute'`
             method. Note that this only applies to
-            :class:`~sklearn.ensemble.GradientBoostingClassifier` and
-            :class:`~sklearn.ensemble.GradientBoostingRegressor`, not to
-            :class:`~sklearn.ensemble.HistGradientBoostingClassifier` and
-            :class:`~sklearn.ensemble.HistGradientBoostingRegressor`.
+            :class:`~sklearn_fork.ensemble.GradientBoostingClassifier` and
+            :class:`~sklearn_fork.ensemble.GradientBoostingRegressor`, not to
+            :class:`~sklearn_fork.ensemble.HistGradientBoostingClassifier` and
+            :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor`.
 
         .. versionadded:: 1.0
 
@@ -405,12 +405,12 @@ class PartialDependenceDisplay:
 
             - `'recursion'` is only supported for some tree-based estimators
               (namely
-              :class:`~sklearn.ensemble.GradientBoostingClassifier`,
-              :class:`~sklearn.ensemble.GradientBoostingRegressor`,
-              :class:`~sklearn.ensemble.HistGradientBoostingClassifier`,
-              :class:`~sklearn.ensemble.HistGradientBoostingRegressor`,
-              :class:`~sklearn.tree.DecisionTreeRegressor`,
-              :class:`~sklearn.ensemble.RandomForestRegressor`
+              :class:`~sklearn_fork.ensemble.GradientBoostingClassifier`,
+              :class:`~sklearn_fork.ensemble.GradientBoostingRegressor`,
+              :class:`~sklearn_fork.ensemble.HistGradientBoostingClassifier`,
+              :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor`,
+              :class:`~sklearn_fork.tree.DecisionTreeRegressor`,
+              :class:`~sklearn_fork.ensemble.RandomForestRegressor`
               but is more efficient in terms of speed.
               With this method, the target response of a
               classifier is always the decision function, not the predicted
@@ -503,7 +503,7 @@ class PartialDependenceDisplay:
 
         Returns
         -------
-        display : :class:`~sklearn.inspection.PartialDependenceDisplay`
+        display : :class:`~sklearn_fork.inspection.PartialDependenceDisplay`
 
         See Also
         --------
@@ -512,9 +512,9 @@ class PartialDependenceDisplay:
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import make_friedman1
-        >>> from sklearn.ensemble import GradientBoostingRegressor
-        >>> from sklearn.inspection import PartialDependenceDisplay
+        >>> from sklearn_fork.datasets import make_friedman1
+        >>> from sklearn_fork.ensemble import GradientBoostingRegressor
+        >>> from sklearn_fork.inspection import PartialDependenceDisplay
         >>> X, y = make_friedman1()
         >>> clf = GradientBoostingRegressor(n_estimators=10).fit(X, y)
         >>> PartialDependenceDisplay.from_estimator(clf, X, [0, (0, 1)])
@@ -1197,8 +1197,8 @@ class PartialDependenceDisplay:
 
         Returns
         -------
-        display : :class:`~sklearn.inspection.PartialDependenceDisplay`
-            Returns a :class:`~sklearn.inspection.PartialDependenceDisplay`
+        display : :class:`~sklearn_fork.inspection.PartialDependenceDisplay`
+            Returns a :class:`~sklearn_fork.inspection.PartialDependenceDisplay`
             object that contains the partial dependence plots.
         """
 

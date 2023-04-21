@@ -75,7 +75,7 @@ General KDD structure :
     Targets               str, 'normal.' or name of the anomaly type
     ================      ==========================================
 
-:func:`sklearn.datasets.fetch_kddcup99` will load the kddcup99 dataset; it
+:func:`sklearn_fork.datasets.fetch_kddcup99` will load the kddcup99 dataset; it
 returns a dictionary-like object with the feature matrix in the ``data`` member
 and the target values in ``target``. The "as_frame" optional argument converts
 ``data`` into a pandas DataFrame and ``target`` into a pandas Series. The

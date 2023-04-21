@@ -7,14 +7,14 @@ from numpy.testing import assert_allclose
 from scipy.sparse import csr_matrix, csc_matrix, dok_matrix, lil_matrix
 from scipy.sparse import issparse
 
-from sklearn import datasets
-from sklearn.utils._testing import assert_array_equal
-from sklearn.metrics.cluster import silhouette_score
-from sklearn.metrics.cluster import silhouette_samples
-from sklearn.metrics.cluster._unsupervised import _silhouette_reduce
-from sklearn.metrics import pairwise_distances
-from sklearn.metrics.cluster import calinski_harabasz_score
-from sklearn.metrics.cluster import davies_bouldin_score
+from sklearn_fork import datasets
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.metrics.cluster import silhouette_score
+from sklearn_fork.metrics.cluster import silhouette_samples
+from sklearn_fork.metrics.cluster._unsupervised import _silhouette_reduce
+from sklearn_fork.metrics import pairwise_distances
+from sklearn_fork.metrics.cluster import calinski_harabasz_score
+from sklearn_fork.metrics.cluster import davies_bouldin_score
 
 
 def test_silhouette():

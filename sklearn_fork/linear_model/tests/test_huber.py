@@ -4,13 +4,13 @@
 import numpy as np
 from scipy import optimize, sparse
 
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
 
-from sklearn.datasets import make_regression
-from sklearn.linear_model import HuberRegressor, LinearRegression, SGDRegressor, Ridge
-from sklearn.linear_model._huber import _huber_loss_and_gradient
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.linear_model import HuberRegressor, LinearRegression, SGDRegressor, Ridge
+from sklearn_fork.linear_model._huber import _huber_loss_and_gradient
 
 
 def make_regression_with_outliers(n_samples=50, n_features=20):

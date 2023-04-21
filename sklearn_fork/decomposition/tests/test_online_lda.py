@@ -8,18 +8,18 @@ from numpy.testing import assert_array_equal
 
 import pytest
 
-from sklearn.decomposition import LatentDirichletAllocation
-from sklearn.decomposition._online_lda_fast import (
+from sklearn_fork.decomposition import LatentDirichletAllocation
+from sklearn_fork.decomposition._online_lda_fast import (
     _dirichlet_expectation_1d,
     _dirichlet_expectation_2d,
 )
 
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import if_safe_multiprocessing_with_blas
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import if_safe_multiprocessing_with_blas
 
-from sklearn.exceptions import NotFittedError
+from sklearn_fork.exceptions import NotFittedError
 from io import StringIO
 
 

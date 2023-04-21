@@ -3,14 +3,14 @@ import numpy as np
 import math
 import pytest
 
-from sklearn import datasets, clone
-from sklearn import manifold
-from sklearn import neighbors
-from sklearn import pipeline
-from sklearn import preprocessing
-from sklearn.datasets import make_blobs
-from sklearn.metrics.pairwise import pairwise_distances
-from sklearn.utils._testing import (
+from sklearn_fork import datasets, clone
+from sklearn_fork import manifold
+from sklearn_fork import neighbors
+from sklearn_fork import pipeline
+from sklearn_fork import preprocessing
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.metrics.pairwise import pairwise_distances
+from sklearn_fork.utils._testing import (
     assert_allclose,
     assert_allclose_dense_sparse,
     assert_array_equal,

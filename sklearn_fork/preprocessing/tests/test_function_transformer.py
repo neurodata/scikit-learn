@@ -3,11 +3,11 @@ import warnings
 import pytest
 import numpy as np
 from scipy import sparse
-from sklearn.utils import _safe_indexing
+from sklearn_fork.utils import _safe_indexing
 
-from sklearn.preprocessing import FunctionTransformer
-from sklearn.pipeline import make_pipeline
-from sklearn.utils._testing import (
+from sklearn_fork.preprocessing import FunctionTransformer
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.utils._testing import (
     assert_array_equal,
     assert_allclose_dense_sparse,
     _convert_container,

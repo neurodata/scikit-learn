@@ -2,7 +2,7 @@
 
 import textwrap
 
-from sklearn.utils._testing import assert_run_python_script
+from sklearn_fork.utils._testing import assert_run_python_script
 
 
 def test_imports_strategies():
@@ -14,17 +14,17 @@ def test_imports_strategies():
     # recommended and can lead to many complications).
 
     good_import = """
-    from sklearn.experimental import enable_halving_search_cv
-    from sklearn.model_selection import HalvingGridSearchCV
-    from sklearn.model_selection import HalvingRandomSearchCV
+    from sklearn_fork.experimental import enable_halving_search_cv
+    from sklearn_fork.model_selection import HalvingGridSearchCV
+    from sklearn_fork.model_selection import HalvingRandomSearchCV
     """
     assert_run_python_script(textwrap.dedent(good_import))
 
     good_import_with_model_selection_first = """
-    import sklearn.model_selection
-    from sklearn.experimental import enable_halving_search_cv
-    from sklearn.model_selection import HalvingGridSearchCV
-    from sklearn.model_selection import HalvingRandomSearchCV
+    import sklearn_fork.model_selection
+    from sklearn_fork.experimental import enable_halving_search_cv
+    from sklearn_fork.model_selection import HalvingGridSearchCV
+    from sklearn_fork.model_selection import HalvingRandomSearchCV
     """
     assert_run_python_script(textwrap.dedent(good_import_with_model_selection_first))
 
@@ -32,10 +32,10 @@ def test_imports_strategies():
     import pytest
 
     with pytest.raises(ImportError, match='HalvingGridSearchCV is experimental'):
-        from sklearn.model_selection import HalvingGridSearchCV
+        from sklearn_fork.model_selection import HalvingGridSearchCV
 
-    import sklearn.experimental
+    import sklearn_fork.experimental
     with pytest.raises(ImportError, match='HalvingRandomSearchCV is experimental'):
-        from sklearn.model_selection import HalvingRandomSearchCV
+        from sklearn_fork.model_selection import HalvingRandomSearchCV
     """
     assert_run_python_script(textwrap.dedent(bad_imports))

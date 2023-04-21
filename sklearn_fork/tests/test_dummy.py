@@ -3,15 +3,15 @@ import pytest
 import numpy as np
 import scipy.sparse as sp
 
-from sklearn.base import clone
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils.stats import _weighted_percentile
+from sklearn_fork.base import clone
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils.stats import _weighted_percentile
 
-from sklearn.dummy import DummyClassifier, DummyRegressor
-from sklearn.exceptions import NotFittedError
+from sklearn_fork.dummy import DummyClassifier, DummyRegressor
+from sklearn_fork.exceptions import NotFittedError
 
 
 @ignore_warnings

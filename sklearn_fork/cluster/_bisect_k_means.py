@@ -188,7 +188,7 @@ class BisectingKMeans(_BaseKMeans):
 
     Examples
     --------
-    >>> from sklearn.cluster import BisectingKMeans
+    >>> from sklearn_fork.cluster import BisectingKMeans
     >>> import numpy as np
     >>> X = np.array([[1, 1], [10, 1], [3, 1],
     ...               [10, 0], [2, 1], [10, 2],

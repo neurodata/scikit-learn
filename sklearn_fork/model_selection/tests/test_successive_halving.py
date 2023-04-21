@@ -4,20 +4,20 @@ import pytest
 from scipy.stats import norm, randint
 import numpy as np
 
-from sklearn.datasets import make_classification
-from sklearn.dummy import DummyClassifier
-from sklearn.experimental import enable_halving_search_cv  # noqa
-from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.model_selection import LeaveOneGroupOut
-from sklearn.model_selection import LeavePGroupsOut
-from sklearn.model_selection import GroupKFold
-from sklearn.model_selection import GroupShuffleSplit
-from sklearn.model_selection import HalvingGridSearchCV
-from sklearn.model_selection import HalvingRandomSearchCV
-from sklearn.model_selection import KFold, ShuffleSplit
-from sklearn.svm import LinearSVC
-from sklearn.model_selection._search_successive_halving import (
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.dummy import DummyClassifier
+from sklearn_fork.experimental import enable_halving_search_cv  # noqa
+from sklearn_fork.model_selection import StratifiedKFold
+from sklearn_fork.model_selection import StratifiedShuffleSplit
+from sklearn_fork.model_selection import LeaveOneGroupOut
+from sklearn_fork.model_selection import LeavePGroupsOut
+from sklearn_fork.model_selection import GroupKFold
+from sklearn_fork.model_selection import GroupShuffleSplit
+from sklearn_fork.model_selection import HalvingGridSearchCV
+from sklearn_fork.model_selection import HalvingRandomSearchCV
+from sklearn_fork.model_selection import KFold, ShuffleSplit
+from sklearn_fork.svm import LinearSVC
+from sklearn_fork.model_selection._search_successive_halving import (
     _SubsampleMetaSplitter,
     _top_k,
 )
@@ -83,7 +83,7 @@ class SometimesFailClassifier(DummyClassifier):
         return super().predict(X)
 
 
-@pytest.mark.filterwarnings("ignore::sklearn.exceptions.FitFailedWarning")
+@pytest.mark.filterwarnings("ignore::sklearn_fork.exceptions.FitFailedWarning")
 @pytest.mark.filterwarnings("ignore:Scoring failed:UserWarning")
 @pytest.mark.filterwarnings("ignore:One or more of the:UserWarning")
 @pytest.mark.parametrize("HalvingSearch", (HalvingGridSearchCV, HalvingRandomSearchCV))

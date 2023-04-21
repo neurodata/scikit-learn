@@ -4,7 +4,7 @@
 # License: BSD 3 clause
 
 """
-The :mod:`sklearn.gaussian_process` module implements Gaussian Process
+The :mod:`sklearn_fork.gaussian_process` module implements Gaussian Process
 based regression and classification.
 """
 

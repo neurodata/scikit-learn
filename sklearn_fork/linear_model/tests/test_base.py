@@ -11,20 +11,20 @@ import numpy as np
 from scipy import sparse
 from scipy import linalg
 
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_allclose
 
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model._base import _deprecate_normalize
-from sklearn.linear_model._base import _preprocess_data
-from sklearn.linear_model._base import _rescale_data
-from sklearn.linear_model._base import make_dataset
-from sklearn.datasets import make_sparse_uncorrelated
-from sklearn.datasets import make_regression
-from sklearn.datasets import load_iris
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import add_dummy_feature
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.linear_model._base import _deprecate_normalize
+from sklearn_fork.linear_model._base import _preprocess_data
+from sklearn_fork.linear_model._base import _rescale_data
+from sklearn_fork.linear_model._base import make_dataset
+from sklearn_fork.datasets import make_sparse_uncorrelated
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.preprocessing import add_dummy_feature
 
 rtol = 1e-6
 

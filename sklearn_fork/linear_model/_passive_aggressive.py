@@ -159,8 +159,8 @@ class PassiveAggressiveClassifier(BaseSGDClassifier):
 
     Examples
     --------
-    >>> from sklearn.linear_model import PassiveAggressiveClassifier
-    >>> from sklearn.datasets import make_classification
+    >>> from sklearn_fork.linear_model import PassiveAggressiveClassifier
+    >>> from sklearn_fork.datasets import make_classification
     >>> X, y = make_classification(n_features=4, random_state=0)
     >>> clf = PassiveAggressiveClassifier(max_iter=1000, random_state=0,
     ... tol=1e-3)
@@ -252,7 +252,7 @@ class PassiveAggressiveClassifier(BaseSGDClassifier):
                 raise ValueError(
                     "class_weight 'balanced' is not supported for "
                     "partial_fit. For 'balanced' weights, use "
-                    "`sklearn.utils.compute_class_weight` with "
+                    "`sklearn_fork.utils.compute_class_weight` with "
                     "`class_weight='balanced'`. In place of y you "
                     "can use a large enough subset of the full "
                     "training set target to properly estimate the "
@@ -443,8 +443,8 @@ class PassiveAggressiveRegressor(BaseSGDRegressor):
 
     Examples
     --------
-    >>> from sklearn.linear_model import PassiveAggressiveRegressor
-    >>> from sklearn.datasets import make_regression
+    >>> from sklearn_fork.linear_model import PassiveAggressiveRegressor
+    >>> from sklearn_fork.datasets import make_regression
 
     >>> X, y = make_regression(n_features=4, random_state=0)
     >>> regr = PassiveAggressiveRegressor(max_iter=100, random_state=0,

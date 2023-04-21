@@ -70,7 +70,7 @@ class FeatureHasher(TransformerMixin, BaseEstimator):
     See Also
     --------
     DictVectorizer : Vectorizes string-valued features using a hash table.
-    sklearn.preprocessing.OneHotEncoder : Handles nominal/categorical features.
+    sklearn_fork.preprocessing.OneHotEncoder : Handles nominal/categorical features.
 
     Notes
     -----
@@ -81,7 +81,7 @@ class FeatureHasher(TransformerMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.feature_extraction import FeatureHasher
+    >>> from sklearn_fork.feature_extraction import FeatureHasher
     >>> h = FeatureHasher(n_features=10)
     >>> D = [{'dog': 1, 'cat':2, 'elephant':4},{'dog': 2, 'run': 5}]
     >>> f = h.transform(D)

@@ -60,7 +60,7 @@ def dbscan(
     metric : str or callable, default='minkowski'
         The metric to use when calculating distance between instances in a
         feature array. If metric is a string or callable, it must be one of
-        the options allowed by :func:`sklearn.metrics.pairwise_distances` for
+        the options allowed by :func:`sklearn_fork.metrics.pairwise_distances` for
         its metric parameter.
         If metric is "precomputed", X is assumed to be a distance matrix and
         must be square during fit.
@@ -128,13 +128,13 @@ def dbscan(
     One way to avoid the query complexity is to pre-compute sparse
     neighborhoods in chunks using
     :func:`NearestNeighbors.radius_neighbors_graph
-    <sklearn.neighbors.NearestNeighbors.radius_neighbors_graph>` with
+    <sklearn_fork.neighbors.NearestNeighbors.radius_neighbors_graph>` with
     ``mode='distance'``, then using ``metric='precomputed'`` here.
 
     Another way to reduce memory and computation time is to remove
     (near-)duplicate points and use ``sample_weight`` instead.
 
-    :func:`cluster.optics <sklearn.cluster.optics>` provides a similar
+    :func:`cluster.optics <sklearn_fork.cluster.optics>` provides a similar
     clustering with lower memory usage.
 
     References
@@ -190,7 +190,7 @@ class DBSCAN(ClusterMixin, BaseEstimator):
     metric : str, or callable, default='euclidean'
         The metric to use when calculating distance between instances in a
         feature array. If metric is a string or callable, it must be one of
-        the options allowed by :func:`sklearn.metrics.pairwise_distances` for
+        the options allowed by :func:`sklearn_fork.metrics.pairwise_distances` for
         its metric parameter.
         If metric is "precomputed", X is assumed to be a distance matrix and
         must be square. X may be a :term:`sparse graph`, in which
@@ -268,7 +268,7 @@ class DBSCAN(ClusterMixin, BaseEstimator):
     One way to avoid the query complexity is to pre-compute sparse
     neighborhoods in chunks using
     :func:`NearestNeighbors.radius_neighbors_graph
-    <sklearn.neighbors.NearestNeighbors.radius_neighbors_graph>` with
+    <sklearn_fork.neighbors.NearestNeighbors.radius_neighbors_graph>` with
     ``mode='distance'``, then using ``metric='precomputed'`` here.
 
     Another way to reduce memory and computation time is to remove
@@ -292,7 +292,7 @@ class DBSCAN(ClusterMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.cluster import DBSCAN
+    >>> from sklearn_fork.cluster import DBSCAN
     >>> import numpy as np
     >>> X = np.array([[1, 2], [2, 2], [2, 3],
     ...               [8, 7], [8, 8], [25, 80]])

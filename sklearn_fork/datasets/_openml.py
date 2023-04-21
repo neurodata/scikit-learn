@@ -600,7 +600,7 @@ def _download_data_to_bunch(
 
     Returns
     -------
-    data : :class:`~sklearn.utils.Bunch`
+    data : :class:`~sklearn_fork.utils.Bunch`
         Dictionary-like object, with the following attributes.
 
         X : {ndarray, sparse matrix, dataframe}
@@ -671,7 +671,7 @@ def _download_data_to_bunch(
 
 def _verify_target_data_type(features_dict, target_columns):
     # verifies the data type of the y array in case there are multiple targets
-    # (throws an error if these targets do not comply with sklearn support)
+    # (throws an error if these targets do not comply with sklearn_fork support)
     if not isinstance(target_columns, list):
         raise ValueError("target_column should be list, got: %s" % type(target_columns))
     found_types = set()
@@ -831,7 +831,7 @@ def fetch_openml(
 
     Returns
     -------
-    data : :class:`~sklearn.utils.Bunch`
+    data : :class:`~sklearn_fork.utils.Bunch`
         Dictionary-like object, with the following attributes.
 
         data : np.array, scipy.sparse.csr_matrix of floats, or pandas DataFrame

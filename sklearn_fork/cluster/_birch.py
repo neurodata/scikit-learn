@@ -386,14 +386,14 @@ class Birch(
         in each. The parent subcluster of that node is removed and two new
         subclusters are added as parents of the 2 split nodes.
 
-    n_clusters : int, instance of sklearn.cluster model or None, default=3
+    n_clusters : int, instance of sklearn_fork.cluster model or None, default=3
         Number of clusters after the final clustering step, which treats the
         subclusters from the leaves as new samples.
 
         - `None` : the final clustering step is not performed and the
           subclusters are returned as they are.
 
-        - :mod:`sklearn.cluster` Estimator : If a model is provided, the model
+        - :mod:`sklearn_fork.cluster` Estimator : If a model is provided, the model
           is fit treating the subclusters as new samples and the initial data
           is mapped to the label of the closest subcluster.
 
@@ -469,7 +469,7 @@ class Birch(
 
     Examples
     --------
-    >>> from sklearn.cluster import Birch
+    >>> from sklearn_fork.cluster import Birch
     >>> X = [[0, 1], [0.3, 1], [-0.3, 1], [0, -1], [0.3, -1], [-0.3, -1]]
     >>> brc = Birch(n_clusters=None)
     >>> brc.fit(X)

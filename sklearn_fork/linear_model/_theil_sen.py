@@ -311,8 +311,8 @@ class TheilSenRegressor(RegressorMixin, LinearModel):
 
     Examples
     --------
-    >>> from sklearn.linear_model import TheilSenRegressor
-    >>> from sklearn.datasets import make_regression
+    >>> from sklearn_fork.linear_model import TheilSenRegressor
+    >>> from sklearn_fork.datasets import make_regression
     >>> X, y = make_regression(
     ...     n_samples=200, n_features=2, noise=4.0, random_state=0)
     >>> reg = TheilSenRegressor(random_state=0).fit(X, y)

@@ -210,13 +210,13 @@ class PCA(_BasePCA):
         This parameter is only relevant when `svd_solver="randomized"`.
         It corresponds to the additional number of random vectors to sample the
         range of `X` so as to ensure proper conditioning. See
-        :func:`~sklearn.utils.extmath.randomized_svd` for more details.
+        :func:`~sklearn_fork.utils.extmath.randomized_svd` for more details.
 
         .. versionadded:: 1.1
 
     power_iteration_normalizer : {'auto', 'QR', 'LU', 'none'}, default='auto'
         Power iteration normalizer for randomized SVD solver.
-        Not used by ARPACK. See :func:`~sklearn.utils.extmath.randomized_svd`
+        Not used by ARPACK. See :func:`~sklearn_fork.utils.extmath.randomized_svd`
         for more details.
 
         .. versionadded:: 1.1
@@ -334,7 +334,7 @@ class PCA(_BasePCA):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.decomposition import PCA
+    >>> from sklearn_fork.decomposition import PCA
     >>> X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
     >>> pca = PCA(n_components=2)
     >>> pca.fit(X)

@@ -129,9 +129,9 @@ class SelfTrainingClassifier(MetaEstimatorMixin, BaseEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn import datasets
-    >>> from sklearn.semi_supervised import SelfTrainingClassifier
-    >>> from sklearn.svm import SVC
+    >>> from sklearn_fork import datasets
+    >>> from sklearn_fork.semi_supervised import SelfTrainingClassifier
+    >>> from sklearn_fork.svm import SVC
     >>> rng = np.random.RandomState(42)
     >>> iris = datasets.load_iris()
     >>> random_unlabeled_points = rng.rand(iris.target.shape[0]) < 0.3

@@ -2,13 +2,13 @@ import numpy as np
 import pytest
 from scipy import sparse
 from scipy.sparse import random as sparse_random
-from sklearn.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
 
 from numpy.testing import assert_allclose, assert_array_equal
 from scipy.interpolate import BSpline
-from sklearn.linear_model import LinearRegression
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import (
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.pipeline import Pipeline
+from sklearn_fork.preprocessing import (
     KBinsDiscretizer,
     PolynomialFeatures,
     SplineTransformer,

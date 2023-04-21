@@ -252,7 +252,7 @@ class _BaseHeterogeneousEnsemble(
 
         Returns
         -------
-        :class:`~sklearn.utils.Bunch`
+        :class:`~sklearn_fork.utils.Bunch`
         """
         return Bunch(**dict(self.estimators))
 

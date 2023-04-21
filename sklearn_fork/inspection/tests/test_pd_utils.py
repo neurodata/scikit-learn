@@ -1,9 +1,9 @@
 import numpy as np
 import pytest
 
-from sklearn.utils._testing import _convert_container
+from sklearn_fork.utils._testing import _convert_container
 
-from sklearn.inspection._pd_utils import _check_feature_names, _get_feature_index
+from sklearn_fork.inspection._pd_utils import _check_feature_names, _get_feature_index
 
 
 @pytest.mark.parametrize(

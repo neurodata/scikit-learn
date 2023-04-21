@@ -9,14 +9,14 @@ import numpy as np
 from numpy.testing import assert_allclose
 from scipy import linalg, optimize, sparse
 
-from sklearn._loss.loss import (
+from sklearn_fork._loss.loss import (
     HalfBinomialLoss,
     HalfMultinomialLoss,
     HalfPoissonLoss,
 )
-from sklearn.datasets import make_low_rank_matrix
-from sklearn.linear_model._linear_loss import LinearModelLoss
-from sklearn.utils.extmath import squared_norm
+from sklearn_fork.datasets import make_low_rank_matrix
+from sklearn_fork.linear_model._linear_loss import LinearModelLoss
+from sklearn_fork.utils.extmath import squared_norm
 
 
 # We do not need to test all losses, just what LinearModelLoss does on top of the

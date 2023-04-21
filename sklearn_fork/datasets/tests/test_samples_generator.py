@@ -6,32 +6,32 @@ import numpy as np
 import pytest
 import scipy.sparse as sp
 
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import ignore_warnings
 
-from sklearn.datasets import make_classification
-from sklearn.datasets import make_multilabel_classification
-from sklearn.datasets import make_hastie_10_2
-from sklearn.datasets import make_regression
-from sklearn.datasets import make_blobs
-from sklearn.datasets import make_friedman1
-from sklearn.datasets import make_friedman2
-from sklearn.datasets import make_friedman3
-from sklearn.datasets import make_low_rank_matrix
-from sklearn.datasets import make_moons
-from sklearn.datasets import make_circles
-from sklearn.datasets import make_sparse_coded_signal
-from sklearn.datasets import make_sparse_uncorrelated
-from sklearn.datasets import make_spd_matrix
-from sklearn.datasets import make_swiss_roll
-from sklearn.datasets import make_s_curve
-from sklearn.datasets import make_biclusters
-from sklearn.datasets import make_checkerboard
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.datasets import make_multilabel_classification
+from sklearn_fork.datasets import make_hastie_10_2
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.datasets import make_friedman1
+from sklearn_fork.datasets import make_friedman2
+from sklearn_fork.datasets import make_friedman3
+from sklearn_fork.datasets import make_low_rank_matrix
+from sklearn_fork.datasets import make_moons
+from sklearn_fork.datasets import make_circles
+from sklearn_fork.datasets import make_sparse_coded_signal
+from sklearn_fork.datasets import make_sparse_uncorrelated
+from sklearn_fork.datasets import make_spd_matrix
+from sklearn_fork.datasets import make_swiss_roll
+from sklearn_fork.datasets import make_s_curve
+from sklearn_fork.datasets import make_biclusters
+from sklearn_fork.datasets import make_checkerboard
 
-from sklearn.utils.validation import assert_all_finite
+from sklearn_fork.utils.validation import assert_all_finite
 
 
 def test_make_classification():

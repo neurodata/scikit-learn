@@ -10,8 +10,8 @@ from numpy.testing import assert_allclose
 
 import pytest
 
-from sklearn.feature_extraction import DictVectorizer
-from sklearn.feature_selection import SelectKBest, chi2
+from sklearn_fork.feature_extraction import DictVectorizer
+from sklearn_fork.feature_selection import SelectKBest, chi2
 
 
 @pytest.mark.parametrize("sparse", (True, False))

@@ -4,16 +4,16 @@ import pytest
 
 import numpy as np
 from scipy.sparse import csc_matrix, csr_matrix, lil_matrix
-from sklearn.utils._testing import (
+from sklearn_fork.utils._testing import (
     assert_almost_equal,
     assert_array_equal,
     assert_allclose,
 )
 
-from sklearn.datasets import load_digits
+from sklearn_fork.datasets import load_digits
 from io import StringIO
-from sklearn.neural_network import BernoulliRBM
-from sklearn.utils.validation import assert_all_finite
+from sklearn_fork.neural_network import BernoulliRBM
+from sklearn_fork.utils.validation import assert_all_finite
 
 Xdigits, _ = load_digits(return_X_y=True)
 Xdigits -= Xdigits.min()

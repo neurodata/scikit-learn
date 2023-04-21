@@ -16,41 +16,41 @@ from scipy.sparse import (
     issparse,
 )
 
-from sklearn import (
+from sklearn_fork import (
     config_context,
     datasets,
     metrics,
     neighbors,
 )
-from sklearn.base import clone
-from sklearn.exceptions import DataConversionWarning
-from sklearn.exceptions import EfficiencyWarning
-from sklearn.exceptions import NotFittedError
-from sklearn.metrics.pairwise import pairwise_distances
-from sklearn.metrics.tests.test_dist_metrics import BOOL_METRICS
-from sklearn.metrics.tests.test_pairwise_distances_reduction import (
+from sklearn_fork.base import clone
+from sklearn_fork.exceptions import DataConversionWarning
+from sklearn_fork.exceptions import EfficiencyWarning
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.metrics.pairwise import pairwise_distances
+from sklearn_fork.metrics.tests.test_dist_metrics import BOOL_METRICS
+from sklearn_fork.metrics.tests.test_pairwise_distances_reduction import (
     assert_radius_neighbors_results_equality,
 )
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import (
+from sklearn_fork.model_selection import cross_val_score
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.neighbors import (
     VALID_METRICS_SPARSE,
     KNeighborsRegressor,
 )
-from sklearn.neighbors._base import (
+from sklearn_fork.neighbors._base import (
     _is_sorted_by_data,
     _check_precomputed,
     sort_graph_by_row_values,
     KNeighborsMixin,
 )
-from sklearn.pipeline import make_pipeline
-from sklearn.utils._testing import (
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.utils._testing import (
     assert_allclose,
     assert_array_equal,
 )
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils.validation import check_random_state
-from sklearn.utils.fixes import sp_version, parse_version
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils.validation import check_random_state
+from sklearn_fork.utils.fixes import sp_version, parse_version
 
 import joblib
 
@@ -1570,7 +1570,7 @@ def test_nearest_neighbors_validate_params():
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize(
     "metric",
     sorted(
@@ -1648,7 +1648,7 @@ def test_neighbors_metrics(
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize(
     "metric", sorted(set(neighbors.VALID_METRICS["brute"]) - set(["precomputed"]))
 )
@@ -1725,7 +1725,7 @@ def test_callable_metric():
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize("metric", neighbors.VALID_METRICS["brute"])
 def test_valid_brute_metric_for_auto_algorithm(
     global_dtype, metric, n_samples=20, n_features=12
@@ -2062,7 +2062,7 @@ def test_sparse_metric_callable():
 def test_pairwise_boolean_distance():
     # Non-regression test for #4523
     # 'brute': uses scipy.spatial.distance through pairwise_distances
-    # 'ball_tree': uses sklearn.neighbors._dist_metrics
+    # 'ball_tree': uses sklearn_fork.neighbors._dist_metrics
     rng = np.random.RandomState(0)
     X = rng.uniform(size=(6, 5))
     NN = neighbors.NearestNeighbors
@@ -2160,8 +2160,8 @@ def test_auto_algorithm(X, metric, metric_params, expected_algo):
 
 # TODO: Remove in 1.3
 def test_neighbors_distance_metric_deprecation():
-    from sklearn.neighbors import DistanceMetric
-    from sklearn.metrics import DistanceMetric as ActualDistanceMetric
+    from sklearn_fork.neighbors import DistanceMetric
+    from sklearn_fork.metrics import DistanceMetric as ActualDistanceMetric
 
     msg = r"This import path will be removed in 1\.3"
     with pytest.warns(FutureWarning, match=msg):
@@ -2171,7 +2171,7 @@ def test_neighbors_distance_metric_deprecation():
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize(
     "metric", sorted(set(neighbors.VALID_METRICS["brute"]) - set(["precomputed"]))
 )

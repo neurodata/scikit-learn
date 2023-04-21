@@ -6,8 +6,8 @@ from scipy import linalg
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 from numpy.random import RandomState
 
-from sklearn.datasets import make_classification
-from sklearn.utils.sparsefuncs import (
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.utils.sparsefuncs import (
     mean_variance_axis,
     incr_mean_variance_axis,
     inplace_column_scale,
@@ -18,13 +18,13 @@ from sklearn.utils.sparsefuncs import (
     count_nonzero,
     csc_median_axis_0,
 )
-from sklearn.utils.sparsefuncs_fast import (
+from sklearn_fork.utils.sparsefuncs_fast import (
     assign_rows_csr,
     inplace_csr_row_normalize_l1,
     inplace_csr_row_normalize_l2,
     csr_row_norms,
 )
-from sklearn.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_allclose
 
 
 def test_mean_variance_axis0():

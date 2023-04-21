@@ -2,7 +2,7 @@ import pytest
 
 import pickle
 
-from sklearn.utils.metaestimators import available_if
+from sklearn_fork.utils.metaestimators import available_if
 
 
 class AvailableParameterEstimator:

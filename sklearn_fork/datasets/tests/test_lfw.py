@@ -15,11 +15,11 @@ import tempfile
 import numpy as np
 import pytest
 from functools import partial
-from sklearn.datasets import fetch_lfw_pairs
-from sklearn.datasets import fetch_lfw_people
+from sklearn_fork.datasets import fetch_lfw_pairs
+from sklearn_fork.datasets import fetch_lfw_people
 
-from sklearn.utils._testing import assert_array_equal
-from sklearn.datasets.tests.test_common import check_return_X_y
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.datasets.tests.test_common import check_return_X_y
 
 
 SCIKIT_LEARN_DATA = None

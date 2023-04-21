@@ -4,18 +4,18 @@ import numpy as np
 from scipy.sparse import csr_matrix
 import pytest
 
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_allclose
 
-from sklearn.metrics.pairwise import kernel_metrics
-from sklearn.kernel_approximation import RBFSampler
-from sklearn.kernel_approximation import AdditiveChi2Sampler
-from sklearn.kernel_approximation import SkewedChi2Sampler
-from sklearn.kernel_approximation import Nystroem
-from sklearn.kernel_approximation import PolynomialCountSketch
-from sklearn.datasets import make_classification
-from sklearn.metrics.pairwise import polynomial_kernel, rbf_kernel, chi2_kernel
+from sklearn_fork.metrics.pairwise import kernel_metrics
+from sklearn_fork.kernel_approximation import RBFSampler
+from sklearn_fork.kernel_approximation import AdditiveChi2Sampler
+from sklearn_fork.kernel_approximation import SkewedChi2Sampler
+from sklearn_fork.kernel_approximation import Nystroem
+from sklearn_fork.kernel_approximation import PolynomialCountSketch
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.metrics.pairwise import polynomial_kernel, rbf_kernel, chi2_kernel
 
 # generate data
 rng = np.random.RandomState(0)

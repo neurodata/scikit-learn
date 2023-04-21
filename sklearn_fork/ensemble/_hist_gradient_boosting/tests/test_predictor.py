@@ -1,14 +1,14 @@
 import numpy as np
 from numpy.testing import assert_allclose
-from sklearn.datasets import make_regression
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.metrics import r2_score
 import pytest
 
-from sklearn.ensemble._hist_gradient_boosting.binning import _BinMapper
-from sklearn.ensemble._hist_gradient_boosting.grower import TreeGrower
-from sklearn.ensemble._hist_gradient_boosting.predictor import TreePredictor
-from sklearn.ensemble._hist_gradient_boosting.common import (
+from sklearn_fork.ensemble._hist_gradient_boosting.binning import _BinMapper
+from sklearn_fork.ensemble._hist_gradient_boosting.grower import TreeGrower
+from sklearn_fork.ensemble._hist_gradient_boosting.predictor import TreePredictor
+from sklearn_fork.ensemble._hist_gradient_boosting.common import (
     G_H_DTYPE,
     PREDICTOR_RECORD_DTYPE,
     ALMOST_INF,
@@ -16,11 +16,11 @@ from sklearn.ensemble._hist_gradient_boosting.common import (
     X_BITSET_INNER_DTYPE,
     X_DTYPE,
 )
-from sklearn.ensemble._hist_gradient_boosting._bitset import (
+from sklearn_fork.ensemble._hist_gradient_boosting._bitset import (
     set_bitset_memoryview,
     set_raw_bitset_from_binned_bitset,
 )
-from sklearn.utils._openmp_helpers import _openmp_effective_n_threads
+from sklearn_fork.utils._openmp_helpers import _openmp_effective_n_threads
 
 n_threads = _openmp_effective_n_threads()
 

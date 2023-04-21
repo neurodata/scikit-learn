@@ -3,15 +3,15 @@ from numpy.testing import assert_allclose
 import pytest
 import scipy.sparse as sp
 
-from sklearn.datasets import make_regression
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import create_memmap_backed_data
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import create_memmap_backed_data
 
-from sklearn.utils._testing import ignore_warnings
-from sklearn.exceptions import ConvergenceWarning
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.exceptions import ConvergenceWarning
 
-from sklearn.linear_model import Lasso, ElasticNet, LassoCV, ElasticNetCV
+from sklearn_fork.linear_model import Lasso, ElasticNet, LassoCV, ElasticNetCV
 
 
 def test_sparse_coef():

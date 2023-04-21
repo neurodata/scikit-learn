@@ -201,7 +201,7 @@ def accuracy_score(y_true, y_pred, *, normalize=True, sample_weight=None):
 
     Examples
     --------
-    >>> from sklearn.metrics import accuracy_score
+    >>> from sklearn_fork.metrics import accuracy_score
     >>> y_pred = [0, 2, 1, 3]
     >>> y_true = [0, 1, 2, 3]
     >>> accuracy_score(y_true, y_pred)
@@ -301,7 +301,7 @@ def confusion_matrix(
 
     Examples
     --------
-    >>> from sklearn.metrics import confusion_matrix
+    >>> from sklearn_fork.metrics import confusion_matrix
     >>> y_true = [2, 0, 2, 2, 0, 1]
     >>> y_pred = [0, 0, 2, 2, 0, 2]
     >>> confusion_matrix(y_true, y_pred)
@@ -462,7 +462,7 @@ def multilabel_confusion_matrix(
     The `multilabel_confusion_matrix` calculates class-wise or sample-wise
     multilabel confusion matrices, and in multiclass tasks, labels are
     binarized under a one-vs-rest way; while
-    :func:`~sklearn.metrics.confusion_matrix` calculates one confusion matrix
+    :func:`~sklearn_fork.metrics.confusion_matrix` calculates one confusion matrix
     for confusion between every two classes.
 
     Examples
@@ -470,7 +470,7 @@ def multilabel_confusion_matrix(
     Multilabel-indicator case:
 
     >>> import numpy as np
-    >>> from sklearn.metrics import multilabel_confusion_matrix
+    >>> from sklearn_fork.metrics import multilabel_confusion_matrix
     >>> y_true = np.array([[1, 0, 1],
     ...                    [0, 1, 0]])
     >>> y_pred = np.array([[1, 0, 0],
@@ -812,7 +812,7 @@ def jaccard_score(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.metrics import jaccard_score
+    >>> from sklearn_fork.metrics import jaccard_score
     >>> y_true = np.array([[0, 1, 1],
     ...                    [1, 1, 0]])
     >>> y_pred = np.array([[1, 1, 1],
@@ -947,7 +947,7 @@ def matthews_corrcoef(y_true, y_pred, *, sample_weight=None):
 
     Examples
     --------
-    >>> from sklearn.metrics import matthews_corrcoef
+    >>> from sklearn_fork.metrics import matthews_corrcoef
     >>> y_true = [+1, +1, +1, -1]
     >>> y_pred = [+1, -1, +1, +1]
     >>> matthews_corrcoef(y_true, y_pred)
@@ -1033,7 +1033,7 @@ def zero_one_loss(y_true, y_pred, *, normalize=True, sample_weight=None):
 
     Examples
     --------
-    >>> from sklearn.metrics import zero_one_loss
+    >>> from sklearn_fork.metrics import zero_one_loss
     >>> y_pred = [1, 2, 3, 4]
     >>> y_true = [2, 2, 3, 4]
     >>> zero_one_loss(y_true, y_pred)
@@ -1200,7 +1200,7 @@ def f1_score(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.metrics import f1_score
+    >>> from sklearn_fork.metrics import f1_score
     >>> y_true = [0, 1, 2, 0, 1, 2]
     >>> y_pred = [0, 2, 1, 0, 0, 1]
     >>> f1_score(y_true, y_pred, average='macro')
@@ -1381,7 +1381,7 @@ def fbeta_score(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.metrics import fbeta_score
+    >>> from sklearn_fork.metrics import fbeta_score
     >>> y_true = [0, 1, 2, 0, 1, 2]
     >>> y_pred = [0, 2, 1, 0, 0, 1]
     >>> fbeta_score(y_true, y_pred, average='macro', beta=0.5)
@@ -1687,7 +1687,7 @@ def precision_recall_fscore_support(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.metrics import precision_recall_fscore_support
+    >>> from sklearn_fork.metrics import precision_recall_fscore_support
     >>> y_true = np.array(['cat', 'dog', 'pig', 'cat', 'dog', 'pig'])
     >>> y_pred = np.array(['cat', 'pig', 'dog', 'cat', 'cat', 'dog'])
     >>> precision_recall_fscore_support(y_true, y_pred, average='macro')
@@ -1874,7 +1874,7 @@ def class_likelihood_ratios(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.metrics import class_likelihood_ratios
+    >>> from sklearn_fork.metrics import class_likelihood_ratios
     >>> class_likelihood_ratios([0, 1, 0, 1, 0], [1, 1, 0, 0, 0])
     (1.5, 0.75)
     >>> y_true = np.array(["non-cat", "cat", "non-cat", "cat", "non-cat"])
@@ -2086,7 +2086,7 @@ def precision_score(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.metrics import precision_score
+    >>> from sklearn_fork.metrics import precision_score
     >>> y_true = [0, 1, 2, 0, 1, 2]
     >>> y_pred = [0, 2, 1, 0, 0, 1]
     >>> precision_score(y_true, y_pred, average='macro')
@@ -2257,7 +2257,7 @@ def recall_score(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.metrics import recall_score
+    >>> from sklearn_fork.metrics import recall_score
     >>> y_true = [0, 1, 2, 0, 1, 2]
     >>> y_pred = [0, 2, 1, 0, 0, 1]
     >>> recall_score(y_true, y_pred, average='macro')
@@ -2366,7 +2366,7 @@ def balanced_accuracy_score(y_true, y_pred, *, sample_weight=None, adjusted=Fals
 
     Examples
     --------
-    >>> from sklearn.metrics import balanced_accuracy_score
+    >>> from sklearn_fork.metrics import balanced_accuracy_score
     >>> y_true = [0, 1, 0, 0, 1, 0]
     >>> y_pred = [0, 1, 0, 0, 0, 1]
     >>> balanced_accuracy_score(y_true, y_pred)
@@ -2490,7 +2490,7 @@ def classification_report(
 
     Examples
     --------
-    >>> from sklearn.metrics import classification_report
+    >>> from sklearn_fork.metrics import classification_report
     >>> y_true = [0, 1, 2, 2, 2]
     >>> y_pred = [0, 0, 2, 2, 1]
     >>> target_names = ['class 0', 'class 1', 'class 2']
@@ -2695,7 +2695,7 @@ def hamming_loss(y_true, y_pred, *, sample_weight=None):
 
     Examples
     --------
-    >>> from sklearn.metrics import hamming_loss
+    >>> from sklearn_fork.metrics import hamming_loss
     >>> y_pred = [1, 2, 3, 4]
     >>> y_true = [2, 2, 3, 4]
     >>> hamming_loss(y_true, y_pred)
@@ -2812,7 +2812,7 @@ def log_loss(
 
     Examples
     --------
-    >>> from sklearn.metrics import log_loss
+    >>> from sklearn_fork.metrics import log_loss
     >>> log_loss(["spam", "ham", "ham", "spam"],
     ...          [[.1, .9], [.9, .1], [.8, .2], [.35, .65]])
     0.21616...
@@ -2969,8 +2969,8 @@ def hinge_loss(y_true, pred_decision, *, labels=None, sample_weight=None):
 
     Examples
     --------
-    >>> from sklearn import svm
-    >>> from sklearn.metrics import hinge_loss
+    >>> from sklearn_fork import svm
+    >>> from sklearn_fork.metrics import hinge_loss
     >>> X = [[0], [1]]
     >>> y = [-1, 1]
     >>> est = svm.LinearSVC(random_state=0)
@@ -3124,7 +3124,7 @@ def brier_score_loss(y_true, y_prob, *, sample_weight=None, pos_label=None):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.metrics import brier_score_loss
+    >>> from sklearn_fork.metrics import brier_score_loss
     >>> y_true = np.array([0, 1, 1, 0])
     >>> y_true_categorical = np.array(["spam", "ham", "ham", "spam"])
     >>> y_prob = np.array([0.1, 0.9, 0.8, 0.3])

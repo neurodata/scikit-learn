@@ -4,12 +4,12 @@ import numpy as np
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 from scipy import sparse
 
-from sklearn import datasets, svm, linear_model, base
-from sklearn.datasets import make_classification, load_digits, make_blobs
-from sklearn.svm.tests import test_svm
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.utils.extmath import safe_sparse_dot
-from sklearn.utils._testing import ignore_warnings, skip_if_32bit
+from sklearn_fork import datasets, svm, linear_model, base
+from sklearn_fork.datasets import make_classification, load_digits, make_blobs
+from sklearn_fork.svm.tests import test_svm
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork.utils.extmath import safe_sparse_dot
+from sklearn_fork.utils._testing import ignore_warnings, skip_if_32bit
 
 
 # test sample 1

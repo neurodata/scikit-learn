@@ -118,7 +118,7 @@ class FunctionTransformer(TransformerMixin, BaseEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.preprocessing import FunctionTransformer
+    >>> from sklearn_fork.preprocessing import FunctionTransformer
     >>> transformer = FunctionTransformer(np.log1p)
     >>> X = np.array([[0, 1], [2, 3]])
     >>> transformer.transform(X)

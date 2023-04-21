@@ -5,16 +5,16 @@ from numpy.testing import (
 import numpy as np
 import pytest
 
-from sklearn.datasets import make_classification
-from sklearn.compose import make_column_transformer
-from sklearn.exceptions import NotFittedError
-from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC, SVR
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.compose import make_column_transformer
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.svm import SVC, SVR
 
-from sklearn.metrics import ConfusionMatrixDisplay
-from sklearn.metrics import confusion_matrix
+from sklearn_fork.metrics import ConfusionMatrixDisplay
+from sklearn_fork.metrics import confusion_matrix
 
 
 # TODO: Remove when https://github.com/numpy/numpy/issues/14397 is resolved

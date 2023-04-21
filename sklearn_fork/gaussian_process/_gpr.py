@@ -61,7 +61,7 @@ class GaussianProcessRegressor(MultiOutputMixin, RegressorMixin, BaseEstimator):
         have the same number of entries as the data used for fitting and is
         used as datapoint-dependent noise level. Allowing to specify the
         noise level directly as a parameter is mainly for convenience and
-        for consistency with :class:`~sklearn.linear_model.Ridge`.
+        for consistency with :class:`~sklearn_fork.linear_model.Ridge`.
 
     optimizer : "fmin_l_bfgs_b", callable or None, default="fmin_l_bfgs_b"
         Can either be one of the internally supported optimizers for optimizing
@@ -161,9 +161,9 @@ class GaussianProcessRegressor(MultiOutputMixin, RegressorMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.datasets import make_friedman2
-    >>> from sklearn.gaussian_process import GaussianProcessRegressor
-    >>> from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
+    >>> from sklearn_fork.datasets import make_friedman2
+    >>> from sklearn_fork.gaussian_process import GaussianProcessRegressor
+    >>> from sklearn_fork.gaussian_process.kernels import DotProduct, WhiteKernel
     >>> X, y = make_friedman2(n_samples=500, noise=0, random_state=0)
     >>> kernel = DotProduct() + WhiteKernel()
     >>> gpr = GaussianProcessRegressor(kernel=kernel,

@@ -3,8 +3,8 @@ import numpy as np
 
 import pytest
 
-from sklearn.neighbors._quad_tree import _QuadTree
-from sklearn.utils import check_random_state
+from sklearn_fork.neighbors._quad_tree import _QuadTree
+from sklearn_fork.utils import check_random_state
 
 
 def test_quadtree_boundary_computation():

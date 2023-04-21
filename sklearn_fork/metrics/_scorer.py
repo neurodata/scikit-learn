@@ -1,11 +1,11 @@
 """
-The :mod:`sklearn.metrics.scorer` submodule implements a flexible
+The :mod:`sklearn_fork.metrics.scorer` submodule implements a flexible
 interface for model selection and evaluation using
 arbitrary score functions.
 
 A scorer object is a callable that can be passed to
-:class:`~sklearn.model_selection.GridSearchCV` or
-:func:`sklearn.model_selection.cross_val_score` as the ``scoring``
+:class:`~sklearn_fork.model_selection.GridSearchCV` or
+:func:`sklearn_fork.model_selection.cross_val_score` as the ``scoring``
 parameter, to specify how a model should be evaluated.
 
 The signature of the call is ``(estimator, X, y)`` where ``estimator``
@@ -412,7 +412,7 @@ def get_scorer(scoring):
     """Get a scorer from string.
 
     Read more in the :ref:`User Guide <scoring_parameter>`.
-    :func:`~sklearn.metrics.get_scorer_names` can be used to retrieve the names
+    :func:`~sklearn_fork.metrics.get_scorer_names` can be used to retrieve the names
     of all available scorers.
 
     Parameters
@@ -438,7 +438,7 @@ def get_scorer(scoring):
         except KeyError:
             raise ValueError(
                 "%r is not a valid scoring value. "
-                "Use sklearn.metrics.get_scorer_names() "
+                "Use sklearn_fork.metrics.get_scorer_names() "
                 "to get valid options." % scoring
             )
     else:
@@ -489,9 +489,9 @@ def check_scoring(estimator, scoring=None, *, allow_none=False):
         module = getattr(scoring, "__module__", None)
         if (
             hasattr(module, "startswith")
-            and module.startswith("sklearn.metrics.")
-            and not module.startswith("sklearn.metrics._scorer")
-            and not module.startswith("sklearn.metrics.tests.")
+            and module.startswith("sklearn_fork.metrics.")
+            and not module.startswith("sklearn_fork.metrics._scorer")
+            and not module.startswith("sklearn_fork.metrics.tests.")
         ):
             raise ValueError(
                 "scoring value %r looks like it is a metric "
@@ -514,7 +514,7 @@ def check_scoring(estimator, scoring=None, *, allow_none=False):
     elif isinstance(scoring, Iterable):
         raise ValueError(
             "For evaluating multiple scores, use "
-            "sklearn.model_selection.cross_validate instead. "
+            "sklearn_fork.model_selection.cross_validate instead. "
             "{0} was passed.".format(scoring)
         )
     else:
@@ -529,7 +529,7 @@ def _check_multimetric_scoring(estimator, scoring):
 
     Parameters
     ----------
-    estimator : sklearn estimator instance
+    estimator : sklearn_fork estimator instance
         The estimator for which the scoring will be applied.
 
     scoring : list, tuple or dict
@@ -627,12 +627,12 @@ def make_scorer(
     """Make a scorer from a performance metric or loss function.
 
     This factory function wraps scoring functions for use in
-    :class:`~sklearn.model_selection.GridSearchCV` and
-    :func:`~sklearn.model_selection.cross_val_score`.
-    It takes a score function, such as :func:`~sklearn.metrics.accuracy_score`,
-    :func:`~sklearn.metrics.mean_squared_error`,
-    :func:`~sklearn.metrics.adjusted_rand_score` or
-    :func:`~sklearn.metrics.average_precision_score`
+    :class:`~sklearn_fork.model_selection.GridSearchCV` and
+    :func:`~sklearn_fork.model_selection.cross_val_score`.
+    It takes a score function, such as :func:`~sklearn_fork.metrics.accuracy_score`,
+    :func:`~sklearn_fork.metrics.mean_squared_error`,
+    :func:`~sklearn_fork.metrics.adjusted_rand_score` or
+    :func:`~sklearn_fork.metrics.average_precision_score`
     and returns a callable that scores an estimator's output.
     The signature of the call is `(estimator, X, y)` where `estimator`
     is the model to be evaluated, `X` is the data and `y` is the
@@ -692,12 +692,12 @@ def make_scorer(
 
     Examples
     --------
-    >>> from sklearn.metrics import fbeta_score, make_scorer
+    >>> from sklearn_fork.metrics import fbeta_score, make_scorer
     >>> ftwo_scorer = make_scorer(fbeta_score, beta=2)
     >>> ftwo_scorer
     make_scorer(fbeta_score, beta=2)
-    >>> from sklearn.model_selection import GridSearchCV
-    >>> from sklearn.svm import LinearSVC
+    >>> from sklearn_fork.model_selection import GridSearchCV
+    >>> from sklearn_fork.svm import LinearSVC
     >>> grid = GridSearchCV(LinearSVC(), param_grid={'C': [1, 10]},
     ...                     scoring=ftwo_scorer)
     """
@@ -808,9 +808,9 @@ class _DeprecatedScorers(dict):
     def __getitem__(self, item):
         warnings.warn(
             (
-                "sklearn.metrics.SCORERS is deprecated and will be removed in v1.3."
-                " Please use sklearn.metrics.get_scorer_names to get a list of"
-                " available scorers and sklearn.metrics.get_metric to get scorer."
+                "sklearn_fork.metrics.SCORERS is deprecated and will be removed in v1.3."
+                " Please use sklearn_fork.metrics.get_scorer_names to get a list of"
+                " available scorers and sklearn_fork.metrics.get_metric to get scorer."
             ),
             FutureWarning,
         )
@@ -859,7 +859,7 @@ _SCORERS = dict(
 def get_scorer_names():
     """Get the names of all available scorers.
 
-    These names can be passed to :func:`~sklearn.metrics.get_scorer` to
+    These names can be passed to :func:`~sklearn_fork.metrics.get_scorer` to
     retrieve the scorer object.
 
     Returns

@@ -109,7 +109,7 @@ def sag_solver(
 
     IMPORTANT NOTE: 'sag' solver converges faster on columns that are on the
     same scale. You can normalize the data by using
-    sklearn.preprocessing.StandardScaler on your data before passing it to the
+    sklearn_fork.preprocessing.StandardScaler on your data before passing it to the
     fit method.
 
     This implementation works with data represented as dense numpy arrays or
@@ -209,7 +209,7 @@ def sag_solver(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn import linear_model
+    >>> from sklearn_fork import linear_model
     >>> n_samples, n_features = 10, 5
     >>> rng = np.random.RandomState(0)
     >>> X = rng.randn(n_samples, n_features)

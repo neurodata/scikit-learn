@@ -71,7 +71,7 @@ def kneighbors_graph(
         documentation of `scipy.spatial.distance
         <https://docs.scipy.org/doc/scipy/reference/spatial.distance.html>`_ and
         the metrics listed in
-        :class:`~sklearn.metrics.pairwise.distance_metrics` for valid metric
+        :class:`~sklearn_fork.metrics.pairwise.distance_metrics` for valid metric
         values.
 
     p : int, default=2
@@ -106,7 +106,7 @@ def kneighbors_graph(
     Examples
     --------
     >>> X = [[0], [3], [1]]
-    >>> from sklearn.neighbors import kneighbors_graph
+    >>> from sklearn_fork.neighbors import kneighbors_graph
     >>> A = kneighbors_graph(X, 2, mode='connectivity', include_self=True)
     >>> A.toarray()
     array([[1., 0., 1.],
@@ -166,7 +166,7 @@ def radius_neighbors_graph(
         documentation of `scipy.spatial.distance
         <https://docs.scipy.org/doc/scipy/reference/spatial.distance.html>`_ and
         the metrics listed in
-        :class:`~sklearn.metrics.pairwise.distance_metrics` for valid metric
+        :class:`~sklearn_fork.metrics.pairwise.distance_metrics` for valid metric
         values.
 
     p : int, default=2
@@ -201,7 +201,7 @@ def radius_neighbors_graph(
     Examples
     --------
     >>> X = [[0], [3], [1]]
-    >>> from sklearn.neighbors import radius_neighbors_graph
+    >>> from sklearn_fork.neighbors import radius_neighbors_graph
     >>> A = radius_neighbors_graph(X, 1.5, mode='connectivity',
     ...                            include_self=True)
     >>> A.toarray()
@@ -272,7 +272,7 @@ class KNeighborsTransformer(
         documentation of `scipy.spatial.distance
         <https://docs.scipy.org/doc/scipy/reference/spatial.distance.html>`_ and
         the metrics listed in
-        :class:`~sklearn.metrics.pairwise.distance_metrics` for valid metric
+        :class:`~sklearn_fork.metrics.pairwise.distance_metrics` for valid metric
         values.
 
         If metric is a callable function, it takes two arrays representing 1D
@@ -284,7 +284,7 @@ class KNeighborsTransformer(
 
     p : int, default=2
         Parameter for the Minkowski metric from
-        sklearn.metrics.pairwise.pairwise_distances. When p = 1, this is
+        sklearn_fork.metrics.pairwise.pairwise_distances. When p = 1, this is
         equivalent to using manhattan_distance (l1), and euclidean_distance
         (l2) for p = 2. For arbitrary p, minkowski_distance (l_p) is used.
 
@@ -331,8 +331,8 @@ class KNeighborsTransformer(
 
     Examples
     --------
-    >>> from sklearn.datasets import load_wine
-    >>> from sklearn.neighbors import KNeighborsTransformer
+    >>> from sklearn_fork.datasets import load_wine
+    >>> from sklearn_fork.neighbors import KNeighborsTransformer
     >>> X, _ = load_wine(return_X_y=True)
     >>> X.shape
     (178, 13)
@@ -496,7 +496,7 @@ class RadiusNeighborsTransformer(
         documentation of `scipy.spatial.distance
         <https://docs.scipy.org/doc/scipy/reference/spatial.distance.html>`_ and
         the metrics listed in
-        :class:`~sklearn.metrics.pairwise.distance_metrics` for valid metric
+        :class:`~sklearn_fork.metrics.pairwise.distance_metrics` for valid metric
         values.
 
         If metric is a callable function, it takes two arrays representing 1D
@@ -508,7 +508,7 @@ class RadiusNeighborsTransformer(
 
     p : int, default=2
         Parameter for the Minkowski metric from
-        sklearn.metrics.pairwise.pairwise_distances. When p = 1, this is
+        sklearn_fork.metrics.pairwise.pairwise_distances. When p = 1, this is
         equivalent to using manhattan_distance (l1), and euclidean_distance
         (l2) for p = 2. For arbitrary p, minkowski_distance (l_p) is used.
 
@@ -556,10 +556,10 @@ class RadiusNeighborsTransformer(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.datasets import load_wine
-    >>> from sklearn.cluster import DBSCAN
-    >>> from sklearn.neighbors import RadiusNeighborsTransformer
-    >>> from sklearn.pipeline import make_pipeline
+    >>> from sklearn_fork.datasets import load_wine
+    >>> from sklearn_fork.cluster import DBSCAN
+    >>> from sklearn_fork.neighbors import RadiusNeighborsTransformer
+    >>> from sklearn_fork.pipeline import make_pipeline
     >>> X, _ = load_wine(return_X_y=True)
     >>> estimator = make_pipeline(
     ...     RadiusNeighborsTransformer(radius=42.0, mode='distance'),

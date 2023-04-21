@@ -7,27 +7,27 @@ from scipy.stats import kstest
 
 import io
 
-from sklearn.utils._testing import _convert_container
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_allclose_dense_sparse
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import _convert_container
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_allclose_dense_sparse
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
 
 # make IterativeImputer available
-from sklearn.experimental import enable_iterative_imputer  # noqa
+from sklearn_fork.experimental import enable_iterative_imputer  # noqa
 
-from sklearn.datasets import load_diabetes
-from sklearn.impute import MissingIndicator
-from sklearn.impute import SimpleImputer, IterativeImputer, KNNImputer
-from sklearn.dummy import DummyRegressor
-from sklearn.linear_model import BayesianRidge, ARDRegression, RidgeCV
-from sklearn.pipeline import Pipeline
-from sklearn.pipeline import make_union
-from sklearn.model_selection import GridSearchCV
-from sklearn import tree
-from sklearn.random_projection import _sparse_random_matrix
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.impute._base import _most_frequent
+from sklearn_fork.datasets import load_diabetes
+from sklearn_fork.impute import MissingIndicator
+from sklearn_fork.impute import SimpleImputer, IterativeImputer, KNNImputer
+from sklearn_fork.dummy import DummyRegressor
+from sklearn_fork.linear_model import BayesianRidge, ARDRegression, RidgeCV
+from sklearn_fork.pipeline import Pipeline
+from sklearn_fork.pipeline import make_union
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork import tree
+from sklearn_fork.random_projection import _sparse_random_matrix
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork.impute._base import _most_frequent
 
 
 def _assert_array_equal_and_same_dtype(x, y):

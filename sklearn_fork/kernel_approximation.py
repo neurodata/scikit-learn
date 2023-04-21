@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.kernel_approximation` module implements several
+The :mod:`sklearn_fork.kernel_approximation` module implements several
 approximate kernel feature maps based on Fourier transforms and Count Sketches.
 """
 
@@ -105,12 +105,12 @@ class PolynomialCountSketch(
     RBFSampler : Approximate a RBF kernel feature map using random Fourier
         features.
     SkewedChi2Sampler : Approximate feature map for "skewed chi-squared" kernel.
-    sklearn.metrics.pairwise.kernel_metrics : List of built-in kernels.
+    sklearn_fork.metrics.pairwise.kernel_metrics : List of built-in kernels.
 
     Examples
     --------
-    >>> from sklearn.kernel_approximation import PolynomialCountSketch
-    >>> from sklearn.linear_model import SGDClassifier
+    >>> from sklearn_fork.kernel_approximation import PolynomialCountSketch
+    >>> from sklearn_fork.linear_model import SGDClassifier
     >>> X = [[0, 0], [1, 1], [1, 0], [0, 1]]
     >>> y = [0, 0, 1, 1]
     >>> ps = PolynomialCountSketch(degree=3, random_state=1)
@@ -297,7 +297,7 @@ class RBFSampler(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimato
     PolynomialCountSketch : Polynomial kernel approximation via Tensor Sketch.
     SkewedChi2Sampler : Approximate feature map for
         "skewed chi-squared" kernel.
-    sklearn.metrics.pairwise.kernel_metrics : List of built-in kernels.
+    sklearn_fork.metrics.pairwise.kernel_metrics : List of built-in kernels.
 
     Notes
     -----
@@ -311,8 +311,8 @@ class RBFSampler(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimato
 
     Examples
     --------
-    >>> from sklearn.kernel_approximation import RBFSampler
-    >>> from sklearn.linear_model import SGDClassifier
+    >>> from sklearn_fork.kernel_approximation import RBFSampler
+    >>> from sklearn_fork.linear_model import SGDClassifier
     >>> X = [[0, 0], [1, 1], [1, 0], [0, 1]]
     >>> y = [0, 0, 1, 1]
     >>> rbf_feature = RBFSampler(gamma=1, random_state=1)
@@ -462,8 +462,8 @@ class SkewedChi2Sampler(
     RBFSampler : Approximate a RBF kernel feature map using random Fourier
         features.
     SkewedChi2Sampler : Approximate feature map for "skewed chi-squared" kernel.
-    sklearn.metrics.pairwise.chi2_kernel : The exact chi squared kernel.
-    sklearn.metrics.pairwise.kernel_metrics : List of built-in kernels.
+    sklearn_fork.metrics.pairwise.chi2_kernel : The exact chi squared kernel.
+    sklearn_fork.metrics.pairwise.kernel_metrics : List of built-in kernels.
 
     References
     ----------
@@ -472,8 +472,8 @@ class SkewedChi2Sampler(
 
     Examples
     --------
-    >>> from sklearn.kernel_approximation import SkewedChi2Sampler
-    >>> from sklearn.linear_model import SGDClassifier
+    >>> from sklearn_fork.kernel_approximation import SkewedChi2Sampler
+    >>> from sklearn_fork.linear_model import SGDClassifier
     >>> X = [[0, 0], [1, 1], [1, 0], [0, 1]]
     >>> y = [0, 0, 1, 1]
     >>> chi2_feature = SkewedChi2Sampler(skewedness=.01,
@@ -620,9 +620,9 @@ class AdditiveChi2Sampler(TransformerMixin, BaseEstimator):
     SkewedChi2Sampler : A Fourier-approximation to a non-additive variant of
         the chi squared kernel.
 
-    sklearn.metrics.pairwise.chi2_kernel : The exact chi squared kernel.
+    sklearn_fork.metrics.pairwise.chi2_kernel : The exact chi squared kernel.
 
-    sklearn.metrics.pairwise.additive_chi2_kernel : The exact additive chi
+    sklearn_fork.metrics.pairwise.additive_chi2_kernel : The exact additive chi
         squared kernel.
 
     Notes
@@ -643,9 +643,9 @@ class AdditiveChi2Sampler(TransformerMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_digits
-    >>> from sklearn.linear_model import SGDClassifier
-    >>> from sklearn.kernel_approximation import AdditiveChi2Sampler
+    >>> from sklearn_fork.datasets import load_digits
+    >>> from sklearn_fork.linear_model import SGDClassifier
+    >>> from sklearn_fork.kernel_approximation import AdditiveChi2Sampler
     >>> X, y = load_digits(return_X_y=True)
     >>> chi2sampler = AdditiveChi2Sampler(sample_steps=2)
     >>> X_transformed = chi2sampler.fit_transform(X, y)
@@ -880,7 +880,7 @@ class Nystroem(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator)
     gamma : float, default=None
         Gamma parameter for the RBF, laplacian, polynomial, exponential chi2
         and sigmoid kernels. Interpretation of the default value is left to
-        the kernel; see the documentation for sklearn.metrics.pairwise.
+        the kernel; see the documentation for sklearn_fork.metrics.pairwise.
         Ignored by other kernels.
 
     coef0 : float, default=None
@@ -946,7 +946,7 @@ class Nystroem(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator)
     RBFSampler : Approximate a RBF kernel feature map using random Fourier
         features.
     SkewedChi2Sampler : Approximate feature map for "skewed chi-squared" kernel.
-    sklearn.metrics.pairwise.kernel_metrics : List of built-in kernels.
+    sklearn_fork.metrics.pairwise.kernel_metrics : List of built-in kernels.
 
     References
     ----------
@@ -961,8 +961,8 @@ class Nystroem(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator)
 
     Examples
     --------
-    >>> from sklearn import datasets, svm
-    >>> from sklearn.kernel_approximation import Nystroem
+    >>> from sklearn_fork import datasets, svm
+    >>> from sklearn_fork.kernel_approximation import Nystroem
     >>> X, y = datasets.load_digits(n_class=9, return_X_y=True)
     >>> data = X / 16.
     >>> clf = svm.LinearSVC()

@@ -10,11 +10,11 @@ between the train and test set is based upon a messages posted before
 and after a specific date.
 
 This module contains two loaders. The first one,
-:func:`sklearn.datasets.fetch_20newsgroups`,
+:func:`sklearn_fork.datasets.fetch_20newsgroups`,
 returns a list of the raw texts that can be fed to text feature
-extractors such as :class:`~sklearn.feature_extraction.text.CountVectorizer`
+extractors such as :class:`~sklearn_fork.feature_extraction.text.CountVectorizer`
 with custom parameters so as to extract feature vectors.
-The second one, :func:`sklearn.datasets.fetch_20newsgroups_vectorized`,
+The second one, :func:`sklearn_fork.datasets.fetch_20newsgroups_vectorized`,
 returns ready-to-use features, i.e., it is not necessary to use a feature
 extractor.
 
@@ -30,14 +30,14 @@ extractor.
 Usage
 ~~~~~
 
-The :func:`sklearn.datasets.fetch_20newsgroups` function is a data
+The :func:`sklearn_fork.datasets.fetch_20newsgroups` function is a data
 fetching / caching functions that downloads the data archive from
 the original `20 newsgroups website`_, extracts the archive contents
 in the ``~/scikit_learn_data/20news_home`` folder and calls the
-:func:`sklearn.datasets.load_files` on either the training or
+:func:`sklearn_fork.datasets.load_files` on either the training or
 testing set folder, or both of them::
 
-  >>> from sklearn.datasets import fetch_20newsgroups
+  >>> from sklearn_fork.datasets import fetch_20newsgroups
   >>> newsgroups_train = fetch_20newsgroups(subset='train')
 
   >>> from pprint import pprint
@@ -75,7 +75,7 @@ attribute is the integer index of the category::
 
 It is possible to load only a sub-selection of the categories by passing the
 list of the categories to load to the
-:func:`sklearn.datasets.fetch_20newsgroups` function::
+:func:`sklearn_fork.datasets.fetch_20newsgroups` function::
 
   >>> cats = ['alt.atheism', 'sci.space']
   >>> newsgroups_train = fetch_20newsgroups(subset='train', categories=cats)
@@ -95,11 +95,11 @@ Converting text to vectors
 In order to feed predictive or clustering models with the text data,
 one first need to turn the text into vectors of numerical values suitable
 for statistical analysis. This can be achieved with the utilities of the
-``sklearn.feature_extraction.text`` as demonstrated in the following
+``sklearn_fork.feature_extraction.text`` as demonstrated in the following
 example that extract `TF-IDF`_ vectors of unigram tokens
 from a subset of 20news::
 
-  >>> from sklearn.feature_extraction.text import TfidfVectorizer
+  >>> from sklearn_fork.feature_extraction.text import TfidfVectorizer
   >>> categories = ['alt.atheism', 'talk.religion.misc',
   ...               'comp.graphics', 'sci.space']
   >>> newsgroups_train = fetch_20newsgroups(subset='train',
@@ -116,7 +116,7 @@ components by sample in a more than 30000-dimensional space
   >>> vectors.nnz / float(vectors.shape[0])
   159.01327...
 
-:func:`sklearn.datasets.fetch_20newsgroups_vectorized` is a function which
+:func:`sklearn_fork.datasets.fetch_20newsgroups_vectorized` is a function which
 returns ready-to-use token counts features instead of file names.
 
 .. _`20 newsgroups website`: http://people.csail.mit.edu/jrennie/20Newsgroups/
@@ -134,8 +134,8 @@ aren't from this window of time.
 For example, let's look at the results of a multinomial Naive Bayes classifier,
 which is fast to train and achieves a decent F-score::
 
-  >>> from sklearn.naive_bayes import MultinomialNB
-  >>> from sklearn import metrics
+  >>> from sklearn_fork.naive_bayes import MultinomialNB
+  >>> from sklearn_fork import metrics
   >>> newsgroups_test = fetch_20newsgroups(subset='test',
   ...                                      categories=categories)
   >>> vectors_test = vectorizer.transform(newsgroups_test.data)

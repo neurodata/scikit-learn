@@ -9,27 +9,27 @@ from scipy import interpolate, sparse
 from copy import deepcopy
 import joblib
 
-from sklearn.base import is_classifier
-from sklearn.base import clone
-from sklearn.datasets import load_diabetes
-from sklearn.datasets import make_regression
-from sklearn.model_selection import (
+from sklearn_fork.base import is_classifier
+from sklearn_fork.base import clone
+from sklearn_fork.datasets import load_diabetes
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.model_selection import (
     GridSearchCV,
     LeaveOneGroupOut,
     train_test_split,
 )
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import ignore_warnings
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import ignore_warnings
 
-from sklearn.utils._testing import TempMemmap
+from sklearn_fork.utils._testing import TempMemmap
 
-from sklearn.linear_model import (
+from sklearn_fork.linear_model import (
     ElasticNet,
     ElasticNetCV,
     enet_path,
@@ -53,8 +53,8 @@ from sklearn.linear_model import (
     RidgeCV,
 )
 
-from sklearn.linear_model._coordinate_descent import _set_order
-from sklearn.utils import check_array
+from sklearn_fork.linear_model._coordinate_descent import _set_order
+from sklearn_fork.utils import check_array
 
 
 @pytest.mark.parametrize("order", ["C", "F"])
@@ -274,8 +274,8 @@ def test_lasso_cv():
 
 
 def test_lasso_cv_with_some_model_selection():
-    from sklearn.model_selection import ShuffleSplit
-    from sklearn import datasets
+    from sklearn_fork.model_selection import ShuffleSplit
+    from sklearn_fork import datasets
 
     diabetes = datasets.load_diabetes()
     X = diabetes.data
@@ -1251,7 +1251,7 @@ def test_lassoCV_does_not_set_precompute(monkeypatch, precompute, inner_precompu
             calls += 1
             assert self.precompute == inner_precompute
 
-    monkeypatch.setattr("sklearn.linear_model._coordinate_descent.Lasso", LassoMock)
+    monkeypatch.setattr("sklearn_fork.linear_model._coordinate_descent.Lasso", LassoMock)
     clf = LassoCV(precompute=precompute)
     clf.fit(X, y)
     assert calls > 0

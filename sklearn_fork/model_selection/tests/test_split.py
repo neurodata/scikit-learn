@@ -10,43 +10,43 @@ from itertools import combinations
 from itertools import combinations_with_replacement
 from itertools import permutations
 
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils.validation import _num_samples
-from sklearn.utils._mocking import MockDataFrame
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils.validation import _num_samples
+from sklearn_fork.utils._mocking import MockDataFrame
 
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import KFold
-from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import GroupKFold
-from sklearn.model_selection import TimeSeriesSplit
-from sklearn.model_selection import LeaveOneOut
-from sklearn.model_selection import LeaveOneGroupOut
-from sklearn.model_selection import LeavePOut
-from sklearn.model_selection import LeavePGroupsOut
-from sklearn.model_selection import ShuffleSplit
-from sklearn.model_selection import GroupShuffleSplit
-from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.model_selection import PredefinedSplit
-from sklearn.model_selection import check_cv
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import RepeatedKFold
-from sklearn.model_selection import RepeatedStratifiedKFold
-from sklearn.model_selection import StratifiedGroupKFold
+from sklearn_fork.model_selection import cross_val_score
+from sklearn_fork.model_selection import KFold
+from sklearn_fork.model_selection import StratifiedKFold
+from sklearn_fork.model_selection import GroupKFold
+from sklearn_fork.model_selection import TimeSeriesSplit
+from sklearn_fork.model_selection import LeaveOneOut
+from sklearn_fork.model_selection import LeaveOneGroupOut
+from sklearn_fork.model_selection import LeavePOut
+from sklearn_fork.model_selection import LeavePGroupsOut
+from sklearn_fork.model_selection import ShuffleSplit
+from sklearn_fork.model_selection import GroupShuffleSplit
+from sklearn_fork.model_selection import StratifiedShuffleSplit
+from sklearn_fork.model_selection import PredefinedSplit
+from sklearn_fork.model_selection import check_cv
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork.model_selection import RepeatedKFold
+from sklearn_fork.model_selection import RepeatedStratifiedKFold
+from sklearn_fork.model_selection import StratifiedGroupKFold
 
-from sklearn.dummy import DummyClassifier
+from sklearn_fork.dummy import DummyClassifier
 
-from sklearn.model_selection._split import _validate_shuffle_split
-from sklearn.model_selection._split import _build_repr
-from sklearn.model_selection._split import _yields_constant_splits
+from sklearn_fork.model_selection._split import _validate_shuffle_split
+from sklearn_fork.model_selection._split import _build_repr
+from sklearn_fork.model_selection._split import _yields_constant_splits
 
-from sklearn.datasets import load_digits
-from sklearn.datasets import make_classification
+from sklearn_fork.datasets import load_digits
+from sklearn_fork.datasets import make_classification
 
-from sklearn.svm import SVC
+from sklearn_fork.svm import SVC
 
 X = np.ones(10)
 y = np.arange(10) // 2

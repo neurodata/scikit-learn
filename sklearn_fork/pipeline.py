@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.pipeline` module implements utilities to build a composite
+The :mod:`sklearn_fork.pipeline` module implements utilities to build a composite
 estimator, as a chain of transforms and estimators.
 """
 # Author: Edouard Duchesnay
@@ -95,7 +95,7 @@ class Pipeline(_BaseComposition):
 
     Attributes
     ----------
-    named_steps : :class:`~sklearn.utils.Bunch`
+    named_steps : :class:`~sklearn_fork.utils.Bunch`
         Dictionary-like object, with the following attributes.
         Read-only attribute to access any step parameter by user given name.
         Keys are step names and values are steps parameters.
@@ -123,11 +123,11 @@ class Pipeline(_BaseComposition):
 
     Examples
     --------
-    >>> from sklearn.svm import SVC
-    >>> from sklearn.preprocessing import StandardScaler
-    >>> from sklearn.datasets import make_classification
-    >>> from sklearn.model_selection import train_test_split
-    >>> from sklearn.pipeline import Pipeline
+    >>> from sklearn_fork.svm import SVC
+    >>> from sklearn_fork.preprocessing import StandardScaler
+    >>> from sklearn_fork.datasets import make_classification
+    >>> from sklearn_fork.model_selection import train_test_split
+    >>> from sklearn_fork.pipeline import Pipeline
     >>> X, y = make_classification(random_state=0)
     >>> X_train, X_test, y_train, y_test = train_test_split(X, y,
     ...                                                     random_state=0)
@@ -883,9 +883,9 @@ def make_pipeline(*steps, memory=None, verbose=False):
 
     Examples
     --------
-    >>> from sklearn.naive_bayes import GaussianNB
-    >>> from sklearn.preprocessing import StandardScaler
-    >>> from sklearn.pipeline import make_pipeline
+    >>> from sklearn_fork.naive_bayes import GaussianNB
+    >>> from sklearn_fork.preprocessing import StandardScaler
+    >>> from sklearn_fork.pipeline import make_pipeline
     >>> make_pipeline(StandardScaler(), GaussianNB(priors=None))
     Pipeline(steps=[('standardscaler', StandardScaler()),
                     ('gaussiannb', GaussianNB())])
@@ -979,7 +979,7 @@ class FeatureUnion(TransformerMixin, _BaseComposition):
 
     Attributes
     ----------
-    named_transformers : :class:`~sklearn.utils.Bunch`
+    named_transformers : :class:`~sklearn_fork.utils.Bunch`
         Dictionary-like object, with the following attributes.
         Read-only attribute to access any transformer parameter by user
         given name. Keys are transformer names and values are
@@ -1007,8 +1007,8 @@ class FeatureUnion(TransformerMixin, _BaseComposition):
 
     Examples
     --------
-    >>> from sklearn.pipeline import FeatureUnion
-    >>> from sklearn.decomposition import PCA, TruncatedSVD
+    >>> from sklearn_fork.pipeline import FeatureUnion
+    >>> from sklearn_fork.decomposition import PCA, TruncatedSVD
     >>> union = FeatureUnion([("pca", PCA(n_components=1)),
     ...                       ("svd", TruncatedSVD(n_components=2))])
     >>> X = [[0., 1., 3], [2., 2., 5]]
@@ -1363,8 +1363,8 @@ def make_union(*transformers, n_jobs=None, verbose=False):
 
     Examples
     --------
-    >>> from sklearn.decomposition import PCA, TruncatedSVD
-    >>> from sklearn.pipeline import make_union
+    >>> from sklearn_fork.decomposition import PCA, TruncatedSVD
+    >>> from sklearn_fork.pipeline import make_union
     >>> make_union(PCA(), TruncatedSVD())
      FeatureUnion(transformer_list=[('pca', PCA()),
                                    ('truncatedsvd', TruncatedSVD())])

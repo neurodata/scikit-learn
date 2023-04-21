@@ -10,17 +10,17 @@ from scipy.optimize import approx_fprime
 
 import pytest
 
-from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.gaussian_process.kernels import (
+from sklearn_fork.gaussian_process import GaussianProcessClassifier
+from sklearn_fork.gaussian_process.kernels import (
     RBF,
     CompoundKernel,
     ConstantKernel as C,
     WhiteKernel,
 )
-from sklearn.gaussian_process.tests._mini_sequence_kernel import MiniSeqKernel
-from sklearn.exceptions import ConvergenceWarning
+from sklearn_fork.gaussian_process.tests._mini_sequence_kernel import MiniSeqKernel
+from sklearn_fork.exceptions import ConvergenceWarning
 
-from sklearn.utils._testing import assert_almost_equal, assert_array_equal
+from sklearn_fork.utils._testing import assert_almost_equal, assert_array_equal
 
 
 def f(x):

@@ -3,7 +3,7 @@ import textwrap
 
 import pytest
 
-from sklearn.datasets._arff_parser import (
+from sklearn_fork.datasets._arff_parser import (
     _liac_arff_parser,
     _pandas_arff_parser,
     _post_process_frame,

@@ -3,31 +3,31 @@ import numpy as np
 
 from numpy.testing import assert_allclose
 
-from sklearn.compose import ColumnTransformer
-from sklearn.datasets import load_diabetes
-from sklearn.datasets import load_iris
-from sklearn.datasets import make_classification
-from sklearn.datasets import make_regression
-from sklearn.dummy import DummyClassifier
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import LogisticRegression
-from sklearn.impute import SimpleImputer
-from sklearn.inspection import permutation_importance
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import (
+from sklearn_fork.compose import ColumnTransformer
+from sklearn_fork.datasets import load_diabetes
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.dummy import DummyClassifier
+from sklearn_fork.ensemble import RandomForestRegressor
+from sklearn_fork.ensemble import RandomForestClassifier
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.impute import SimpleImputer
+from sklearn_fork.inspection import permutation_importance
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.metrics import (
     get_scorer,
     mean_squared_error,
     r2_score,
 )
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import KBinsDiscretizer
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import scale
-from sklearn.utils import parallel_backend
-from sklearn.utils._testing import _convert_container
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import KBinsDiscretizer
+from sklearn_fork.preprocessing import OneHotEncoder
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.preprocessing import scale
+from sklearn_fork.utils import parallel_backend
+from sklearn_fork.utils._testing import _convert_container
 
 
 @pytest.mark.parametrize("n_jobs", [1, 2])

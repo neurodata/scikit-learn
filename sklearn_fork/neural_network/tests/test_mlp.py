@@ -1,5 +1,5 @@
 """
-Testing for Multi-layer Perceptron module (sklearn.neural_network)
+Testing for Multi-layer Perceptron module (sklearn_fork.neural_network)
 """
 
 # Author: Issam H. Laradji
@@ -19,17 +19,17 @@ from numpy.testing import (
     assert_allclose,
 )
 
-from sklearn.datasets import load_digits, load_iris
-from sklearn.datasets import make_regression, make_multilabel_classification
-from sklearn.exceptions import ConvergenceWarning
+from sklearn_fork.datasets import load_digits, load_iris
+from sklearn_fork.datasets import make_regression, make_multilabel_classification
+from sklearn_fork.exceptions import ConvergenceWarning
 from io import StringIO
-from sklearn.metrics import roc_auc_score
-from sklearn.neural_network import MLPClassifier
-from sklearn.neural_network import MLPRegressor
-from sklearn.preprocessing import LabelBinarizer
-from sklearn.preprocessing import MinMaxScaler, scale
+from sklearn_fork.metrics import roc_auc_score
+from sklearn_fork.neural_network import MLPClassifier
+from sklearn_fork.neural_network import MLPRegressor
+from sklearn_fork.preprocessing import LabelBinarizer
+from sklearn_fork.preprocessing import MinMaxScaler, scale
 from scipy.sparse import csr_matrix
-from sklearn.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import ignore_warnings
 
 
 ACTIVATION_TYPES = ["identity", "logistic", "tanh", "relu"]

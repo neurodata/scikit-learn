@@ -3,20 +3,20 @@ import warnings
 import numpy as np
 import pytest
 from scipy import linalg
-from sklearn.base import clone
-from sklearn.model_selection import train_test_split
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils._testing import TempMemmap
-from sklearn.utils import check_random_state
-from sklearn.exceptions import ConvergenceWarning
-from sklearn import linear_model, datasets
-from sklearn.linear_model._least_angle import _lars_path_residues
-from sklearn.linear_model import LassoLarsIC, lars_path
-from sklearn.linear_model import Lars, LassoLars, LarsCV, LassoLarsCV
+from sklearn_fork.base import clone
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import TempMemmap
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork import linear_model, datasets
+from sklearn_fork.linear_model._least_angle import _lars_path_residues
+from sklearn_fork.linear_model import LassoLarsIC, lars_path
+from sklearn_fork.linear_model import Lars, LassoLars, LarsCV, LassoLarsCV
 
 # TODO: use another dataset that has multiple drops
 diabetes = datasets.load_diabetes()
@@ -652,7 +652,7 @@ def test_lasso_lars_vs_lasso_cd_positive():
 
 
 def test_lasso_lars_vs_R_implementation():
-    # Test that sklearn LassoLars implementation agrees with the LassoLars
+    # Test that sklearn_fork LassoLars implementation agrees with the LassoLars
     # implementation available in R (lars library) when fit_intercept=False.
 
     # Let's generate the data used in the bug report 7778

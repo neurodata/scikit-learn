@@ -268,12 +268,12 @@ def config_context(
 
     Examples
     --------
-    >>> import sklearn
-    >>> from sklearn.utils.validation import assert_all_finite
-    >>> with sklearn.config_context(assume_finite=True):
+    >>> import sklearn_fork
+    >>> from sklearn_fork.utils.validation import assert_all_finite
+    >>> with sklearn_fork.config_context(assume_finite=True):
     ...     assert_all_finite([float('nan')])
-    >>> with sklearn.config_context(assume_finite=True):
-    ...     with sklearn.config_context(assume_finite=False):
+    >>> with sklearn_fork.config_context(assume_finite=True):
+    ...     with sklearn_fork.config_context(assume_finite=False):
     ...         assert_all_finite([float('nan')])
     Traceback (most recent call last):
     ...

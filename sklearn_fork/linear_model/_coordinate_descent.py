@@ -32,7 +32,7 @@ from ..utils.validation import (
 )
 from ..utils.parallel import delayed, Parallel
 
-# mypy error: Module 'sklearn.linear_model' has no attribute '_cd_fast'
+# mypy error: Module 'sklearn_fork.linear_model' has no attribute '_cd_fast'
 from . import _cd_fast as cd_fast  # type: ignore
 
 
@@ -284,7 +284,7 @@ def lasso_path(
     LassoCV : Lasso linear model with iterative fitting along a regularization
         path.
     LassoLarsCV : Cross-validated Lasso using the LARS algorithm.
-    sklearn.decomposition.sparse_encode : Estimator that can be used to
+    sklearn_fork.decomposition.sparse_encode : Estimator that can be used to
         transform signals into sparse linear combination of atoms from a fixed.
 
     Notes
@@ -307,7 +307,7 @@ def lasso_path(
     Comparing lasso_path and lars_path with interpolation:
 
     >>> import numpy as np
-    >>> from sklearn.linear_model import lasso_path
+    >>> from sklearn_fork.linear_model import lasso_path
     >>> X = np.array([[1, 2, 3.1], [2.3, 5.4, 4.3]]).T
     >>> y = np.array([1, 2, 3.1])
     >>> # Use lasso_path to compute a coefficient path
@@ -318,7 +318,7 @@ def lasso_path(
 
     >>> # Now use lars_path and 1D linear interpolation to compute the
     >>> # same path
-    >>> from sklearn.linear_model import lars_path
+    >>> from sklearn_fork.linear_model import lars_path
     >>> alphas, active, coef_path_lars = lars_path(X, y, method='lasso')
     >>> from scipy import interpolate
     >>> coef_path_continuous = interpolate.interp1d(alphas[::-1],
@@ -793,8 +793,8 @@ class ElasticNet(MultiOutputMixin, RegressorMixin, LinearModel):
 
     Examples
     --------
-    >>> from sklearn.linear_model import ElasticNet
-    >>> from sklearn.datasets import make_regression
+    >>> from sklearn_fork.linear_model import ElasticNet
+    >>> from sklearn_fork.datasets import make_regression
 
     >>> X, y = make_regression(n_features=2, random_state=0)
     >>> regr = ElasticNet(random_state=0)
@@ -1181,7 +1181,7 @@ class Lasso(ElasticNet):
     LassoLars : Lasso Path along the regularization parameter using LARS algorithm.
     LassoCV : Lasso alpha parameter by cross-validation.
     LassoLarsCV : Lasso least angle parameter algorithm by cross-validation.
-    sklearn.decomposition.sparse_encode : Sparse coding array estimator.
+    sklearn_fork.decomposition.sparse_encode : Sparse coding array estimator.
 
     Notes
     -----
@@ -1193,8 +1193,8 @@ class Lasso(ElasticNet):
     Regularization improves the conditioning of the problem and
     reduces the variance of the estimates. Larger values specify stronger
     regularization. Alpha corresponds to `1 / (2C)` in other linear
-    models such as :class:`~sklearn.linear_model.LogisticRegression` or
-    :class:`~sklearn.svm.LinearSVC`. If an array is passed, penalties are
+    models such as :class:`~sklearn_fork.linear_model.LogisticRegression` or
+    :class:`~sklearn_fork.svm.LinearSVC`. If an array is passed, penalties are
     assumed to be specific to the targets. Hence they must correspond in
     number.
 
@@ -1210,13 +1210,13 @@ class Lasso(ElasticNet):
         (1 / (2 * n_samples)) * ||Y - XW||^2_F + alpha * ||W||_11
 
     where :math:`||W||_{1,1}` is the sum of the magnitude of the matrix coefficients.
-    It should not be confused with :class:`~sklearn.linear_model.MultiTaskLasso` which
+    It should not be confused with :class:`~sklearn_fork.linear_model.MultiTaskLasso` which
     instead penalizes the :math:`L_{2,1}` norm of the coefficients, yielding row-wise
     sparsity in the coefficients.
 
     Examples
     --------
-    >>> from sklearn import linear_model
+    >>> from sklearn_fork import linear_model
     >>> clf = linear_model.Lasso(alpha=0.1)
     >>> clf.fit([[0,0], [1, 1], [2, 2]], [0, 1, 2])
     Lasso(alpha=0.1)
@@ -1881,7 +1881,7 @@ class LassoCV(RegressorMixin, LinearModelCV):
      <sphx_glr_auto_examples_linear_model_plot_lasso_model_selection.py>`.
 
     :class:`LassoCV` leads to different results than a hyperparameter
-    search using :class:`~sklearn.model_selection.GridSearchCV` with a
+    search using :class:`~sklearn_fork.model_selection.GridSearchCV` with a
     :class:`Lasso` model. In :class:`LassoCV`, a model for a given
     penalty `alpha` is warm started using the coefficients of the
     closest model (trained at the previous iteration) on the
@@ -1890,8 +1890,8 @@ class LassoCV(RegressorMixin, LinearModelCV):
 
     Examples
     --------
-    >>> from sklearn.linear_model import LassoCV
-    >>> from sklearn.datasets import make_regression
+    >>> from sklearn_fork.linear_model import LassoCV
+    >>> from sklearn_fork.datasets import make_regression
     >>> X, y = make_regression(noise=4, random_state=0)
     >>> reg = LassoCV(cv=5, random_state=0).fit(X, y)
     >>> reg.score(X, y)
@@ -2119,8 +2119,8 @@ class ElasticNetCV(RegressorMixin, LinearModelCV):
 
     Examples
     --------
-    >>> from sklearn.linear_model import ElasticNetCV
-    >>> from sklearn.datasets import make_regression
+    >>> from sklearn_fork.linear_model import ElasticNetCV
+    >>> from sklearn_fork.datasets import make_regression
 
     >>> X, y = make_regression(n_features=2, random_state=0)
     >>> regr = ElasticNetCV(cv=5, random_state=0)
@@ -2303,7 +2303,7 @@ class MultiTaskElasticNet(Lasso):
 
     Examples
     --------
-    >>> from sklearn import linear_model
+    >>> from sklearn_fork import linear_model
     >>> clf = linear_model.MultiTaskElasticNet(alpha=0.1)
     >>> clf.fit([[0,0], [1, 1], [2, 2]], [[0, 0], [1, 1], [2, 2]])
     MultiTaskElasticNet(alpha=0.1)
@@ -2541,7 +2541,7 @@ class MultiTaskLasso(MultiTaskElasticNet):
 
     Examples
     --------
-    >>> from sklearn import linear_model
+    >>> from sklearn_fork import linear_model
     >>> clf = linear_model.MultiTaskLasso(alpha=0.1)
     >>> clf.fit([[0, 1], [1, 2], [2, 4]], [[0, 0], [1, 1], [2, 3]])
     MultiTaskLasso(alpha=0.1)
@@ -2742,7 +2742,7 @@ class MultiTaskElasticNetCV(RegressorMixin, LinearModelCV):
 
     Examples
     --------
-    >>> from sklearn import linear_model
+    >>> from sklearn_fork import linear_model
     >>> clf = linear_model.MultiTaskElasticNetCV(cv=3)
     >>> clf.fit([[0,0], [1, 1], [2, 2]],
     ...         [[0, 0], [1, 1], [2, 2]])
@@ -2970,9 +2970,9 @@ class MultiTaskLassoCV(RegressorMixin, LinearModelCV):
 
     Examples
     --------
-    >>> from sklearn.linear_model import MultiTaskLassoCV
-    >>> from sklearn.datasets import make_regression
-    >>> from sklearn.metrics import r2_score
+    >>> from sklearn_fork.linear_model import MultiTaskLassoCV
+    >>> from sklearn_fork.datasets import make_regression
+    >>> from sklearn_fork.metrics import r2_score
     >>> X, y = make_regression(n_targets=2, noise=4, random_state=0)
     >>> reg = MultiTaskLassoCV(cv=5, random_state=0).fit(X, y)
     >>> r2_score(y, reg.predict(X))

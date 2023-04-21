@@ -6,47 +6,47 @@ from itertools import product
 import pytest
 import warnings
 
-from sklearn.utils import _IS_32BIT
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils.estimator_checks import check_sample_weights_invariance
+from sklearn_fork.utils import _IS_32BIT
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils.estimator_checks import check_sample_weights_invariance
 
-from sklearn.exceptions import ConvergenceWarning
+from sklearn_fork.exceptions import ConvergenceWarning
 
-from sklearn import datasets
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import make_scorer
-from sklearn.metrics import get_scorer
+from sklearn_fork import datasets
+from sklearn_fork.metrics import mean_squared_error
+from sklearn_fork.metrics import make_scorer
+from sklearn_fork.metrics import get_scorer
 
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import ridge_regression
-from sklearn.linear_model import Ridge
-from sklearn.linear_model._ridge import _RidgeGCV
-from sklearn.linear_model import RidgeCV
-from sklearn.linear_model import RidgeClassifier
-from sklearn.linear_model import RidgeClassifierCV
-from sklearn.linear_model._ridge import _solve_cholesky
-from sklearn.linear_model._ridge import _solve_cholesky_kernel
-from sklearn.linear_model._ridge import _solve_svd
-from sklearn.linear_model._ridge import _solve_lbfgs
-from sklearn.linear_model._ridge import _check_gcv_mode
-from sklearn.linear_model._ridge import _X_CenterStackOp
-from sklearn.datasets import make_low_rank_matrix
-from sklearn.datasets import make_regression
-from sklearn.datasets import make_classification
-from sklearn.datasets import make_multilabel_classification
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.linear_model import ridge_regression
+from sklearn_fork.linear_model import Ridge
+from sklearn_fork.linear_model._ridge import _RidgeGCV
+from sklearn_fork.linear_model import RidgeCV
+from sklearn_fork.linear_model import RidgeClassifier
+from sklearn_fork.linear_model import RidgeClassifierCV
+from sklearn_fork.linear_model._ridge import _solve_cholesky
+from sklearn_fork.linear_model._ridge import _solve_cholesky_kernel
+from sklearn_fork.linear_model._ridge import _solve_svd
+from sklearn_fork.linear_model._ridge import _solve_lbfgs
+from sklearn_fork.linear_model._ridge import _check_gcv_mode
+from sklearn_fork.linear_model._ridge import _X_CenterStackOp
+from sklearn_fork.datasets import make_low_rank_matrix
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.datasets import make_multilabel_classification
 
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import KFold
-from sklearn.model_selection import GroupKFold
-from sklearn.model_selection import cross_val_predict
-from sklearn.model_selection import LeaveOneOut
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork.model_selection import KFold
+from sklearn_fork.model_selection import GroupKFold
+from sklearn_fork.model_selection import cross_val_predict
+from sklearn_fork.model_selection import LeaveOneOut
 
-from sklearn.preprocessing import minmax_scale
-from sklearn.utils import check_random_state
+from sklearn_fork.preprocessing import minmax_scale
+from sklearn_fork.utils import check_random_state
 
 
 SOLVERS = ("svd", "sparse_cg", "cholesky", "lsqr", "sag", "saga")

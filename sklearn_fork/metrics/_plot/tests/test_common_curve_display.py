@@ -1,17 +1,17 @@
 import numpy as np
 import pytest
 
-from sklearn.base import ClassifierMixin, clone
-from sklearn.compose import make_column_transformer
-from sklearn.datasets import load_iris
-from sklearn.exceptions import NotFittedError
-from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn_fork.base import ClassifierMixin, clone
+from sklearn_fork.compose import make_column_transformer
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.tree import DecisionTreeClassifier, DecisionTreeRegressor
 
-from sklearn.calibration import CalibrationDisplay
-from sklearn.metrics import (
+from sklearn_fork.calibration import CalibrationDisplay
+from sklearn_fork.metrics import (
     DetCurveDisplay,
     PrecisionRecallDisplay,
     RocCurveDisplay,

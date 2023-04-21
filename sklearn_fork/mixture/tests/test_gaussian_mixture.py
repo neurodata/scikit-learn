@@ -12,13 +12,13 @@ import pytest
 import numpy as np
 from scipy import stats, linalg
 
-from sklearn.cluster import KMeans
-from sklearn.covariance import EmpiricalCovariance
-from sklearn.datasets import make_spd_matrix
+from sklearn_fork.cluster import KMeans
+from sklearn_fork.covariance import EmpiricalCovariance
+from sklearn_fork.datasets import make_spd_matrix
 from io import StringIO
-from sklearn.metrics.cluster import adjusted_rand_score
-from sklearn.mixture import GaussianMixture
-from sklearn.mixture._gaussian_mixture import (
+from sklearn_fork.metrics.cluster import adjusted_rand_score
+from sklearn_fork.mixture import GaussianMixture
+from sklearn_fork.mixture._gaussian_mixture import (
     _estimate_gaussian_covariances_full,
     _estimate_gaussian_covariances_tied,
     _estimate_gaussian_covariances_diag,
@@ -27,13 +27,13 @@ from sklearn.mixture._gaussian_mixture import (
     _compute_precision_cholesky,
     _compute_log_det_cholesky,
 )
-from sklearn.exceptions import ConvergenceWarning, NotFittedError
-from sklearn.utils.extmath import fast_logdet
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import ignore_warnings
+from sklearn_fork.exceptions import ConvergenceWarning, NotFittedError
+from sklearn_fork.utils.extmath import fast_logdet
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import ignore_warnings
 
 
 COVARIANCE_TYPE = ["full", "tied", "diag", "spherical"]
@@ -431,7 +431,7 @@ def _naive_lmvnpdf_diag(X, means, covars):
 
 
 def test_gaussian_mixture_log_probabilities():
-    from sklearn.mixture._gaussian_mixture import _estimate_log_gaussian_prob
+    from sklearn_fork.mixture._gaussian_mixture import _estimate_log_gaussian_prob
 
     # test against with _naive_lmvnpdf_diag
     rng = np.random.RandomState(0)

@@ -7,15 +7,15 @@ import numpy as np
 import pytest
 import scipy.sparse as sp
 from numpy.testing import assert_array_equal
-from sklearn.utils._seq_dataset import (
+from sklearn_fork.utils._seq_dataset import (
     ArrayDataset32,
     ArrayDataset64,
     CSRDataset32,
     CSRDataset64,
 )
 
-from sklearn.datasets import load_iris
-from sklearn.utils._testing import assert_allclose
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.utils._testing import assert_allclose
 
 iris = load_iris()
 X64 = iris.data.astype(np.float64)

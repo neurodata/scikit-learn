@@ -9,11 +9,11 @@ import itertools
 import numpy as np
 import pytest
 
-from sklearn.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
 
-from sklearn import datasets
-from sklearn.covariance import empirical_covariance, MinCovDet
-from sklearn.covariance import fast_mcd
+from sklearn_fork import datasets
+from sklearn_fork.covariance import empirical_covariance, MinCovDet
+from sklearn_fork.covariance import fast_mcd
 
 X = datasets.load_iris().data
 X_1d = X[:, 0]

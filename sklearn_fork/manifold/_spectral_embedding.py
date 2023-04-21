@@ -533,8 +533,8 @@ class SpectralEmbedding(BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_digits
-    >>> from sklearn.manifold import SpectralEmbedding
+    >>> from sklearn_fork.datasets import load_digits
+    >>> from sklearn_fork.manifold import SpectralEmbedding
     >>> X, _ = load_digits(return_X_y=True)
     >>> X.shape
     (1797, 64)

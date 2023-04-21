@@ -4,17 +4,17 @@ import numpy as np
 import warnings
 from unittest.mock import Mock
 
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import skip_if_32bit
-from sklearn.utils._testing import MinimalClassifier
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import skip_if_32bit
+from sklearn_fork.utils._testing import MinimalClassifier
 
-from sklearn import datasets
-from sklearn.cross_decomposition import CCA, PLSCanonical, PLSRegression
-from sklearn.datasets import make_friedman1
-from sklearn.exceptions import NotFittedError
-from sklearn.linear_model import (
+from sklearn_fork import datasets
+from sklearn_fork.cross_decomposition import CCA, PLSCanonical, PLSRegression
+from sklearn_fork.datasets import make_friedman1
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.linear_model import (
     LogisticRegression,
     SGDClassifier,
     Lasso,
@@ -22,13 +22,13 @@ from sklearn.linear_model import (
     ElasticNet,
     ElasticNetCV,
 )
-from sklearn.svm import LinearSVC
-from sklearn.feature_selection import SelectFromModel
-from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingClassifier
-from sklearn.linear_model import PassiveAggressiveClassifier
-from sklearn.base import BaseEstimator
-from sklearn.pipeline import make_pipeline
-from sklearn.decomposition import PCA
+from sklearn_fork.svm import LinearSVC
+from sklearn_fork.feature_selection import SelectFromModel
+from sklearn_fork.ensemble import RandomForestClassifier, HistGradientBoostingClassifier
+from sklearn_fork.linear_model import PassiveAggressiveClassifier
+from sklearn_fork.base import BaseEstimator
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.decomposition import PCA
 
 
 class NaNTag(BaseEstimator):

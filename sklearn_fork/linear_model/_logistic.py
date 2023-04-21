@@ -18,7 +18,7 @@ import numpy as np
 from scipy import optimize
 from joblib import effective_n_jobs
 
-from sklearn.metrics import get_scorer_names
+from sklearn_fork.metrics import get_scorer_names
 
 from ._base import LinearClassifierMixin, SparseCoefMixin, BaseEstimator
 from ._linear_loss import LinearModelLoss
@@ -618,7 +618,7 @@ def _log_reg_scoring_path(
         A string (see model evaluation documentation) or
         a scorer callable object / function with signature
         ``scorer(estimator, X, y)``. For a list of scoring functions
-        that can be used, look at :mod:`sklearn.metrics`. The
+        that can be used, look at :mod:`sklearn_fork.metrics`. The
         default scoring option used is accuracy_score.
 
     fit_intercept : bool, default=False
@@ -910,7 +910,7 @@ class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):
         .. note::
            'sag' and 'saga' fast convergence is only guaranteed on features
            with approximately the same scale. You can preprocess the data with
-           a scaler from :mod:`sklearn.preprocessing`.
+           a scaler from :mod:`sklearn_fork.preprocessing`.
 
         .. seealso::
            Refer to the User Guide for more information regarding
@@ -1055,8 +1055,8 @@ class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.linear_model import LogisticRegression
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.linear_model import LogisticRegression
     >>> X, y = load_iris(return_X_y=True)
     >>> clf = LogisticRegression(random_state=0).fit(X, y)
     >>> clf.predict(X[:2, :])
@@ -1422,7 +1422,7 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
 
     For the grid of `Cs` values and `l1_ratios` values, the best hyperparameter
     is selected by the cross-validator
-    :class:`~sklearn.model_selection.StratifiedKFold`, but it can be changed
+    :class:`~sklearn_fork.model_selection.StratifiedKFold`, but it can be changed
     using the :term:`cv` parameter. The 'newton-cg', 'sag', 'saga' and 'lbfgs'
     solvers can warm-start the coefficients (see :term:`Glossary<warm_start>`).
 
@@ -1444,7 +1444,7 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
     cv : int or cross-validation generator, default=None
         The default cross-validation generator used is Stratified K-Folds.
         If an integer is provided, then it is the number of folds used.
-        See the module :mod:`sklearn.model_selection` module for the
+        See the module :mod:`sklearn_fork.model_selection` module for the
         list of possible cross-validation objects.
 
         .. versionchanged:: 0.22
@@ -1471,7 +1471,7 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
         A string (see model evaluation documentation) or
         a scorer callable object / function with signature
         ``scorer(estimator, X, y)``. For a list of scoring functions
-        that can be used, look at :mod:`sklearn.metrics`. The
+        that can be used, look at :mod:`sklearn_fork.metrics`. The
         default scoring option used is 'accuracy'.
 
     solver : {'lbfgs', 'liblinear', 'newton-cg', 'newton-cholesky', 'sag', 'saga'}, \
@@ -1508,7 +1508,7 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
         .. note::
            'sag' and 'saga' fast convergence is only guaranteed on features
            with approximately the same scale. You can preprocess the data with
-           a scaler from :mod:`sklearn.preprocessing`.
+           a scaler from :mod:`sklearn_fork.preprocessing`.
 
         .. versionadded:: 0.17
            Stochastic Average Gradient descent solver.
@@ -1675,8 +1675,8 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
 
     Examples
     --------
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.linear_model import LogisticRegressionCV
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.linear_model import LogisticRegressionCV
     >>> X, y = load_iris(return_X_y=True)
     >>> clf = LogisticRegressionCV(cv=5, random_state=0).fit(X, y)
     >>> clf.predict(X[:2, :])

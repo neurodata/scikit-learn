@@ -156,7 +156,7 @@ def fetch_species_distributions(*, data_home=None, download_if_missing=True):
 
     Returns
     -------
-    data : :class:`~sklearn.utils.Bunch`
+    data : :class:`~sklearn_fork.utils.Bunch`
         Dictionary-like object, with the following attributes.
 
         coverages : array, shape = [14, 1592, 1212]

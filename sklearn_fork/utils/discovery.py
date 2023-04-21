@@ -15,7 +15,7 @@ _MODULE_TO_IGNORE = {
 
 
 def all_estimators(type_filter=None):
-    """Get a list of all estimators from `sklearn`.
+    """Get a list of all estimators from `sklearn_fork`.
 
     This function crawls the module and gets all classes that inherit
     from BaseEstimator. Classes that are defined in test-modules are not
@@ -37,7 +37,7 @@ def all_estimators(type_filter=None):
         List of (name, class), where ``name`` is the class name as string
         and ``class`` is the actual type of the class.
     """
-    # lazy import to avoid circular imports from sklearn.base
+    # lazy import to avoid circular imports from sklearn_fork.base
     from . import IS_PYPY
     from ._testing import ignore_warnings
     from ..base import (
@@ -56,11 +56,11 @@ def all_estimators(type_filter=None):
         return True
 
     all_classes = []
-    root = str(Path(__file__).parent.parent)  # sklearn package
+    root = str(Path(__file__).parent.parent)  # sklearn_fork package
     # Ignore deprecation warnings triggered at import time and from walking
     # packages
     with ignore_warnings(category=FutureWarning):
-        for _, module_name, _ in pkgutil.walk_packages(path=[root], prefix="sklearn."):
+        for _, module_name, _ in pkgutil.walk_packages(path=[root], prefix="sklearn_fork."):
             module_parts = module_name.split(".")
             if (
                 any(part in _MODULE_TO_IGNORE for part in module_parts)
@@ -128,7 +128,7 @@ def all_estimators(type_filter=None):
 
 
 def all_displays():
-    """Get a list of all displays from `sklearn`.
+    """Get a list of all displays from `sklearn_fork`.
 
     Returns
     -------
@@ -136,15 +136,15 @@ def all_displays():
         List of (name, class), where ``name`` is the display class name as
         string and ``class`` is the actual type of the class.
     """
-    # lazy import to avoid circular imports from sklearn.base
+    # lazy import to avoid circular imports from sklearn_fork.base
     from ._testing import ignore_warnings
 
     all_classes = []
-    root = str(Path(__file__).parent.parent)  # sklearn package
+    root = str(Path(__file__).parent.parent)  # sklearn_fork package
     # Ignore deprecation warnings triggered at import time and from walking
     # packages
     with ignore_warnings(category=FutureWarning):
-        for _, module_name, _ in pkgutil.walk_packages(path=[root], prefix="sklearn."):
+        for _, module_name, _ in pkgutil.walk_packages(path=[root], prefix="sklearn_fork."):
             module_parts = module_name.split(".")
             if (
                 any(part in _MODULE_TO_IGNORE for part in module_parts)
@@ -171,14 +171,14 @@ def _is_checked_function(item):
         return False
 
     mod = item.__module__
-    if not mod.startswith("sklearn.") or mod.endswith("estimator_checks"):
+    if not mod.startswith("sklearn_fork.") or mod.endswith("estimator_checks"):
         return False
 
     return True
 
 
 def all_functions():
-    """Get a list of all functions from `sklearn`.
+    """Get a list of all functions from `sklearn_fork`.
 
     Returns
     -------
@@ -186,15 +186,15 @@ def all_functions():
         List of (name, function), where ``name`` is the function name as
         string and ``function`` is the actual function.
     """
-    # lazy import to avoid circular imports from sklearn.base
+    # lazy import to avoid circular imports from sklearn_fork.base
     from ._testing import ignore_warnings
 
     all_functions = []
-    root = str(Path(__file__).parent.parent)  # sklearn package
+    root = str(Path(__file__).parent.parent)  # sklearn_fork package
     # Ignore deprecation warnings triggered at import time and from walking
     # packages
     with ignore_warnings(category=FutureWarning):
-        for _, module_name, _ in pkgutil.walk_packages(path=[root], prefix="sklearn."):
+        for _, module_name, _ in pkgutil.walk_packages(path=[root], prefix="sklearn_fork."):
             module_parts = module_name.split(".")
             if (
                 any(part in _MODULE_TO_IGNORE for part in module_parts)

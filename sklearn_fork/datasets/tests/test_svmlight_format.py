@@ -9,16 +9,16 @@ from tempfile import NamedTemporaryFile
 
 import pytest
 
-from sklearn.utils.fixes import _open_binary, _path
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal, assert_allclose
-from sklearn.utils._testing import fails_if_pypy
+from sklearn_fork.utils.fixes import _open_binary, _path
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal, assert_allclose
+from sklearn_fork.utils._testing import fails_if_pypy
 
-import sklearn
-from sklearn.datasets import load_svmlight_file, load_svmlight_files, dump_svmlight_file
+import sklearn_fork
+from sklearn_fork.datasets import load_svmlight_file, load_svmlight_files, dump_svmlight_file
 
 
-TEST_DATA_MODULE = "sklearn.datasets.tests.data"
+TEST_DATA_MODULE = "sklearn_fork.datasets.tests.data"
 datafile = "svmlight_classification.txt"
 multifile = "svmlight_multilabel.txt"
 invalidfile = "svmlight_invalid.txt"
@@ -142,7 +142,7 @@ def test_load_svmlight_file_n_features():
 def test_load_compressed():
     X, y = _load_svmlight_local_test_file(datafile)
 
-    with NamedTemporaryFile(prefix="sklearn-test", suffix=".gz") as tmp:
+    with NamedTemporaryFile(prefix="sklearn_fork-test", suffix=".gz") as tmp:
         tmp.close()  # necessary under windows
         with _open_binary(TEST_DATA_MODULE, datafile) as f:
             with gzip.open(tmp.name, "wb") as fh_out:
@@ -154,7 +154,7 @@ def test_load_compressed():
     assert_array_almost_equal(X.toarray(), Xgz.toarray())
     assert_array_almost_equal(y, ygz)
 
-    with NamedTemporaryFile(prefix="sklearn-test", suffix=".bz2") as tmp:
+    with NamedTemporaryFile(prefix="sklearn_fork-test", suffix=".bz2") as tmp:
         tmp.close()  # necessary under windows
         with _open_binary(TEST_DATA_MODULE, datafile) as f:
             with BZ2File(tmp.name, "wb") as fh_out:
@@ -291,7 +291,7 @@ def test_dump():
                     comment = f.readline()
                     comment = str(comment, "utf-8")
 
-                    assert "scikit-learn %s" % sklearn.__version__ in comment
+                    assert "scikit-learn %s" % sklearn_fork.__version__ in comment
 
                     comment = f.readline()
                     comment = str(comment, "utf-8")

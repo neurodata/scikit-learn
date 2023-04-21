@@ -8,13 +8,13 @@ from pytest import approx
 from scipy.optimize import minimize
 from scipy import sparse
 
-from sklearn.datasets import make_regression
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.linear_model import HuberRegressor, QuantileRegressor
-from sklearn.metrics import mean_pinball_loss
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import skip_if_32bit
-from sklearn.utils.fixes import parse_version, sp_version
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork.linear_model import HuberRegressor, QuantileRegressor
+from sklearn_fork.metrics import mean_pinball_loss
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import skip_if_32bit
+from sklearn_fork.utils.fixes import parse_version, sp_version
 
 
 @pytest.fixture
@@ -293,10 +293,10 @@ def test_error_interior_point_future(X_y_data, monkeypatch):
     `solver='interior-point'` in SciPy >= 1.11.
     """
     X, y = X_y_data
-    import sklearn.linear_model._quantile
+    import sklearn_fork.linear_model._quantile
 
     with monkeypatch.context() as m:
-        m.setattr(sklearn.linear_model._quantile, "sp_version", parse_version("1.11.0"))
+        m.setattr(sklearn_fork.linear_model._quantile, "sp_version", parse_version("1.11.0"))
         err_msg = "Solver interior-point is not anymore available in SciPy >= 1.11.0."
         with pytest.raises(ValueError, match=err_msg):
             QuantileRegressor(solver="interior-point").fit(X, y)

@@ -3,7 +3,7 @@ or if specifically requested via environment variable
 (e.g. for CI jobs)."""
 import pytest
 
-from sklearn.datasets.tests.test_common import check_return_X_y
+from sklearn_fork.datasets.tests.test_common import check_return_X_y
 from functools import partial
 
 

@@ -5,11 +5,11 @@ import numpy as np
 from scipy.sparse import csr_matrix
 from numpy.testing import assert_array_equal
 
-from sklearn._config import config_context, get_config
-from sklearn.utils._set_output import _wrap_in_pandas_container
-from sklearn.utils._set_output import _safe_set_output
-from sklearn.utils._set_output import _SetOutputMixin
-from sklearn.utils._set_output import _get_output_config
+from sklearn_fork._config import config_context, get_config
+from sklearn_fork.utils._set_output import _wrap_in_pandas_container
+from sklearn_fork.utils._set_output import _safe_set_output
+from sklearn_fork.utils._set_output import _SetOutputMixin
+from sklearn_fork.utils._set_output import _get_output_config
 
 
 def test__wrap_in_pandas_container_dense():

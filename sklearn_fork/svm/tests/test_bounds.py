@@ -4,10 +4,10 @@ from scipy import stats
 
 import pytest
 
-from sklearn.svm._bounds import l1_min_c
-from sklearn.svm import LinearSVC
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm._newrand import set_seed_wrap, bounded_rand_int_wrap
+from sklearn_fork.svm._bounds import l1_min_c
+from sklearn_fork.svm import LinearSVC
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.svm._newrand import set_seed_wrap, bounded_rand_int_wrap
 
 
 dense_X = [[-1, 0], [0, 1], [1, 1], [1, 1]]

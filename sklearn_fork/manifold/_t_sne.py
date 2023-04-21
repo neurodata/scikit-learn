@@ -25,10 +25,10 @@ from ..utils._param_validation import Interval, StrOptions, Hidden
 from ..decomposition import PCA
 from ..metrics.pairwise import pairwise_distances, _VALID_METRICS
 
-# mypy error: Module 'sklearn.manifold' has no attribute '_utils'
+# mypy error: Module 'sklearn_fork.manifold' has no attribute '_utils'
 from . import _utils  # type: ignore
 
-# mypy error: Module 'sklearn.manifold' has no attribute '_barnes_hut_tsne'
+# mypy error: Module 'sklearn_fork.manifold' has no attribute '_barnes_hut_tsne'
 from . import _barnes_hut_tsne  # type: ignore
 
 MACHINE_EPSILON = np.finfo(np.double).eps
@@ -479,9 +479,9 @@ def trustworthiness(X, X_embedded, *, n_neighbors=5, metric="euclidean"):
         from the original input space. If metric is 'precomputed', X must be a
         matrix of pairwise distances or squared distances. Otherwise, for a list
         of available metrics, see the documentation of argument metric in
-        `sklearn.pairwise.pairwise_distances` and metrics listed in
-        `sklearn.metrics.pairwise.PAIRWISE_DISTANCE_FUNCTIONS`. Note that the
-        "cosine" metric uses :func:`~sklearn.metrics.pairwise.cosine_distances`.
+        `sklearn_fork.pairwise.pairwise_distances` and metrics listed in
+        `sklearn_fork.metrics.pairwise.PAIRWISE_DISTANCE_FUNCTIONS`. Note that the
+        "cosine" metric uses :func:`~sklearn_fork.metrics.pairwise.cosine_distances`.
 
         .. versionadded:: 0.20
 
@@ -715,9 +715,9 @@ class TSNE(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
 
     See Also
     --------
-    sklearn.decomposition.PCA : Principal component analysis that is a linear
+    sklearn_fork.decomposition.PCA : Principal component analysis that is a linear
         dimensionality reduction method.
-    sklearn.decomposition.KernelPCA : Non-linear dimensionality reduction using
+    sklearn_fork.decomposition.KernelPCA : Non-linear dimensionality reduction using
         kernels and PCA.
     MDS : Manifold learning using multidimensional scaling.
     Isomap : Manifold learning based on Isometric Mapping.
@@ -748,7 +748,7 @@ class TSNE(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.manifold import TSNE
+    >>> from sklearn_fork.manifold import TSNE
     >>> X = np.array([[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
     >>> X_embedded = TSNE(n_components=2, learning_rate='auto',
     ...                   init='random', perplexity=3).fit_transform(X)

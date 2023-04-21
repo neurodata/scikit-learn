@@ -101,9 +101,9 @@ class BernoulliRBM(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstima
 
     See Also
     --------
-    sklearn.neural_network.MLPRegressor : Multi-layer Perceptron regressor.
-    sklearn.neural_network.MLPClassifier : Multi-layer Perceptron classifier.
-    sklearn.decomposition.PCA : An unsupervised linear dimensionality
+    sklearn_fork.neural_network.MLPRegressor : Multi-layer Perceptron regressor.
+    sklearn_fork.neural_network.MLPClassifier : Multi-layer Perceptron classifier.
+    sklearn_fork.decomposition.PCA : An unsupervised linear dimensionality
         reduction model.
 
     References
@@ -121,7 +121,7 @@ class BernoulliRBM(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstima
     --------
 
     >>> import numpy as np
-    >>> from sklearn.neural_network import BernoulliRBM
+    >>> from sklearn_fork.neural_network import BernoulliRBM
     >>> X = np.array([[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 1]])
     >>> model = BernoulliRBM(n_components=2)
     >>> model.fit(X)

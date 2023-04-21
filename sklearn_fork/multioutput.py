@@ -311,9 +311,9 @@ class MultiOutputRegressor(RegressorMixin, _MultiOutputEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.datasets import load_linnerud
-    >>> from sklearn.multioutput import MultiOutputRegressor
-    >>> from sklearn.linear_model import Ridge
+    >>> from sklearn_fork.datasets import load_linnerud
+    >>> from sklearn_fork.multioutput import MultiOutputRegressor
+    >>> from sklearn_fork.linear_model import Ridge
     >>> X, y = load_linnerud(return_X_y=True)
     >>> regr = MultiOutputRegressor(Ridge(random_state=123)).fit(X, y)
     >>> regr.predict(X[[0]])
@@ -407,9 +407,9 @@ class MultiOutputClassifier(ClassifierMixin, _MultiOutputEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.datasets import make_multilabel_classification
-    >>> from sklearn.multioutput import MultiOutputClassifier
-    >>> from sklearn.linear_model import LogisticRegression
+    >>> from sklearn_fork.datasets import make_multilabel_classification
+    >>> from sklearn_fork.multioutput import MultiOutputClassifier
+    >>> from sklearn_fork.linear_model import LogisticRegression
     >>> X, y = make_multilabel_classification(n_classes=3, random_state=0)
     >>> clf = MultiOutputClassifier(LogisticRegression()).fit(X, y)
     >>> clf.predict(X[-2:])
@@ -768,10 +768,10 @@ class ClassifierChain(MetaEstimatorMixin, ClassifierMixin, _BaseChain):
 
     Examples
     --------
-    >>> from sklearn.datasets import make_multilabel_classification
-    >>> from sklearn.linear_model import LogisticRegression
-    >>> from sklearn.model_selection import train_test_split
-    >>> from sklearn.multioutput import ClassifierChain
+    >>> from sklearn_fork.datasets import make_multilabel_classification
+    >>> from sklearn_fork.linear_model import LogisticRegression
+    >>> from sklearn_fork.model_selection import train_test_split
+    >>> from sklearn_fork.multioutput import ClassifierChain
     >>> X, Y = make_multilabel_classification(
     ...    n_samples=12, n_classes=3, random_state=0
     ... )
@@ -967,8 +967,8 @@ class RegressorChain(MetaEstimatorMixin, RegressorMixin, _BaseChain):
 
     Examples
     --------
-    >>> from sklearn.multioutput import RegressorChain
-    >>> from sklearn.linear_model import LogisticRegression
+    >>> from sklearn_fork.multioutput import RegressorChain
+    >>> from sklearn_fork.linear_model import LogisticRegression
     >>> logreg = LogisticRegression(solver='lbfgs',multi_class='multinomial')
     >>> X, Y = [[1, 0], [0, 1], [1, 1]], [[0, 2], [1, 1], [2, 0]]
     >>> chain = RegressorChain(base_estimator=logreg, order=[0, 1]).fit(X, Y)

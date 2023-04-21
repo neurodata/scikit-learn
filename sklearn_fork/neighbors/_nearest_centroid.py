@@ -19,7 +19,7 @@ from ..utils.validation import check_is_fitted
 from ..utils.sparsefuncs import csc_median_axis_0
 from ..utils.multiclass import check_classification_targets
 from ..utils._param_validation import Interval, StrOptions
-from sklearn.metrics.pairwise import _VALID_METRICS
+from sklearn_fork.metrics.pairwise import _VALID_METRICS
 
 
 class NearestCentroid(ClassifierMixin, BaseEstimator):
@@ -37,7 +37,7 @@ class NearestCentroid(ClassifierMixin, BaseEstimator):
         `scipy.spatial.distance
         <https://docs.scipy.org/doc/scipy/reference/spatial.distance.html>`_ and
         the metrics listed in
-        :class:`~sklearn.metrics.pairwise.distance_metrics` for valid metric
+        :class:`~sklearn_fork.metrics.pairwise.distance_metrics` for valid metric
         values. Note that "wminkowski", "seuclidean" and "mahalanobis" are not
         supported.
 
@@ -90,7 +90,7 @@ class NearestCentroid(ClassifierMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.neighbors import NearestCentroid
+    >>> from sklearn_fork.neighbors import NearestCentroid
     >>> import numpy as np
     >>> X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
     >>> y = np.array([1, 1, 1, 2, 2, 2])

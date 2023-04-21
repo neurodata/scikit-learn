@@ -49,7 +49,7 @@ Scikit-learn-tree
 =================
 
 ``scikit-learn-tree`` is an alias of scikit-learn, released under the namespace `sklearn_fork`. It is a maintained fork of scikit-learn, which advances the tree submodule, while staying in-line
-with changes from upstream scikit-learn. It is an exact stand-in for ``sklearn`` in package imports, but is
+with changes from upstream scikit-learn. It is an exact stand-in for ``sklearn_fork`` in package imports, but is
 released under the name ``scikit-learn-tree`` to avoid confusion.
 
 It is currently maintained by a team of volunteers.

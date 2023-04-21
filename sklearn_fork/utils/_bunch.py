@@ -10,7 +10,7 @@ class Bunch(dict):
 
     Examples
     --------
-    >>> from sklearn.utils import Bunch
+    >>> from sklearn_fork.utils import Bunch
     >>> b = Bunch(a=1, b=2)
     >>> b['b']
     2

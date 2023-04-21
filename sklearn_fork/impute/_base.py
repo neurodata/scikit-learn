@@ -148,7 +148,7 @@ class SimpleImputer(_BaseImputer):
     Read more in the :ref:`User Guide <impute>`.
 
     .. versionadded:: 0.20
-       `SimpleImputer` replaces the previous `sklearn.preprocessing.Imputer`
+       `SimpleImputer` replaces the previous `sklearn_fork.preprocessing.Imputer`
        estimator which is now removed.
 
     Parameters
@@ -223,7 +223,7 @@ class SimpleImputer(_BaseImputer):
         During :meth:`transform`, features corresponding to `np.nan`
         statistics will be discarded.
 
-    indicator_ : :class:`~sklearn.impute.MissingIndicator`
+    indicator_ : :class:`~sklearn_fork.impute.MissingIndicator`
         Indicator used to add binary indicators for missing values.
         `None` if `add_indicator=False`.
 
@@ -253,12 +253,12 @@ class SimpleImputer(_BaseImputer):
     In a prediction context, simple imputation usually performs poorly when
     associated with a weak learner. However, with a powerful learner, it can
     lead to as good or better performance than complex imputation such as
-    :class:`~sklearn.impute.IterativeImputer` or :class:`~sklearn.impute.KNNImputer`.
+    :class:`~sklearn_fork.impute.IterativeImputer` or :class:`~sklearn_fork.impute.KNNImputer`.
 
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.impute import SimpleImputer
+    >>> from sklearn_fork.impute import SimpleImputer
     >>> imp_mean = SimpleImputer(missing_values=np.nan, strategy='mean')
     >>> imp_mean.fit([[7, 2, 3], [4, np.nan, 6], [10, 5, 9]])
     SimpleImputer()
@@ -783,7 +783,7 @@ class MissingIndicator(TransformerMixin, BaseEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.impute import MissingIndicator
+    >>> from sklearn_fork.impute import MissingIndicator
     >>> X1 = np.array([[np.nan, 1, 3],
     ...                [4, 0, np.nan],
     ...                [8, 1, 0]])

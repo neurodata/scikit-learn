@@ -9,9 +9,9 @@ from scipy import sparse
 
 import pytest
 
-from sklearn.utils.deprecation import deprecated
-from sklearn.utils.metaestimators import available_if
-from sklearn.utils._testing import (
+from sklearn_fork.utils.deprecation import deprecated
+from sklearn_fork.utils.metaestimators import available_if
+from sklearn_fork.utils._testing import (
     assert_raises,
     assert_no_warnings,
     set_random_state,
@@ -28,8 +28,8 @@ from sklearn.utils._testing import (
     assert_allclose,
 )
 
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn_fork.tree import DecisionTreeClassifier
+from sklearn_fork.discriminant_analysis import LinearDiscriminantAnalysis
 
 
 def test_set_random_state():
@@ -453,22 +453,22 @@ def test_check_docstring_parameters():
     mock_meta_name = mock_meta.__class__.__name__
     assert incorrect == [
         (
-            "sklearn.utils.tests.test_testing.f_check_param_definition There "
+            "sklearn_fork.utils.tests.test_testing.f_check_param_definition There "
             "was no space between the param name and colon ('a: int')"
         ),
         (
-            "sklearn.utils.tests.test_testing.f_check_param_definition There "
+            "sklearn_fork.utils.tests.test_testing.f_check_param_definition There "
             "was no space between the param name and colon ('b:')"
         ),
         (
-            "sklearn.utils.tests.test_testing.f_check_param_definition There "
+            "sklearn_fork.utils.tests.test_testing.f_check_param_definition There "
             "was no space between the param name and colon ('d:int')"
         ),
     ]
 
     messages = [
         [
-            "In function: sklearn.utils.tests.test_testing.f_bad_order",
+            "In function: sklearn_fork.utils.tests.test_testing.f_bad_order",
             (
                 "There's a parameter name mismatch in function docstring w.r.t."
                 " function signature, at index 0 diff: 'b' != 'a'"
@@ -479,7 +479,7 @@ def test_check_docstring_parameters():
         ],
         [
             "In function: "
-            + "sklearn.utils.tests.test_testing.f_too_many_param_docstring",
+            + "sklearn_fork.utils.tests.test_testing.f_too_many_param_docstring",
             (
                 "Parameters in function docstring have more items w.r.t. function"
                 " signature, first extra item: c"
@@ -490,7 +490,7 @@ def test_check_docstring_parameters():
             "?          +++++",
         ],
         [
-            "In function: sklearn.utils.tests.test_testing.f_missing",
+            "In function: sklearn_fork.utils.tests.test_testing.f_missing",
             (
                 "Parameters in function docstring have less items w.r.t. function"
                 " signature, first missing item: b"
@@ -500,7 +500,7 @@ def test_check_docstring_parameters():
             "+ ['a']",
         ],
         [
-            "In function: sklearn.utils.tests.test_testing.Klass.f_missing",
+            "In function: sklearn_fork.utils.tests.test_testing.Klass.f_missing",
             (
                 "Parameters in function docstring have less items w.r.t. function"
                 " signature, first missing item: X"
@@ -511,7 +511,7 @@ def test_check_docstring_parameters():
         ],
         [
             "In function: "
-            + f"sklearn.utils.tests.test_testing.{mock_meta_name}.predict",
+            + f"sklearn_fork.utils.tests.test_testing.{mock_meta_name}.predict",
             (
                 "There's a parameter name mismatch in function docstring w.r.t."
                 " function signature, at index 0 diff: 'X' != 'y'"
@@ -524,7 +524,7 @@ def test_check_docstring_parameters():
         ],
         [
             "In function: "
-            + f"sklearn.utils.tests.test_testing.{mock_meta_name}."
+            + f"sklearn_fork.utils.tests.test_testing.{mock_meta_name}."
             + "predict_proba",
             "potentially wrong underline length... ",
             "Parameters ",
@@ -532,13 +532,13 @@ def test_check_docstring_parameters():
         ],
         [
             "In function: "
-            + f"sklearn.utils.tests.test_testing.{mock_meta_name}.score",
+            + f"sklearn_fork.utils.tests.test_testing.{mock_meta_name}.score",
             "potentially wrong underline length... ",
             "Parameters ",
             "--------- in ",
         ],
         [
-            "In function: " + f"sklearn.utils.tests.test_testing.{mock_meta_name}.fit",
+            "In function: " + f"sklearn_fork.utils.tests.test_testing.{mock_meta_name}.fit",
             (
                 "Parameters in function docstring have less items w.r.t. function"
                 " signature, first missing item: X"

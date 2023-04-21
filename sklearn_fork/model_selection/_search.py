@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.model_selection._search` includes utilities to fine-tune the
+The :mod:`sklearn_fork.model_selection._search` includes utilities to fine-tune the
 parameters of an estimator.
 """
 
@@ -69,7 +69,7 @@ class ParameterGrid:
 
     Examples
     --------
-    >>> from sklearn.model_selection import ParameterGrid
+    >>> from sklearn_fork.model_selection import ParameterGrid
     >>> param_grid = {'a': [1, 2], 'b': [True, False]}
     >>> list(ParameterGrid(param_grid)) == (
     ...    [{'a': 1, 'b': True}, {'a': 1, 'b': False},
@@ -239,7 +239,7 @@ class ParameterSampler:
 
     Examples
     --------
-    >>> from sklearn.model_selection import ParameterSampler
+    >>> from sklearn_fork.model_selection import ParameterSampler
     >>> from scipy.stats.distributions import expon
     >>> import numpy as np
     >>> rng = np.random.RandomState(0)
@@ -771,7 +771,7 @@ class BaseSearchCV(MetaEstimatorMixin, BaseEstimator, metaclass=ABCMeta):
         groups : array-like of shape (n_samples,), default=None
             Group labels for the samples used while splitting the dataset into
             train/test set. Only used in conjunction with a "Group" :term:`cv`
-            instance (e.g., :class:`~sklearn.model_selection.GroupKFold`).
+            instance (e.g., :class:`~sklearn_fork.model_selection.GroupKFold`).
 
         **fit_params : dict of str -> object
             Parameters passed to the `fit` method of the estimator.
@@ -1341,7 +1341,7 @@ class GridSearchCV(BaseSearchCV):
     train_test_split : Utility function to split the data into a development
         set usable for fitting a GridSearchCV instance and an evaluation set
         for its final evaluation.
-    sklearn.metrics.make_scorer : Make a scorer from a performance metric or
+    sklearn_fork.metrics.make_scorer : Make a scorer from a performance metric or
         loss function.
 
     Notes
@@ -1359,8 +1359,8 @@ class GridSearchCV(BaseSearchCV):
 
     Examples
     --------
-    >>> from sklearn import svm, datasets
-    >>> from sklearn.model_selection import GridSearchCV
+    >>> from sklearn_fork import svm, datasets
+    >>> from sklearn_fork.model_selection import GridSearchCV
     >>> iris = datasets.load_iris()
     >>> parameters = {'kernel':('linear', 'rbf'), 'C':[1, 10]}
     >>> svc = svm.SVC()
@@ -1742,9 +1742,9 @@ class RandomizedSearchCV(BaseSearchCV):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.linear_model import LogisticRegression
-    >>> from sklearn.model_selection import RandomizedSearchCV
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.linear_model import LogisticRegression
+    >>> from sklearn_fork.model_selection import RandomizedSearchCV
     >>> from scipy.stats import uniform
     >>> iris = load_iris()
     >>> logistic = LogisticRegression(solver='saga', tol=1e-2, max_iter=200,

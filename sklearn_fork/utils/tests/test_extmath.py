@@ -10,29 +10,29 @@ from scipy.sparse.linalg import eigsh
 from scipy.special import expit
 
 import pytest
-from sklearn.utils import gen_batches
-from sklearn.utils._arpack import _init_arpack_v0
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_allclose_dense_sparse
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import skip_if_32bit
-from sklearn.utils.fixes import _mode, _eigh
+from sklearn_fork.utils import gen_batches
+from sklearn_fork.utils._arpack import _init_arpack_v0
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_allclose_dense_sparse
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import skip_if_32bit
+from sklearn_fork.utils.fixes import _mode, _eigh
 
-from sklearn.utils.extmath import density, _safe_accumulator_op
-from sklearn.utils.extmath import randomized_svd, _randomized_eigsh
-from sklearn.utils.extmath import row_norms
-from sklearn.utils.extmath import weighted_mode
-from sklearn.utils.extmath import cartesian
-from sklearn.utils.extmath import log_logistic
-from sklearn.utils.extmath import svd_flip
-from sklearn.utils.extmath import _incremental_mean_and_var
-from sklearn.utils.extmath import _deterministic_vector_sign_flip
-from sklearn.utils.extmath import softmax
-from sklearn.utils.extmath import stable_cumsum
-from sklearn.utils.extmath import safe_sparse_dot
-from sklearn.datasets import make_low_rank_matrix, make_sparse_spd_matrix
+from sklearn_fork.utils.extmath import density, _safe_accumulator_op
+from sklearn_fork.utils.extmath import randomized_svd, _randomized_eigsh
+from sklearn_fork.utils.extmath import row_norms
+from sklearn_fork.utils.extmath import weighted_mode
+from sklearn_fork.utils.extmath import cartesian
+from sklearn_fork.utils.extmath import log_logistic
+from sklearn_fork.utils.extmath import svd_flip
+from sklearn_fork.utils.extmath import _incremental_mean_and_var
+from sklearn_fork.utils.extmath import _deterministic_vector_sign_flip
+from sklearn_fork.utils.extmath import softmax
+from sklearn_fork.utils.extmath import stable_cumsum
+from sklearn_fork.utils.extmath import safe_sparse_dot
+from sklearn_fork.datasets import make_low_rank_matrix, make_sparse_spd_matrix
 
 
 def test_density():

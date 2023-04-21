@@ -12,12 +12,12 @@ import pytest
 import joblib
 
 from numpy.testing import assert_allclose
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import ignore_warnings
 
-from sklearn.base import BaseEstimator
-from sklearn.metrics import (
+from sklearn_fork.base import BaseEstimator
+from sklearn_fork.metrics import (
     accuracy_score,
     balanced_accuracy_score,
     average_precision_score,
@@ -33,28 +33,28 @@ from sklearn.metrics import (
     top_k_accuracy_score,
     matthews_corrcoef,
 )
-from sklearn.metrics import cluster as cluster_module
-from sklearn.metrics import check_scoring
-from sklearn.metrics._scorer import (
+from sklearn_fork.metrics import cluster as cluster_module
+from sklearn_fork.metrics import check_scoring
+from sklearn_fork.metrics._scorer import (
     _PredictScorer,
     _passthrough_scorer,
     _MultimetricScorer,
     _check_multimetric_scoring,
 )
-from sklearn.metrics import make_scorer, get_scorer, SCORERS, get_scorer_names
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import LinearSVC
-from sklearn.pipeline import make_pipeline
-from sklearn.cluster import KMeans
-from sklearn.linear_model import Ridge, LogisticRegression, Perceptron
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
-from sklearn.datasets import make_blobs
-from sklearn.datasets import make_classification, make_regression
-from sklearn.datasets import make_multilabel_classification
-from sklearn.datasets import load_diabetes
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.model_selection import GridSearchCV
-from sklearn.multiclass import OneVsRestClassifier
+from sklearn_fork.metrics import make_scorer, get_scorer, SCORERS, get_scorer_names
+from sklearn_fork.neighbors import KNeighborsClassifier
+from sklearn_fork.svm import LinearSVC
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.cluster import KMeans
+from sklearn_fork.linear_model import Ridge, LogisticRegression, Perceptron
+from sklearn_fork.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.datasets import make_classification, make_regression
+from sklearn_fork.datasets import make_multilabel_classification
+from sklearn_fork.datasets import load_diabetes
+from sklearn_fork.model_selection import train_test_split, cross_val_score
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork.multiclass import OneVsRestClassifier
 
 
 REGRESSION_SCORERS = [
@@ -1008,8 +1008,8 @@ def string_labeled_classification_problem():
     y_pred_decision : ndarray of shape (n_samples,), dtype=np.float64
         Decision function values of `classifier` when predicting on `X_test`.
     """
-    from sklearn.datasets import load_breast_cancer
-    from sklearn.utils import shuffle
+    from sklearn_fork.datasets import load_breast_cancer
+    from sklearn_fork.utils import shuffle
 
     X, y = load_breast_cancer(return_X_y=True)
     # create an highly imbalanced classification task

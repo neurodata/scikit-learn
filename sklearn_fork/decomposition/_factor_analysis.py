@@ -152,8 +152,8 @@ class FactorAnalysis(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEsti
 
     Examples
     --------
-    >>> from sklearn.datasets import load_digits
-    >>> from sklearn.decomposition import FactorAnalysis
+    >>> from sklearn_fork.datasets import load_digits
+    >>> from sklearn_fork.decomposition import FactorAnalysis
     >>> X, _ = load_digits(return_X_y=True)
     >>> transformer = FactorAnalysis(n_components=7, random_state=0)
     >>> X_transformed = transformer.fit_transform(X)

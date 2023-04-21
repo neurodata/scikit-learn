@@ -3,10 +3,10 @@ import numpy as np
 import scipy.sparse as sp
 import warnings
 
-from sklearn import clone
-from sklearn.preprocessing import KBinsDiscretizer
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.utils._testing import (
+from sklearn_fork import clone
+from sklearn_fork.preprocessing import KBinsDiscretizer
+from sklearn_fork.preprocessing import OneHotEncoder
+from sklearn_fork.utils._testing import (
     assert_array_almost_equal,
     assert_array_equal,
     assert_allclose_dense_sparse,

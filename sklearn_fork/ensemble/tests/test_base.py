@@ -1,5 +1,5 @@
 """
-Testing for the base module (sklearn.ensemble.base).
+Testing for the base module (sklearn_fork.ensemble.base).
 """
 
 # Authors: Gilles Louppe
@@ -8,16 +8,16 @@ Testing for the base module (sklearn.ensemble.base).
 import numpy as np
 import pytest
 
-from sklearn.datasets import load_iris
-from sklearn.ensemble import BaggingClassifier
-from sklearn.ensemble._base import _set_random_states
-from sklearn.linear_model import Perceptron
-from sklearn.linear_model import Ridge, LogisticRegression
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.ensemble import BaggingClassifier
+from sklearn_fork.ensemble._base import _set_random_states
+from sklearn_fork.linear_model import Perceptron
+from sklearn_fork.linear_model import Ridge, LogisticRegression
 from collections import OrderedDict
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.pipeline import Pipeline
-from sklearn.feature_selection import SelectFromModel
-from sklearn import ensemble
+from sklearn_fork.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn_fork.pipeline import Pipeline
+from sklearn_fork.feature_selection import SelectFromModel
+from sklearn_fork import ensemble
 
 
 def test_base():

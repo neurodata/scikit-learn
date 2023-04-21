@@ -9,11 +9,11 @@ import pytest
 import numpy as np
 import scipy.sparse as sp
 
-from sklearn.datasets.tests.test_common import check_as_frame
-from sklearn.datasets.tests.test_common import check_pandas_dependency_message
-from sklearn.datasets.tests.test_common import check_return_X_y
-from sklearn.utils._testing import assert_allclose_dense_sparse
-from sklearn.preprocessing import normalize
+from sklearn_fork.datasets.tests.test_common import check_as_frame
+from sklearn_fork.datasets.tests.test_common import check_pandas_dependency_message
+from sklearn_fork.datasets.tests.test_common import check_return_X_y
+from sklearn_fork.utils._testing import assert_allclose_dense_sparse
+from sklearn_fork.preprocessing import normalize
 
 
 def test_20news(fetch_20newsgroups_fxt):

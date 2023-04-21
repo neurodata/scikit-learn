@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.mixture` module implements mixture modeling algorithms.
+The :mod:`sklearn_fork.mixture` module implements mixture modeling algorithms.
 """
 
 from ._gaussian_mixture import GaussianMixture

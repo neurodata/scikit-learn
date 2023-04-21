@@ -91,7 +91,7 @@ def _deprecate_normalize(normalize, estimator_name):
     pipeline_msg = (
         "If you wish to scale the data, use Pipeline with a StandardScaler "
         "in a preprocessing stage. To reproduce the previous behavior:\n\n"
-        "from sklearn.pipeline import make_pipeline\n\n"
+        "from sklearn_fork.pipeline import make_pipeline\n\n"
         "model = make_pipeline(StandardScaler(with_mean=False), "
         f"{estimator_name}())\n\n"
         "If you wish to pass a sample_weight parameter, you need to pass it "
@@ -120,7 +120,7 @@ def _deprecate_normalize(normalize, estimator_name):
                 "Please leave the normalize parameter to its default value to "
                 "silence this warning. The default behavior of this estimator "
                 "is to not do any normalization. If normalization is needed "
-                "please use sklearn.preprocessing.StandardScaler instead."
+                "please use sklearn_fork.preprocessing.StandardScaler instead."
             ),
             FutureWarning,
         )
@@ -607,7 +607,7 @@ class LinearRegression(MultiOutputMixin, RegressorMixin, LinearModel):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.linear_model import LinearRegression
+    >>> from sklearn_fork.linear_model import LinearRegression
     >>> X = np.array([[1, 1], [1, 2], [2, 2], [2, 3]])
     >>> # y = 1 * x_0 + 2 * x_1 + 3
     >>> y = np.dot(X, np.array([1, 2])) + 3

@@ -68,9 +68,9 @@ class IterativeImputer(_BaseImputer):
       you need to explicitly import `enable_iterative_imputer`::
 
         >>> # explicitly require this experimental feature
-        >>> from sklearn.experimental import enable_iterative_imputer  # noqa
-        >>> # now you can import normally from sklearn.impute
-        >>> from sklearn.impute import IterativeImputer
+        >>> from sklearn_fork.experimental import enable_iterative_imputer  # noqa
+        >>> # now you can import normally from sklearn_fork.impute
+        >>> from sklearn_fork.impute import IterativeImputer
 
     Parameters
     ----------
@@ -115,7 +115,7 @@ class IterativeImputer(_BaseImputer):
     initial_strategy : {'mean', 'median', 'most_frequent', 'constant'}, \
             default='mean'
         Which strategy to use to initialize the missing values. Same as the
-        `strategy` parameter in :class:`~sklearn.impute.SimpleImputer`.
+        `strategy` parameter in :class:`~sklearn_fork.impute.SimpleImputer`.
 
     fill_value : str or numerical value, default=None
         When `strategy="constant"`, `fill_value` is used to replace all
@@ -190,7 +190,7 @@ class IterativeImputer(_BaseImputer):
 
     Attributes
     ----------
-    initial_imputer_ : object of type :class:`~sklearn.impute.SimpleImputer`
+    initial_imputer_ : object of type :class:`~sklearn_fork.impute.SimpleImputer`
         Imputer used to initialize the missing values.
 
     imputation_sequence_ : list of tuples
@@ -219,7 +219,7 @@ class IterativeImputer(_BaseImputer):
     n_features_with_missing_ : int
         Number of features with missing values.
 
-    indicator_ : :class:`~sklearn.impute.MissingIndicator`
+    indicator_ : :class:`~sklearn_fork.impute.MissingIndicator`
         Indicator used to add binary indicators for missing values.
         `None` if `add_indicator=False`.
 
@@ -268,8 +268,8 @@ class IterativeImputer(_BaseImputer):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.experimental import enable_iterative_imputer
-    >>> from sklearn.impute import IterativeImputer
+    >>> from sklearn_fork.experimental import enable_iterative_imputer
+    >>> from sklearn_fork.impute import IterativeImputer
     >>> imp_mean = IterativeImputer(random_state=0)
     >>> imp_mean.fit([[7, 2, 3], [4, np.nan, 6], [10, 5, 9]])
     IterativeImputer(random_state=0)
@@ -385,7 +385,7 @@ class IterativeImputer(_BaseImputer):
         X_filled : ndarray
             Input data with `X_filled[missing_row_mask, feat_idx]` updated.
 
-        estimator : estimator with sklearn API
+        estimator : estimator with sklearn_fork API
             The fitted estimator used to impute
             `X_filled[missing_row_mask, feat_idx]`.
         """

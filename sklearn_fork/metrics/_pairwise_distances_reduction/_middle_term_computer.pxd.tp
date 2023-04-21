@@ -6,7 +6,7 @@ implementation_specific_values = [
     #       name_suffix, upcast_to_float64, INPUT_DTYPE_t, INPUT_DTYPE
     #
     # We also use the float64 dtype and C-type names as defined in
-    # `sklearn.utils._typedefs` to maintain consistency.
+    # `sklearn_fork.utils._typedefs` to maintain consistency.
     #
     ('64', False, 'float64_t', 'np.float64'),
     ('32', True, 'float32_t', 'np.float32')

@@ -12,8 +12,8 @@ class ConfusionMatrixDisplay:
     """Confusion Matrix visualization.
 
     It is recommend to use
-    :func:`~sklearn.metrics.ConfusionMatrixDisplay.from_estimator` or
-    :func:`~sklearn.metrics.ConfusionMatrixDisplay.from_predictions` to
+    :func:`~sklearn_fork.metrics.ConfusionMatrixDisplay.from_estimator` or
+    :func:`~sklearn_fork.metrics.ConfusionMatrixDisplay.from_predictions` to
     create a :class:`ConfusionMatrixDisplay`. All parameters are stored as
     attributes.
 
@@ -55,10 +55,10 @@ class ConfusionMatrixDisplay:
     Examples
     --------
     >>> import matplotlib.pyplot as plt
-    >>> from sklearn.datasets import make_classification
-    >>> from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-    >>> from sklearn.model_selection import train_test_split
-    >>> from sklearn.svm import SVC
+    >>> from sklearn_fork.datasets import make_classification
+    >>> from sklearn_fork.metrics import confusion_matrix, ConfusionMatrixDisplay
+    >>> from sklearn_fork.model_selection import train_test_split
+    >>> from sklearn_fork.svm import SVC
     >>> X, y = make_classification(random_state=0)
     >>> X_train, X_test, y_train, y_test = train_test_split(X, y,
     ...                                                     random_state=0)
@@ -125,8 +125,8 @@ class ConfusionMatrixDisplay:
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.ConfusionMatrixDisplay`
-            Returns a :class:`~sklearn.metrics.ConfusionMatrixDisplay` instance
+        display : :class:`~sklearn_fork.metrics.ConfusionMatrixDisplay`
+            Returns a :class:`~sklearn_fork.metrics.ConfusionMatrixDisplay` instance
             that contains all the information to plot the confusion matrix.
         """
         check_matplotlib_support("ConfusionMatrixDisplay.plot")
@@ -223,7 +223,7 @@ class ConfusionMatrixDisplay:
         Parameters
         ----------
         estimator : estimator instance
-            Fitted classifier or a fitted :class:`~sklearn.pipeline.Pipeline`
+            Fitted classifier or a fitted :class:`~sklearn_fork.pipeline.Pipeline`
             in which the last estimator is a classifier.
 
         X : {array-like, sparse matrix} of shape (n_samples, n_features)
@@ -288,7 +288,7 @@ class ConfusionMatrixDisplay:
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.ConfusionMatrixDisplay`
+        display : :class:`~sklearn_fork.metrics.ConfusionMatrixDisplay`
 
         See Also
         --------
@@ -298,10 +298,10 @@ class ConfusionMatrixDisplay:
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import make_classification
-        >>> from sklearn.metrics import ConfusionMatrixDisplay
-        >>> from sklearn.model_selection import train_test_split
-        >>> from sklearn.svm import SVC
+        >>> from sklearn_fork.datasets import make_classification
+        >>> from sklearn_fork.metrics import ConfusionMatrixDisplay
+        >>> from sklearn_fork.model_selection import train_test_split
+        >>> from sklearn_fork.svm import SVC
         >>> X, y = make_classification(random_state=0)
         >>> X_train, X_test, y_train, y_test = train_test_split(
         ...         X, y, random_state=0)
@@ -426,7 +426,7 @@ class ConfusionMatrixDisplay:
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.ConfusionMatrixDisplay`
+        display : :class:`~sklearn_fork.metrics.ConfusionMatrixDisplay`
 
         See Also
         --------
@@ -436,10 +436,10 @@ class ConfusionMatrixDisplay:
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import make_classification
-        >>> from sklearn.metrics import ConfusionMatrixDisplay
-        >>> from sklearn.model_selection import train_test_split
-        >>> from sklearn.svm import SVC
+        >>> from sklearn_fork.datasets import make_classification
+        >>> from sklearn_fork.metrics import ConfusionMatrixDisplay
+        >>> from sklearn_fork.model_selection import train_test_split
+        >>> from sklearn_fork.svm import SVC
         >>> X, y = make_classification(random_state=0)
         >>> X_train, X_test, y_train, y_test = train_test_split(
         ...         X, y, random_state=0)

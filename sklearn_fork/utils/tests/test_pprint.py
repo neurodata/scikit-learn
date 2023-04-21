@@ -3,12 +3,12 @@ from pprint import PrettyPrinter
 
 import numpy as np
 
-from sklearn.utils._pprint import _EstimatorPrettyPrinter
-from sklearn.linear_model import LogisticRegressionCV
-from sklearn.pipeline import make_pipeline
-from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.feature_selection import SelectKBest, chi2
-from sklearn import config_context
+from sklearn_fork.utils._pprint import _EstimatorPrettyPrinter
+from sklearn_fork.linear_model import LogisticRegressionCV
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.base import BaseEstimator, TransformerMixin
+from sklearn_fork.feature_selection import SelectKBest, chi2
+from sklearn_fork import config_context
 
 
 # Ignore flake8 (lots of line too long issues)

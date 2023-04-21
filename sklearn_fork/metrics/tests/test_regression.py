@@ -5,30 +5,30 @@ from scipy.special import factorial, xlogy
 from itertools import product
 import pytest
 
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.dummy import DummyRegressor
-from sklearn.model_selection import GridSearchCV
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.dummy import DummyRegressor
+from sklearn_fork.model_selection import GridSearchCV
 
-from sklearn.metrics import explained_variance_score
-from sklearn.metrics import mean_absolute_error
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import mean_squared_log_error
-from sklearn.metrics import median_absolute_error
-from sklearn.metrics import mean_absolute_percentage_error
-from sklearn.metrics import max_error
-from sklearn.metrics import mean_pinball_loss
-from sklearn.metrics import r2_score
-from sklearn.metrics import mean_tweedie_deviance
-from sklearn.metrics import d2_tweedie_score
-from sklearn.metrics import d2_pinball_score
-from sklearn.metrics import d2_absolute_error_score
-from sklearn.metrics import make_scorer
+from sklearn_fork.metrics import explained_variance_score
+from sklearn_fork.metrics import mean_absolute_error
+from sklearn_fork.metrics import mean_squared_error
+from sklearn_fork.metrics import mean_squared_log_error
+from sklearn_fork.metrics import median_absolute_error
+from sklearn_fork.metrics import mean_absolute_percentage_error
+from sklearn_fork.metrics import max_error
+from sklearn_fork.metrics import mean_pinball_loss
+from sklearn_fork.metrics import r2_score
+from sklearn_fork.metrics import mean_tweedie_deviance
+from sklearn_fork.metrics import d2_tweedie_score
+from sklearn_fork.metrics import d2_pinball_score
+from sklearn_fork.metrics import d2_absolute_error_score
+from sklearn_fork.metrics import make_scorer
 
-from sklearn.metrics._regression import _check_reg_targets
+from sklearn_fork.metrics._regression import _check_reg_targets
 
-from sklearn.exceptions import UndefinedMetricWarning
+from sklearn_fork.exceptions import UndefinedMetricWarning
 
 
 def test_regression_metrics(n_samples=50):

@@ -1,5 +1,5 @@
 """
-Testing for the forest module (sklearn.ensemble.forest).
+Testing for the forest module (sklearn_fork.ensemble.forest).
 """
 
 # Authors: Gilles Louppe,
@@ -27,36 +27,36 @@ import joblib
 
 import pytest
 
-import sklearn
-from sklearn.dummy import DummyRegressor
-from sklearn.metrics import mean_poisson_deviance
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import _convert_container
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils._testing import skip_if_no_parallel
+import sklearn_fork
+from sklearn_fork.dummy import DummyRegressor
+from sklearn_fork.metrics import mean_poisson_deviance
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import _convert_container
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import skip_if_no_parallel
 
-from sklearn.exceptions import NotFittedError
+from sklearn_fork.exceptions import NotFittedError
 
-from sklearn import datasets
-from sklearn.decomposition import TruncatedSVD
-from sklearn.datasets import make_classification
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.ensemble import ExtraTreesRegressor
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import RandomTreesEmbedding
-from sklearn.metrics import explained_variance_score, f1_score
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.model_selection import GridSearchCV
-from sklearn.svm import LinearSVC
-from sklearn.utils.parallel import Parallel
-from sklearn.utils.validation import check_random_state
+from sklearn_fork import datasets
+from sklearn_fork.decomposition import TruncatedSVD
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.ensemble import ExtraTreesClassifier
+from sklearn_fork.ensemble import ExtraTreesRegressor
+from sklearn_fork.ensemble import RandomForestClassifier
+from sklearn_fork.ensemble import RandomForestRegressor
+from sklearn_fork.ensemble import RandomTreesEmbedding
+from sklearn_fork.metrics import explained_variance_score, f1_score
+from sklearn_fork.model_selection import train_test_split, cross_val_score
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork.svm import LinearSVC
+from sklearn_fork.utils.parallel import Parallel
+from sklearn_fork.utils.validation import check_random_state
 
-from sklearn.metrics import mean_squared_error
+from sklearn_fork.metrics import mean_squared_error
 
-from sklearn.tree._classes import SPARSE_SPLITTERS
+from sklearn_fork.tree._classes import SPARSE_SPLITTERS
 
 
 # toy sample
@@ -1820,7 +1820,7 @@ def test_mse_criterion_object_segfault_smoke_test(Forest):
     # does not cause a segfault when fitting with concurrent threads.
     # Non-regression test for:
     # https://github.com/scikit-learn/scikit-learn/issues/12623
-    from sklearn.tree._criterion import MSE
+    from sklearn_fork.tree._criterion import MSE
 
     y = y_reg.reshape(-1, 1)
     n_samples, n_outputs = y.shape
@@ -1881,7 +1881,7 @@ def test_read_only_buffer(monkeypatch):
     Non-regression test for: https://github.com/scikit-learn/scikit-learn/issues/25333
     """
     monkeypatch.setattr(
-        sklearn.ensemble._forest,
+        sklearn_fork.ensemble._forest,
         "Parallel",
         partial(Parallel, max_nbytes=100),
     )

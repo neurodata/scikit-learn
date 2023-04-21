@@ -1,13 +1,13 @@
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn.datasets import make_classification, make_regression
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.metrics import accuracy_score
+from sklearn_fork.datasets import make_classification, make_regression
 import numpy as np
 import pytest
 
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.ensemble._hist_gradient_boosting.binning import _BinMapper
-from sklearn.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.ensemble._hist_gradient_boosting.binning import _BinMapper
+from sklearn_fork.ensemble._hist_gradient_boosting.utils import get_equivalent_estimator
 
 
 @pytest.mark.parametrize("seed", range(5))
@@ -33,11 +33,11 @@ from sklearn.ensemble._hist_gradient_boosting.utils import get_equivalent_estima
 def test_same_predictions_regression(
     seed, loss, min_samples_leaf, n_samples, max_leaf_nodes
 ):
-    # Make sure sklearn has the same predictions as lightgbm for easy targets.
+    # Make sure sklearn_fork has the same predictions as lightgbm for easy targets.
     #
     # In particular when the size of the trees are bound and the number of
     # samples is large enough, the structure of the prediction trees found by
-    # LightGBM and sklearn should be exactly identical.
+    # LightGBM and sklearn_fork should be exactly identical.
     #
     # Notes:
     # - Several candidate splits may have equal gains when the number of

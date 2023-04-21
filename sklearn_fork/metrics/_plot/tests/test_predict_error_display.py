@@ -2,11 +2,11 @@ import pytest
 
 from numpy.testing import assert_allclose
 
-from sklearn.datasets import load_diabetes
-from sklearn.exceptions import NotFittedError
-from sklearn.linear_model import Ridge
+from sklearn_fork.datasets import load_diabetes
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.linear_model import Ridge
 
-from sklearn.metrics import PredictionErrorDisplay
+from sklearn_fork.metrics import PredictionErrorDisplay
 
 X, y = load_diabetes(return_X_y=True)
 

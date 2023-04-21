@@ -3,7 +3,7 @@
 import numpy as np
 from numpy.testing import assert_array_equal, assert_allclose
 
-from sklearn.utils._fast_dict import IntFloatDict, argmin
+from sklearn_fork.utils._fast_dict import IntFloatDict, argmin
 
 
 def test_int_float_dict():

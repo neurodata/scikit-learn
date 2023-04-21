@@ -65,7 +65,7 @@ class DecisionBoundaryDisplay:
     """Decisions boundary visualization.
 
     It is recommended to use
-    :func:`~sklearn.inspection.DecisionBoundaryDisplay.from_estimator`
+    :func:`~sklearn_fork.inspection.DecisionBoundaryDisplay.from_estimator`
     to create a :class:`DecisionBoundaryDisplay`. All parameters are stored as
     attributes.
 
@@ -112,9 +112,9 @@ class DecisionBoundaryDisplay:
     --------
     >>> import matplotlib.pyplot as plt
     >>> import numpy as np
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.inspection import DecisionBoundaryDisplay
-    >>> from sklearn.tree import DecisionTreeClassifier
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.inspection import DecisionBoundaryDisplay
+    >>> from sklearn_fork.tree import DecisionTreeClassifier
     >>> iris = load_iris()
     >>> feature_1, feature_2 = np.meshgrid(
     ...     np.linspace(iris.data[:, 0].min(), iris.data[:, 0].max()),
@@ -169,7 +169,7 @@ class DecisionBoundaryDisplay:
 
         Returns
         -------
-        display: :class:`~sklearn.inspection.DecisionBoundaryDisplay`
+        display: :class:`~sklearn_fork.inspection.DecisionBoundaryDisplay`
             Object that stores computed values.
         """
         check_matplotlib_support("DecisionBoundaryDisplay.plot")
@@ -269,7 +269,7 @@ class DecisionBoundaryDisplay:
 
         Returns
         -------
-        display : :class:`~sklearn.inspection.DecisionBoundaryDisplay`
+        display : :class:`~sklearn_fork.inspection.DecisionBoundaryDisplay`
             Object that stores the result.
 
         See Also
@@ -283,9 +283,9 @@ class DecisionBoundaryDisplay:
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import load_iris
-        >>> from sklearn.linear_model import LogisticRegression
-        >>> from sklearn.inspection import DecisionBoundaryDisplay
+        >>> from sklearn_fork.datasets import load_iris
+        >>> from sklearn_fork.linear_model import LogisticRegression
+        >>> from sklearn_fork.inspection import DecisionBoundaryDisplay
         >>> iris = load_iris()
         >>> X = iris.data[:, :2]
         >>> classifier = LogisticRegression().fit(X, iris.target)

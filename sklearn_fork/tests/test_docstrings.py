@@ -5,12 +5,12 @@ from typing import Optional
 import pytest
 
 # make it possible to discover experimental estimators when calling `all_estimators`
-from sklearn.experimental import enable_iterative_imputer  # noqa
-from sklearn.experimental import enable_halving_search_cv  # noqa
+from sklearn_fork.experimental import enable_iterative_imputer  # noqa
+from sklearn_fork.experimental import enable_halving_search_cv  # noqa
 
-from sklearn.utils.discovery import all_estimators
-from sklearn.utils.discovery import all_displays
-from sklearn.utils.discovery import all_functions
+from sklearn_fork.utils.discovery import all_estimators
+from sklearn_fork.utils.discovery import all_displays
+from sklearn_fork.utils.discovery import all_functions
 
 
 numpydoc_validation = pytest.importorskip("numpydoc.validate")

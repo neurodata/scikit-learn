@@ -30,7 +30,7 @@ def _get_response_values(
     Parameters
     ----------
     estimator : estimator instance
-        Fitted classifier or regressor or a fitted :class:`~sklearn.pipeline.Pipeline`
+        Fitted classifier or regressor or a fitted :class:`~sklearn_fork.pipeline.Pipeline`
         in which the last estimator is a classifier or a regressor.
 
     X : {array-like, sparse matrix} of shape (n_samples, n_features)
@@ -70,7 +70,7 @@ def _get_response_values(
         If the response method can be applied to a classifier only and
         `estimator` is a regressor.
     """
-    from sklearn.base import is_classifier  # noqa
+    from sklearn_fork.base import is_classifier  # noqa
 
     if is_classifier(estimator):
         prediction_method = _check_response_method(estimator, response_method)
@@ -127,7 +127,7 @@ def _get_response_values_binary(estimator, X, response_method, pos_label=None):
     Parameters
     ----------
     estimator : estimator instance
-        Fitted classifier or a fitted :class:`~sklearn.pipeline.Pipeline`
+        Fitted classifier or a fitted :class:`~sklearn_fork.pipeline.Pipeline`
         in which the last estimator is a binary classifier.
 
     X : {array-like, sparse matrix} of shape (n_samples, n_features)

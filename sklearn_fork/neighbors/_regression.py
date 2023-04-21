@@ -78,7 +78,7 @@ class KNeighborsRegressor(KNeighborsMixin, RegressorMixin, NeighborsBase):
         documentation of `scipy.spatial.distance
         <https://docs.scipy.org/doc/scipy/reference/spatial.distance.html>`_ and
         the metrics listed in
-        :class:`~sklearn.metrics.pairwise.distance_metrics` for valid metric
+        :class:`~sklearn_fork.metrics.pairwise.distance_metrics` for valid metric
         values.
 
         If metric is "precomputed", X is assumed to be a distance matrix and
@@ -153,7 +153,7 @@ class KNeighborsRegressor(KNeighborsMixin, RegressorMixin, NeighborsBase):
     --------
     >>> X = [[0], [1], [2], [3]]
     >>> y = [0, 0, 1, 1]
-    >>> from sklearn.neighbors import KNeighborsRegressor
+    >>> from sklearn_fork.neighbors import KNeighborsRegressor
     >>> neigh = KNeighborsRegressor(n_neighbors=2)
     >>> neigh.fit(X, y)
     KNeighborsRegressor(...)
@@ -319,7 +319,7 @@ class RadiusNeighborsRegressor(RadiusNeighborsMixin, RegressorMixin, NeighborsBa
         documentation of `scipy.spatial.distance
         <https://docs.scipy.org/doc/scipy/reference/spatial.distance.html>`_ and
         the metrics listed in
-        :class:`~sklearn.metrics.pairwise.distance_metrics` for valid metric
+        :class:`~sklearn_fork.metrics.pairwise.distance_metrics` for valid metric
         values.
 
         If metric is "precomputed", X is assumed to be a distance matrix and
@@ -385,7 +385,7 @@ class RadiusNeighborsRegressor(RadiusNeighborsMixin, RegressorMixin, NeighborsBa
     --------
     >>> X = [[0], [1], [2], [3]]
     >>> y = [0, 0, 1, 1]
-    >>> from sklearn.neighbors import RadiusNeighborsRegressor
+    >>> from sklearn_fork.neighbors import RadiusNeighborsRegressor
     >>> neigh = RadiusNeighborsRegressor(radius=1.0)
     >>> neigh.fit(X, y)
     RadiusNeighborsRegressor(...)

@@ -4,8 +4,8 @@ import scipy.sparse as sp
 from scipy.special import comb
 from numpy.testing import assert_array_almost_equal
 
-from sklearn.utils.random import _random_choice_csc, sample_without_replacement
-from sklearn.utils._random import _our_rand_r_py
+from sklearn_fork.utils.random import _random_choice_csc, sample_without_replacement
+from sklearn_fork.utils._random import _our_rand_r_py
 
 
 ###############################################################################

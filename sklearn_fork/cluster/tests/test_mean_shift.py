@@ -7,15 +7,15 @@ import numpy as np
 import warnings
 import pytest
 
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_allclose
 
-from sklearn.cluster import MeanShift
-from sklearn.cluster import mean_shift
-from sklearn.cluster import estimate_bandwidth
-from sklearn.cluster import get_bin_seeds
-from sklearn.datasets import make_blobs
-from sklearn.metrics import v_measure_score
+from sklearn_fork.cluster import MeanShift
+from sklearn_fork.cluster import mean_shift
+from sklearn_fork.cluster import estimate_bandwidth
+from sklearn_fork.cluster import get_bin_seeds
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.metrics import v_measure_score
 
 
 n_clusters = 3

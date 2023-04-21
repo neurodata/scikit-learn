@@ -3,8 +3,8 @@ import numpy as np
 from numpy.testing import assert_array_almost_equal, assert_allclose
 import pytest
 
-from sklearn.manifold import _mds as mds
-from sklearn.metrics import euclidean_distances
+from sklearn_fork.manifold import _mds as mds
+from sklearn_fork.metrics import euclidean_distances
 
 
 def test_smacof():
@@ -95,7 +95,7 @@ def test_normalized_stress_auto(metric, monkeypatch):
     dist = euclidean_distances(X)
 
     mock = Mock(side_effect=mds._smacof_single)
-    monkeypatch.setattr("sklearn.manifold._mds._smacof_single", mock)
+    monkeypatch.setattr("sklearn_fork.manifold._mds._smacof_single", mock)
 
     est = mds.MDS(metric=metric, normalized_stress="auto", random_state=rng)
     est.fit_transform(X)

@@ -411,7 +411,7 @@ class StackingClassifier(ClassifierMixin, _BaseStacking):
     final_estimator : estimator, default=None
         A classifier which will be used to combine the base estimators.
         The default classifier is a
-        :class:`~sklearn.linear_model.LogisticRegression`.
+        :class:`~sklearn_fork.linear_model.LogisticRegression`.
 
     cv : int, cross-validation generator, iterable, or "prefit", default=None
         Determines the cross-validation splitting strategy used in
@@ -427,8 +427,8 @@ class StackingClassifier(ClassifierMixin, _BaseStacking):
 
         For integer/None inputs, if the estimator is a classifier and y is
         either binary or multiclass,
-        :class:`~sklearn.model_selection.StratifiedKFold` is used.
-        In all other cases, :class:`~sklearn.model_selection.KFold` is used.
+        :class:`~sklearn_fork.model_selection.StratifiedKFold` is used.
+        In all other cases, :class:`~sklearn_fork.model_selection.KFold` is used.
         These splitters are instantiated with `shuffle=False` so the splits
         will be the same across calls.
 
@@ -487,7 +487,7 @@ class StackingClassifier(ClassifierMixin, _BaseStacking):
         will not appear in `estimators_`. When `cv="prefit"`, `estimators_`
         is set to `estimators` and is not fitted again.
 
-    named_estimators_ : :class:`~sklearn.utils.Bunch`
+    named_estimators_ : :class:`~sklearn_fork.utils.Bunch`
         Attribute to access any fitted sub-estimators by name.
 
     n_features_in_ : int
@@ -533,13 +533,13 @@ class StackingClassifier(ClassifierMixin, _BaseStacking):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.ensemble import RandomForestClassifier
-    >>> from sklearn.svm import LinearSVC
-    >>> from sklearn.linear_model import LogisticRegression
-    >>> from sklearn.preprocessing import StandardScaler
-    >>> from sklearn.pipeline import make_pipeline
-    >>> from sklearn.ensemble import StackingClassifier
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.ensemble import RandomForestClassifier
+    >>> from sklearn_fork.svm import LinearSVC
+    >>> from sklearn_fork.linear_model import LogisticRegression
+    >>> from sklearn_fork.preprocessing import StandardScaler
+    >>> from sklearn_fork.pipeline import make_pipeline
+    >>> from sklearn_fork.ensemble import StackingClassifier
     >>> X, y = load_iris(return_X_y=True)
     >>> estimators = [
     ...     ('rf', RandomForestClassifier(n_estimators=10, random_state=42)),
@@ -549,7 +549,7 @@ class StackingClassifier(ClassifierMixin, _BaseStacking):
     >>> clf = StackingClassifier(
     ...     estimators=estimators, final_estimator=LogisticRegression()
     ... )
-    >>> from sklearn.model_selection import train_test_split
+    >>> from sklearn_fork.model_selection import train_test_split
     >>> X_train, X_test, y_train, y_test = train_test_split(
     ...     X, y, stratify=y, random_state=42
     ... )
@@ -787,7 +787,7 @@ class StackingRegressor(RegressorMixin, _BaseStacking):
 
     final_estimator : estimator, default=None
         A regressor which will be used to combine the base estimators.
-        The default regressor is a :class:`~sklearn.linear_model.RidgeCV`.
+        The default regressor is a :class:`~sklearn_fork.linear_model.RidgeCV`.
 
     cv : int, cross-validation generator, iterable, or "prefit", default=None
         Determines the cross-validation splitting strategy used in
@@ -802,8 +802,8 @@ class StackingRegressor(RegressorMixin, _BaseStacking):
 
         For integer/None inputs, if the estimator is a classifier and y is
         either binary or multiclass,
-        :class:`~sklearn.model_selection.StratifiedKFold` is used.
-        In all other cases, :class:`~sklearn.model_selection.KFold` is used.
+        :class:`~sklearn_fork.model_selection.StratifiedKFold` is used.
+        In all other cases, :class:`~sklearn_fork.model_selection.KFold` is used.
         These splitters are instantiated with `shuffle=False` so the splits
         will be the same across calls.
 
@@ -847,7 +847,7 @@ class StackingRegressor(RegressorMixin, _BaseStacking):
         will not appear in `estimators_`. When `cv="prefit"`, `estimators_`
         is set to `estimators` and is not fitted again.
 
-    named_estimators_ : :class:`~sklearn.utils.Bunch`
+    named_estimators_ : :class:`~sklearn_fork.utils.Bunch`
         Attribute to access any fitted sub-estimators by name.
 
     n_features_in_ : int
@@ -879,11 +879,11 @@ class StackingRegressor(RegressorMixin, _BaseStacking):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_diabetes
-    >>> from sklearn.linear_model import RidgeCV
-    >>> from sklearn.svm import LinearSVR
-    >>> from sklearn.ensemble import RandomForestRegressor
-    >>> from sklearn.ensemble import StackingRegressor
+    >>> from sklearn_fork.datasets import load_diabetes
+    >>> from sklearn_fork.linear_model import RidgeCV
+    >>> from sklearn_fork.svm import LinearSVR
+    >>> from sklearn_fork.ensemble import RandomForestRegressor
+    >>> from sklearn_fork.ensemble import StackingRegressor
     >>> X, y = load_diabetes(return_X_y=True)
     >>> estimators = [
     ...     ('lr', RidgeCV()),
@@ -894,7 +894,7 @@ class StackingRegressor(RegressorMixin, _BaseStacking):
     ...     final_estimator=RandomForestRegressor(n_estimators=10,
     ...                                           random_state=42)
     ... )
-    >>> from sklearn.model_selection import train_test_split
+    >>> from sklearn_fork.model_selection import train_test_split
     >>> X_train, X_test, y_train, y_test = train_test_split(
     ...     X, y, random_state=42
     ... )

@@ -6,40 +6,40 @@ import warnings
 import numpy as np
 import pytest
 
-import sklearn
-from sklearn.inspection import partial_dependence
-from sklearn.inspection._partial_dependence import (
+import sklearn_fork
+from sklearn_fork.inspection import partial_dependence
+from sklearn_fork.inspection._partial_dependence import (
     _grid_from_X,
     _partial_dependence_brute,
     _partial_dependence_recursion,
 )
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble import GradientBoostingRegressor
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.linear_model import LinearRegression
-from sklearn.linear_model import LogisticRegression
-from sklearn.linear_model import MultiTaskLasso
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.datasets import load_iris
-from sklearn.datasets import make_classification, make_regression
-from sklearn.cluster import KMeans
-from sklearn.compose import make_column_transformer
-from sklearn.metrics import r2_score
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import RobustScaler
-from sklearn.preprocessing import scale
-from sklearn.pipeline import make_pipeline
-from sklearn.dummy import DummyClassifier
-from sklearn.base import BaseEstimator, ClassifierMixin, clone
-from sklearn.exceptions import NotFittedError
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils import _IS_32BIT
-from sklearn.utils.validation import check_random_state
-from sklearn.tree.tests.test_tree import assert_is_subtree
+from sklearn_fork.ensemble import GradientBoostingClassifier
+from sklearn_fork.ensemble import GradientBoostingRegressor
+from sklearn_fork.ensemble import RandomForestRegressor
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.linear_model import MultiTaskLasso
+from sklearn_fork.tree import DecisionTreeRegressor
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.datasets import make_classification, make_regression
+from sklearn_fork.cluster import KMeans
+from sklearn_fork.compose import make_column_transformer
+from sklearn_fork.metrics import r2_score
+from sklearn_fork.preprocessing import PolynomialFeatures
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.preprocessing import RobustScaler
+from sklearn_fork.preprocessing import scale
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.dummy import DummyClassifier
+from sklearn_fork.base import BaseEstimator, ClassifierMixin, clone
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils import _IS_32BIT
+from sklearn_fork.utils.validation import check_random_state
+from sklearn_fork.tree.tests.test_tree import assert_is_subtree
 
 
 # toy sample
@@ -451,12 +451,12 @@ def test_partial_dependence_easy_target(est, power):
 @pytest.mark.parametrize(
     "Estimator",
     (
-        sklearn.tree.DecisionTreeClassifier,
-        sklearn.tree.ExtraTreeClassifier,
-        sklearn.ensemble.ExtraTreesClassifier,
-        sklearn.neighbors.KNeighborsClassifier,
-        sklearn.neighbors.RadiusNeighborsClassifier,
-        sklearn.ensemble.RandomForestClassifier,
+        sklearn_fork.tree.DecisionTreeClassifier,
+        sklearn_fork.tree.ExtraTreeClassifier,
+        sklearn_fork.ensemble.ExtraTreesClassifier,
+        sklearn_fork.neighbors.KNeighborsClassifier,
+        sklearn_fork.neighbors.RadiusNeighborsClassifier,
+        sklearn_fork.ensemble.RandomForestClassifier,
     ),
 )
 def test_multiclass_multioutput(Estimator):
@@ -875,7 +875,7 @@ def test_mixed_type_categorical():
     X = np.array(["A", "B", "C", np.nan], dtype=object).reshape(-1, 1)
     y = np.array([0, 1, 0, 1])
 
-    from sklearn.preprocessing import OrdinalEncoder
+    from sklearn_fork.preprocessing import OrdinalEncoder
 
     clf = make_pipeline(
         OrdinalEncoder(encoded_missing_value=-1),

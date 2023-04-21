@@ -437,7 +437,7 @@ class SpectralClustering(ClusterMixin, BaseEstimator):
            of precomputed distances, and construct a binary affinity matrix
            from the ``n_neighbors`` nearest neighbors of each instance.
          - one of the kernels supported by
-           :func:`~sklearn.metrics.pairwise_kernels`.
+           :func:`~sklearn_fork.metrics.pairwise_kernels`.
 
         Only kernels that produce similarity scores (non-negative values that
         increase with similarity) should be used. This property is not checked
@@ -525,8 +525,8 @@ class SpectralClustering(ClusterMixin, BaseEstimator):
 
     See Also
     --------
-    sklearn.cluster.KMeans : K-Means clustering.
-    sklearn.cluster.DBSCAN : Density-Based Spatial Clustering of
+    sklearn_fork.cluster.KMeans : K-Means clustering.
+    sklearn_fork.cluster.DBSCAN : Density-Based Spatial Clustering of
         Applications with Noise.
 
     Notes
@@ -573,7 +573,7 @@ class SpectralClustering(ClusterMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.cluster import SpectralClustering
+    >>> from sklearn_fork.cluster import SpectralClustering
     >>> import numpy as np
     >>> X = np.array([[1, 1], [2, 1], [1, 0],
     ...               [4, 7], [3, 5], [3, 6]])

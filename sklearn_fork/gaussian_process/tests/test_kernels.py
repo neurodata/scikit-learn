@@ -7,14 +7,14 @@ import pytest
 import numpy as np
 from inspect import signature
 
-from sklearn.gaussian_process.kernels import _approx_fprime
+from sklearn_fork.gaussian_process.kernels import _approx_fprime
 
-from sklearn.metrics.pairwise import (
+from sklearn_fork.metrics.pairwise import (
     PAIRWISE_KERNEL_FUNCTIONS,
     euclidean_distances,
     pairwise_kernels,
 )
-from sklearn.gaussian_process.kernels import (
+from sklearn_fork.gaussian_process.kernels import (
     RBF,
     Matern,
     RationalQuadratic,
@@ -27,9 +27,9 @@ from sklearn.gaussian_process.kernels import (
     Exponentiation,
     CompoundKernel,
 )
-from sklearn.base import clone
+from sklearn_fork.base import clone
 
-from sklearn.utils._testing import (
+from sklearn_fork.utils._testing import (
     assert_almost_equal,
     assert_array_equal,
     assert_array_almost_equal,
@@ -239,11 +239,11 @@ def check_hyperparameters_equal(kernel1, kernel2):
 
 @pytest.mark.parametrize("kernel", kernels)
 def test_kernel_clone(kernel):
-    # Test that sklearn's clone works correctly on kernels.
+    # Test that sklearn_fork's clone works correctly on kernels.
     kernel_cloned = clone(kernel)
 
     # XXX: Should this be fixed?
-    # This differs from the sklearn's estimators equality check.
+    # This differs from the sklearn_fork's estimators equality check.
     assert kernel == kernel_cloned
     assert id(kernel) != id(kernel_cloned)
 

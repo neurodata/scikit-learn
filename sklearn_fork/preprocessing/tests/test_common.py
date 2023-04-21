@@ -5,27 +5,27 @@ import numpy as np
 
 from scipy import sparse
 
-from sklearn.datasets import load_iris
-from sklearn.model_selection import train_test_split
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.model_selection import train_test_split
 
-from sklearn.base import clone
+from sklearn_fork.base import clone
 
-from sklearn.preprocessing import maxabs_scale
-from sklearn.preprocessing import minmax_scale
-from sklearn.preprocessing import scale
-from sklearn.preprocessing import power_transform
-from sklearn.preprocessing import quantile_transform
-from sklearn.preprocessing import robust_scale
+from sklearn_fork.preprocessing import maxabs_scale
+from sklearn_fork.preprocessing import minmax_scale
+from sklearn_fork.preprocessing import scale
+from sklearn_fork.preprocessing import power_transform
+from sklearn_fork.preprocessing import quantile_transform
+from sklearn_fork.preprocessing import robust_scale
 
-from sklearn.preprocessing import MaxAbsScaler
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import PowerTransformer
-from sklearn.preprocessing import QuantileTransformer
-from sklearn.preprocessing import RobustScaler
+from sklearn_fork.preprocessing import MaxAbsScaler
+from sklearn_fork.preprocessing import MinMaxScaler
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.preprocessing import PowerTransformer
+from sklearn_fork.preprocessing import QuantileTransformer
+from sklearn_fork.preprocessing import RobustScaler
 
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_allclose
 
 iris = load_iris()
 

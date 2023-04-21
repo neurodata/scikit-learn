@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.cluster` module gathers popular unsupervised clustering
+The :mod:`sklearn_fork.cluster` module gathers popular unsupervised clustering
 algorithms.
 """
 

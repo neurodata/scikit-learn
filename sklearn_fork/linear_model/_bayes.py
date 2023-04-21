@@ -209,7 +209,7 @@ class BayesianRidge(RegressorMixin, LinearModel):
 
     Examples
     --------
-    >>> from sklearn import linear_model
+    >>> from sklearn_fork import linear_model
     >>> clf = linear_model.BayesianRidge()
     >>> clf.fit([[0,0], [1, 1], [2, 2]], [0, 1, 2])
     BayesianRidge()
@@ -610,7 +610,7 @@ class ARDRegression(RegressorMixin, LinearModel):
 
     Examples
     --------
-    >>> from sklearn import linear_model
+    >>> from sklearn_fork import linear_model
     >>> clf = linear_model.ARDRegression()
     >>> clf.fit([[0,0], [1, 1], [2, 2]], [0, 1, 2])
     ARDRegression()

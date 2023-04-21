@@ -3,14 +3,14 @@ import pytest
 from numpy.testing import assert_allclose
 from scipy import sparse
 
-from sklearn.datasets import make_blobs
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.tree import DecisionTreeClassifier
 
-from sklearn.utils.class_weight import compute_class_weight
-from sklearn.utils.class_weight import compute_sample_weight
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_almost_equal
+from sklearn_fork.utils.class_weight import compute_class_weight
+from sklearn_fork.utils.class_weight import compute_sample_weight
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_almost_equal
 
 
 def test_compute_class_weight():

@@ -4,23 +4,23 @@ import numpy as np
 import pytest
 from scipy.sparse import csr_matrix, issparse
 
-from sklearn.model_selection import ParameterGrid
+from sklearn_fork.model_selection import ParameterGrid
 
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
 
-from sklearn.base import BaseEstimator, BiclusterMixin
+from sklearn_fork.base import BaseEstimator, BiclusterMixin
 
-from sklearn.cluster import SpectralCoclustering
-from sklearn.cluster import SpectralBiclustering
-from sklearn.cluster._bicluster import _scale_normalize
-from sklearn.cluster._bicluster import _bistochastic_normalize
-from sklearn.cluster._bicluster import _log_normalize
+from sklearn_fork.cluster import SpectralCoclustering
+from sklearn_fork.cluster import SpectralBiclustering
+from sklearn_fork.cluster._bicluster import _scale_normalize
+from sklearn_fork.cluster._bicluster import _bistochastic_normalize
+from sklearn_fork.cluster._bicluster import _log_normalize
 
-from sklearn.metrics import consensus_score, v_measure_score
+from sklearn_fork.metrics import consensus_score, v_measure_score
 
-from sklearn.datasets import make_biclusters, make_checkerboard
+from sklearn_fork.datasets import make_biclusters, make_checkerboard
 
 
 class MockBiclustering(BiclusterMixin, BaseEstimator):

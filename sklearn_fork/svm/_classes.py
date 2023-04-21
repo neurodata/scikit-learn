@@ -138,12 +138,12 @@ class LinearSVC(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):
         Furthermore SVC multi-class mode is implemented using one
         vs one scheme while LinearSVC uses one vs the rest. It is
         possible to implement one vs the rest with SVC by using the
-        :class:`~sklearn.multiclass.OneVsRestClassifier` wrapper.
+        :class:`~sklearn_fork.multiclass.OneVsRestClassifier` wrapper.
 
         Finally SVC can fit dense data without memory copy if the input
         is C-contiguous. Sparse data will still incur memory copy though.
 
-    sklearn.linear_model.SGDClassifier : SGDClassifier can optimize the same
+    sklearn_fork.linear_model.SGDClassifier : SGDClassifier can optimize the same
         cost function as LinearSVC
         by adjusting the penalty and loss parameters. In addition it requires
         less memory, allows incremental (online) learning, and implements
@@ -170,10 +170,10 @@ class LinearSVC(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.svm import LinearSVC
-    >>> from sklearn.pipeline import make_pipeline
-    >>> from sklearn.preprocessing import StandardScaler
-    >>> from sklearn.datasets import make_classification
+    >>> from sklearn_fork.svm import LinearSVC
+    >>> from sklearn_fork.pipeline import make_pipeline
+    >>> from sklearn_fork.preprocessing import StandardScaler
+    >>> from sklearn_fork.datasets import make_classification
     >>> X, y = make_classification(n_features=4, random_state=0)
     >>> clf = make_pipeline(StandardScaler(),
     ...                     LinearSVC(random_state=0, tol=1e-5))
@@ -415,7 +415,7 @@ class LinearSVR(RegressorMixin, LinearModel):
         the kernel can be non-linear but its SMO algorithm does not
         scale to large number of samples as LinearSVC does.
 
-    sklearn.linear_model.SGDRegressor : SGDRegressor can optimize the same cost
+    sklearn_fork.linear_model.SGDRegressor : SGDRegressor can optimize the same cost
         function as LinearSVR
         by adjusting the penalty and loss parameters. In addition it requires
         less memory, allows incremental (online) learning, and implements
@@ -423,10 +423,10 @@ class LinearSVR(RegressorMixin, LinearModel):
 
     Examples
     --------
-    >>> from sklearn.svm import LinearSVR
-    >>> from sklearn.pipeline import make_pipeline
-    >>> from sklearn.preprocessing import StandardScaler
-    >>> from sklearn.datasets import make_regression
+    >>> from sklearn_fork.svm import LinearSVR
+    >>> from sklearn_fork.pipeline import make_pipeline
+    >>> from sklearn_fork.preprocessing import StandardScaler
+    >>> from sklearn_fork.datasets import make_regression
     >>> X, y = make_regression(n_features=4, random_state=0)
     >>> regr = make_pipeline(StandardScaler(),
     ...                      LinearSVR(random_state=0, tol=1e-5))
@@ -557,9 +557,9 @@ class SVC(BaseSVC):
     The implementation is based on libsvm. The fit time scales at least
     quadratically with the number of samples and may be impractical
     beyond tens of thousands of samples. For large datasets
-    consider using :class:`~sklearn.svm.LinearSVC` or
-    :class:`~sklearn.linear_model.SGDClassifier` instead, possibly after a
-    :class:`~sklearn.kernel_approximation.Nystroem` transformer or
+    consider using :class:`~sklearn_fork.svm.LinearSVC` or
+    :class:`~sklearn_fork.linear_model.SGDClassifier` instead, possibly after a
+    :class:`~sklearn_fork.kernel_approximation.Nystroem` transformer or
     other :ref:`kernel_approximation`.
 
     The multiclass support is handled according to a one-vs-one scheme.
@@ -761,11 +761,11 @@ class SVC(BaseSVC):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.pipeline import make_pipeline
-    >>> from sklearn.preprocessing import StandardScaler
+    >>> from sklearn_fork.pipeline import make_pipeline
+    >>> from sklearn_fork.preprocessing import StandardScaler
     >>> X = np.array([[-1, -1], [-2, -1], [1, 1], [2, 1]])
     >>> y = np.array([1, 1, 2, 2])
-    >>> from sklearn.svm import SVC
+    >>> from sklearn_fork.svm import SVC
     >>> clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
     >>> clf.fit(X, y)
     Pipeline(steps=[('standardscaler', StandardScaler()),
@@ -1026,9 +1026,9 @@ class NuSVC(BaseSVC):
     >>> import numpy as np
     >>> X = np.array([[-1, -1], [-2, -1], [1, 1], [2, 1]])
     >>> y = np.array([1, 1, 2, 2])
-    >>> from sklearn.pipeline import make_pipeline
-    >>> from sklearn.preprocessing import StandardScaler
-    >>> from sklearn.svm import NuSVC
+    >>> from sklearn_fork.pipeline import make_pipeline
+    >>> from sklearn_fork.preprocessing import StandardScaler
+    >>> from sklearn_fork.svm import NuSVC
     >>> clf = make_pipeline(StandardScaler(), NuSVC())
     >>> clf.fit(X, y)
     Pipeline(steps=[('standardscaler', StandardScaler()), ('nusvc', NuSVC())])
@@ -1107,9 +1107,9 @@ class SVR(RegressorMixin, BaseLibSVM):
     The implementation is based on libsvm. The fit time complexity
     is more than quadratic with the number of samples which makes it hard
     to scale to datasets with more than a couple of 10000 samples. For large
-    datasets consider using :class:`~sklearn.svm.LinearSVR` or
-    :class:`~sklearn.linear_model.SGDRegressor` instead, possibly after a
-    :class:`~sklearn.kernel_approximation.Nystroem` transformer or
+    datasets consider using :class:`~sklearn_fork.svm.LinearSVR` or
+    :class:`~sklearn_fork.linear_model.SGDRegressor` instead, possibly after a
+    :class:`~sklearn_fork.kernel_approximation.Nystroem` transformer or
     other :ref:`kernel_approximation`.
 
     Read more in the :ref:`User Guide <svm_regression>`.
@@ -1242,9 +1242,9 @@ class SVR(RegressorMixin, BaseLibSVM):
 
     Examples
     --------
-    >>> from sklearn.svm import SVR
-    >>> from sklearn.pipeline import make_pipeline
-    >>> from sklearn.preprocessing import StandardScaler
+    >>> from sklearn_fork.svm import SVR
+    >>> from sklearn_fork.pipeline import make_pipeline
+    >>> from sklearn_fork.preprocessing import StandardScaler
     >>> import numpy as np
     >>> n_samples, n_features = 10, 5
     >>> rng = np.random.RandomState(0)
@@ -1450,9 +1450,9 @@ class NuSVR(RegressorMixin, BaseLibSVM):
 
     Examples
     --------
-    >>> from sklearn.svm import NuSVR
-    >>> from sklearn.pipeline import make_pipeline
-    >>> from sklearn.preprocessing import StandardScaler
+    >>> from sklearn_fork.svm import NuSVR
+    >>> from sklearn_fork.pipeline import make_pipeline
+    >>> from sklearn_fork.preprocessing import StandardScaler
     >>> import numpy as np
     >>> n_samples, n_features = 10, 5
     >>> np.random.seed(0)
@@ -1645,15 +1645,15 @@ class OneClassSVM(OutlierMixin, BaseLibSVM):
 
     See Also
     --------
-    sklearn.linear_model.SGDOneClassSVM : Solves linear One-Class SVM using
+    sklearn_fork.linear_model.SGDOneClassSVM : Solves linear One-Class SVM using
         Stochastic Gradient Descent.
-    sklearn.neighbors.LocalOutlierFactor : Unsupervised Outlier Detection using
+    sklearn_fork.neighbors.LocalOutlierFactor : Unsupervised Outlier Detection using
         Local Outlier Factor (LOF).
-    sklearn.ensemble.IsolationForest : Isolation Forest Algorithm.
+    sklearn_fork.ensemble.IsolationForest : Isolation Forest Algorithm.
 
     Examples
     --------
-    >>> from sklearn.svm import OneClassSVM
+    >>> from sklearn_fork.svm import OneClassSVM
     >>> X = [[0], [0.44], [0.45], [0.46], [1]]
     >>> clf = OneClassSVM(gamma='auto').fit(X)
     >>> clf.predict(X)

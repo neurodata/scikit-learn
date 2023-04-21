@@ -250,8 +250,8 @@ class SparsePCA(_BaseSparsePCA):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.datasets import make_friedman1
-    >>> from sklearn.decomposition import SparsePCA
+    >>> from sklearn_fork.datasets import make_friedman1
+    >>> from sklearn_fork.decomposition import SparsePCA
     >>> X, _ = make_friedman1(n_samples=200, n_features=30, random_state=0)
     >>> transformer = SparsePCA(n_components=5, random_state=0)
     >>> transformer.fit(X)
@@ -457,8 +457,8 @@ class MiniBatchSparsePCA(_BaseSparsePCA):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.datasets import make_friedman1
-    >>> from sklearn.decomposition import MiniBatchSparsePCA
+    >>> from sklearn_fork.datasets import make_friedman1
+    >>> from sklearn_fork.decomposition import MiniBatchSparsePCA
     >>> X, _ = make_friedman1(n_samples=200, n_features=30, random_state=0)
     >>> transformer = MiniBatchSparsePCA(n_components=5, batch_size=50,
     ...                                  max_iter=10, random_state=0)

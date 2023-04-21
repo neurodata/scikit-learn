@@ -42,7 +42,7 @@ def single_source_shortest_path_length(graph, source, *, cutoff=None):
 
     Examples
     --------
-    >>> from sklearn.utils.graph import single_source_shortest_path_length
+    >>> from sklearn_fork.utils.graph import single_source_shortest_path_length
     >>> import numpy as np
     >>> graph = np.array([[ 0, 1, 0, 0],
     ...                   [ 1, 0, 1, 0],
@@ -114,11 +114,11 @@ def _fix_connected_components(
         between neighbors according to the given metric.
 
     metric : str
-        Metric used in `sklearn.metrics.pairwise.pairwise_distances`.
+        Metric used in `sklearn_fork.metrics.pairwise.pairwise_distances`.
 
     kwargs : kwargs
         Keyword arguments passed to
-        `sklearn.metrics.pairwise.pairwise_distances`.
+        `sklearn_fork.metrics.pairwise.pairwise_distances`.
 
     Returns
     -------

@@ -414,7 +414,7 @@ class AffinityPropagation(ClusterMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.cluster import AffinityPropagation
+    >>> from sklearn_fork.cluster import AffinityPropagation
     >>> import numpy as np
     >>> X = np.array([[1, 2], [1, 4], [1, 0],
     ...               [4, 2], [4, 4], [4, 0]])

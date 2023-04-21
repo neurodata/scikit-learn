@@ -146,7 +146,7 @@ def fetch_rcv1(
 
     Returns
     -------
-    dataset : :class:`~sklearn.utils.Bunch`
+    dataset : :class:`~sklearn_fork.utils.Bunch`
         Dictionary-like object. Returned only if `return_X_y` is False.
         `dataset` has the following attributes:
 

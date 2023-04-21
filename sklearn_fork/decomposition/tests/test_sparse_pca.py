@@ -7,12 +7,12 @@ import pytest
 import numpy as np
 from numpy.testing import assert_array_equal
 
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import if_safe_multiprocessing_with_blas
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import if_safe_multiprocessing_with_blas
 
-from sklearn.decomposition import SparsePCA, MiniBatchSparsePCA, PCA
-from sklearn.utils import check_random_state
+from sklearn_fork.decomposition import SparsePCA, MiniBatchSparsePCA, PCA
+from sklearn_fork.utils import check_random_state
 
 
 def generate_toy_data(n_components, n_samples, image_size, random_state=None):

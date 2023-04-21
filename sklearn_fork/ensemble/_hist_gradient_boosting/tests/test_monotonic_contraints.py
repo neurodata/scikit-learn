@@ -2,18 +2,18 @@ import re
 import numpy as np
 import pytest
 
-from sklearn.ensemble._hist_gradient_boosting.grower import TreeGrower
-from sklearn.ensemble._hist_gradient_boosting.common import G_H_DTYPE
-from sklearn.ensemble._hist_gradient_boosting.common import X_BINNED_DTYPE
-from sklearn.ensemble._hist_gradient_boosting.common import MonotonicConstraint
-from sklearn.ensemble._hist_gradient_boosting.splitting import (
+from sklearn_fork.ensemble._hist_gradient_boosting.grower import TreeGrower
+from sklearn_fork.ensemble._hist_gradient_boosting.common import G_H_DTYPE
+from sklearn_fork.ensemble._hist_gradient_boosting.common import X_BINNED_DTYPE
+from sklearn_fork.ensemble._hist_gradient_boosting.common import MonotonicConstraint
+from sklearn_fork.ensemble._hist_gradient_boosting.splitting import (
     Splitter,
     compute_node_value,
 )
-from sklearn.ensemble._hist_gradient_boosting.histogram import HistogramBuilder
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.utils._openmp_helpers import _openmp_effective_n_threads
+from sklearn_fork.ensemble._hist_gradient_boosting.histogram import HistogramBuilder
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.utils._openmp_helpers import _openmp_effective_n_threads
 
 n_threads = _openmp_effective_n_threads()
 

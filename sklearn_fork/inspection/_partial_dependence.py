@@ -246,8 +246,8 @@ def partial_dependence(
 
     .. warning::
 
-        For :class:`~sklearn.ensemble.GradientBoostingClassifier` and
-        :class:`~sklearn.ensemble.GradientBoostingRegressor`, the
+        For :class:`~sklearn_fork.ensemble.GradientBoostingClassifier` and
+        :class:`~sklearn_fork.ensemble.GradientBoostingRegressor`, the
         `'recursion'` method (used by default) will not account for the `init`
         predictor of the boosting process. In practice, this will produce
         the same values as `'brute'` up to a constant offset in the target
@@ -256,10 +256,10 @@ def partial_dependence(
         partial dependence values are incorrect for `'recursion'` because the
         offset will be sample-dependent. It is preferable to use the `'brute'`
         method. Note that this only applies to
-        :class:`~sklearn.ensemble.GradientBoostingClassifier` and
-        :class:`~sklearn.ensemble.GradientBoostingRegressor`, not to
-        :class:`~sklearn.ensemble.HistGradientBoostingClassifier` and
-        :class:`~sklearn.ensemble.HistGradientBoostingRegressor`.
+        :class:`~sklearn_fork.ensemble.GradientBoostingClassifier` and
+        :class:`~sklearn_fork.ensemble.GradientBoostingRegressor`, not to
+        :class:`~sklearn_fork.ensemble.HistGradientBoostingClassifier` and
+        :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor`.
 
     Parameters
     ----------
@@ -322,12 +322,12 @@ def partial_dependence(
 
         - `'recursion'` is only supported for some tree-based estimators
           (namely
-          :class:`~sklearn.ensemble.GradientBoostingClassifier`,
-          :class:`~sklearn.ensemble.GradientBoostingRegressor`,
-          :class:`~sklearn.ensemble.HistGradientBoostingClassifier`,
-          :class:`~sklearn.ensemble.HistGradientBoostingRegressor`,
-          :class:`~sklearn.tree.DecisionTreeRegressor`,
-          :class:`~sklearn.ensemble.RandomForestRegressor`,
+          :class:`~sklearn_fork.ensemble.GradientBoostingClassifier`,
+          :class:`~sklearn_fork.ensemble.GradientBoostingRegressor`,
+          :class:`~sklearn_fork.ensemble.HistGradientBoostingClassifier`,
+          :class:`~sklearn_fork.ensemble.HistGradientBoostingRegressor`,
+          :class:`~sklearn_fork.tree.DecisionTreeRegressor`,
+          :class:`~sklearn_fork.ensemble.RandomForestRegressor`,
           ) when `kind='average'`.
           This is more efficient in terms of speed.
           With this method, the target response of a
@@ -359,7 +359,7 @@ def partial_dependence(
 
     Returns
     -------
-    predictions : :class:`~sklearn.utils.Bunch`
+    predictions : :class:`~sklearn_fork.utils.Bunch`
         Dictionary-like object, with the following attributes.
 
         individual : ndarray of shape (n_outputs, n_instances, \
@@ -406,7 +406,7 @@ def partial_dependence(
     --------
     >>> X = [[0, 0, 2], [1, 0, 0]]
     >>> y = [0, 1]
-    >>> from sklearn.ensemble import GradientBoostingClassifier
+    >>> from sklearn_fork.ensemble import GradientBoostingClassifier
     >>> gb = GradientBoostingClassifier(random_state=0).fit(X, y)
     >>> partial_dependence(gb, features=[0], X=X, percentiles=(0, 1),
     ...                    grid_resolution=2) # doctest: +SKIP

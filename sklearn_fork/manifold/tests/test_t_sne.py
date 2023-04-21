@@ -5,34 +5,34 @@ from numpy.testing import assert_allclose
 import scipy.sparse as sp
 import pytest
 
-from sklearn import config_context
-from sklearn.neighbors import NearestNeighbors
-from sklearn.neighbors import kneighbors_graph
-from sklearn.exceptions import EfficiencyWarning
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import skip_if_32bit
-from sklearn.utils import check_random_state
-from sklearn.manifold._t_sne import _joint_probabilities
-from sklearn.manifold._t_sne import _joint_probabilities_nn
-from sklearn.manifold._t_sne import _kl_divergence
-from sklearn.manifold._t_sne import _kl_divergence_bh
-from sklearn.manifold._t_sne import _gradient_descent
-from sklearn.manifold._t_sne import trustworthiness
-from sklearn.manifold import TSNE
+from sklearn_fork import config_context
+from sklearn_fork.neighbors import NearestNeighbors
+from sklearn_fork.neighbors import kneighbors_graph
+from sklearn_fork.exceptions import EfficiencyWarning
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import skip_if_32bit
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.manifold._t_sne import _joint_probabilities
+from sklearn_fork.manifold._t_sne import _joint_probabilities_nn
+from sklearn_fork.manifold._t_sne import _kl_divergence
+from sklearn_fork.manifold._t_sne import _kl_divergence_bh
+from sklearn_fork.manifold._t_sne import _gradient_descent
+from sklearn_fork.manifold._t_sne import trustworthiness
+from sklearn_fork.manifold import TSNE
 
-# mypy error: Module 'sklearn.manifold' has no attribute '_barnes_hut_tsne'
-from sklearn.manifold import _barnes_hut_tsne  # type: ignore
-from sklearn.manifold._utils import _binary_search_perplexity
-from sklearn.datasets import make_blobs
+# mypy error: Module 'sklearn_fork.manifold' has no attribute '_barnes_hut_tsne'
+from sklearn_fork.manifold import _barnes_hut_tsne  # type: ignore
+from sklearn_fork.manifold._utils import _binary_search_perplexity
+from sklearn_fork.datasets import make_blobs
 from scipy.optimize import check_grad
 from scipy.spatial.distance import pdist
 from scipy.spatial.distance import squareform
-from sklearn.metrics.pairwise import pairwise_distances
-from sklearn.metrics.pairwise import manhattan_distances
-from sklearn.metrics.pairwise import cosine_distances
+from sklearn_fork.metrics.pairwise import pairwise_distances
+from sklearn_fork.metrics.pairwise import manhattan_distances
+from sklearn_fork.metrics.pairwise import cosine_distances
 
 
 x = np.linspace(0, 1, 10)

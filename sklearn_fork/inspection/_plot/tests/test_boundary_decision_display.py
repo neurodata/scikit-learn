@@ -4,17 +4,17 @@ import pytest
 import numpy as np
 from numpy.testing import assert_allclose
 
-from sklearn.base import BaseEstimator
-from sklearn.base import ClassifierMixin
-from sklearn.datasets import make_classification
-from sklearn.linear_model import LogisticRegression
-from sklearn.datasets import load_iris
-from sklearn.datasets import make_multilabel_classification
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.tree import DecisionTreeClassifier
+from sklearn_fork.base import BaseEstimator
+from sklearn_fork.base import ClassifierMixin
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.datasets import make_multilabel_classification
+from sklearn_fork.tree import DecisionTreeRegressor
+from sklearn_fork.tree import DecisionTreeClassifier
 
-from sklearn.inspection import DecisionBoundaryDisplay
-from sklearn.inspection._plot.decision_boundary import _check_boundary_response_method
+from sklearn_fork.inspection import DecisionBoundaryDisplay
+from sklearn_fork.inspection._plot.decision_boundary import _check_boundary_response_method
 
 
 # TODO: Remove when https://github.com/numpy/numpy/issues/14397 is resolved

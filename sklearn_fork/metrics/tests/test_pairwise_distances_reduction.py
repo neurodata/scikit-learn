@@ -10,16 +10,16 @@ from math import log10, floor
 from scipy.sparse import csr_matrix
 from scipy.spatial.distance import cdist
 
-from sklearn.metrics._pairwise_distances_reduction import (
+from sklearn_fork.metrics._pairwise_distances_reduction import (
     BaseDistancesReductionDispatcher,
     ArgKmin,
     ArgKminClassMode,
     RadiusNeighbors,
     sqeuclidean_row_norms,
 )
-from sklearn.metrics import euclidean_distances
-from sklearn.utils.fixes import sp_version, parse_version
-from sklearn.utils._testing import (
+from sklearn_fork.metrics import euclidean_distances
+from sklearn_fork.utils.fixes import sp_version, parse_version
+from sklearn_fork.utils._testing import (
     assert_array_equal,
     assert_allclose,
     create_memmap_backed_data,
@@ -1117,7 +1117,7 @@ def test_strategies_consistency(
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize("n_features", [50, 500])
 @pytest.mark.parametrize("translation", [0, 1e6])
 @pytest.mark.parametrize("metric", CDIST_PAIRWISE_DISTANCES_REDUCTION_COMMON_METRICS)
@@ -1193,7 +1193,7 @@ def test_pairwise_distances_argkmin(
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize("n_features", [50, 500])
 @pytest.mark.parametrize("translation", [0, 1e6])
 @pytest.mark.parametrize("metric", CDIST_PAIRWISE_DISTANCES_REDUCTION_COMMON_METRICS)

@@ -1,5 +1,5 @@
 """
-Testing for Neighborhood Component Analysis module (sklearn.neighbors.nca)
+Testing for Neighborhood Component Analysis module (sklearn_fork.neighbors.nca)
 """
 
 # Authors: William de Vazelhes <wdevazelhes@gmail.com>
@@ -11,13 +11,13 @@ import re
 import numpy as np
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 from scipy.optimize import check_grad
-from sklearn import clone
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.utils import check_random_state
-from sklearn.datasets import load_iris, make_classification, make_blobs
-from sklearn.neighbors import NeighborhoodComponentsAnalysis
-from sklearn.metrics import pairwise_distances
-from sklearn.preprocessing import LabelEncoder
+from sklearn_fork import clone
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.datasets import load_iris, make_classification, make_blobs
+from sklearn_fork.neighbors import NeighborhoodComponentsAnalysis
+from sklearn_fork.metrics import pairwise_distances
+from sklearn_fork.preprocessing import LabelEncoder
 
 
 rng = check_random_state(0)

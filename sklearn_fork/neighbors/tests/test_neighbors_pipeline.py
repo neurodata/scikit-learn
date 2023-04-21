@@ -7,23 +7,23 @@ neighbors.
 
 import numpy as np
 
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.cluster.tests.common import generate_clustered_data
-from sklearn.datasets import make_blobs
-from sklearn.pipeline import make_pipeline
-from sklearn.base import clone
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.cluster.tests.common import generate_clustered_data
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.base import clone
 
-from sklearn.neighbors import KNeighborsTransformer
-from sklearn.neighbors import RadiusNeighborsTransformer
+from sklearn_fork.neighbors import KNeighborsTransformer
+from sklearn_fork.neighbors import RadiusNeighborsTransformer
 
-from sklearn.cluster import DBSCAN
-from sklearn.cluster import SpectralClustering
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.neighbors import RadiusNeighborsRegressor
-from sklearn.neighbors import LocalOutlierFactor
-from sklearn.manifold import SpectralEmbedding
-from sklearn.manifold import Isomap
-from sklearn.manifold import TSNE
+from sklearn_fork.cluster import DBSCAN
+from sklearn_fork.cluster import SpectralClustering
+from sklearn_fork.neighbors import KNeighborsRegressor
+from sklearn_fork.neighbors import RadiusNeighborsRegressor
+from sklearn_fork.neighbors import LocalOutlierFactor
+from sklearn_fork.manifold import SpectralEmbedding
+from sklearn_fork.manifold import Isomap
+from sklearn_fork.manifold import TSNE
 
 
 def test_spectral_clustering():

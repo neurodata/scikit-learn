@@ -11,18 +11,18 @@ import numpy as np
 from threadpoolctl import threadpool_limits
 from _pytest.doctest import DoctestItem
 
-from sklearn.utils import _IS_32BIT
-from sklearn._min_dependencies import PYTEST_MIN_VERSION
-from sklearn.utils.fixes import sp_version
-from sklearn.utils.fixes import parse_version
-from sklearn.datasets import fetch_20newsgroups
-from sklearn.datasets import fetch_20newsgroups_vectorized
-from sklearn.datasets import fetch_california_housing
-from sklearn.datasets import fetch_covtype
-from sklearn.datasets import fetch_kddcup99
-from sklearn.datasets import fetch_olivetti_faces
-from sklearn.datasets import fetch_rcv1
-from sklearn.tests import random_seed
+from sklearn_fork.utils import _IS_32BIT
+from sklearn_fork._min_dependencies import PYTEST_MIN_VERSION
+from sklearn_fork.utils.fixes import sp_version
+from sklearn_fork.utils.fixes import parse_version
+from sklearn_fork.datasets import fetch_20newsgroups
+from sklearn_fork.datasets import fetch_20newsgroups_vectorized
+from sklearn_fork.datasets import fetch_california_housing
+from sklearn_fork.datasets import fetch_covtype
+from sklearn_fork.datasets import fetch_kddcup99
+from sklearn_fork.datasets import fetch_olivetti_faces
+from sklearn_fork.datasets import fetch_rcv1
+from sklearn_fork.tests import random_seed
 
 
 if parse_version(pytest.__version__) < parse_version(PYTEST_MIN_VERSION):
@@ -194,7 +194,7 @@ def pytest_collection_modifyitems(config, items):
                 # mark to a doctest in a contextmanager, see
                 # https://github.com/pytest-dev/pytest/issues/8796 for more
                 # details.
-                if item.name != "sklearn._config.config_context":
+                if item.name != "sklearn_fork._config.config_context":
                     item.add_marker(skip_marker)
     try:
         import PIL  # noqa
@@ -207,8 +207,8 @@ def pytest_collection_modifyitems(config, items):
         skip_marker = pytest.mark.skip(reason="pillow (or PIL) not installed!")
         for item in items:
             if item.name in [
-                "sklearn.feature_extraction.image.PatchExtractor",
-                "sklearn.feature_extraction.image.extract_patches_2d",
+                "sklearn_fork.feature_extraction.image.PatchExtractor",
+                "sklearn_fork.feature_extraction.image.extract_patches_2d",
             ]:
                 item.add_marker(skip_marker)
 
@@ -250,5 +250,5 @@ def pytest_configure(config):
     threadpool_limits(allowed_parallelism)
 
     # Register global_random_seed plugin if it is not already registered
-    if not config.pluginmanager.hasplugin("sklearn.tests.random_seed"):
+    if not config.pluginmanager.hasplugin("sklearn_fork.tests.random_seed"):
         config.pluginmanager.register(random_seed)

@@ -209,12 +209,12 @@ class VotingClassifier(ClassifierMixin, _BaseVoting):
         The collection of fitted sub-estimators as defined in ``estimators``
         that are not 'drop'.
 
-    named_estimators_ : :class:`~sklearn.utils.Bunch`
+    named_estimators_ : :class:`~sklearn_fork.utils.Bunch`
         Attribute to access any fitted sub-estimators by name.
 
         .. versionadded:: 0.20
 
-    le_ : :class:`~sklearn.preprocessing.LabelEncoder`
+    le_ : :class:`~sklearn_fork.preprocessing.LabelEncoder`
         Transformer used to encode the labels during fit and decode during
         prediction.
 
@@ -240,9 +240,9 @@ class VotingClassifier(ClassifierMixin, _BaseVoting):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.linear_model import LogisticRegression
-    >>> from sklearn.naive_bayes import GaussianNB
-    >>> from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+    >>> from sklearn_fork.linear_model import LogisticRegression
+    >>> from sklearn_fork.naive_bayes import GaussianNB
+    >>> from sklearn_fork.ensemble import RandomForestClassifier, VotingClassifier
     >>> clf1 = LogisticRegression(multi_class='multinomial', random_state=1)
     >>> clf2 = RandomForestClassifier(n_estimators=50, random_state=1)
     >>> clf3 = GaussianNB()
@@ -520,7 +520,7 @@ class VotingRegressor(RegressorMixin, _BaseVoting):
         The collection of fitted sub-estimators as defined in ``estimators``
         that are not 'drop'.
 
-    named_estimators_ : :class:`~sklearn.utils.Bunch`
+    named_estimators_ : :class:`~sklearn_fork.utils.Bunch`
         Attribute to access any fitted sub-estimators by name.
 
         .. versionadded:: 0.20
@@ -544,10 +544,10 @@ class VotingRegressor(RegressorMixin, _BaseVoting):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.linear_model import LinearRegression
-    >>> from sklearn.ensemble import RandomForestRegressor
-    >>> from sklearn.ensemble import VotingRegressor
-    >>> from sklearn.neighbors import KNeighborsRegressor
+    >>> from sklearn_fork.linear_model import LinearRegression
+    >>> from sklearn_fork.ensemble import RandomForestRegressor
+    >>> from sklearn_fork.ensemble import VotingRegressor
+    >>> from sklearn_fork.neighbors import KNeighborsRegressor
     >>> r1 = LinearRegression()
     >>> r2 = RandomForestRegressor(n_estimators=10, random_state=1)
     >>> r3 = KNeighborsRegressor()

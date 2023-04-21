@@ -9,19 +9,19 @@ from scipy import sparse
 import pytest
 
 from numpy.testing import assert_allclose
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_allclose_dense_sparse
-from sklearn.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_allclose_dense_sparse
+from sklearn_fork.utils._testing import assert_almost_equal
 
-from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.compose import (
+from sklearn_fork.base import BaseEstimator, TransformerMixin
+from sklearn_fork.compose import (
     ColumnTransformer,
     make_column_transformer,
     make_column_selector,
 )
-from sklearn.exceptions import NotFittedError
-from sklearn.preprocessing import FunctionTransformer
-from sklearn.preprocessing import StandardScaler, Normalizer, OneHotEncoder
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.preprocessing import FunctionTransformer
+from sklearn_fork.preprocessing import StandardScaler, Normalizer, OneHotEncoder
 
 
 class Trans(TransformerMixin, BaseEstimator):

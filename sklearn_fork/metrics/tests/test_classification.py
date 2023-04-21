@@ -10,44 +10,44 @@ from scipy import linalg
 from scipy.stats import bernoulli
 import pytest
 
-from sklearn import datasets
-from sklearn import svm
+from sklearn_fork import datasets
+from sklearn_fork import svm
 
-from sklearn.datasets import make_multilabel_classification
-from sklearn.preprocessing import label_binarize, LabelBinarizer
-from sklearn.utils.validation import check_random_state
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_no_warnings
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils._mocking import MockDataFrame
+from sklearn_fork.datasets import make_multilabel_classification
+from sklearn_fork.preprocessing import label_binarize, LabelBinarizer
+from sklearn_fork.utils.validation import check_random_state
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_no_warnings
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils._mocking import MockDataFrame
 
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import average_precision_score
-from sklearn.metrics import balanced_accuracy_score
-from sklearn.metrics import class_likelihood_ratios
-from sklearn.metrics import classification_report
-from sklearn.metrics import cohen_kappa_score
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import f1_score
-from sklearn.metrics import fbeta_score
-from sklearn.metrics import hamming_loss
-from sklearn.metrics import hinge_loss
-from sklearn.metrics import jaccard_score
-from sklearn.metrics import log_loss
-from sklearn.metrics import matthews_corrcoef
-from sklearn.metrics import precision_recall_fscore_support
-from sklearn.metrics import precision_score
-from sklearn.metrics import recall_score
-from sklearn.metrics import zero_one_loss
-from sklearn.metrics import brier_score_loss
-from sklearn.metrics import multilabel_confusion_matrix
+from sklearn_fork.metrics import accuracy_score
+from sklearn_fork.metrics import average_precision_score
+from sklearn_fork.metrics import balanced_accuracy_score
+from sklearn_fork.metrics import class_likelihood_ratios
+from sklearn_fork.metrics import classification_report
+from sklearn_fork.metrics import cohen_kappa_score
+from sklearn_fork.metrics import confusion_matrix
+from sklearn_fork.metrics import f1_score
+from sklearn_fork.metrics import fbeta_score
+from sklearn_fork.metrics import hamming_loss
+from sklearn_fork.metrics import hinge_loss
+from sklearn_fork.metrics import jaccard_score
+from sklearn_fork.metrics import log_loss
+from sklearn_fork.metrics import matthews_corrcoef
+from sklearn_fork.metrics import precision_recall_fscore_support
+from sklearn_fork.metrics import precision_score
+from sklearn_fork.metrics import recall_score
+from sklearn_fork.metrics import zero_one_loss
+from sklearn_fork.metrics import brier_score_loss
+from sklearn_fork.metrics import multilabel_confusion_matrix
 
-from sklearn.metrics._classification import _check_targets
-from sklearn.exceptions import UndefinedMetricWarning
-from sklearn.utils.extmath import _nanaverage
+from sklearn_fork.metrics._classification import _check_targets
+from sklearn_fork.exceptions import UndefinedMetricWarning
+from sklearn_fork.utils.extmath import _nanaverage
 
 from scipy.spatial.distance import hamming as sp_hamming
 

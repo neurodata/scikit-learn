@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.neural_network` module includes models based on neural
+The :mod:`sklearn_fork.neural_network` module includes models based on neural
 networks.
 """
 

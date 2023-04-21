@@ -8,19 +8,19 @@ from scipy.sparse import csgraph
 from scipy.linalg import eigh
 from scipy.sparse.linalg import eigsh
 
-from sklearn.manifold import SpectralEmbedding, _spectral_embedding
-from sklearn.manifold._spectral_embedding import _graph_is_connected
-from sklearn.manifold._spectral_embedding import _graph_connected_component
-from sklearn.manifold import spectral_embedding
-from sklearn.metrics.pairwise import rbf_kernel
-from sklearn.metrics import normalized_mutual_info_score, pairwise_distances
-from sklearn.neighbors import NearestNeighbors
-from sklearn.cluster import KMeans
-from sklearn.datasets import make_blobs
-from sklearn.utils.extmath import _deterministic_vector_sign_flip
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils.fixes import lobpcg
+from sklearn_fork.manifold import SpectralEmbedding, _spectral_embedding
+from sklearn_fork.manifold._spectral_embedding import _graph_is_connected
+from sklearn_fork.manifold._spectral_embedding import _graph_connected_component
+from sklearn_fork.manifold import spectral_embedding
+from sklearn_fork.metrics.pairwise import rbf_kernel
+from sklearn_fork.metrics import normalized_mutual_info_score, pairwise_distances
+from sklearn_fork.neighbors import NearestNeighbors
+from sklearn_fork.cluster import KMeans
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.utils.extmath import _deterministic_vector_sign_flip
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils.fixes import lobpcg
 
 try:
     from pyamg import smoothed_aggregation_solver  # noqa

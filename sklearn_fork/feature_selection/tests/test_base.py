@@ -4,8 +4,8 @@ from scipy import sparse as sp
 
 from numpy.testing import assert_array_equal
 
-from sklearn.base import BaseEstimator
-from sklearn.feature_selection._base import SelectorMixin
+from sklearn_fork.base import BaseEstimator
+from sklearn_fork.feature_selection._base import SelectorMixin
 
 
 class StepSelector(SelectorMixin, BaseEstimator):

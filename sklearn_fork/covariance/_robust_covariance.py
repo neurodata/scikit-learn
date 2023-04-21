@@ -26,7 +26,7 @@ from ..utils._param_validation import Interval
 #   1999, American Statistical Association and the American Society
 #   for Quality, TECHNOMETRICS)
 # XXX Is this really a public function? It's not listed in the docs or
-# exported by sklearn.covariance. Deprecate?
+# exported by sklearn_fork.covariance. Deprecate?
 def c_step(
     X,
     n_support,
@@ -65,7 +65,7 @@ def c_step(
         Verbose mode.
 
     cov_computation_method : callable, \
-            default=:func:`sklearn.covariance.empirical_covariance`
+            default=:func:`sklearn_fork.covariance.empirical_covariance`
         The function which will be used to compute the covariance.
         Must return array of shape (n_features, n_features).
 
@@ -263,7 +263,7 @@ def select_candidates(
         Control the output verbosity.
 
     cov_computation_method : callable, \
-            default=:func:`sklearn.covariance.empirical_covariance`
+            default=:func:`sklearn_fork.covariance.empirical_covariance`
         The function which will be used to compute the covariance.
         Must return an array of shape (n_features, n_features).
 
@@ -375,7 +375,7 @@ def fast_mcd(
         range (0, 1).
 
     cov_computation_method : callable, \
-            default=:func:`sklearn.covariance.empirical_covariance`
+            default=:func:`sklearn_fork.covariance.empirical_covariance`
         The function which will be used to compute the covariance.
         Must return an array of shape (n_features, n_features).
 
@@ -683,8 +683,8 @@ class MinCovDet(EmpiricalCovariance):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.covariance import MinCovDet
-    >>> from sklearn.datasets import make_gaussian_quantiles
+    >>> from sklearn_fork.covariance import MinCovDet
+    >>> from sklearn_fork.datasets import make_gaussian_quantiles
     >>> real_cov = np.array([[.8, .3],
     ...                      [.3, .4]])
     >>> rng = np.random.RandomState(0)

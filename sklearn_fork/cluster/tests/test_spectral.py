@@ -9,16 +9,16 @@ import pytest
 
 import pickle
 
-from sklearn.utils import check_random_state
-from sklearn.utils._testing import assert_array_equal
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.utils._testing import assert_array_equal
 
-from sklearn.cluster import SpectralClustering, spectral_clustering
-from sklearn.cluster._spectral import discretize, cluster_qr
-from sklearn.feature_extraction import img_to_graph
-from sklearn.metrics import adjusted_rand_score
-from sklearn.metrics.pairwise import kernel_metrics, rbf_kernel
-from sklearn.neighbors import NearestNeighbors
-from sklearn.datasets import make_blobs
+from sklearn_fork.cluster import SpectralClustering, spectral_clustering
+from sklearn_fork.cluster._spectral import discretize, cluster_qr
+from sklearn_fork.feature_extraction import img_to_graph
+from sklearn_fork.metrics import adjusted_rand_score
+from sklearn_fork.metrics.pairwise import kernel_metrics, rbf_kernel
+from sklearn_fork.neighbors import NearestNeighbors
+from sklearn_fork.datasets import make_blobs
 
 try:
     from pyamg import smoothed_aggregation_solver  # noqa

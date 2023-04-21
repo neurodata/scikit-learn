@@ -4,9 +4,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 import pytest
 
-from sklearn import get_config, set_config, config_context
-import sklearn
-from sklearn.utils.parallel import delayed, Parallel
+from sklearn_fork import get_config, set_config, config_context
+import sklearn_fork
+from sklearn_fork.utils.parallel import delayed, Parallel
 
 
 def test_config_context():
@@ -181,7 +181,7 @@ def test_config_array_api_dispatch_error_numpy(monkeypatch):
         return orig_import(name, *args, **kwargs)
 
     monkeypatch.setattr(builtins, "__import__", mocked_import)
-    monkeypatch.setattr(sklearn.utils._array_api.numpy, "__version__", "1.20")
+    monkeypatch.setattr(sklearn_fork.utils._array_api.numpy, "__version__", "1.20")
 
     with pytest.raises(ImportError, match="NumPy must be 1.21 or newer"):
         with config_context(array_api_dispatch=True):

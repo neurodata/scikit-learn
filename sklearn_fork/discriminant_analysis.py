@@ -52,7 +52,7 @@ def _cov(X, shrinkage=None, covariance_estimator=None):
         the covariance matrices instead of relying on the empirical
         covariance estimator (with potential shrinkage).
         The object should have a fit method and a ``covariance_`` attribute
-        like the estimators in :mod:`sklearn.covariance``.
+        like the estimators in :mod:`sklearn_fork.covariance``.
         if None the shrinkage parameter drives the estimate.
 
         .. versionadded:: 0.24
@@ -152,7 +152,7 @@ def _class_cov(X, y, priors, shrinkage=None, covariance_estimator=None):
         the covariance matrices instead of relying the empirical
         covariance estimator (with potential shrinkage).
         The object should have a fit method and a ``covariance_`` attribute
-        like the estimators in sklearn.covariance.
+        like the estimators in sklearn_fork.covariance.
         If None, the shrinkage parameter drives the estimate.
 
         .. versionadded:: 0.24
@@ -248,7 +248,7 @@ class LinearDiscriminantAnalysis(
         the covariance matrices instead of relying on the empirical
         covariance estimator (with potential shrinkage).
         The object should have a fit method and a ``covariance_`` attribute
-        like the estimators in :mod:`sklearn.covariance`.
+        like the estimators in :mod:`sklearn_fork.covariance`.
         if None the shrinkage parameter drives the estimate.
 
         This should be left to None if `shrinkage` is used.
@@ -312,7 +312,7 @@ class LinearDiscriminantAnalysis(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+    >>> from sklearn_fork.discriminant_analysis import LinearDiscriminantAnalysis
     >>> X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
     >>> y = np.array([1, 1, 1, 2, 2, 2])
     >>> clf = LinearDiscriminantAnalysis()
@@ -382,7 +382,7 @@ class LinearDiscriminantAnalysis(
             the covariance matrices instead of relying the empirical
             covariance estimator (with potential shrinkage).
             The object should have a fit method and a ``covariance_`` attribute
-            like the estimators in sklearn.covariance.
+            like the estimators in sklearn_fork.covariance.
             if None the shrinkage parameter drives the estimate.
 
             .. versionadded:: 0.24
@@ -436,7 +436,7 @@ class LinearDiscriminantAnalysis(
             the covariance matrices instead of relying the empirical
             covariance estimator (with potential shrinkage).
             The object should have a fit method and a ``covariance_`` attribute
-            like the estimators in sklearn.covariance.
+            like the estimators in sklearn_fork.covariance.
             if None the shrinkage parameter drives the estimate.
 
             .. versionadded:: 0.24
@@ -836,7 +836,7 @@ class QuadraticDiscriminantAnalysis(ClassifierMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+    >>> from sklearn_fork.discriminant_analysis import QuadraticDiscriminantAnalysis
     >>> import numpy as np
     >>> X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
     >>> y = np.array([1, 1, 1, 2, 2, 2])

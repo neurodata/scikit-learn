@@ -9,14 +9,14 @@ from scipy import stats, sparse
 
 import pytest
 
-from sklearn.utils._testing import assert_almost_equal, _convert_container
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils import safe_mask
+from sklearn_fork.utils._testing import assert_almost_equal, _convert_container
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils import safe_mask
 
-from sklearn.datasets import make_classification, make_regression, load_iris
-from sklearn.feature_selection import (
+from sklearn_fork.datasets import make_classification, make_regression, load_iris
+from sklearn_fork.feature_selection import (
     chi2,
     f_classif,
     f_oneway,

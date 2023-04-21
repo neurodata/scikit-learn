@@ -11,72 +11,72 @@ import pytest
 import numpy as np
 from scipy.sparse import coo_matrix, csr_matrix
 from scipy.sparse import issparse
-from sklearn.exceptions import FitFailedWarning
+from sklearn_fork.exceptions import FitFailedWarning
 
-from sklearn.model_selection.tests.test_search import FailingClassifier
+from sklearn_fork.model_selection.tests.test_search import FailingClassifier
 
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._mocking import CheckingClassifier, MockDataFrame
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._mocking import CheckingClassifier, MockDataFrame
 
-from sklearn.utils.validation import _num_samples
+from sklearn_fork.utils.validation import _num_samples
 
-from sklearn.model_selection import cross_val_score, ShuffleSplit
-from sklearn.model_selection import cross_val_predict
-from sklearn.model_selection import cross_validate
-from sklearn.model_selection import permutation_test_score
-from sklearn.model_selection import KFold
-from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import LeaveOneOut
-from sklearn.model_selection import LeaveOneGroupOut
-from sklearn.model_selection import LeavePGroupsOut
-from sklearn.model_selection import GroupKFold
-from sklearn.model_selection import GroupShuffleSplit
-from sklearn.model_selection import learning_curve
-from sklearn.model_selection import validation_curve
-from sklearn.model_selection._validation import _check_is_permutation
-from sklearn.model_selection._validation import _fit_and_score
-from sklearn.model_selection._validation import _score
+from sklearn_fork.model_selection import cross_val_score, ShuffleSplit
+from sklearn_fork.model_selection import cross_val_predict
+from sklearn_fork.model_selection import cross_validate
+from sklearn_fork.model_selection import permutation_test_score
+from sklearn_fork.model_selection import KFold
+from sklearn_fork.model_selection import StratifiedKFold
+from sklearn_fork.model_selection import LeaveOneOut
+from sklearn_fork.model_selection import LeaveOneGroupOut
+from sklearn_fork.model_selection import LeavePGroupsOut
+from sklearn_fork.model_selection import GroupKFold
+from sklearn_fork.model_selection import GroupShuffleSplit
+from sklearn_fork.model_selection import learning_curve
+from sklearn_fork.model_selection import validation_curve
+from sklearn_fork.model_selection._validation import _check_is_permutation
+from sklearn_fork.model_selection._validation import _fit_and_score
+from sklearn_fork.model_selection._validation import _score
 
-from sklearn.datasets import make_regression
-from sklearn.datasets import load_diabetes
-from sklearn.datasets import load_iris
-from sklearn.datasets import load_digits
-from sklearn.metrics import explained_variance_score
-from sklearn.metrics import make_scorer
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import precision_recall_fscore_support
-from sklearn.metrics import precision_score
-from sklearn.metrics import r2_score
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import check_scoring
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.datasets import load_diabetes
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.datasets import load_digits
+from sklearn_fork.metrics import explained_variance_score
+from sklearn_fork.metrics import make_scorer
+from sklearn_fork.metrics import accuracy_score
+from sklearn_fork.metrics import confusion_matrix
+from sklearn_fork.metrics import precision_recall_fscore_support
+from sklearn_fork.metrics import precision_score
+from sklearn_fork.metrics import r2_score
+from sklearn_fork.metrics import mean_squared_error
+from sklearn_fork.metrics import check_scoring
 
-from sklearn.linear_model import Ridge, LogisticRegression, SGDClassifier
-from sklearn.linear_model import PassiveAggressiveClassifier, RidgeClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC, LinearSVC
-from sklearn.cluster import KMeans
-from sklearn.neural_network import MLPRegressor
+from sklearn_fork.linear_model import Ridge, LogisticRegression, SGDClassifier
+from sklearn_fork.linear_model import PassiveAggressiveClassifier, RidgeClassifier
+from sklearn_fork.ensemble import RandomForestClassifier
+from sklearn_fork.neighbors import KNeighborsClassifier
+from sklearn_fork.svm import SVC, LinearSVC
+from sklearn_fork.cluster import KMeans
+from sklearn_fork.neural_network import MLPRegressor
 
-from sklearn.impute import SimpleImputer
+from sklearn_fork.impute import SimpleImputer
 
-from sklearn.preprocessing import LabelEncoder, scale
-from sklearn.pipeline import Pipeline
+from sklearn_fork.preprocessing import LabelEncoder, scale
+from sklearn_fork.pipeline import Pipeline
 
 from io import StringIO
-from sklearn.base import BaseEstimator
-from sklearn.base import clone
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.utils import shuffle
-from sklearn.datasets import make_classification
-from sklearn.datasets import make_multilabel_classification
+from sklearn_fork.base import BaseEstimator
+from sklearn_fork.base import clone
+from sklearn_fork.multiclass import OneVsRestClassifier
+from sklearn_fork.utils import shuffle
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.datasets import make_multilabel_classification
 
-from sklearn.model_selection.tests.common import OneTimeSplitter
-from sklearn.model_selection import GridSearchCV
+from sklearn_fork.model_selection.tests.common import OneTimeSplitter
+from sklearn_fork.model_selection import GridSearchCV
 
 
 try:
@@ -302,7 +302,7 @@ def test_cross_val_score():
     scores = cross_val_score(clf, X, y2.tolist(), cv=3)
 
     with pytest.raises(ValueError):
-        cross_val_score(clf, X, y2, scoring="sklearn")
+        cross_val_score(clf, X, y2, scoring="sklearn_fork")
 
     # test with 3d X and
     X_3d = X[:, :, np.newaxis]

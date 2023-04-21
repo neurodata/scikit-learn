@@ -5,22 +5,22 @@ import copy
 
 import pytest
 
-import sklearn
-from sklearn.datasets import make_regression
-from sklearn.isotonic import (
+import sklearn_fork
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.isotonic import (
     check_increasing,
     isotonic_regression,
     IsotonicRegression,
     _make_unique,
 )
 
-from sklearn.utils.validation import check_array
-from sklearn.utils._testing import (
+from sklearn_fork.utils.validation import check_array
+from sklearn_fork.utils._testing import (
     assert_allclose,
     assert_array_equal,
     assert_array_almost_equal,
 )
-from sklearn.utils import shuffle
+from sklearn_fork.utils import shuffle
 
 from scipy.special import expit
 
@@ -695,7 +695,7 @@ def test_isotonic_regression_output_predict():
     pd = pytest.importorskip("pandas")
     X, y = make_regression(n_samples=10, n_features=1, random_state=42)
     regressor = IsotonicRegression()
-    with sklearn.config_context(transform_output="pandas"):
+    with sklearn_fork.config_context(transform_output="pandas"):
         regressor.fit(X, y)
         X_trans = regressor.transform(X)
         y_pred = regressor.predict(X)

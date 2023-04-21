@@ -3,15 +3,15 @@ import pytest
 import numpy as np
 from scipy import sparse
 
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_allclose_dense_sparse
-from sklearn.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_allclose_dense_sparse
+from sklearn_fork.utils._testing import assert_array_equal
 
-from sklearn.experimental import enable_iterative_imputer  # noqa
+from sklearn_fork.experimental import enable_iterative_imputer  # noqa
 
-from sklearn.impute import IterativeImputer
-from sklearn.impute import KNNImputer
-from sklearn.impute import SimpleImputer
+from sklearn_fork.impute import IterativeImputer
+from sklearn_fork.impute import KNNImputer
+from sklearn_fork.impute import SimpleImputer
 
 
 def imputers():
@@ -23,7 +23,7 @@ def sparse_imputers():
 
 
 # ConvergenceWarning will be raised by the IterativeImputer
-@pytest.mark.filterwarnings("ignore::sklearn.exceptions.ConvergenceWarning")
+@pytest.mark.filterwarnings("ignore::sklearn_fork.exceptions.ConvergenceWarning")
 @pytest.mark.parametrize("imputer", imputers(), ids=lambda x: x.__class__.__name__)
 def test_imputation_missing_value_in_test_array(imputer):
     # [Non Regression Test for issue #13968] Missing value in test set should
@@ -35,7 +35,7 @@ def test_imputation_missing_value_in_test_array(imputer):
 
 
 # ConvergenceWarning will be raised by the IterativeImputer
-@pytest.mark.filterwarnings("ignore::sklearn.exceptions.ConvergenceWarning")
+@pytest.mark.filterwarnings("ignore::sklearn_fork.exceptions.ConvergenceWarning")
 @pytest.mark.parametrize("marker", [np.nan, -1, 0])
 @pytest.mark.parametrize("imputer", imputers(), ids=lambda x: x.__class__.__name__)
 def test_imputers_add_indicator(marker, imputer):
@@ -67,7 +67,7 @@ def test_imputers_add_indicator(marker, imputer):
 
 
 # ConvergenceWarning will be raised by the IterativeImputer
-@pytest.mark.filterwarnings("ignore::sklearn.exceptions.ConvergenceWarning")
+@pytest.mark.filterwarnings("ignore::sklearn_fork.exceptions.ConvergenceWarning")
 @pytest.mark.parametrize("marker", [np.nan, -1])
 @pytest.mark.parametrize(
     "imputer", sparse_imputers(), ids=lambda x: x.__class__.__name__
@@ -101,7 +101,7 @@ def test_imputers_add_indicator_sparse(imputer, marker):
 
 
 # ConvergenceWarning will be raised by the IterativeImputer
-@pytest.mark.filterwarnings("ignore::sklearn.exceptions.ConvergenceWarning")
+@pytest.mark.filterwarnings("ignore::sklearn_fork.exceptions.ConvergenceWarning")
 @pytest.mark.parametrize("imputer", imputers(), ids=lambda x: x.__class__.__name__)
 @pytest.mark.parametrize("add_indicator", [True, False])
 def test_imputers_pandas_na_integer_array_support(imputer, add_indicator):

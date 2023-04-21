@@ -79,7 +79,7 @@ class RANSACRegressor(
            which is used to compute residual error using loss function.
 
         If `estimator` is None, then
-        :class:`~sklearn.linear_model.LinearRegression` is used for
+        :class:`~sklearn_fork.linear_model.LinearRegression` is used for
         target values of dtype float.
 
         Note that the current implementation only supports regression
@@ -91,7 +91,7 @@ class RANSACRegressor(
         relative number `ceil(min_samples * X.shape[0])` for
         `min_samples < 1`. This is typically chosen as the minimal number of
         samples necessary to estimate the given `estimator`. By default a
-        ``sklearn.linear_model.LinearRegression()`` estimator is assumed and
+        ``sklearn_fork.linear_model.LinearRegression()`` estimator is assumed and
         `min_samples` is chosen as ``X.shape[1] + 1``. This parameter is highly
         dependent upon the model, so if a `estimator` other than
         :class:`linear_model.LinearRegression` is used, the user must provide a value.
@@ -222,8 +222,8 @@ class RANSACRegressor(
 
     Examples
     --------
-    >>> from sklearn.linear_model import RANSACRegressor
-    >>> from sklearn.datasets import make_regression
+    >>> from sklearn_fork.linear_model import RANSACRegressor
+    >>> from sklearn_fork.datasets import make_regression
     >>> X, y = make_regression(
     ...     n_samples=200, n_features=2, noise=4.0, random_state=0)
     >>> reg = RANSACRegressor(random_state=0).fit(X, y)

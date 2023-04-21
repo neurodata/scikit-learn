@@ -120,7 +120,7 @@ def _isdtype_single(dtype, kind, *, xp):
 
 
 class _ArrayAPIWrapper:
-    """sklearn specific Array API compatibility wrapper
+    """sklearn_fork specific Array API compatibility wrapper
 
     This wrapper makes it possible for scikit-learn maintainers to
     deal with discrepancies between different implementations of the
@@ -302,11 +302,11 @@ def get_namespace(*arrays):
     Namespace support is not enabled by default. To enabled it
     call:
 
-      sklearn.set_config(array_api_dispatch=True)
+      sklearn_fork.set_config(array_api_dispatch=True)
 
     or:
 
-      with sklearn.config_context(array_api_dispatch=True):
+      with sklearn_fork.config_context(array_api_dispatch=True):
           # your code here
 
     Otherwise an instance of the `_NumPyAPIWrapper`
@@ -419,7 +419,7 @@ def _estimator_with_converted_arrays(estimator, converter):
     new_estimator : Estimator
         Convert estimator
     """
-    from sklearn.base import clone
+    from sklearn_fork.base import clone
 
     new_estimator = clone(estimator)
     for key, attribute in vars(estimator).items():

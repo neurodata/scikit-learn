@@ -3,19 +3,19 @@ import warnings
 import numpy as np
 from numpy.testing import assert_array_almost_equal, assert_array_equal, assert_allclose
 
-from sklearn.datasets import load_linnerud
-from sklearn.cross_decomposition._pls import (
+from sklearn_fork.datasets import load_linnerud
+from sklearn_fork.cross_decomposition._pls import (
     _center_scale_xy,
     _get_first_singular_vectors_power_method,
     _get_first_singular_vectors_svd,
     _svd_flip_1d,
 )
-from sklearn.cross_decomposition import CCA
-from sklearn.cross_decomposition import PLSSVD, PLSRegression, PLSCanonical
-from sklearn.datasets import make_regression
-from sklearn.utils import check_random_state
-from sklearn.utils.extmath import svd_flip
-from sklearn.exceptions import ConvergenceWarning
+from sklearn_fork.cross_decomposition import CCA
+from sklearn_fork.cross_decomposition import PLSSVD, PLSRegression, PLSCanonical
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.utils.extmath import svd_flip
+from sklearn_fork.exceptions import ConvergenceWarning
 
 
 def assert_matrix_orthogonal(M):

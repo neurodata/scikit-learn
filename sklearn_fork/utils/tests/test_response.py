@@ -1,17 +1,17 @@
 import numpy as np
 import pytest
 
-from sklearn.datasets import load_iris, make_classification, make_regression
-from sklearn.linear_model import (
+from sklearn_fork.datasets import load_iris, make_classification, make_regression
+from sklearn_fork.linear_model import (
     LinearRegression,
     LogisticRegression,
 )
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
-from sklearn.utils._mocking import _MockEstimatorOnOffPrediction
-from sklearn.utils._testing import assert_allclose, assert_array_equal
+from sklearn_fork.svm import SVC
+from sklearn_fork.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn_fork.utils._mocking import _MockEstimatorOnOffPrediction
+from sklearn_fork.utils._testing import assert_allclose, assert_array_equal
 
-from sklearn.utils._response import _get_response_values, _get_response_values_binary
+from sklearn_fork.utils._response import _get_response_values, _get_response_values_binary
 
 
 X, y = load_iris(return_X_y=True)

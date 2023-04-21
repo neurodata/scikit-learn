@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.manifold` module implements data embedding techniques.
+The :mod:`sklearn_fork.manifold` module implements data embedding techniques.
 """
 
 from ._locally_linear import locally_linear_embedding, LocallyLinearEmbedding

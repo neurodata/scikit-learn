@@ -20,7 +20,7 @@ from .common import X_BITSET_INNER_DTYPE
 from .common import Y_DTYPE
 from .common import MonotonicConstraint
 from ._bitset import set_raw_bitset_from_binned_bitset
-from sklearn.utils._openmp_helpers import _openmp_effective_n_threads
+from sklearn_fork.utils._openmp_helpers import _openmp_effective_n_threads
 
 
 EPS = np.finfo(Y_DTYPE).eps  # to avoid zero division errors

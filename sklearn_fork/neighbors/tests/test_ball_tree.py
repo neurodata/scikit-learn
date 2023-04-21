@@ -3,10 +3,10 @@ import itertools
 import numpy as np
 import pytest
 from numpy.testing import assert_array_almost_equal
-from sklearn.neighbors._ball_tree import BallTree
-from sklearn.utils import check_random_state
-from sklearn.utils.validation import check_array
-from sklearn.utils._testing import _convert_container
+from sklearn_fork.neighbors._ball_tree import BallTree
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.utils.validation import check_array
+from sklearn_fork.utils._testing import _convert_container
 
 rng = np.random.RandomState(10)
 V_mahalanobis = rng.rand(3, 3)
@@ -38,7 +38,7 @@ BOOLEAN_METRICS = [
 
 
 def brute_force_neighbors(X, Y, k, metric, **kwargs):
-    from sklearn.metrics import DistanceMetric
+    from sklearn_fork.metrics import DistanceMetric
 
     X, Y = check_array(X), check_array(Y)
     D = DistanceMetric.get_metric(metric, **kwargs).pairwise(Y, X)

@@ -25,7 +25,7 @@ _DEFAULT_TAGS = {
 def _safe_tags(estimator, key=None):
     """Safely get estimator tags.
 
-    :class:`~sklearn.BaseEstimator` provides the estimator tags machinery.
+    :class:`~sklearn_fork.BaseEstimator` provides the estimator tags machinery.
     However, if an estimator does not inherit from this base class, we should
     fall-back to the default tags.
 

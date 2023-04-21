@@ -6,35 +6,35 @@ import numpy as np
 from numpy.testing import assert_allclose
 from scipy import sparse
 
-from sklearn.base import BaseEstimator, clone
-from sklearn.dummy import DummyClassifier
-from sklearn.model_selection import LeaveOneOut, train_test_split
+from sklearn_fork.base import BaseEstimator, clone
+from sklearn_fork.dummy import DummyClassifier
+from sklearn_fork.model_selection import LeaveOneOut, train_test_split
 
-from sklearn.utils._testing import (
+from sklearn_fork.utils._testing import (
     assert_array_almost_equal,
     assert_almost_equal,
     assert_array_equal,
 )
-from sklearn.utils.extmath import softmax
-from sklearn.exceptions import NotFittedError
-from sklearn.datasets import make_classification, make_blobs, load_iris
-from sklearn.preprocessing import LabelEncoder
-from sklearn.model_selection import KFold, cross_val_predict
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.ensemble import (
+from sklearn_fork.utils.extmath import softmax
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.datasets import make_classification, make_blobs, load_iris
+from sklearn_fork.preprocessing import LabelEncoder
+from sklearn_fork.model_selection import KFold, cross_val_predict
+from sklearn_fork.naive_bayes import MultinomialNB
+from sklearn_fork.ensemble import (
     RandomForestClassifier,
     VotingClassifier,
 )
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.svm import LinearSVC
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.isotonic import IsotonicRegression
-from sklearn.feature_extraction import DictVectorizer
-from sklearn.impute import SimpleImputer
-from sklearn.metrics import brier_score_loss
-from sklearn.calibration import (
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.tree import DecisionTreeClassifier
+from sklearn_fork.svm import LinearSVC
+from sklearn_fork.pipeline import Pipeline, make_pipeline
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.isotonic import IsotonicRegression
+from sklearn_fork.feature_extraction import DictVectorizer
+from sklearn_fork.impute import SimpleImputer
+from sklearn_fork.metrics import brier_score_loss
+from sklearn_fork.calibration import (
     _CalibratedClassifier,
     _SigmoidCalibration,
     _sigmoid_calibration,
@@ -42,8 +42,8 @@ from sklearn.calibration import (
     CalibrationDisplay,
     calibration_curve,
 )
-from sklearn.utils._mocking import CheckingClassifier
-from sklearn.utils._testing import _convert_container
+from sklearn_fork.utils._mocking import CheckingClassifier
+from sklearn_fork.utils._testing import _convert_container
 
 
 N_SAMPLES = 200

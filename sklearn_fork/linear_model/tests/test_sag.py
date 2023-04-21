@@ -10,22 +10,22 @@ import numpy as np
 import scipy.sparse as sp
 from scipy.special import logsumexp
 
-from sklearn._loss.loss import HalfMultinomialLoss
-from sklearn.linear_model._linear_loss import LinearModelLoss
-from sklearn.linear_model._sag import get_auto_step_size
-from sklearn.linear_model._sag_fast import _multinomial_grad_loss_all_samples
-from sklearn.linear_model import LogisticRegression, Ridge
-from sklearn.linear_model._base import make_dataset
+from sklearn_fork._loss.loss import HalfMultinomialLoss
+from sklearn_fork.linear_model._linear_loss import LinearModelLoss
+from sklearn_fork.linear_model._sag import get_auto_step_size
+from sklearn_fork.linear_model._sag_fast import _multinomial_grad_loss_all_samples
+from sklearn_fork.linear_model import LogisticRegression, Ridge
+from sklearn_fork.linear_model._base import make_dataset
 
-from sklearn.utils.extmath import row_norms
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils import compute_class_weight
-from sklearn.utils import check_random_state
-from sklearn.preprocessing import LabelEncoder, LabelBinarizer
-from sklearn.datasets import make_blobs, load_iris, make_classification
-from sklearn.base import clone
+from sklearn_fork.utils.extmath import row_norms
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils import compute_class_weight
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.preprocessing import LabelEncoder, LabelBinarizer
+from sklearn_fork.datasets import make_blobs, load_iris, make_classification
+from sklearn_fork.base import clone
 
 iris = load_iris()
 

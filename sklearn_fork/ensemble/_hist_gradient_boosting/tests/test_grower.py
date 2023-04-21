@@ -4,15 +4,15 @@ from pytest import approx
 from numpy.testing import assert_array_equal
 from numpy.testing import assert_allclose
 
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.ensemble._hist_gradient_boosting.grower import TreeGrower
-from sklearn.ensemble._hist_gradient_boosting.binning import _BinMapper
-from sklearn.ensemble._hist_gradient_boosting.common import X_BINNED_DTYPE
-from sklearn.ensemble._hist_gradient_boosting.common import X_DTYPE
-from sklearn.ensemble._hist_gradient_boosting.common import Y_DTYPE
-from sklearn.ensemble._hist_gradient_boosting.common import G_H_DTYPE
-from sklearn.ensemble._hist_gradient_boosting.common import X_BITSET_INNER_DTYPE
-from sklearn.utils._openmp_helpers import _openmp_effective_n_threads
+from sklearn_fork.preprocessing import OneHotEncoder
+from sklearn_fork.ensemble._hist_gradient_boosting.grower import TreeGrower
+from sklearn_fork.ensemble._hist_gradient_boosting.binning import _BinMapper
+from sklearn_fork.ensemble._hist_gradient_boosting.common import X_BINNED_DTYPE
+from sklearn_fork.ensemble._hist_gradient_boosting.common import X_DTYPE
+from sklearn_fork.ensemble._hist_gradient_boosting.common import Y_DTYPE
+from sklearn_fork.ensemble._hist_gradient_boosting.common import G_H_DTYPE
+from sklearn_fork.ensemble._hist_gradient_boosting.common import X_BITSET_INNER_DTYPE
+from sklearn_fork.utils._openmp_helpers import _openmp_effective_n_threads
 
 n_threads = _openmp_effective_n_threads()
 

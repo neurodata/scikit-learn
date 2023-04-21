@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.naive_bayes` module implements Naive Bayes algorithms. These
+The :mod:`sklearn_fork.naive_bayes` module implements Naive Bayes algorithms. These
 are supervised learning methods based on applying Bayes' theorem with strong
 (naive) feature independence assumptions.
 """
@@ -217,7 +217,7 @@ class GaussianNB(_BaseNB):
     >>> import numpy as np
     >>> X = np.array([[-1, -1], [-2, -1], [-3, -2], [1, 1], [2, 1], [3, 2]])
     >>> Y = np.array([1, 1, 1, 2, 2, 2])
-    >>> from sklearn.naive_bayes import GaussianNB
+    >>> from sklearn_fork.naive_bayes import GaussianNB
     >>> clf = GaussianNB()
     >>> clf.fit(X, Y)
     GaussianNB()
@@ -875,7 +875,7 @@ class MultinomialNB(_BaseDiscreteNB):
     >>> rng = np.random.RandomState(1)
     >>> X = rng.randint(5, size=(6, 100))
     >>> y = np.array([1, 2, 3, 4, 5, 6])
-    >>> from sklearn.naive_bayes import MultinomialNB
+    >>> from sklearn_fork.naive_bayes import MultinomialNB
     >>> clf = MultinomialNB(force_alpha=True)
     >>> clf.fit(X, y)
     MultinomialNB(force_alpha=True)
@@ -1009,7 +1009,7 @@ class ComplementNB(_BaseDiscreteNB):
     >>> rng = np.random.RandomState(1)
     >>> X = rng.randint(5, size=(6, 100))
     >>> y = np.array([1, 2, 3, 4, 5, 6])
-    >>> from sklearn.naive_bayes import ComplementNB
+    >>> from sklearn_fork.naive_bayes import ComplementNB
     >>> clf = ComplementNB(force_alpha=True)
     >>> clf.fit(X, y)
     ComplementNB(force_alpha=True)
@@ -1163,7 +1163,7 @@ class BernoulliNB(_BaseDiscreteNB):
     >>> rng = np.random.RandomState(1)
     >>> X = rng.randint(5, size=(6, 100))
     >>> Y = np.array([1, 2, 3, 4, 4, 5])
-    >>> from sklearn.naive_bayes import BernoulliNB
+    >>> from sklearn_fork.naive_bayes import BernoulliNB
     >>> clf = BernoulliNB(force_alpha=True)
     >>> clf.fit(X, Y)
     BernoulliNB(force_alpha=True)
@@ -1335,7 +1335,7 @@ class CategoricalNB(_BaseDiscreteNB):
     >>> rng = np.random.RandomState(1)
     >>> X = rng.randint(5, size=(6, 100))
     >>> y = np.array([1, 2, 3, 4, 5, 6])
-    >>> from sklearn.naive_bayes import CategoricalNB
+    >>> from sklearn_fork.naive_bayes import CategoricalNB
     >>> clf = CategoricalNB(force_alpha=True)
     >>> clf.fit(X, y)
     CategoricalNB(force_alpha=True)

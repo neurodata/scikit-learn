@@ -16,10 +16,10 @@ purposes. The dataset is extensively described in [1]_.
     Features           real, between 0 and 1
     ==============     =====================
 
-:func:`sklearn.datasets.fetch_rcv1` will load the following 
+:func:`sklearn_fork.datasets.fetch_rcv1` will load the following 
 version: RCV1-v2, vectors, full sets, topics multilabels::
 
-    >>> from sklearn.datasets import fetch_rcv1
+    >>> from sklearn_fork.datasets import fetch_rcv1
     >>> rcv1 = fetch_rcv1()
 
 It returns a dictionary-like object, with the following attributes:

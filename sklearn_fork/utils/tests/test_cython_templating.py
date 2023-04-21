@@ -1,15 +1,15 @@
 import pathlib
 import pytest
-import sklearn
+import sklearn_fork
 
 
 def test_files_generated_by_templates_are_git_ignored():
     """Check the consistence of the files generated from template files."""
-    gitignore_file = pathlib.Path(sklearn.__file__).parent.parent / ".gitignore"
+    gitignore_file = pathlib.Path(sklearn_fork.__file__).parent.parent / ".gitignore"
     if not gitignore_file.exists():
         pytest.skip("Tests are not run from the source folder")
 
-    base_dir = pathlib.Path(sklearn.__file__).parent
+    base_dir = pathlib.Path(sklearn_fork.__file__).parent
     ignored_files = gitignore_file.read_text().split("\n")
     ignored_files = [pathlib.Path(line) for line in ignored_files]
 

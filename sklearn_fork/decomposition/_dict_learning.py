@@ -139,7 +139,7 @@ def _sparse_encode_precomputed(
         alpha = float(regularization) / n_features  # account for scaling
 
         # TODO: Make verbosity argument for Lasso?
-        # sklearn.linear_model.coordinate_descent.enet_path has a verbosity
+        # sklearn_fork.linear_model.coordinate_descent.enet_path has a verbosity
         # argument that we could pass in from Lasso.
         clf = Lasso(
             alpha=alpha,
@@ -329,10 +329,10 @@ def sparse_encode(
 
     See Also
     --------
-    sklearn.linear_model.lars_path : Compute Least Angle Regression or Lasso
+    sklearn_fork.linear_model.lars_path : Compute Least Angle Regression or Lasso
         path using LARS algorithm.
-    sklearn.linear_model.orthogonal_mp : Solves Orthogonal Matching Pursuit problems.
-    sklearn.linear_model.Lasso : Train Linear Model with L1 prior as regularizer.
+    sklearn_fork.linear_model.orthogonal_mp : Solves Orthogonal Matching Pursuit problems.
+    sklearn_fork.linear_model.Lasso : Train Linear Model with L1 prior as regularizer.
     SparseCoder : Find a sparse representation of data from a fixed precomputed
         dictionary.
     """
@@ -732,7 +732,7 @@ def dict_learning_online(
     dict_init : ndarray of shape (n_components, n_features), default=None
         Initial values for the dictionary for warm restart scenarios.
         If `None`, the initial values for the dictionary are created
-        with an SVD decomposition of the data via :func:`~sklearn.utils.randomized_svd`.
+        with an SVD decomposition of the data via :func:`~sklearn_fork.utils.randomized_svd`.
 
     callback : callable, default=None
         A callable that gets invoked at the end of each iteration.
@@ -1407,7 +1407,7 @@ class SparseCoder(_BaseSparseCoding, BaseEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.decomposition import SparseCoder
+    >>> from sklearn_fork.decomposition import SparseCoder
     >>> X = np.array([[-1, -1, -1], [0, 0, 3]])
     >>> dictionary = np.array(
     ...     [[0, 1, 0],
@@ -1551,9 +1551,9 @@ class DictionaryLearning(_BaseSparseCoding, BaseEstimator):
 
     fit_algorithm : {'lars', 'cd'}, default='lars'
         * `'lars'`: uses the least angle regression method to solve the lasso
-          problem (:func:`~sklearn.linear_model.lars_path`);
+          problem (:func:`~sklearn_fork.linear_model.lars_path`);
         * `'cd'`: uses the coordinate descent method to compute the
-          Lasso solution (:class:`~sklearn.linear_model.Lasso`). Lars will be
+          Lasso solution (:class:`~sklearn_fork.linear_model.Lasso`). Lars will be
           faster if the estimated components are sparse.
 
         .. versionadded:: 0.17
@@ -1564,10 +1564,10 @@ class DictionaryLearning(_BaseSparseCoding, BaseEstimator):
         Algorithm used to transform the data:
 
         - `'lars'`: uses the least angle regression method
-          (:func:`~sklearn.linear_model.lars_path`);
+          (:func:`~sklearn_fork.linear_model.lars_path`);
         - `'lasso_lars'`: uses Lars to compute the Lasso solution.
         - `'lasso_cd'`: uses the coordinate descent method to compute the
-          Lasso solution (:class:`~sklearn.linear_model.Lasso`). `'lasso_lars'`
+          Lasso solution (:class:`~sklearn_fork.linear_model.Lasso`). `'lasso_lars'`
           will be faster if the estimated components are sparse.
         - `'omp'`: uses orthogonal matching pursuit to estimate the sparse
           solution.
@@ -1683,8 +1683,8 @@ class DictionaryLearning(_BaseSparseCoding, BaseEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.datasets import make_sparse_coded_signal
-    >>> from sklearn.decomposition import DictionaryLearning
+    >>> from sklearn_fork.datasets import make_sparse_coded_signal
+    >>> from sklearn_fork.decomposition import DictionaryLearning
     >>> X, dictionary, code = make_sparse_coded_signal(
     ...     n_samples=100, n_components=15, n_features=20, n_nonzero_coefs=10,
     ...     random_state=42,
@@ -2054,8 +2054,8 @@ class MiniBatchDictionaryLearning(_BaseSparseCoding, BaseEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.datasets import make_sparse_coded_signal
-    >>> from sklearn.decomposition import MiniBatchDictionaryLearning
+    >>> from sklearn_fork.datasets import make_sparse_coded_signal
+    >>> from sklearn_fork.decomposition import MiniBatchDictionaryLearning
     >>> X, dictionary, code = make_sparse_coded_signal(
     ...     n_samples=100, n_components=15, n_features=20, n_nonzero_coefs=10,
     ...     random_state=42)

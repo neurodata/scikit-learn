@@ -12,7 +12,7 @@ import numpy as np
 from scipy import sparse
 import joblib
 
-from sklearn.utils._testing import (
+from sklearn_fork.utils._testing import (
     assert_allclose,
     assert_array_equal,
     assert_array_almost_equal,
@@ -20,25 +20,25 @@ from sklearn.utils._testing import (
     MinimalRegressor,
     MinimalTransformer,
 )
-from sklearn.exceptions import NotFittedError
-from sklearn.model_selection import train_test_split
-from sklearn.utils.validation import check_is_fitted
-from sklearn.base import clone, is_classifier, BaseEstimator, TransformerMixin
-from sklearn.pipeline import Pipeline, FeatureUnion, make_pipeline, make_union
-from sklearn.svm import SVC
-from sklearn.neighbors import LocalOutlierFactor
-from sklearn.linear_model import LogisticRegression, Lasso
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import accuracy_score, r2_score
-from sklearn.cluster import KMeans
-from sklearn.feature_selection import SelectKBest, f_classif
-from sklearn.dummy import DummyRegressor
-from sklearn.decomposition import PCA, TruncatedSVD
-from sklearn.datasets import load_iris
-from sklearn.preprocessing import StandardScaler
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.ensemble import HistGradientBoostingClassifier
-from sklearn.impute import SimpleImputer
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.utils.validation import check_is_fitted
+from sklearn_fork.base import clone, is_classifier, BaseEstimator, TransformerMixin
+from sklearn_fork.pipeline import Pipeline, FeatureUnion, make_pipeline, make_union
+from sklearn_fork.svm import SVC
+from sklearn_fork.neighbors import LocalOutlierFactor
+from sklearn_fork.linear_model import LogisticRegression, Lasso
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.metrics import accuracy_score, r2_score
+from sklearn_fork.cluster import KMeans
+from sklearn_fork.feature_selection import SelectKBest, f_classif
+from sklearn_fork.dummy import DummyRegressor
+from sklearn_fork.decomposition import PCA, TruncatedSVD
+from sklearn_fork.datasets import load_iris
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.feature_extraction.text import CountVectorizer
+from sklearn_fork.ensemble import HistGradientBoostingClassifier
+from sklearn_fork.impute import SimpleImputer
 
 iris = load_iris()
 

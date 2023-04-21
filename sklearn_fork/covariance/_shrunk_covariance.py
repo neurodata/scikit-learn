@@ -210,8 +210,8 @@ class ShrunkCovariance(EmpiricalCovariance):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.covariance import ShrunkCovariance
-    >>> from sklearn.datasets import make_gaussian_quantiles
+    >>> from sklearn_fork.covariance import ShrunkCovariance
+    >>> from sklearn_fork.datasets import make_gaussian_quantiles
     >>> real_cov = np.array([[.8, .3],
     ...                      [.3, .4]])
     >>> rng = np.random.RandomState(0)
@@ -507,7 +507,7 @@ class LedoitWolf(EmpiricalCovariance):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.covariance import LedoitWolf
+    >>> from sklearn_fork.covariance import LedoitWolf
     >>> real_cov = np.array([[.4, .2],
     ...                      [.2, .8]])
     >>> np.random.seed(0)
@@ -703,8 +703,8 @@ class OAS(EmpiricalCovariance):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.covariance import OAS
-    >>> from sklearn.datasets import make_gaussian_quantiles
+    >>> from sklearn_fork.covariance import OAS
+    >>> from sklearn_fork.datasets import make_gaussian_quantiles
     >>> real_cov = np.array([[.8, .3],
     ...                      [.3, .4]])
     >>> rng = np.random.RandomState(0)

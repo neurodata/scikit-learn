@@ -31,8 +31,8 @@ Kernel:
 Examples
 --------
 >>> import numpy as np
->>> from sklearn import datasets
->>> from sklearn.semi_supervised import LabelPropagation
+>>> from sklearn_fork import datasets
+>>> from sklearn_fork.semi_supervised import LabelPropagation
 >>> label_prop_model = LabelPropagation()
 >>> iris = datasets.load_iris()
 >>> rng = np.random.RandomState(42)
@@ -409,8 +409,8 @@ class LabelPropagation(BaseLabelPropagation):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn import datasets
-    >>> from sklearn.semi_supervised import LabelPropagation
+    >>> from sklearn_fork import datasets
+    >>> from sklearn_fork.semi_supervised import LabelPropagation
     >>> label_prop_model = LabelPropagation()
     >>> iris = datasets.load_iris()
     >>> rng = np.random.RandomState(42)
@@ -568,8 +568,8 @@ class LabelSpreading(BaseLabelPropagation):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn import datasets
-    >>> from sklearn.semi_supervised import LabelSpreading
+    >>> from sklearn_fork import datasets
+    >>> from sklearn_fork.semi_supervised import LabelSpreading
     >>> label_prop_model = LabelSpreading()
     >>> iris = datasets.load_iris()
     >>> rng = np.random.RandomState(42)

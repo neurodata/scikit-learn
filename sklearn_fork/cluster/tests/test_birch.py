@@ -6,15 +6,15 @@ from scipy import sparse
 import numpy as np
 import pytest
 
-from sklearn.cluster.tests.common import generate_clustered_data
-from sklearn.cluster import Birch
-from sklearn.cluster import AgglomerativeClustering
-from sklearn.datasets import make_blobs
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.metrics import pairwise_distances_argmin, v_measure_score
+from sklearn_fork.cluster.tests.common import generate_clustered_data
+from sklearn_fork.cluster import Birch
+from sklearn_fork.cluster import AgglomerativeClustering
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork.metrics import pairwise_distances_argmin, v_measure_score
 
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_allclose
 
 
 def test_n_samples_leaves_roots(global_random_seed, global_dtype):

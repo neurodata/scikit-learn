@@ -85,7 +85,7 @@ class Isomap(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
     metric : str, or callable, default="minkowski"
         The metric to use when calculating distance between instances in a
         feature array. If metric is a string or callable, it must be one of
-        the options allowed by :func:`sklearn.metrics.pairwise_distances` for
+        the options allowed by :func:`sklearn_fork.metrics.pairwise_distances` for
         its metric parameter.
         If metric is "precomputed", X is assumed to be a distance matrix and
         must be square. X may be a :term:`Glossary <sparse graph>`.
@@ -94,7 +94,7 @@ class Isomap(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
 
     p : int, default=2
         Parameter for the Minkowski metric from
-        sklearn.metrics.pairwise.pairwise_distances. When p = 1, this is
+        sklearn_fork.metrics.pairwise.pairwise_distances. When p = 1, this is
         equivalent to using manhattan_distance (l1), and euclidean_distance
         (l2) for p = 2. For arbitrary p, minkowski_distance (l_p) is used.
 
@@ -111,10 +111,10 @@ class Isomap(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
         Stores the embedding vectors.
 
     kernel_pca_ : object
-        :class:`~sklearn.decomposition.KernelPCA` object used to implement the
+        :class:`~sklearn_fork.decomposition.KernelPCA` object used to implement the
         embedding.
 
-    nbrs_ : sklearn.neighbors.NearestNeighbors instance
+    nbrs_ : sklearn_fork.neighbors.NearestNeighbors instance
         Stores nearest neighbors instance, including BallTree or KDtree
         if applicable.
 
@@ -134,9 +134,9 @@ class Isomap(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
 
     See Also
     --------
-    sklearn.decomposition.PCA : Principal component analysis that is a linear
+    sklearn_fork.decomposition.PCA : Principal component analysis that is a linear
         dimensionality reduction method.
-    sklearn.decomposition.KernelPCA : Non-linear dimensionality reduction using
+    sklearn_fork.decomposition.KernelPCA : Non-linear dimensionality reduction using
         kernels and PCA.
     MDS : Manifold learning using multidimensional scaling.
     TSNE : T-distributed Stochastic Neighbor Embedding.
@@ -151,8 +151,8 @@ class Isomap(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_digits
-    >>> from sklearn.manifold import Isomap
+    >>> from sklearn_fork.datasets import load_digits
+    >>> from sklearn_fork.manifold import Isomap
     >>> X, _ = load_digits(return_X_y=True)
     >>> X.shape
     (1797, 64)

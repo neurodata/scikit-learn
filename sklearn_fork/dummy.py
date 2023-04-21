@@ -117,7 +117,7 @@ class DummyClassifier(MultiOutputMixin, ClassifierMixin, BaseEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.dummy import DummyClassifier
+    >>> from sklearn_fork.dummy import DummyClassifier
     >>> X = np.array([-1, 1, 1, 1])
     >>> y = np.array([0, 1, 1, 1])
     >>> dummy_clf = DummyClassifier(strategy="most_frequent")
@@ -491,7 +491,7 @@ class DummyRegressor(MultiOutputMixin, RegressorMixin, BaseEstimator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.dummy import DummyRegressor
+    >>> from sklearn_fork.dummy import DummyRegressor
     >>> X = np.array([1.0, 2.0, 3.0, 4.0])
     >>> y = np.array([2.0, 3.0, 5.0, 10.0])
     >>> dummy_regr = DummyRegressor(strategy="mean")

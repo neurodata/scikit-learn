@@ -7,17 +7,17 @@ from numpy.testing import assert_allclose
 import pytest
 from pytest import approx
 
-from sklearn.utils import check_random_state
-from sklearn.metrics import mean_pinball_loss
-from sklearn.ensemble._gb_losses import RegressionLossFunction
-from sklearn.ensemble._gb_losses import LeastSquaresError
-from sklearn.ensemble._gb_losses import LeastAbsoluteError
-from sklearn.ensemble._gb_losses import HuberLossFunction
-from sklearn.ensemble._gb_losses import QuantileLossFunction
-from sklearn.ensemble._gb_losses import BinomialDeviance
-from sklearn.ensemble._gb_losses import MultinomialDeviance
-from sklearn.ensemble._gb_losses import ExponentialLoss
-from sklearn.ensemble._gb_losses import LOSS_FUNCTIONS
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.metrics import mean_pinball_loss
+from sklearn_fork.ensemble._gb_losses import RegressionLossFunction
+from sklearn_fork.ensemble._gb_losses import LeastSquaresError
+from sklearn_fork.ensemble._gb_losses import LeastAbsoluteError
+from sklearn_fork.ensemble._gb_losses import HuberLossFunction
+from sklearn_fork.ensemble._gb_losses import QuantileLossFunction
+from sklearn_fork.ensemble._gb_losses import BinomialDeviance
+from sklearn_fork.ensemble._gb_losses import MultinomialDeviance
+from sklearn_fork.ensemble._gb_losses import ExponentialLoss
+from sklearn_fork.ensemble._gb_losses import LOSS_FUNCTIONS
 
 
 def test_binomial_deviance():

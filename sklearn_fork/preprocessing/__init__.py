@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.preprocessing` module includes scaling, centering,
+The :mod:`sklearn_fork.preprocessing` module includes scaling, centering,
 normalization, binarization methods.
 """
 

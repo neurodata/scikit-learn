@@ -11,10 +11,10 @@ import numpy as np
 import scipy.sparse as sp
 import joblib
 
-from sklearn.base import BaseEstimator, ClassifierMixin, OutlierMixin
-from sklearn.datasets import make_multilabel_classification
-from sklearn.utils import deprecated
-from sklearn.utils._testing import (
+from sklearn_fork.base import BaseEstimator, ClassifierMixin, OutlierMixin
+from sklearn_fork.datasets import make_multilabel_classification
+from sklearn_fork.utils import deprecated
+from sklearn_fork.utils._testing import (
     raises,
     ignore_warnings,
     MinimalClassifier,
@@ -23,23 +23,23 @@ from sklearn.utils._testing import (
     SkipTest,
 )
 
-from sklearn.utils.validation import check_is_fitted, check_X_y
-from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.linear_model import LinearRegression, SGDClassifier
-from sklearn.mixture import GaussianMixture
-from sklearn.cluster import MiniBatchKMeans
-from sklearn.decomposition import PCA
-from sklearn.linear_model import MultiTaskElasticNet, LogisticRegression
-from sklearn.svm import SVC, NuSVC
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.utils.validation import check_array
-from sklearn.utils import all_estimators
-from sklearn.exceptions import SkipTestWarning
-from sklearn.utils.metaestimators import available_if
-from sklearn.utils.estimator_checks import check_decision_proba_consistency
-from sklearn.utils._param_validation import Interval, StrOptions
+from sklearn_fork.utils.validation import check_is_fitted, check_X_y
+from sklearn_fork.ensemble import ExtraTreesClassifier
+from sklearn_fork.linear_model import LinearRegression, SGDClassifier
+from sklearn_fork.mixture import GaussianMixture
+from sklearn_fork.cluster import MiniBatchKMeans
+from sklearn_fork.decomposition import PCA
+from sklearn_fork.linear_model import MultiTaskElasticNet, LogisticRegression
+from sklearn_fork.svm import SVC, NuSVC
+from sklearn_fork.neighbors import KNeighborsRegressor
+from sklearn_fork.utils.validation import check_array
+from sklearn_fork.utils import all_estimators
+from sklearn_fork.exceptions import SkipTestWarning
+from sklearn_fork.utils.metaestimators import available_if
+from sklearn_fork.utils.estimator_checks import check_decision_proba_consistency
+from sklearn_fork.utils._param_validation import Interval, StrOptions
 
-from sklearn.utils.estimator_checks import (
+from sklearn_fork.utils.estimator_checks import (
     _NotAnArray,
     _set_checking_parameters,
     check_class_weight_balanced_linear_classifier,
@@ -251,8 +251,8 @@ class BadBalancedWeightsClassifier(BaseBadClassifier):
         self.class_weight = class_weight
 
     def fit(self, X, y):
-        from sklearn.preprocessing import LabelEncoder
-        from sklearn.utils import compute_class_weight
+        from sklearn_fork.preprocessing import LabelEncoder
+        from sklearn_fork.utils import compute_class_weight
 
         label_encoder = LabelEncoder().fit(y)
         classes = label_encoder.classes_
@@ -661,7 +661,7 @@ def test_check_estimator_transformer_no_mixin():
 
 def test_check_estimator_clones():
     # check that check_estimator doesn't modify the estimator it receives
-    from sklearn.datasets import load_iris
+    from sklearn_fork.datasets import load_iris
 
     iris = load_iris()
 

@@ -4,20 +4,20 @@ from itertools import chain
 import pytest
 import numpy as np
 
-from sklearn.metrics.cluster import adjusted_mutual_info_score
-from sklearn.metrics.cluster import adjusted_rand_score
-from sklearn.metrics.cluster import rand_score
-from sklearn.metrics.cluster import completeness_score
-from sklearn.metrics.cluster import fowlkes_mallows_score
-from sklearn.metrics.cluster import homogeneity_score
-from sklearn.metrics.cluster import mutual_info_score
-from sklearn.metrics.cluster import normalized_mutual_info_score
-from sklearn.metrics.cluster import v_measure_score
-from sklearn.metrics.cluster import silhouette_score
-from sklearn.metrics.cluster import calinski_harabasz_score
-from sklearn.metrics.cluster import davies_bouldin_score
+from sklearn_fork.metrics.cluster import adjusted_mutual_info_score
+from sklearn_fork.metrics.cluster import adjusted_rand_score
+from sklearn_fork.metrics.cluster import rand_score
+from sklearn_fork.metrics.cluster import completeness_score
+from sklearn_fork.metrics.cluster import fowlkes_mallows_score
+from sklearn_fork.metrics.cluster import homogeneity_score
+from sklearn_fork.metrics.cluster import mutual_info_score
+from sklearn_fork.metrics.cluster import normalized_mutual_info_score
+from sklearn_fork.metrics.cluster import v_measure_score
+from sklearn_fork.metrics.cluster import silhouette_score
+from sklearn_fork.metrics.cluster import calinski_harabasz_score
+from sklearn_fork.metrics.cluster import davies_bouldin_score
 
-from sklearn.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_allclose
 
 
 # Dictionaries of metrics

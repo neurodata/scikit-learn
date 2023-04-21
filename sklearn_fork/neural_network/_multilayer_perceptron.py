@@ -1016,9 +1016,9 @@ class MLPClassifier(ClassifierMixin, BaseMultilayerPerceptron):
 
     Examples
     --------
-    >>> from sklearn.neural_network import MLPClassifier
-    >>> from sklearn.datasets import make_classification
-    >>> from sklearn.model_selection import train_test_split
+    >>> from sklearn_fork.neural_network import MLPClassifier
+    >>> from sklearn_fork.datasets import make_classification
+    >>> from sklearn_fork.model_selection import train_test_split
     >>> X, y = make_classification(n_samples=100, random_state=1)
     >>> X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y,
     ...                                                     random_state=1)
@@ -1481,7 +1481,7 @@ class MLPRegressor(RegressorMixin, BaseMultilayerPerceptron):
     --------
     BernoulliRBM : Bernoulli Restricted Boltzmann Machine (RBM).
     MLPClassifier : Multi-layer Perceptron classifier.
-    sklearn.linear_model.SGDRegressor : Linear model fitted by minimizing
+    sklearn_fork.linear_model.SGDRegressor : Linear model fitted by minimizing
         a regularized empirical loss with SGD.
 
     Notes
@@ -1513,9 +1513,9 @@ class MLPRegressor(RegressorMixin, BaseMultilayerPerceptron):
 
     Examples
     --------
-    >>> from sklearn.neural_network import MLPRegressor
-    >>> from sklearn.datasets import make_regression
-    >>> from sklearn.model_selection import train_test_split
+    >>> from sklearn_fork.neural_network import MLPRegressor
+    >>> from sklearn_fork.datasets import make_regression
+    >>> from sklearn_fork.model_selection import train_test_split
     >>> X, y = make_regression(n_samples=200, random_state=1)
     >>> X_train, X_test, y_train, y_test = train_test_split(X, y,
     ...                                                     random_state=1)

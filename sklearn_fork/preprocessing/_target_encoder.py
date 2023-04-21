@@ -49,14 +49,14 @@ class TargetEncoder(OneToOneFeatureMixin, _BaseEncoder):
         Type of target.
 
         - `"auto"` : Type of target is inferred with
-          :func:`~sklearn.utils.multiclass.type_of_target`.
+          :func:`~sklearn_fork.utils.multiclass.type_of_target`.
         - `"continuous"` : Continuous target
         - `"binary"` : Binary target
 
         .. note::
             The type of target inferred with `"auto"` may not be the desired target
             type used for modeling. For example, if the target consistent of integers
-            between 0 and 100, then :func:`~sklearn.utils.multiclass.type_of_target`
+            between 0 and 100, then :func:`~sklearn_fork.utils.multiclass.type_of_target`
             will infer the target as `"multiclass"`. In this case, setting
             `target_type="continuous"` will understand the target as a regression
             problem. The `target_type_` attribute gives the target type used by the
@@ -130,7 +130,7 @@ class TargetEncoder(OneToOneFeatureMixin, _BaseEncoder):
     With `smooth="auto"`, the smoothing parameter is set to an empirical Bayes estimate:
 
     >>> import numpy as np
-    >>> from sklearn.preprocessing import TargetEncoder
+    >>> from sklearn_fork.preprocessing import TargetEncoder
     >>> X = np.array([["dog"] * 20 + ["cat"] * 30 + ["snake"] * 38], dtype=object).T
     >>> y = [90.3] * 5 + [80.1] * 15 + [20.4] * 5 + [20.1] * 25 + [21.2] * 8 + [49] * 30
     >>> enc_auto = TargetEncoder(smooth="auto")

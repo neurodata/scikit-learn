@@ -13,7 +13,7 @@ at which the fix is no longer needed.
 from importlib import resources
 import sys
 
-import sklearn
+import sklearn_fork
 import numpy as np
 import scipy
 import scipy.stats
@@ -77,10 +77,10 @@ def _get_threadpool_controller():
     if not hasattr(threadpoolctl, "ThreadpoolController"):
         return None
 
-    if not hasattr(sklearn, "_sklearn_threadpool_controller"):
-        sklearn._sklearn_threadpool_controller = threadpoolctl.ThreadpoolController()
+    if not hasattr(sklearn_fork, "_sklearn_threadpool_controller"):
+        sklearn_fork._sklearn_threadpool_controller = threadpoolctl.ThreadpoolController()
 
-    return sklearn._sklearn_threadpool_controller
+    return sklearn_fork._sklearn_threadpool_controller
 
 
 def threadpool_limits(limits=None, user_api=None):
@@ -106,11 +106,11 @@ threadpool_info.__doc__ = threadpoolctl.threadpool_info.__doc__
 
 
 @deprecated(
-    "The function `delayed` has been moved from `sklearn.utils.fixes` to "
-    "`sklearn.utils.parallel`. This import path will be removed in 1.5."
+    "The function `delayed` has been moved from `sklearn_fork.utils.fixes` to "
+    "`sklearn_fork.utils.parallel`. This import path will be removed in 1.5."
 )
 def delayed(function):
-    from sklearn.utils.parallel import delayed
+    from sklearn_fork.utils.parallel import delayed
 
     return delayed(function)
 

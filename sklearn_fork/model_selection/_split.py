@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.model_selection._split` module includes classes and
+The :mod:`sklearn_fork.model_selection._split` module includes classes and
 functions to split the data based on a preset strategy.
 """
 
@@ -133,7 +133,7 @@ class LeaveOneOut(BaseCrossValidator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import LeaveOneOut
+    >>> from sklearn_fork.model_selection import LeaveOneOut
     >>> X = np.array([[1, 2], [3, 4]])
     >>> y = np.array([1, 2])
     >>> loo = LeaveOneOut()
@@ -218,7 +218,7 @@ class LeavePOut(BaseCrossValidator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import LeavePOut
+    >>> from sklearn_fork.model_selection import LeavePOut
     >>> X = np.array([[1, 2], [3, 4], [5, 6], [7, 8]])
     >>> y = np.array([1, 2, 3, 4])
     >>> lpo = LeavePOut(2)
@@ -411,7 +411,7 @@ class KFold(_BaseKFold):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import KFold
+    >>> from sklearn_fork.model_selection import KFold
     >>> X = np.array([[1, 2], [3, 4], [1, 2], [3, 4]])
     >>> y = np.array([1, 2, 3, 4])
     >>> kf = KFold(n_splits=2)
@@ -496,7 +496,7 @@ class GroupKFold(_BaseKFold):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import GroupKFold
+    >>> from sklearn_fork.model_selection import GroupKFold
     >>> X = np.array([[1, 2], [3, 4], [5, 6], [7, 8], [9, 10], [11, 12]])
     >>> y = np.array([1, 2, 3, 4, 5, 6])
     >>> groups = np.array([0, 0, 2, 2, 3, 3])
@@ -627,7 +627,7 @@ class StratifiedKFold(_BaseKFold):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import StratifiedKFold
+    >>> from sklearn_fork.model_selection import StratifiedKFold
     >>> X = np.array([[1, 2], [3, 4], [1, 2], [3, 4]])
     >>> y = np.array([0, 0, 1, 1])
     >>> skf = StratifiedKFold(n_splits=2)
@@ -786,8 +786,8 @@ class StratifiedGroupKFold(_BaseKFold):
     Each group will appear exactly once in the test set across all folds (the
     number of distinct groups has to be at least equal to the number of folds).
 
-    The difference between :class:`~sklearn.model_selection.GroupKFold`
-    and :class:`~sklearn.model_selection.StratifiedGroupKFold` is that
+    The difference between :class:`~sklearn_fork.model_selection.GroupKFold`
+    and :class:`~sklearn_fork.model_selection.StratifiedGroupKFold` is that
     the former attempts to create balanced folds such that the number of
     distinct groups is approximately the same in each fold, whereas
     StratifiedGroupKFold attempts to create folds which preserve the
@@ -817,7 +817,7 @@ class StratifiedGroupKFold(_BaseKFold):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import StratifiedGroupKFold
+    >>> from sklearn_fork.model_selection import StratifiedGroupKFold
     >>> X = np.ones((17, 2))
     >>> y = np.array([0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0])
     >>> groups = np.array([1, 1, 2, 2, 3, 3, 3, 4, 5, 5, 5, 5, 6, 6, 7, 8, 8])
@@ -1024,7 +1024,7 @@ class TimeSeriesSplit(_BaseKFold):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import TimeSeriesSplit
+    >>> from sklearn_fork.model_selection import TimeSeriesSplit
     >>> X = np.array([[1, 2], [3, 4], [1, 2], [3, 4], [1, 2], [3, 4]])
     >>> y = np.array([1, 2, 3, 4, 5, 6])
     >>> tscv = TimeSeriesSplit()
@@ -1179,7 +1179,7 @@ class LeaveOneGroupOut(BaseCrossValidator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import LeaveOneGroupOut
+    >>> from sklearn_fork.model_selection import LeaveOneGroupOut
     >>> X = np.array([[1, 2], [3, 4], [5, 6], [7, 8]])
     >>> y = np.array([1, 2, 1, 2])
     >>> groups = np.array([1, 1, 2, 2])
@@ -1301,7 +1301,7 @@ class LeavePGroupsOut(BaseCrossValidator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import LeavePGroupsOut
+    >>> from sklearn_fork.model_selection import LeavePGroupsOut
     >>> X = np.array([[1, 2], [3, 4], [5, 6]])
     >>> y = np.array([1, 2, 1])
     >>> groups = np.array([1, 2, 3])
@@ -1533,7 +1533,7 @@ class RepeatedKFold(_RepeatedSplits):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import RepeatedKFold
+    >>> from sklearn_fork.model_selection import RepeatedKFold
     >>> X = np.array([[1, 2], [3, 4], [1, 2], [3, 4]])
     >>> y = np.array([0, 0, 1, 1])
     >>> rkf = RepeatedKFold(n_splits=2, n_repeats=2, random_state=2652124)
@@ -1600,7 +1600,7 @@ class RepeatedStratifiedKFold(_RepeatedSplits):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import RepeatedStratifiedKFold
+    >>> from sklearn_fork.model_selection import RepeatedStratifiedKFold
     >>> X = np.array([[1, 2], [3, 4], [1, 2], [3, 4]])
     >>> y = np.array([0, 0, 1, 1])
     >>> rskf = RepeatedStratifiedKFold(n_splits=2, n_repeats=2,
@@ -1759,7 +1759,7 @@ class ShuffleSplit(BaseShuffleSplit):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import ShuffleSplit
+    >>> from sklearn_fork.model_selection import ShuffleSplit
     >>> X = np.array([[1, 2], [3, 4], [5, 6], [7, 8], [3, 4], [5, 6]])
     >>> y = np.array([1, 2, 1, 2, 1, 2])
     >>> rs = ShuffleSplit(n_splits=5, test_size=.25, random_state=0)
@@ -1891,7 +1891,7 @@ class GroupShuffleSplit(ShuffleSplit):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import GroupShuffleSplit
+    >>> from sklearn_fork.model_selection import GroupShuffleSplit
     >>> X = np.ones(shape=(8, 2))
     >>> y = np.ones(shape=(8, 1))
     >>> groups = np.array([1, 1, 2, 2, 2, 3, 3, 3])
@@ -2019,7 +2019,7 @@ class StratifiedShuffleSplit(BaseShuffleSplit):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import StratifiedShuffleSplit
+    >>> from sklearn_fork.model_selection import StratifiedShuffleSplit
     >>> X = np.array([[1, 2], [3, 4], [1, 2], [3, 4], [1, 2], [3, 4]])
     >>> y = np.array([0, 0, 0, 1, 1, 1])
     >>> sss = StratifiedShuffleSplit(n_splits=5, test_size=0.5, random_state=0)
@@ -2267,7 +2267,7 @@ class PredefinedSplit(BaseCrossValidator):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import PredefinedSplit
+    >>> from sklearn_fork.model_selection import PredefinedSplit
     >>> X = np.array([[1, 2], [3, 4], [1, 2], [3, 4]])
     >>> y = np.array([0, 0, 1, 1])
     >>> test_fold = [0, 1, -1, 1]
@@ -2456,7 +2456,7 @@ def check_cv(cv=5, y=None, *, classifier=False):
         if not isinstance(cv, Iterable) or isinstance(cv, str):
             raise ValueError(
                 "Expected cv as an integer, cross-validation "
-                "object (from sklearn.model_selection) "
+                "object (from sklearn_fork.model_selection) "
                 "or an iterable. Got %s." % cv
             )
         return _CVIterableWrapper(cv)
@@ -2544,7 +2544,7 @@ def train_test_split(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.model_selection import train_test_split
+    >>> from sklearn_fork.model_selection import train_test_split
     >>> X, y = np.arange(10).reshape((5, 2)), range(5)
     >>> X
     array([[0, 1],

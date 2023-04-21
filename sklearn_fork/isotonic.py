@@ -193,9 +193,9 @@ class IsotonicRegression(RegressorMixin, TransformerMixin, BaseEstimator):
 
     See Also
     --------
-    sklearn.linear_model.LinearRegression : Ordinary least squares Linear
+    sklearn_fork.linear_model.LinearRegression : Ordinary least squares Linear
         Regression.
-    sklearn.ensemble.HistGradientBoostingRegressor : Gradient boosting that
+    sklearn_fork.ensemble.HistGradientBoostingRegressor : Gradient boosting that
         is a non-parametric model accepting monotonicity constraints.
     isotonic_regression : Function to solve the isotonic regression model.
 
@@ -220,8 +220,8 @@ class IsotonicRegression(RegressorMixin, TransformerMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.datasets import make_regression
-    >>> from sklearn.isotonic import IsotonicRegression
+    >>> from sklearn_fork.datasets import make_regression
+    >>> from sklearn_fork.isotonic import IsotonicRegression
     >>> X, y = make_regression(n_samples=10, n_features=1, random_state=41)
     >>> iso_reg = IsotonicRegression().fit(X, y)
     >>> iso_reg.predict([.1, .2])

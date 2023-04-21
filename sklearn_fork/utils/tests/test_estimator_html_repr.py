@@ -4,34 +4,34 @@ from io import StringIO
 
 import pytest
 
-from sklearn import config_context
-from sklearn.linear_model import LogisticRegression
-from sklearn.neural_network import MLPClassifier
-from sklearn.impute import SimpleImputer
-from sklearn.decomposition import PCA
-from sklearn.decomposition import TruncatedSVD
-from sklearn.pipeline import Pipeline
-from sklearn.pipeline import FeatureUnion
-from sklearn.compose import ColumnTransformer
-from sklearn.ensemble import VotingClassifier
-from sklearn.feature_selection import SelectPercentile
-from sklearn.cluster import Birch
-from sklearn.cluster import AgglomerativeClustering
-from sklearn.preprocessing import OneHotEncoder
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import LinearSVC
-from sklearn.svm import LinearSVR
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.multiclass import OneVsOneClassifier
-from sklearn.ensemble import StackingClassifier
-from sklearn.ensemble import StackingRegressor
-from sklearn.gaussian_process.kernels import ExpSineSquared
-from sklearn.kernel_ridge import KernelRidge
+from sklearn_fork import config_context
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.neural_network import MLPClassifier
+from sklearn_fork.impute import SimpleImputer
+from sklearn_fork.decomposition import PCA
+from sklearn_fork.decomposition import TruncatedSVD
+from sklearn_fork.pipeline import Pipeline
+from sklearn_fork.pipeline import FeatureUnion
+from sklearn_fork.compose import ColumnTransformer
+from sklearn_fork.ensemble import VotingClassifier
+from sklearn_fork.feature_selection import SelectPercentile
+from sklearn_fork.cluster import Birch
+from sklearn_fork.cluster import AgglomerativeClustering
+from sklearn_fork.preprocessing import OneHotEncoder
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.svm import LinearSVC
+from sklearn_fork.svm import LinearSVR
+from sklearn_fork.tree import DecisionTreeClassifier
+from sklearn_fork.multiclass import OneVsOneClassifier
+from sklearn_fork.ensemble import StackingClassifier
+from sklearn_fork.ensemble import StackingRegressor
+from sklearn_fork.gaussian_process.kernels import ExpSineSquared
+from sklearn_fork.kernel_ridge import KernelRidge
 
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.utils._estimator_html_repr import _write_label_html
-from sklearn.utils._estimator_html_repr import _get_visual_block
-from sklearn.utils._estimator_html_repr import estimator_html_repr
+from sklearn_fork.model_selection import RandomizedSearchCV
+from sklearn_fork.utils._estimator_html_repr import _write_label_html
+from sklearn_fork.utils._estimator_html_repr import _get_visual_block
+from sklearn_fork.utils._estimator_html_repr import estimator_html_repr
 
 
 @pytest.mark.parametrize("checked", [True, False])

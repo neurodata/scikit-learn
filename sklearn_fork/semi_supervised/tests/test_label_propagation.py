@@ -5,17 +5,17 @@ import pytest
 import warnings
 
 from scipy.sparse import issparse
-from sklearn.semi_supervised import _label_propagation as label_propagation
-from sklearn.metrics.pairwise import rbf_kernel
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import NearestNeighbors
-from sklearn.datasets import make_classification
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.utils._testing import (
+from sklearn_fork.semi_supervised import _label_propagation as label_propagation
+from sklearn_fork.metrics.pairwise import rbf_kernel
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.neighbors import NearestNeighbors
+from sklearn_fork.datasets import make_classification
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork.utils._testing import (
     assert_allclose,
     assert_array_equal,
 )
-from sklearn.utils._testing import _convert_container
+from sklearn_fork.utils._testing import _convert_container
 
 CONSTRUCTOR_TYPES = ("array", "sparse_csr", "sparse_csc")
 

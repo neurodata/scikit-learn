@@ -368,7 +368,7 @@ def orthogonal_mp(
     OrthogonalMatchingPursuit : Orthogonal Matching Pursuit model.
     orthogonal_mp_gram : Solve OMP problems using Gram matrix and the product X.T * y.
     lars_path : Compute Least Angle Regression or Lasso path using LARS algorithm.
-    sklearn.decomposition.sparse_encode : Sparse coding.
+    sklearn_fork.decomposition.sparse_encode : Sparse coding.
 
     Notes
     -----
@@ -519,7 +519,7 @@ def orthogonal_mp_gram(
     orthogonal_mp : Solves n_targets Orthogonal Matching Pursuit problems.
     lars_path : Compute Least Angle Regression or Lasso path using
         LARS algorithm.
-    sklearn.decomposition.sparse_encode : Generic sparse coding.
+    sklearn_fork.decomposition.sparse_encode : Generic sparse coding.
         Each column of the result is the solution to a Lasso problem.
 
     Notes
@@ -623,7 +623,7 @@ class OrthogonalMatchingPursuit(MultiOutputMixin, RegressorMixin, LinearModel):
         If True, the regressors X will be normalized before regression by
         subtracting the mean and dividing by the l2-norm.
         If you wish to standardize, please use
-        :class:`~sklearn.preprocessing.StandardScaler` before calling ``fit``
+        :class:`~sklearn_fork.preprocessing.StandardScaler` before calling ``fit``
         on an estimator with ``normalize=False``.
 
         .. versionchanged:: 1.2
@@ -673,7 +673,7 @@ class OrthogonalMatchingPursuit(MultiOutputMixin, RegressorMixin, LinearModel):
     lars_path : Compute Least Angle Regression or Lasso path using LARS algorithm.
     Lars : Least Angle Regression model a.k.a. LAR.
     LassoLars : Lasso model fit with Least Angle Regression a.k.a. Lars.
-    sklearn.decomposition.sparse_encode : Generic sparse coding.
+    sklearn_fork.decomposition.sparse_encode : Generic sparse coding.
         Each column of the result is the solution to a Lasso problem.
     OrthogonalMatchingPursuitCV : Cross-validated
         Orthogonal Matching Pursuit model (OMP).
@@ -692,8 +692,8 @@ class OrthogonalMatchingPursuit(MultiOutputMixin, RegressorMixin, LinearModel):
 
     Examples
     --------
-    >>> from sklearn.linear_model import OrthogonalMatchingPursuit
-    >>> from sklearn.datasets import make_regression
+    >>> from sklearn_fork.linear_model import OrthogonalMatchingPursuit
+    >>> from sklearn_fork.datasets import make_regression
     >>> X, y = make_regression(noise=4, random_state=0)
     >>> reg = OrthogonalMatchingPursuit().fit(X, y)
     >>> reg.score(X, y)
@@ -832,7 +832,7 @@ def _omp_path_residues(
         If True, the regressors X will be normalized before regression by
         subtracting the mean and dividing by the l2-norm.
         If you wish to standardize, please use
-        :class:`~sklearn.preprocessing.StandardScaler` before calling ``fit``
+        :class:`~sklearn_fork.preprocessing.StandardScaler` before calling ``fit``
         on an estimator with ``normalize=False``.
 
         .. versionchanged:: 1.2
@@ -913,7 +913,7 @@ class OrthogonalMatchingPursuitCV(RegressorMixin, LinearModel):
         If True, the regressors X will be normalized before regression by
         subtracting the mean and dividing by the l2-norm.
         If you wish to standardize, please use
-        :class:`~sklearn.preprocessing.StandardScaler` before calling ``fit``
+        :class:`~sklearn_fork.preprocessing.StandardScaler` before calling ``fit``
         on an estimator with ``normalize=False``.
 
         .. versionchanged:: 1.2
@@ -990,7 +990,7 @@ class OrthogonalMatchingPursuitCV(RegressorMixin, LinearModel):
     OrthogonalMatchingPursuit : Orthogonal Matching Pursuit model (OMP).
     LarsCV : Cross-validated Least Angle Regression model.
     LassoLarsCV : Cross-validated Lasso model fit with Least Angle Regression.
-    sklearn.decomposition.sparse_encode : Generic sparse coding.
+    sklearn_fork.decomposition.sparse_encode : Generic sparse coding.
         Each column of the result is the solution to a Lasso problem.
 
     Notes
@@ -1000,8 +1000,8 @@ class OrthogonalMatchingPursuitCV(RegressorMixin, LinearModel):
 
     Examples
     --------
-    >>> from sklearn.linear_model import OrthogonalMatchingPursuitCV
-    >>> from sklearn.datasets import make_regression
+    >>> from sklearn_fork.linear_model import OrthogonalMatchingPursuitCV
+    >>> from sklearn_fork.datasets import make_regression
     >>> X, y = make_regression(n_features=100, n_informative=10,
     ...                        noise=4, random_state=0)
     >>> reg = OrthogonalMatchingPursuitCV(cv=5).fit(X, y)

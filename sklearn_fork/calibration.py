@@ -60,10 +60,10 @@ class CalibratedClassifierCV(ClassifierMixin, MetaEstimatorMixin, BaseEstimator)
     using the testing subset. For prediction, predicted probabilities are
     averaged across these individual calibrated classifiers. When
     `ensemble=False`, cross-validation is used to obtain unbiased predictions,
-    via :func:`~sklearn.model_selection.cross_val_predict`, which are then
+    via :func:`~sklearn_fork.model_selection.cross_val_predict`, which are then
     used for calibration. For prediction, the base estimator, trained using all
     the data, is used. This is the method implemented when `probabilities=True`
-    for :mod:`sklearn.svm` estimators.
+    for :mod:`sklearn_fork.svm` estimators.
 
     Already fitted classifiers can be calibrated via the parameter
     `cv="prefit"`. In this case, no cross-validation is used and all provided
@@ -80,7 +80,7 @@ class CalibratedClassifierCV(ClassifierMixin, MetaEstimatorMixin, BaseEstimator)
     estimator : estimator instance, default=None
         The classifier whose output need to be calibrated to provide more
         accurate `predict_proba` outputs. The default classifier is
-        a :class:`~sklearn.svm.LinearSVC`.
+        a :class:`~sklearn_fork.svm.LinearSVC`.
 
         .. versionadded:: 1.2
 
@@ -102,8 +102,8 @@ class CalibratedClassifierCV(ClassifierMixin, MetaEstimatorMixin, BaseEstimator)
         - An iterable yielding (train, test) splits as arrays of indices.
 
         For integer/None inputs, if ``y`` is binary or multiclass,
-        :class:`~sklearn.model_selection.StratifiedKFold` is used. If ``y`` is
-        neither binary nor multiclass, :class:`~sklearn.model_selection.KFold`
+        :class:`~sklearn_fork.model_selection.StratifiedKFold` is used. If ``y`` is
+        neither binary nor multiclass, :class:`~sklearn_fork.model_selection.KFold`
         is used.
 
         Refer to the :ref:`User Guide <cross_validation>` for the various
@@ -138,11 +138,11 @@ class CalibratedClassifierCV(ClassifierMixin, MetaEstimatorMixin, BaseEstimator)
         average predicted probabilities of all pairs.
 
         If `False`, `cv` is used to compute unbiased predictions, via
-        :func:`~sklearn.model_selection.cross_val_predict`, which are then
+        :func:`~sklearn_fork.model_selection.cross_val_predict`, which are then
         used for calibration. At prediction time, the classifier used is the
         `estimator` trained on all the data.
         Note that this method is also internally implemented  in
-        :mod:`sklearn.svm` estimators with the `probabilities=True` parameter.
+        :mod:`sklearn_fork.svm` estimators with the `probabilities=True` parameter.
 
         .. versionadded:: 0.24
 
@@ -206,9 +206,9 @@ class CalibratedClassifierCV(ClassifierMixin, MetaEstimatorMixin, BaseEstimator)
 
     Examples
     --------
-    >>> from sklearn.datasets import make_classification
-    >>> from sklearn.naive_bayes import GaussianNB
-    >>> from sklearn.calibration import CalibratedClassifierCV
+    >>> from sklearn_fork.datasets import make_classification
+    >>> from sklearn_fork.naive_bayes import GaussianNB
+    >>> from sklearn_fork.calibration import CalibratedClassifierCV
     >>> X, y = make_classification(n_samples=100, n_features=2,
     ...                            n_redundant=0, random_state=42)
     >>> base_clf = GaussianNB()
@@ -223,7 +223,7 @@ class CalibratedClassifierCV(ClassifierMixin, MetaEstimatorMixin, BaseEstimator)
            [0.928..., 0.071...],
            [0.928..., 0.071...],
            [0.071..., 0.928...]])
-    >>> from sklearn.model_selection import train_test_split
+    >>> from sklearn_fork.model_selection import train_test_split
     >>> X, y = make_classification(n_samples=100, n_features=2,
     ...                            n_redundant=0, random_state=42)
     >>> X_train, X_calib, y_train, y_calib = train_test_split(
@@ -966,7 +966,7 @@ def calibration_curve(
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.calibration import calibration_curve
+    >>> from sklearn_fork.calibration import calibration_curve
     >>> y_true = np.array([0, 0, 0, 0, 1, 1, 1, 1, 1])
     >>> y_pred = np.array([0.1, 0.2, 0.3, 0.4, 0.65, 0.7, 0.8, 0.9,  1.])
     >>> prob_true, prob_pred = calibration_curve(y_true, y_pred, n_bins=3)
@@ -1018,8 +1018,8 @@ class CalibrationDisplay(_BinaryClassifierCurveDisplayMixin):
     """Calibration curve (also known as reliability diagram) visualization.
 
     It is recommended to use
-    :func:`~sklearn.calibration.CalibrationDisplay.from_estimator` or
-    :func:`~sklearn.calibration.CalibrationDisplay.from_predictions`
+    :func:`~sklearn_fork.calibration.CalibrationDisplay.from_estimator` or
+    :func:`~sklearn_fork.calibration.CalibrationDisplay.from_predictions`
     to create a `CalibrationDisplay`. All parameters are stored as attributes.
 
     Read more about calibration in the :ref:`User Guide <calibration>` and
@@ -1071,10 +1071,10 @@ class CalibrationDisplay(_BinaryClassifierCurveDisplayMixin):
 
     Examples
     --------
-    >>> from sklearn.datasets import make_classification
-    >>> from sklearn.model_selection import train_test_split
-    >>> from sklearn.linear_model import LogisticRegression
-    >>> from sklearn.calibration import calibration_curve, CalibrationDisplay
+    >>> from sklearn_fork.datasets import make_classification
+    >>> from sklearn_fork.model_selection import train_test_split
+    >>> from sklearn_fork.linear_model import LogisticRegression
+    >>> from sklearn_fork.calibration import calibration_curve, CalibrationDisplay
     >>> X, y = make_classification(random_state=0)
     >>> X_train, X_test, y_train, y_test = train_test_split(
     ...     X, y, random_state=0)
@@ -1122,7 +1122,7 @@ class CalibrationDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.calibration.CalibrationDisplay`
+        display : :class:`~sklearn_fork.calibration.CalibrationDisplay`
             Object that stores computed values.
         """
         self.ax_, self.figure_, name = self._validate_plot_params(ax=ax, name=name)
@@ -1186,7 +1186,7 @@ class CalibrationDisplay(_BinaryClassifierCurveDisplayMixin):
         Parameters
         ----------
         estimator : estimator instance
-            Fitted classifier or a fitted :class:`~sklearn.pipeline.Pipeline`
+            Fitted classifier or a fitted :class:`~sklearn_fork.pipeline.Pipeline`
             in which the last estimator is a classifier. The classifier must
             have a :term:`predict_proba` method.
 
@@ -1232,7 +1232,7 @@ class CalibrationDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.calibration.CalibrationDisplay`.
+        display : :class:`~sklearn_fork.calibration.CalibrationDisplay`.
             Object that stores computed values.
 
         See Also
@@ -1243,10 +1243,10 @@ class CalibrationDisplay(_BinaryClassifierCurveDisplayMixin):
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import make_classification
-        >>> from sklearn.model_selection import train_test_split
-        >>> from sklearn.linear_model import LogisticRegression
-        >>> from sklearn.calibration import CalibrationDisplay
+        >>> from sklearn_fork.datasets import make_classification
+        >>> from sklearn_fork.model_selection import train_test_split
+        >>> from sklearn_fork.linear_model import LogisticRegression
+        >>> from sklearn_fork.calibration import CalibrationDisplay
         >>> X, y = make_classification(random_state=0)
         >>> X_train, X_test, y_train, y_test = train_test_split(
         ...     X, y, random_state=0)
@@ -1349,7 +1349,7 @@ class CalibrationDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.calibration.CalibrationDisplay`.
+        display : :class:`~sklearn_fork.calibration.CalibrationDisplay`.
             Object that stores computed values.
 
         See Also
@@ -1360,10 +1360,10 @@ class CalibrationDisplay(_BinaryClassifierCurveDisplayMixin):
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import make_classification
-        >>> from sklearn.model_selection import train_test_split
-        >>> from sklearn.linear_model import LogisticRegression
-        >>> from sklearn.calibration import CalibrationDisplay
+        >>> from sklearn_fork.datasets import make_classification
+        >>> from sklearn_fork.model_selection import train_test_split
+        >>> from sklearn_fork.linear_model import LogisticRegression
+        >>> from sklearn_fork.calibration import CalibrationDisplay
         >>> X, y = make_classification(random_state=0)
         >>> X_train, X_test, y_train, y_test = train_test_split(
         ...     X, y, random_state=0)

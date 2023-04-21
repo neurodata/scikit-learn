@@ -1187,7 +1187,7 @@ class HistGradientBoostingRegressor(RegressorMixin, BaseHistGradientBoosting):
     """Histogram-based Gradient Boosting Regression Tree.
 
     This estimator is much faster than
-    :class:`GradientBoostingRegressor<sklearn.ensemble.GradientBoostingRegressor>`
+    :class:`GradientBoostingRegressor<sklearn_fork.ensemble.GradientBoostingRegressor>`
     for big datasets (n_samples >= 10 000).
 
     This estimator has native support for missing values (NaNs). During
@@ -1400,7 +1400,7 @@ class HistGradientBoostingRegressor(RegressorMixin, BaseHistGradientBoosting):
     --------
     GradientBoostingRegressor : Exact gradient boosting method that does not
         scale as good on datasets with a large number of samples.
-    sklearn.tree.DecisionTreeRegressor : A decision tree regressor.
+    sklearn_fork.tree.DecisionTreeRegressor : A decision tree regressor.
     RandomForestRegressor : A meta-estimator that fits a number of decision
         tree regressors on various sub-samples of the dataset and uses
         averaging to improve the statistical performance and control
@@ -1413,8 +1413,8 @@ class HistGradientBoostingRegressor(RegressorMixin, BaseHistGradientBoosting):
 
     Examples
     --------
-    >>> from sklearn.ensemble import HistGradientBoostingRegressor
-    >>> from sklearn.datasets import load_diabetes
+    >>> from sklearn_fork.ensemble import HistGradientBoostingRegressor
+    >>> from sklearn_fork.datasets import load_diabetes
     >>> X, y = load_diabetes(return_X_y=True)
     >>> est = HistGradientBoostingRegressor().fit(X, y)
     >>> est.score(X, y)
@@ -1553,7 +1553,7 @@ class HistGradientBoostingClassifier(ClassifierMixin, BaseHistGradientBoosting):
     """Histogram-based Gradient Boosting Classification Tree.
 
     This estimator is much faster than
-    :class:`GradientBoostingClassifier<sklearn.ensemble.GradientBoostingClassifier>`
+    :class:`GradientBoostingClassifier<sklearn_fork.ensemble.GradientBoostingClassifier>`
     for big datasets (n_samples >= 10 000).
 
     This estimator has native support for missing values (NaNs). During
@@ -1770,7 +1770,7 @@ class HistGradientBoostingClassifier(ClassifierMixin, BaseHistGradientBoosting):
     --------
     GradientBoostingClassifier : Exact gradient boosting method that does not
         scale as good on datasets with a large number of samples.
-    sklearn.tree.DecisionTreeClassifier : A decision tree classifier.
+    sklearn_fork.tree.DecisionTreeClassifier : A decision tree classifier.
     RandomForestClassifier : A meta-estimator that fits a number of decision
         tree classifiers on various sub-samples of the dataset and uses
         averaging to improve the predictive accuracy and control over-fitting.
@@ -1782,8 +1782,8 @@ class HistGradientBoostingClassifier(ClassifierMixin, BaseHistGradientBoosting):
 
     Examples
     --------
-    >>> from sklearn.ensemble import HistGradientBoostingClassifier
-    >>> from sklearn.datasets import load_iris
+    >>> from sklearn_fork.ensemble import HistGradientBoostingClassifier
+    >>> from sklearn_fork.datasets import load_iris
     >>> X, y = load_iris(return_X_y=True)
     >>> clf = HistGradientBoostingClassifier().fit(X, y)
     >>> clf.score(X, y)

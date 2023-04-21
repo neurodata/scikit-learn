@@ -6,8 +6,8 @@ import pytest
 from scipy import sparse as sp
 from numpy.testing import assert_array_equal
 
-from sklearn.neighbors import NearestCentroid
-from sklearn import datasets
+from sklearn_fork.neighbors import NearestCentroid
+from sklearn_fork import datasets
 
 # toy sample
 X = [[-2, -1], [-1, -1], [-1, -2], [1, 1], [1, 2], [2, 1]]

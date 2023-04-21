@@ -7,9 +7,9 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
     """Precision Recall visualization.
 
     It is recommend to use
-    :func:`~sklearn.metrics.PrecisionRecallDisplay.from_estimator` or
-    :func:`~sklearn.metrics.PrecisionRecallDisplay.from_predictions` to create
-    a :class:`~sklearn.metrics.PredictionRecallDisplay`. All parameters are
+    :func:`~sklearn_fork.metrics.PrecisionRecallDisplay.from_estimator` or
+    :func:`~sklearn_fork.metrics.PrecisionRecallDisplay.from_predictions` to create
+    a :class:`~sklearn_fork.metrics.PredictionRecallDisplay`. All parameters are
     stored as attributes.
 
     Read more in the :ref:`User Guide <visualizations>`.
@@ -56,7 +56,7 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
 
     Notes
     -----
-    The average precision (cf. :func:`~sklearn.metrics.average_precision`) in
+    The average precision (cf. :func:`~sklearn_fork.metrics.average_precision`) in
     scikit-learn is computed without any interpolation. To be consistent with
     this metric, the precision-recall curve is plotted without any
     interpolation as well (step-wise style).
@@ -69,11 +69,11 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
     Examples
     --------
     >>> import matplotlib.pyplot as plt
-    >>> from sklearn.datasets import make_classification
-    >>> from sklearn.metrics import (precision_recall_curve,
+    >>> from sklearn_fork.datasets import make_classification
+    >>> from sklearn_fork.metrics import (precision_recall_curve,
     ...                              PrecisionRecallDisplay)
-    >>> from sklearn.model_selection import train_test_split
-    >>> from sklearn.svm import SVC
+    >>> from sklearn_fork.model_selection import train_test_split
+    >>> from sklearn_fork.svm import SVC
     >>> X, y = make_classification(random_state=0)
     >>> X_train, X_test, y_train, y_test = train_test_split(X, y,
     ...                                                     random_state=0)
@@ -123,12 +123,12 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.PrecisionRecallDisplay`
+        display : :class:`~sklearn_fork.metrics.PrecisionRecallDisplay`
             Object that stores computed values.
 
         Notes
         -----
-        The average precision (cf. :func:`~sklearn.metrics.average_precision`)
+        The average precision (cf. :func:`~sklearn_fork.metrics.average_precision`)
         in scikit-learn is computed without any interpolation. To be consistent
         with this metric, the precision-recall curve is plotted without any
         interpolation as well (step-wise style).
@@ -182,7 +182,7 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
         Parameters
         ----------
         estimator : estimator instance
-            Fitted classifier or a fitted :class:`~sklearn.pipeline.Pipeline`
+            Fitted classifier or a fitted :class:`~sklearn_fork.pipeline.Pipeline`
             in which the last estimator is a classifier.
 
         X : {array-like, sparse matrix} of shape (n_samples, n_features)
@@ -224,7 +224,7 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.PrecisionRecallDisplay`
+        display : :class:`~sklearn_fork.metrics.PrecisionRecallDisplay`
 
         See Also
         --------
@@ -233,7 +233,7 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Notes
         -----
-        The average precision (cf. :func:`~sklearn.metrics.average_precision`)
+        The average precision (cf. :func:`~sklearn_fork.metrics.average_precision`)
         in scikit-learn is computed without any interpolation. To be consistent
         with this metric, the precision-recall curve is plotted without any
         interpolation as well (step-wise style).
@@ -245,10 +245,10 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import make_classification
-        >>> from sklearn.metrics import PrecisionRecallDisplay
-        >>> from sklearn.model_selection import train_test_split
-        >>> from sklearn.linear_model import LogisticRegression
+        >>> from sklearn_fork.datasets import make_classification
+        >>> from sklearn_fork.metrics import PrecisionRecallDisplay
+        >>> from sklearn_fork.model_selection import train_test_split
+        >>> from sklearn_fork.linear_model import LogisticRegression
         >>> X, y = make_classification(random_state=0)
         >>> X_train, X_test, y_train, y_test = train_test_split(
         ...         X, y, random_state=0)
@@ -329,7 +329,7 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.PrecisionRecallDisplay`
+        display : :class:`~sklearn_fork.metrics.PrecisionRecallDisplay`
 
         See Also
         --------
@@ -338,7 +338,7 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Notes
         -----
-        The average precision (cf. :func:`~sklearn.metrics.average_precision`)
+        The average precision (cf. :func:`~sklearn_fork.metrics.average_precision`)
         in scikit-learn is computed without any interpolation. To be consistent
         with this metric, the precision-recall curve is plotted without any
         interpolation as well (step-wise style).
@@ -350,10 +350,10 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import make_classification
-        >>> from sklearn.metrics import PrecisionRecallDisplay
-        >>> from sklearn.model_selection import train_test_split
-        >>> from sklearn.linear_model import LogisticRegression
+        >>> from sklearn_fork.datasets import make_classification
+        >>> from sklearn_fork.metrics import PrecisionRecallDisplay
+        >>> from sklearn_fork.model_selection import train_test_split
+        >>> from sklearn_fork.linear_model import LogisticRegression
         >>> X, y = make_classification(random_state=0)
         >>> X_train, X_test, y_train, y_test = train_test_split(
         ...         X, y, random_state=0)

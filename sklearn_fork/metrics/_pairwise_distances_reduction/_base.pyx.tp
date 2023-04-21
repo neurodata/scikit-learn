@@ -11,8 +11,8 @@ import numpy as np
 
 from scipy.sparse import issparse
 from numbers import Integral
-from sklearn import get_config
-from sklearn.utils import check_scalar
+from sklearn_fork import get_config
+from sklearn_fork.utils import check_scalar
 from ...utils._openmp_helpers import _openmp_effective_n_threads
 from ...utils.sparsefuncs_fast import _sqeuclidean_row_norms_sparse
 

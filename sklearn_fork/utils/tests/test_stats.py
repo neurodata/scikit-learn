@@ -2,7 +2,7 @@ import numpy as np
 from numpy.testing import assert_allclose
 from pytest import approx
 
-from sklearn.utils.stats import _weighted_percentile
+from sklearn_fork.utils.stats import _weighted_percentile
 
 
 def test_weighted_percentile():

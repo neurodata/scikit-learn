@@ -2,16 +2,16 @@ import numpy
 from numpy.testing import assert_allclose, assert_array_equal
 import pytest
 
-from sklearn.base import BaseEstimator
-from sklearn.utils._array_api import get_namespace
-from sklearn.utils._array_api import _NumPyAPIWrapper
-from sklearn.utils._array_api import _ArrayAPIWrapper
-from sklearn.utils._array_api import _asarray_with_order
-from sklearn.utils._array_api import _convert_to_numpy
-from sklearn.utils._array_api import _estimator_with_converted_arrays
-from sklearn.utils._testing import skip_if_array_api_compat_not_configured
+from sklearn_fork.base import BaseEstimator
+from sklearn_fork.utils._array_api import get_namespace
+from sklearn_fork.utils._array_api import _NumPyAPIWrapper
+from sklearn_fork.utils._array_api import _ArrayAPIWrapper
+from sklearn_fork.utils._array_api import _asarray_with_order
+from sklearn_fork.utils._array_api import _convert_to_numpy
+from sklearn_fork.utils._array_api import _estimator_with_converted_arrays
+from sklearn_fork.utils._testing import skip_if_array_api_compat_not_configured
 
-from sklearn._config import config_context
+from sklearn_fork._config import config_context
 
 pytestmark = pytest.mark.filterwarnings(
     "ignore:The numpy.array_api submodule:UserWarning"

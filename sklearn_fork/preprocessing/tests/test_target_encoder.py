@@ -3,19 +3,19 @@ from numpy.testing import assert_allclose
 from numpy.testing import assert_array_equal
 import pytest
 
-from sklearn.preprocessing import (
+from sklearn_fork.preprocessing import (
     TargetEncoder,
     LabelEncoder,
     KBinsDiscretizer,
 )
-from sklearn.model_selection import KFold
-from sklearn.model_selection import StratifiedKFold
-from sklearn.model_selection import ShuffleSplit
-from sklearn.model_selection import cross_val_score
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import Ridge
-from sklearn.pipeline import make_pipeline
+from sklearn_fork.model_selection import KFold
+from sklearn_fork.model_selection import StratifiedKFold
+from sklearn_fork.model_selection import ShuffleSplit
+from sklearn_fork.model_selection import cross_val_score
+from sklearn_fork.model_selection import train_test_split
+from sklearn_fork.ensemble import RandomForestRegressor
+from sklearn_fork.linear_model import Ridge
+from sklearn_fork.pipeline import make_pipeline
 
 
 def _encode_target(X_ordinal, y_int, n_categories, smooth):

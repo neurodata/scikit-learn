@@ -954,7 +954,7 @@ class SGDClassifier(BaseSGDClassifier):
         - The other losses, 'squared_error', 'huber', 'epsilon_insensitive' and
           'squared_epsilon_insensitive' are designed for regression but can be useful
           in classification as well; see
-          :class:`~sklearn.linear_model.SGDRegressor` for a description.
+          :class:`~sklearn_fork.linear_model.SGDRegressor` for a description.
 
         More details about the losses formulas can be found in the
         :ref:`User Guide <sgd_mathematical_formulation>`.
@@ -1147,7 +1147,7 @@ class SGDClassifier(BaseSGDClassifier):
 
     See Also
     --------
-    sklearn.svm.LinearSVC : Linear support vector classification.
+    sklearn_fork.svm.LinearSVC : Linear support vector classification.
     LogisticRegression : Logistic regression.
     Perceptron : Inherits from SGDClassifier. ``Perceptron()`` is equivalent to
         ``SGDClassifier(loss="perceptron", eta0=1, learning_rate="constant",
@@ -1156,9 +1156,9 @@ class SGDClassifier(BaseSGDClassifier):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.linear_model import SGDClassifier
-    >>> from sklearn.preprocessing import StandardScaler
-    >>> from sklearn.pipeline import make_pipeline
+    >>> from sklearn_fork.linear_model import SGDClassifier
+    >>> from sklearn_fork.preprocessing import StandardScaler
+    >>> from sklearn_fork.pipeline import make_pipeline
     >>> X = np.array([[-1, -1], [-2, -1], [1, 1], [2, 1]])
     >>> Y = np.array([1, 1, 2, 2])
     >>> # Always scale the input. The most convenient way is to use a pipeline.
@@ -1255,7 +1255,7 @@ class SGDClassifier(BaseSGDClassifier):
         (clip(decision_function(X), -1, 1) + 1) / 2. For other loss functions
         it is necessary to perform proper probability calibration by wrapping
         the classifier with
-        :class:`~sklearn.calibration.CalibratedClassifierCV` instead.
+        :class:`~sklearn_fork.calibration.CalibratedClassifierCV` instead.
 
         Parameters
         ----------
@@ -1922,15 +1922,15 @@ class SGDRegressor(BaseSGDRegressor):
     Lasso : Linear Model trained with L1 prior as regularizer.
     RANSACRegressor : RANSAC (RANdom SAmple Consensus) algorithm.
     Ridge : Linear least squares with l2 regularization.
-    sklearn.svm.SVR : Epsilon-Support Vector Regression.
+    sklearn_fork.svm.SVR : Epsilon-Support Vector Regression.
     TheilSenRegressor : Theil-Sen Estimator robust multivariate regression model.
 
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.linear_model import SGDRegressor
-    >>> from sklearn.pipeline import make_pipeline
-    >>> from sklearn.preprocessing import StandardScaler
+    >>> from sklearn_fork.linear_model import SGDRegressor
+    >>> from sklearn_fork.pipeline import make_pipeline
+    >>> from sklearn_fork.preprocessing import StandardScaler
     >>> n_samples, n_features = 10, 5
     >>> rng = np.random.RandomState(0)
     >>> y = rng.randn(n_samples)
@@ -2017,8 +2017,8 @@ class SGDOneClassSVM(BaseSGD, OutlierMixin):
     """Solves linear One-Class SVM using Stochastic Gradient Descent.
 
     This implementation is meant to be used with a kernel approximation
-    technique (e.g. `sklearn.kernel_approximation.Nystroem`) to obtain results
-    similar to `sklearn.svm.OneClassSVM` which uses a Gaussian kernel by
+    technique (e.g. `sklearn_fork.kernel_approximation.Nystroem`) to obtain results
+    similar to `sklearn_fork.svm.OneClassSVM` which uses a Gaussian kernel by
     default.
 
     Read more in the :ref:`User Guide <sgd_online_one_class_svm>`.
@@ -2131,19 +2131,19 @@ class SGDOneClassSVM(BaseSGD, OutlierMixin):
 
     See Also
     --------
-    sklearn.svm.OneClassSVM : Unsupervised Outlier Detection.
+    sklearn_fork.svm.OneClassSVM : Unsupervised Outlier Detection.
 
     Notes
     -----
     This estimator has a linear complexity in the number of training samples
-    and is thus better suited than the `sklearn.svm.OneClassSVM`
+    and is thus better suited than the `sklearn_fork.svm.OneClassSVM`
     implementation for datasets with a large number of training samples (say
     > 10,000).
 
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn import linear_model
+    >>> from sklearn_fork import linear_model
     >>> X = np.array([[-1, -1], [-2, -1], [1, 1], [2, 1]])
     >>> clf = linear_model.SGDOneClassSVM(random_state=42)
     >>> clf.fit(X)

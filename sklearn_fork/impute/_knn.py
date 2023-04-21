@@ -81,7 +81,7 @@ class KNNImputer(_BaseImputer):
 
     Attributes
     ----------
-    indicator_ : :class:`~sklearn.impute.MissingIndicator`
+    indicator_ : :class:`~sklearn_fork.impute.MissingIndicator`
         Indicator used to add binary indicators for missing values.
         ``None`` if add_indicator is False.
 
@@ -113,7 +113,7 @@ class KNNImputer(_BaseImputer):
     Examples
     --------
     >>> import numpy as np
-    >>> from sklearn.impute import KNNImputer
+    >>> from sklearn_fork.impute import KNNImputer
     >>> X = [[1, 2, np.nan], [3, 4, 3], [np.nan, 6, 5], [8, 8, 7]]
     >>> imputer = KNNImputer(n_neighbors=2)
     >>> imputer.fit_transform(X)

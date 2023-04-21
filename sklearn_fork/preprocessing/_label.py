@@ -59,7 +59,7 @@ class LabelEncoder(TransformerMixin, BaseEstimator):
     --------
     `LabelEncoder` can be used to normalize labels.
 
-    >>> from sklearn import preprocessing
+    >>> from sklearn_fork import preprocessing
     >>> le = preprocessing.LabelEncoder()
     >>> le.fit([1, 2, 2, 6])
     LabelEncoder()
@@ -224,7 +224,7 @@ class LabelBinarizer(TransformerMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn import preprocessing
+    >>> from sklearn_fork import preprocessing
     >>> lb = preprocessing.LabelBinarizer()
     >>> lb.fit([1, 2, 6, 4, 2])
     LabelBinarizer()
@@ -472,7 +472,7 @@ def label_binarize(y, *, classes, neg_label=0, pos_label=1, sparse_output=False)
 
     Examples
     --------
-    >>> from sklearn.preprocessing import label_binarize
+    >>> from sklearn_fork.preprocessing import label_binarize
     >>> label_binarize([1, 6], classes=[1, 2, 4, 6])
     array([[1, 0, 0, 0],
            [0, 0, 0, 1]])
@@ -720,7 +720,7 @@ class MultiLabelBinarizer(TransformerMixin, BaseEstimator):
 
     Examples
     --------
-    >>> from sklearn.preprocessing import MultiLabelBinarizer
+    >>> from sklearn_fork.preprocessing import MultiLabelBinarizer
     >>> mlb = MultiLabelBinarizer()
     >>> mlb.fit_transform([(1, 2), (3,)])
     array([[1, 1, 0],

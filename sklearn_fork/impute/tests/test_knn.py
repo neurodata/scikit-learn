@@ -1,12 +1,12 @@
 import numpy as np
 import pytest
 
-from sklearn import config_context
-from sklearn.impute import KNNImputer
-from sklearn.metrics.pairwise import nan_euclidean_distances
-from sklearn.metrics.pairwise import pairwise_distances
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn.utils._testing import assert_allclose
+from sklearn_fork import config_context
+from sklearn_fork.impute import KNNImputer
+from sklearn_fork.metrics.pairwise import nan_euclidean_distances
+from sklearn_fork.metrics.pairwise import pairwise_distances
+from sklearn_fork.neighbors import KNeighborsRegressor
+from sklearn_fork.utils._testing import assert_allclose
 
 
 @pytest.mark.parametrize("weights", ["uniform", "distance"])

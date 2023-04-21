@@ -647,9 +647,9 @@ class OneHotEncoder(_BaseEncoder):
     OrdinalEncoder : Performs an ordinal (integer)
       encoding of the categorical features.
     TargetEncoder : Encodes categorical features using the target.
-    sklearn.feature_extraction.DictVectorizer : Performs a one-hot encoding of
+    sklearn_fork.feature_extraction.DictVectorizer : Performs a one-hot encoding of
       dictionary items (also handles string-valued features).
-    sklearn.feature_extraction.FeatureHasher : Performs an approximate one-hot
+    sklearn_fork.feature_extraction.FeatureHasher : Performs an approximate one-hot
       encoding of dictionary items or strings.
     LabelBinarizer : Binarizes labels in a one-vs-all
       fashion.
@@ -662,7 +662,7 @@ class OneHotEncoder(_BaseEncoder):
     Given a dataset with two features, we let the encoder find the unique
     values per feature and transform the data to a binary one-hot encoding.
 
-    >>> from sklearn.preprocessing import OneHotEncoder
+    >>> from sklearn_fork.preprocessing import OneHotEncoder
 
     One can discard categories not seen during `fit`:
 
@@ -964,7 +964,7 @@ class OneHotEncoder(_BaseEncoder):
 
         y : None
             Ignored. This parameter exists only for compatibility with
-            :class:`~sklearn.pipeline.Pipeline`.
+            :class:`~sklearn_fork.pipeline.Pipeline`.
 
         Returns
         -------
@@ -1359,7 +1359,7 @@ class OrdinalEncoder(OneToOneFeatureMixin, _BaseEncoder):
     Given a dataset with two features, we let the encoder find the unique
     values per feature and transform the data to an ordinal encoding.
 
-    >>> from sklearn.preprocessing import OrdinalEncoder
+    >>> from sklearn_fork.preprocessing import OrdinalEncoder
     >>> enc = OrdinalEncoder()
     >>> X = [['Male', 1], ['Female', 3], ['Female', 2]]
     >>> enc.fit(X)
@@ -1457,7 +1457,7 @@ class OrdinalEncoder(OneToOneFeatureMixin, _BaseEncoder):
 
         y : None
             Ignored. This parameter exists only for compatibility with
-            :class:`~sklearn.pipeline.Pipeline`.
+            :class:`~sklearn_fork.pipeline.Pipeline`.
 
         Returns
         -------

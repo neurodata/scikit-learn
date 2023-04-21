@@ -87,10 +87,10 @@ class Hyperparameter(
 
     Examples
     --------
-    >>> from sklearn.gaussian_process.kernels import ConstantKernel
-    >>> from sklearn.datasets import make_friedman2
-    >>> from sklearn.gaussian_process import GaussianProcessRegressor
-    >>> from sklearn.gaussian_process.kernels import Hyperparameter
+    >>> from sklearn_fork.gaussian_process.kernels import ConstantKernel
+    >>> from sklearn_fork.datasets import make_friedman2
+    >>> from sklearn_fork.gaussian_process import GaussianProcessRegressor
+    >>> from sklearn_fork.gaussian_process.kernels import Hyperparameter
     >>> X, y = make_friedman2(n_samples=50, noise=0, random_state=0)
     >>> kernel = ConstantKernel(constant_value=1.0,
     ...    constant_value_bounds=(0.0, 10.0))
@@ -501,9 +501,9 @@ class CompoundKernel(Kernel):
 
     Examples
     --------
-    >>> from sklearn.gaussian_process.kernels import WhiteKernel
-    >>> from sklearn.gaussian_process.kernels import RBF
-    >>> from sklearn.gaussian_process.kernels import CompoundKernel
+    >>> from sklearn_fork.gaussian_process.kernels import WhiteKernel
+    >>> from sklearn_fork.gaussian_process.kernels import RBF
+    >>> from sklearn_fork.gaussian_process.kernels import CompoundKernel
     >>> kernel = CompoundKernel(
     ...     [WhiteKernel(noise_level=3.0), RBF(length_scale=2.0)])
     >>> print(kernel.bounds)
@@ -797,9 +797,9 @@ class Sum(KernelOperator):
 
     Examples
     --------
-    >>> from sklearn.datasets import make_friedman2
-    >>> from sklearn.gaussian_process import GaussianProcessRegressor
-    >>> from sklearn.gaussian_process.kernels import RBF, Sum, ConstantKernel
+    >>> from sklearn_fork.datasets import make_friedman2
+    >>> from sklearn_fork.gaussian_process import GaussianProcessRegressor
+    >>> from sklearn_fork.gaussian_process.kernels import RBF, Sum, ConstantKernel
     >>> X, y = make_friedman2(n_samples=500, noise=0, random_state=0)
     >>> kernel = Sum(ConstantKernel(2), RBF())
     >>> gpr = GaussianProcessRegressor(kernel=kernel,
@@ -894,9 +894,9 @@ class Product(KernelOperator):
 
     Examples
     --------
-    >>> from sklearn.datasets import make_friedman2
-    >>> from sklearn.gaussian_process import GaussianProcessRegressor
-    >>> from sklearn.gaussian_process.kernels import (RBF, Product,
+    >>> from sklearn_fork.datasets import make_friedman2
+    >>> from sklearn_fork.gaussian_process import GaussianProcessRegressor
+    >>> from sklearn_fork.gaussian_process.kernels import (RBF, Product,
     ...            ConstantKernel)
     >>> X, y = make_friedman2(n_samples=500, noise=0, random_state=0)
     >>> kernel = Product(ConstantKernel(2), RBF())
@@ -995,9 +995,9 @@ class Exponentiation(Kernel):
 
     Examples
     --------
-    >>> from sklearn.datasets import make_friedman2
-    >>> from sklearn.gaussian_process import GaussianProcessRegressor
-    >>> from sklearn.gaussian_process.kernels import (RationalQuadratic,
+    >>> from sklearn_fork.datasets import make_friedman2
+    >>> from sklearn_fork.gaussian_process import GaussianProcessRegressor
+    >>> from sklearn_fork.gaussian_process.kernels import (RationalQuadratic,
     ...            Exponentiation)
     >>> X, y = make_friedman2(n_samples=500, noise=0, random_state=0)
     >>> kernel = Exponentiation(RationalQuadratic(), exponent=2)
@@ -1195,9 +1195,9 @@ class ConstantKernel(StationaryKernelMixin, GenericKernelMixin, Kernel):
 
     Examples
     --------
-    >>> from sklearn.datasets import make_friedman2
-    >>> from sklearn.gaussian_process import GaussianProcessRegressor
-    >>> from sklearn.gaussian_process.kernels import RBF, ConstantKernel
+    >>> from sklearn_fork.datasets import make_friedman2
+    >>> from sklearn_fork.gaussian_process import GaussianProcessRegressor
+    >>> from sklearn_fork.gaussian_process.kernels import RBF, ConstantKernel
     >>> X, y = make_friedman2(n_samples=500, noise=0, random_state=0)
     >>> kernel = RBF() + ConstantKernel(constant_value=2)
     >>> gpr = GaussianProcessRegressor(kernel=kernel, alpha=5,
@@ -1325,9 +1325,9 @@ class WhiteKernel(StationaryKernelMixin, GenericKernelMixin, Kernel):
 
     Examples
     --------
-    >>> from sklearn.datasets import make_friedman2
-    >>> from sklearn.gaussian_process import GaussianProcessRegressor
-    >>> from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
+    >>> from sklearn_fork.datasets import make_friedman2
+    >>> from sklearn_fork.gaussian_process import GaussianProcessRegressor
+    >>> from sklearn_fork.gaussian_process.kernels import DotProduct, WhiteKernel
     >>> X, y = make_friedman2(n_samples=500, noise=0, random_state=0)
     >>> kernel = DotProduct() + WhiteKernel(noise_level=0.5)
     >>> gpr = GaussianProcessRegressor(kernel=kernel,
@@ -1469,9 +1469,9 @@ class RBF(StationaryKernelMixin, NormalizedKernelMixin, Kernel):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.gaussian_process import GaussianProcessClassifier
-    >>> from sklearn.gaussian_process.kernels import RBF
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.gaussian_process import GaussianProcessClassifier
+    >>> from sklearn_fork.gaussian_process.kernels import RBF
     >>> X, y = load_iris(return_X_y=True)
     >>> kernel = 1.0 * RBF(1.0)
     >>> gpc = GaussianProcessClassifier(kernel=kernel,
@@ -1639,9 +1639,9 @@ class Matern(RBF):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.gaussian_process import GaussianProcessClassifier
-    >>> from sklearn.gaussian_process.kernels import Matern
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.gaussian_process import GaussianProcessClassifier
+    >>> from sklearn_fork.gaussian_process.kernels import Matern
     >>> X, y = load_iris(return_X_y=True)
     >>> kernel = 1.0 * Matern(length_scale=1.0, nu=1.5)
     >>> gpc = GaussianProcessClassifier(kernel=kernel,
@@ -1824,9 +1824,9 @@ class RationalQuadratic(StationaryKernelMixin, NormalizedKernelMixin, Kernel):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.gaussian_process import GaussianProcessClassifier
-    >>> from sklearn.gaussian_process.kernels import RationalQuadratic
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.gaussian_process import GaussianProcessClassifier
+    >>> from sklearn_fork.gaussian_process.kernels import RationalQuadratic
     >>> X, y = load_iris(return_X_y=True)
     >>> kernel = RationalQuadratic(length_scale=1.0, alpha=1.5)
     >>> gpc = GaussianProcessClassifier(kernel=kernel,
@@ -1973,9 +1973,9 @@ class ExpSineSquared(StationaryKernelMixin, NormalizedKernelMixin, Kernel):
 
     Examples
     --------
-    >>> from sklearn.datasets import make_friedman2
-    >>> from sklearn.gaussian_process import GaussianProcessRegressor
-    >>> from sklearn.gaussian_process.kernels import ExpSineSquared
+    >>> from sklearn_fork.datasets import make_friedman2
+    >>> from sklearn_fork.gaussian_process import GaussianProcessRegressor
+    >>> from sklearn_fork.gaussian_process.kernels import ExpSineSquared
     >>> X, y = make_friedman2(n_samples=50, noise=0, random_state=0)
     >>> kernel = ExpSineSquared(length_scale=1, periodicity=1)
     >>> gpr = GaussianProcessRegressor(kernel=kernel, alpha=5,
@@ -2120,9 +2120,9 @@ class DotProduct(Kernel):
 
     Examples
     --------
-    >>> from sklearn.datasets import make_friedman2
-    >>> from sklearn.gaussian_process import GaussianProcessRegressor
-    >>> from sklearn.gaussian_process.kernels import DotProduct, WhiteKernel
+    >>> from sklearn_fork.datasets import make_friedman2
+    >>> from sklearn_fork.gaussian_process import GaussianProcessRegressor
+    >>> from sklearn_fork.gaussian_process.kernels import DotProduct, WhiteKernel
     >>> X, y = make_friedman2(n_samples=500, noise=0, random_state=0)
     >>> kernel = DotProduct() + WhiteKernel()
     >>> gpr = GaussianProcessRegressor(kernel=kernel,
@@ -2228,10 +2228,10 @@ def _approx_fprime(xk, f, epsilon, args=()):
 
 
 class PairwiseKernel(Kernel):
-    """Wrapper for kernels in sklearn.metrics.pairwise.
+    """Wrapper for kernels in sklearn_fork.metrics.pairwise.
 
     A thin wrapper around the functionality of the kernels in
-    sklearn.metrics.pairwise.
+    sklearn_fork.metrics.pairwise.
 
     Note: Evaluation of eval_gradient is not analytic but numeric and all
           kernels support only isotropic distances. The parameter gamma is
@@ -2270,9 +2270,9 @@ class PairwiseKernel(Kernel):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.gaussian_process import GaussianProcessClassifier
-    >>> from sklearn.gaussian_process.kernels import PairwiseKernel
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.gaussian_process import GaussianProcessClassifier
+    >>> from sklearn_fork.gaussian_process.kernels import PairwiseKernel
     >>> X, y = load_iris(return_X_y=True)
     >>> kernel = PairwiseKernel(metric='rbf')
     >>> gpc = GaussianProcessClassifier(kernel=kernel,

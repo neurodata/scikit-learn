@@ -7,9 +7,9 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
     """ROC Curve visualization.
 
     It is recommend to use
-    :func:`~sklearn.metrics.RocCurveDisplay.from_estimator` or
-    :func:`~sklearn.metrics.RocCurveDisplay.from_predictions` to create
-    a :class:`~sklearn.metrics.RocCurveDisplay`. All parameters are
+    :func:`~sklearn_fork.metrics.RocCurveDisplay.from_estimator` or
+    :func:`~sklearn_fork.metrics.RocCurveDisplay.from_predictions` to create
+    a :class:`~sklearn_fork.metrics.RocCurveDisplay`. All parameters are
     stored as attributes.
 
     Read more in the :ref:`User Guide <visualizations>`.
@@ -64,7 +64,7 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
     --------
     >>> import matplotlib.pyplot as plt
     >>> import numpy as np
-    >>> from sklearn import metrics
+    >>> from sklearn_fork import metrics
     >>> y = np.array([0, 0, 1, 1])
     >>> pred = np.array([0.1, 0.4, 0.35, 0.8])
     >>> fpr, tpr, thresholds = metrics.roc_curve(y, pred)
@@ -122,7 +122,7 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.plot.RocCurveDisplay`
+        display : :class:`~sklearn_fork.metrics.plot.RocCurveDisplay`
             Object that stores computed values.
         """
         self.ax_, self.figure_, name = self._validate_plot_params(ax=ax, name=name)
@@ -189,7 +189,7 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         Parameters
         ----------
         estimator : estimator instance
-            Fitted classifier or a fitted :class:`~sklearn.pipeline.Pipeline`
+            Fitted classifier or a fitted :class:`~sklearn_fork.pipeline.Pipeline`
             in which the last estimator is a classifier.
 
         X : {array-like, sparse matrix} of shape (n_samples, n_features)
@@ -241,7 +241,7 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.plot.RocCurveDisplay`
+        display : :class:`~sklearn_fork.metrics.plot.RocCurveDisplay`
             The ROC Curve display.
 
         See Also
@@ -254,10 +254,10 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import make_classification
-        >>> from sklearn.metrics import RocCurveDisplay
-        >>> from sklearn.model_selection import train_test_split
-        >>> from sklearn.svm import SVC
+        >>> from sklearn_fork.datasets import make_classification
+        >>> from sklearn_fork.metrics import RocCurveDisplay
+        >>> from sklearn_fork.model_selection import train_test_split
+        >>> from sklearn_fork.svm import SVC
         >>> X, y = make_classification(random_state=0)
         >>> X_train, X_test, y_train, y_test = train_test_split(
         ...     X, y, random_state=0)
@@ -357,7 +357,7 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
 
         Returns
         -------
-        display : :class:`~sklearn.metrics.RocCurveDisplay`
+        display : :class:`~sklearn_fork.metrics.RocCurveDisplay`
             Object that stores computed values.
 
         See Also
@@ -370,10 +370,10 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import make_classification
-        >>> from sklearn.metrics import RocCurveDisplay
-        >>> from sklearn.model_selection import train_test_split
-        >>> from sklearn.svm import SVC
+        >>> from sklearn_fork.datasets import make_classification
+        >>> from sklearn_fork.metrics import RocCurveDisplay
+        >>> from sklearn_fork.model_selection import train_test_split
+        >>> from sklearn_fork.svm import SVC
         >>> X, y = make_classification(random_state=0)
         >>> X_train, X_test, y_train, y_test = train_test_split(
         ...     X, y, random_state=0)

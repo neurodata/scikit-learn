@@ -5,9 +5,9 @@ or if specifically requested via environment variable
 import scipy.sparse as sp
 import numpy as np
 from functools import partial
-from sklearn.datasets.tests.test_common import check_return_X_y
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import assert_array_equal
+from sklearn_fork.datasets.tests.test_common import check_return_X_y
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
 
 
 def test_fetch_rcv1(fetch_rcv1_fxt, global_random_seed):

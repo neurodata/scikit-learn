@@ -1,5 +1,5 @@
 """
-The :mod:`sklearn.exceptions` module includes all custom warnings and error
+The :mod:`sklearn_fork.exceptions` module includes all custom warnings and error
 classes used across scikit-learn.
 """
 
@@ -24,8 +24,8 @@ class NotFittedError(ValueError, AttributeError):
 
     Examples
     --------
-    >>> from sklearn.svm import LinearSVC
-    >>> from sklearn.exceptions import NotFittedError
+    >>> from sklearn_fork.svm import LinearSVC
+    >>> from sklearn_fork.exceptions import NotFittedError
     >>> try:
     ...     LinearSVC().predict([[1, 2], [2, 3], [3, 4]])
     ... except NotFittedError as e:
@@ -34,7 +34,7 @@ class NotFittedError(ValueError, AttributeError):
     appropriate arguments before using this estimator."...)
 
     .. versionchanged:: 0.18
-       Moved from sklearn.utils.validation.
+       Moved from sklearn_fork.utils.validation.
     """
 
 
@@ -42,7 +42,7 @@ class ConvergenceWarning(UserWarning):
     """Custom warning to capture convergence problems
 
     .. versionchanged:: 0.18
-       Moved from sklearn.utils.
+       Moved from sklearn_fork.utils.
     """
 
 
@@ -60,7 +60,7 @@ class DataConversionWarning(UserWarning):
         - passes an input whose shape can be interpreted ambiguously.
 
     .. versionchanged:: 0.18
-       Moved from sklearn.utils.validation.
+       Moved from sklearn_fork.utils.validation.
     """
 
 
@@ -74,7 +74,7 @@ class DataDimensionalityWarning(UserWarning):
     dimensionality of the problem will not be reduced.
 
     .. versionchanged:: 0.18
-       Moved from sklearn.utils.
+       Moved from sklearn_fork.utils.
     """
 
 
@@ -97,7 +97,7 @@ class FitFailedWarning(RuntimeWarning):
     is an error while fitting the estimator.
 
     .. versionchanged:: 0.18
-       Moved from sklearn.cross_validation.
+       Moved from sklearn_fork.cross_validation.
     """
 
 
@@ -114,7 +114,7 @@ class UndefinedMetricWarning(UserWarning):
     """Warning used when the metric is invalid
 
     .. versionchanged:: 0.18
-       Moved from sklearn.base.
+       Moved from sklearn_fork.base.
     """
 
 

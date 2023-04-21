@@ -111,8 +111,8 @@ def barycenter_kneighbors_graph(X, n_neighbors, reg=1e-3, n_jobs=None):
 
     See Also
     --------
-    sklearn.neighbors.kneighbors_graph
-    sklearn.neighbors.radius_neighbors_graph
+    sklearn_fork.neighbors.kneighbors_graph
+    sklearn_fork.neighbors.radius_neighbors_graph
     """
     knn = NearestNeighbors(n_neighbors=n_neighbors + 1, n_jobs=n_jobs).fit(X)
     X = knn._fit_X
@@ -619,7 +619,7 @@ class LocallyLinearEmbedding(
     neighbors_algorithm : {'auto', 'brute', 'kd_tree', 'ball_tree'}, \
                           default='auto'
         Algorithm to use for nearest neighbors search, passed to
-        :class:`~sklearn.neighbors.NearestNeighbors` instance.
+        :class:`~sklearn_fork.neighbors.NearestNeighbors` instance.
 
     random_state : int, RandomState instance, default=None
         Determines the random number generator when
@@ -678,8 +678,8 @@ class LocallyLinearEmbedding(
 
     Examples
     --------
-    >>> from sklearn.datasets import load_digits
-    >>> from sklearn.manifold import LocallyLinearEmbedding
+    >>> from sklearn_fork.datasets import load_digits
+    >>> from sklearn_fork.manifold import LocallyLinearEmbedding
     >>> X, _ = load_digits(return_X_y=True)
     >>> X.shape
     (1797, 64)

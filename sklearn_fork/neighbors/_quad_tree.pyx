@@ -43,9 +43,9 @@ cdef class _QuadTree:
     using `Cython.Tempita` to save some memory for QuadTree.
 
     Note that this code is currently internally used only by the Barnes-Hut
-    method in `sklearn.manifold.TSNE`. It is planned to be refactored and
+    method in `sklearn_fork.manifold.TSNE`. It is planned to be refactored and
     generalized in the future to be compatible with nearest neighbors API of
-    `sklearn.neighbors` with 2D and 3D data.
+    `sklearn_fork.neighbors` with 2D and 3D data.
     """
     def __cinit__(self, int n_dimensions, int verbose):
         """Constructor."""

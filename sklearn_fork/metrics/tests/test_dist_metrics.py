@@ -7,17 +7,17 @@ import pytest
 
 import scipy.sparse as sp
 from scipy.spatial.distance import cdist
-from sklearn.metrics import DistanceMetric
+from sklearn_fork.metrics import DistanceMetric
 
-from sklearn.metrics._dist_metrics import (
+from sklearn_fork.metrics._dist_metrics import (
     BOOL_METRICS,
     # Unexposed private DistanceMetric for 32 bit
     DistanceMetric32,
 )
 
-from sklearn.utils import check_random_state
-from sklearn.utils._testing import assert_allclose, create_memmap_backed_data
-from sklearn.utils.fixes import sp_version, parse_version
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.utils._testing import assert_allclose, create_memmap_backed_data
+from sklearn_fork.utils.fixes import sp_version, parse_version
 
 
 def dist_func(x1, x2, p):
@@ -72,7 +72,7 @@ else:
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize(
     "metric_param_grid", METRICS_DEFAULT_PARAMS, ids=lambda params: params[0]
 )
@@ -159,7 +159,7 @@ def test_cdist_bool_metric(metric, X_bool, Y_bool):
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize(
     "metric_param_grid", METRICS_DEFAULT_PARAMS, ids=lambda params: params[0]
 )
@@ -210,7 +210,7 @@ def test_pdist(metric_param_grid, X):
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize(
     "metric_param_grid", METRICS_DEFAULT_PARAMS, ids=lambda params: params[0]
 )
@@ -262,7 +262,7 @@ def test_pdist_bool_metrics(metric, X_bool):
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize("writable_kwargs", [True, False])
 @pytest.mark.parametrize(
     "metric_param_grid", METRICS_DEFAULT_PARAMS, ids=lambda params: params[0]
@@ -289,7 +289,7 @@ def test_pickle(writable_kwargs, metric_param_grid, X):
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize("metric", BOOL_METRICS)
 @pytest.mark.parametrize("X_bool", [X_bool, X_bool_mmap])
 def test_pickle_bool_metrics(metric, X_bool):
@@ -386,7 +386,7 @@ def test_input_data_size():
 
 
 # TODO: Remove filterwarnings in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 def test_readonly_kwargs():
     # Non-regression test for:
     # https://github.com/scikit-learn/scikit-learn/issues/21685
@@ -444,7 +444,7 @@ def test_wminkowski_deprecated():
 
 
 # TODO: Remove in 1.3 when wminkowski is removed
-@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn")
+@pytest.mark.filterwarnings("ignore:WMinkowskiDistance:FutureWarning:sklearn_fork")
 @pytest.mark.parametrize("p", [1, 1.5, 3])
 def test_wminkowski_minkowski_equivalence(p):
     w = rng.random_sample(d)

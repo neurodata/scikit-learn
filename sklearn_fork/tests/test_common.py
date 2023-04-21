@@ -1,5 +1,5 @@
 """
-General tests for all estimators in sklearn.
+General tests for all estimators in sklearn_fork.
 """
 
 # Authors: Andreas Mueller <amueller@ais.uni-bonn.de>
@@ -18,56 +18,56 @@ from functools import partial
 import pytest
 import numpy as np
 
-from sklearn.cluster import (
+from sklearn_fork.cluster import (
     AffinityPropagation,
     Birch,
     MeanShift,
     OPTICS,
     SpectralClustering,
 )
-from sklearn.datasets import make_blobs
-from sklearn.manifold import Isomap, TSNE, LocallyLinearEmbedding
-from sklearn.neighbors import (
+from sklearn_fork.datasets import make_blobs
+from sklearn_fork.manifold import Isomap, TSNE, LocallyLinearEmbedding
+from sklearn_fork.neighbors import (
     LocalOutlierFactor,
     KNeighborsClassifier,
     KNeighborsRegressor,
     RadiusNeighborsClassifier,
     RadiusNeighborsRegressor,
 )
-from sklearn.preprocessing import FunctionTransformer
-from sklearn.semi_supervised import LabelPropagation, LabelSpreading
+from sklearn_fork.preprocessing import FunctionTransformer
+from sklearn_fork.semi_supervised import LabelPropagation, LabelSpreading
 
-from sklearn.utils import all_estimators
-from sklearn.utils._testing import ignore_warnings
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.exceptions import FitFailedWarning
-from sklearn.utils.estimator_checks import check_estimator
+from sklearn_fork.utils import all_estimators
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.exceptions import ConvergenceWarning
+from sklearn_fork.exceptions import FitFailedWarning
+from sklearn_fork.utils.estimator_checks import check_estimator
 
-import sklearn
+import sklearn_fork
 
 # make it possible to discover experimental estimators when calling `all_estimators`
-from sklearn.experimental import enable_iterative_imputer  # noqa
-from sklearn.experimental import enable_halving_search_cv  # noqa
+from sklearn_fork.experimental import enable_iterative_imputer  # noqa
+from sklearn_fork.experimental import enable_halving_search_cv  # noqa
 
-from sklearn.compose import ColumnTransformer
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
-from sklearn.linear_model._base import LinearClassifierMixin
-from sklearn.linear_model import LogisticRegression
-from sklearn.linear_model import Ridge
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import RandomizedSearchCV
-from sklearn.model_selection import HalvingGridSearchCV
-from sklearn.model_selection import HalvingRandomSearchCV
-from sklearn.pipeline import make_pipeline, Pipeline
+from sklearn_fork.compose import ColumnTransformer
+from sklearn_fork.decomposition import PCA
+from sklearn_fork.preprocessing import StandardScaler, MinMaxScaler, OneHotEncoder
+from sklearn_fork.linear_model._base import LinearClassifierMixin
+from sklearn_fork.linear_model import LogisticRegression
+from sklearn_fork.linear_model import Ridge
+from sklearn_fork.model_selection import GridSearchCV
+from sklearn_fork.model_selection import RandomizedSearchCV
+from sklearn_fork.model_selection import HalvingGridSearchCV
+from sklearn_fork.model_selection import HalvingRandomSearchCV
+from sklearn_fork.pipeline import make_pipeline, Pipeline
 
-from sklearn.utils import IS_PYPY
-from sklearn.utils._tags import _DEFAULT_TAGS, _safe_tags
-from sklearn.utils._testing import (
+from sklearn_fork.utils import IS_PYPY
+from sklearn_fork.utils._tags import _DEFAULT_TAGS, _safe_tags
+from sklearn_fork.utils._testing import (
     SkipTest,
     set_random_state,
 )
-from sklearn.utils.estimator_checks import (
+from sklearn_fork.utils.estimator_checks import (
     _construct_instance,
     _set_checking_parameters,
     _get_check_estimator_ids,
@@ -154,7 +154,7 @@ def test_configure():
     # is installed in editable mode by pip build isolation enabled.
     pytest.importorskip("Cython")
     cwd = os.getcwd()
-    setup_path = os.path.abspath(os.path.join(sklearn.__path__[0], ".."))
+    setup_path = os.path.abspath(os.path.join(sklearn_fork.__path__[0], ".."))
     setup_filename = os.path.join(setup_path, "setup.py")
     if not os.path.exists(setup_filename):
         pytest.skip("setup.py not available")
@@ -200,10 +200,10 @@ def test_import_all_consistency():
     # Smoke test to check that any name in a __all__ list is actually defined
     # in the namespace of the module or package.
     pkgs = pkgutil.walk_packages(
-        path=sklearn.__path__, prefix="sklearn.", onerror=lambda _: None
+        path=sklearn_fork.__path__, prefix="sklearn_fork.", onerror=lambda _: None
     )
     submods = [modname for _, modname, _ in pkgs]
-    for modname in submods + ["sklearn"]:
+    for modname in submods + ["sklearn_fork"]:
         if ".tests." in modname:
             continue
         if IS_PYPY and (
@@ -221,11 +221,11 @@ def test_import_all_consistency():
 def test_root_import_all_completeness():
     EXCEPTIONS = ("utils", "tests", "base", "setup", "conftest")
     for _, modname, _ in pkgutil.walk_packages(
-        path=sklearn.__path__, onerror=lambda _: None
+        path=sklearn_fork.__path__, onerror=lambda _: None
     ):
         if "." in modname or modname.startswith("_") or modname in EXCEPTIONS:
             continue
-        assert modname in sklearn.__all__
+        assert modname in sklearn_fork.__all__
 
 
 def test_all_tests_are_importable():
@@ -238,13 +238,13 @@ def test_all_tests_are_importable():
                                       \._
                                       """)
     resource_modules = {
-        "sklearn.datasets.data",
-        "sklearn.datasets.descr",
-        "sklearn.datasets.images",
+        "sklearn_fork.datasets.data",
+        "sklearn_fork.datasets.descr",
+        "sklearn_fork.datasets.images",
     }
     lookup = {
         name: ispkg
-        for _, name, ispkg in pkgutil.walk_packages(sklearn.__path__, prefix="sklearn.")
+        for _, name, ispkg in pkgutil.walk_packages(sklearn_fork.__path__, prefix="sklearn_fork.")
     }
     missing_tests = [
         name

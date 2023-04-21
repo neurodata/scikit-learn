@@ -5,24 +5,24 @@ from numpy.testing import assert_allclose
 
 from re import escape
 
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._mocking import CheckingClassifier
-from sklearn.multiclass import OneVsRestClassifier
-from sklearn.multiclass import OneVsOneClassifier
-from sklearn.multiclass import OutputCodeClassifier
-from sklearn.utils.multiclass import check_classification_targets, type_of_target
-from sklearn.utils import (
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._mocking import CheckingClassifier
+from sklearn_fork.multiclass import OneVsRestClassifier
+from sklearn_fork.multiclass import OneVsOneClassifier
+from sklearn_fork.multiclass import OutputCodeClassifier
+from sklearn_fork.utils.multiclass import check_classification_targets, type_of_target
+from sklearn_fork.utils import (
     check_array,
     shuffle,
 )
 
-from sklearn.metrics import precision_score
-from sklearn.metrics import recall_score
+from sklearn_fork.metrics import precision_score
+from sklearn_fork.metrics import recall_score
 
-from sklearn.svm import LinearSVC, SVC
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.linear_model import (
+from sklearn_fork.svm import LinearSVC, SVC
+from sklearn_fork.naive_bayes import MultinomialNB
+from sklearn_fork.linear_model import (
     LinearRegression,
     Lasso,
     ElasticNet,
@@ -31,15 +31,15 @@ from sklearn.linear_model import (
     LogisticRegression,
     SGDClassifier,
 )
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import GridSearchCV, cross_val_score
-from sklearn.pipeline import Pipeline, make_pipeline
-from sklearn.impute import SimpleImputer
-from sklearn import svm
-from sklearn.exceptions import NotFittedError
-from sklearn import datasets
-from sklearn.datasets import load_breast_cancer
+from sklearn_fork.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn_fork.neighbors import KNeighborsClassifier
+from sklearn_fork.model_selection import GridSearchCV, cross_val_score
+from sklearn_fork.pipeline import Pipeline, make_pipeline
+from sklearn_fork.impute import SimpleImputer
+from sklearn_fork import svm
+from sklearn_fork.exceptions import NotFittedError
+from sklearn_fork import datasets
+from sklearn_fork.datasets import load_breast_cancer
 
 msg = "The default value for `force_alpha` will change"
 pytestmark = pytest.mark.filterwarnings(f"ignore:{msg}:FutureWarning")

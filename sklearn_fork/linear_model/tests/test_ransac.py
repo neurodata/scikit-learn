@@ -5,13 +5,13 @@ from scipy import sparse
 from numpy.testing import assert_array_almost_equal
 from numpy.testing import assert_array_equal
 
-from sklearn.utils import check_random_state
-from sklearn.utils._testing import assert_allclose
-from sklearn.datasets import make_regression
-from sklearn.linear_model import LinearRegression, RANSACRegressor, Ridge
-from sklearn.linear_model import OrthogonalMatchingPursuit
-from sklearn.linear_model._ransac import _dynamic_max_trials
-from sklearn.exceptions import ConvergenceWarning
+from sklearn_fork.utils import check_random_state
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.datasets import make_regression
+from sklearn_fork.linear_model import LinearRegression, RANSACRegressor, Ridge
+from sklearn_fork.linear_model import OrthogonalMatchingPursuit
+from sklearn_fork.linear_model._ransac import _dynamic_max_trials
+from sklearn_fork.exceptions import ConvergenceWarning
 
 
 # Generate coordinates of line

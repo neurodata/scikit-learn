@@ -1,5 +1,5 @@
 """
-Testing for the tree module (sklearn.tree).
+Testing for the tree module (sklearn_fork.tree).
 """
 import copy
 import pickle
@@ -18,48 +18,48 @@ from scipy.sparse import coo_matrix
 import joblib
 from joblib.numpy_pickle import NumpyPickler
 
-from sklearn.random_projection import _sparse_random_matrix
+from sklearn_fork.random_projection import _sparse_random_matrix
 
-from sklearn.dummy import DummyRegressor
+from sklearn_fork.dummy import DummyRegressor
 
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import mean_poisson_deviance
+from sklearn_fork.metrics import accuracy_score
+from sklearn_fork.metrics import mean_squared_error
+from sklearn_fork.metrics import mean_poisson_deviance
 
-from sklearn.model_selection import train_test_split
+from sklearn_fork.model_selection import train_test_split
 
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_almost_equal
-from sklearn.utils._testing import create_memmap_backed_data
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils._testing import skip_if_32bit
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_almost_equal
+from sklearn_fork.utils._testing import create_memmap_backed_data
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import skip_if_32bit
 
-from sklearn.utils.estimator_checks import check_sample_weights_invariance
-from sklearn.utils.validation import check_random_state
-from sklearn.utils import _IS_32BIT
+from sklearn_fork.utils.estimator_checks import check_sample_weights_invariance
+from sklearn_fork.utils.validation import check_random_state
+from sklearn_fork.utils import _IS_32BIT
 
-from sklearn.exceptions import NotFittedError
+from sklearn_fork.exceptions import NotFittedError
 
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.tree import DecisionTreeRegressor
-from sklearn.tree import ExtraTreeClassifier
-from sklearn.tree import ExtraTreeRegressor
+from sklearn_fork.tree import DecisionTreeClassifier
+from sklearn_fork.tree import DecisionTreeRegressor
+from sklearn_fork.tree import ExtraTreeClassifier
+from sklearn_fork.tree import ExtraTreeRegressor
 
-from sklearn import tree
-from sklearn.tree._tree import TREE_LEAF, TREE_UNDEFINED
-from sklearn.tree._tree import Tree as CythonTree
-from sklearn.tree._tree import _check_n_classes
-from sklearn.tree._tree import _check_value_ndarray
-from sklearn.tree._tree import _check_node_ndarray
-from sklearn.tree._tree import NODE_DTYPE
+from sklearn_fork import tree
+from sklearn_fork.tree._tree import TREE_LEAF, TREE_UNDEFINED
+from sklearn_fork.tree._tree import Tree as CythonTree
+from sklearn_fork.tree._tree import _check_n_classes
+from sklearn_fork.tree._tree import _check_value_ndarray
+from sklearn_fork.tree._tree import _check_node_ndarray
+from sklearn_fork.tree._tree import NODE_DTYPE
 
-from sklearn.tree._classes import CRITERIA_CLF
-from sklearn.tree._classes import CRITERIA_REG
-from sklearn import datasets
+from sklearn_fork.tree._classes import CRITERIA_CLF
+from sklearn_fork.tree._classes import CRITERIA_REG
+from sklearn_fork import datasets
 
-from sklearn.utils import compute_sample_weight
-from sklearn.tree._classes import DENSE_SPLITTERS, SPARSE_SPLITTERS
+from sklearn_fork.utils import compute_sample_weight
+from sklearn_fork.tree._classes import DENSE_SPLITTERS, SPARSE_SPLITTERS
 
 
 CLF_CRITERIONS = ("gini", "log_loss")
@@ -1294,7 +1294,7 @@ def test_big_input():
 
 
 def test_realloc():
-    from sklearn.tree._utils import _realloc_test
+    from sklearn_fork.tree._utils import _realloc_test
 
     with pytest.raises(MemoryError):
         _realloc_test()
@@ -2012,7 +2012,7 @@ def test_poisson_vs_mse():
     # For a Poisson distributed target, Poisson loss should give better results
     # than squared error measured in Poisson deviance as metric.
     # We have a similar test, test_poisson(), in
-    # sklearn/ensemble/_hist_gradient_boosting/tests/test_gradient_boosting.py
+    # sklearn_fork/ensemble/_hist_gradient_boosting/tests/test_gradient_boosting.py
     rng = np.random.RandomState(42)
     n_train, n_test, n_features = 500, 500, 10
     X = datasets.make_low_rank_matrix(
@@ -2166,7 +2166,7 @@ def test_different_endianness_joblib_pickle():
 def get_different_bitness_node_ndarray(node_ndarray):
     new_dtype_for_indexing_fields = np.int64 if _IS_32BIT else np.int32
 
-    # field names in Node struct with SIZE_t types (see sklearn/tree/_tree.pxd)
+    # field names in Node struct with SIZE_t types (see sklearn_fork/tree/_tree.pxd)
     indexing_field_names = ["left_child", "right_child", "feature", "n_node_samples"]
 
     new_dtype_dict = {

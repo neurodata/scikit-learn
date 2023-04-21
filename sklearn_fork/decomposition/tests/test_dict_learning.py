@@ -5,32 +5,32 @@ import numpy as np
 from functools import partial
 import itertools
 
-import sklearn
+import sklearn_fork
 
-from sklearn.base import clone
+from sklearn_fork.base import clone
 
-from sklearn.exceptions import ConvergenceWarning
+from sklearn_fork.exceptions import ConvergenceWarning
 
-from sklearn.utils import check_array
-from sklearn.utils.parallel import Parallel
+from sklearn_fork.utils import check_array
+from sklearn_fork.utils.parallel import Parallel
 
-from sklearn.utils._testing import assert_allclose
-from sklearn.utils._testing import assert_array_almost_equal
-from sklearn.utils._testing import assert_array_equal
-from sklearn.utils._testing import ignore_warnings
-from sklearn.utils._testing import TempMemmap
+from sklearn_fork.utils._testing import assert_allclose
+from sklearn_fork.utils._testing import assert_array_almost_equal
+from sklearn_fork.utils._testing import assert_array_equal
+from sklearn_fork.utils._testing import ignore_warnings
+from sklearn_fork.utils._testing import TempMemmap
 
-from sklearn.decomposition import DictionaryLearning
-from sklearn.decomposition import MiniBatchDictionaryLearning
-from sklearn.decomposition import SparseCoder
-from sklearn.decomposition import dict_learning
-from sklearn.decomposition import dict_learning_online
-from sklearn.decomposition import sparse_encode
-from sklearn.utils.estimator_checks import check_transformer_data_not_an_array
-from sklearn.utils.estimator_checks import check_transformer_general
-from sklearn.utils.estimator_checks import check_transformers_unfitted
+from sklearn_fork.decomposition import DictionaryLearning
+from sklearn_fork.decomposition import MiniBatchDictionaryLearning
+from sklearn_fork.decomposition import SparseCoder
+from sklearn_fork.decomposition import dict_learning
+from sklearn_fork.decomposition import dict_learning_online
+from sklearn_fork.decomposition import sparse_encode
+from sklearn_fork.utils.estimator_checks import check_transformer_data_not_an_array
+from sklearn_fork.utils.estimator_checks import check_transformer_general
+from sklearn_fork.utils.estimator_checks import check_transformers_unfitted
 
-from sklearn.decomposition._dict_learning import _update_dict
+from sklearn_fork.decomposition._dict_learning import _update_dict
 
 
 rng_global = np.random.RandomState(0)
@@ -995,7 +995,7 @@ def test_get_feature_names_out(estimator):
 
 def test_cd_work_on_joblib_memmapped_data(monkeypatch):
     monkeypatch.setattr(
-        sklearn.decomposition._dict_learning,
+        sklearn_fork.decomposition._dict_learning,
         "Parallel",
         partial(Parallel, max_nbytes=100),
     )

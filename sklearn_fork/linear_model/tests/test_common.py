@@ -5,9 +5,9 @@ import inspect
 import numpy as np
 import pytest
 
-from sklearn.base import is_classifier
-from sklearn.datasets import make_low_rank_matrix
-from sklearn.linear_model import (
+from sklearn_fork.base import is_classifier
+from sklearn_fork.datasets import make_low_rank_matrix
+from sklearn_fork.linear_model import (
     ARDRegression,
     BayesianRidge,
     ElasticNet,

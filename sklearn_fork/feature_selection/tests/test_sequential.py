@@ -3,15 +3,15 @@ import scipy
 import numpy as np
 from numpy.testing import assert_array_equal
 
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import make_pipeline
-from sklearn.feature_selection import SequentialFeatureSelector
-from sklearn.datasets import make_regression, make_blobs, make_classification
-from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import HistGradientBoostingRegressor
-from sklearn.model_selection import cross_val_score, LeaveOneGroupOut
-from sklearn.cluster import KMeans
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn_fork.preprocessing import StandardScaler
+from sklearn_fork.pipeline import make_pipeline
+from sklearn_fork.feature_selection import SequentialFeatureSelector
+from sklearn_fork.datasets import make_regression, make_blobs, make_classification
+from sklearn_fork.linear_model import LinearRegression
+from sklearn_fork.ensemble import HistGradientBoostingRegressor
+from sklearn_fork.model_selection import cross_val_score, LeaveOneGroupOut
+from sklearn_fork.cluster import KMeans
+from sklearn_fork.neighbors import KNeighborsClassifier
 
 
 def test_bad_n_features_to_select():

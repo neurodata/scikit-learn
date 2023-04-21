@@ -5,7 +5,7 @@ import os
 import pytest
 import numpy as np
 
-import sklearn.datasets
+import sklearn_fork.datasets
 
 
 def is_pillow_installed():
@@ -92,7 +92,7 @@ def _skip_network_tests():
 
 def _generate_func_supporting_param(param, dataset_type=("load", "fetch")):
     markers_fetch = FETCH_PYTEST_MARKERS.get(param, {})
-    for name, obj in inspect.getmembers(sklearn.datasets):
+    for name, obj in inspect.getmembers(sklearn_fork.datasets):
         if not inspect.isfunction(obj):
             continue
 

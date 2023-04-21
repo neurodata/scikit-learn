@@ -129,7 +129,7 @@ def fetch_covtype(
 
     Returns
     -------
-    dataset : :class:`~sklearn.utils.Bunch`
+    dataset : :class:`~sklearn_fork.utils.Bunch`
         Dictionary-like object, with the following attributes.
 
         data : ndarray of shape (581012, 54)

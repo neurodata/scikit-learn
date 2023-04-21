@@ -164,8 +164,8 @@ class IncrementalPCA(_BasePCA):
 
     Examples
     --------
-    >>> from sklearn.datasets import load_digits
-    >>> from sklearn.decomposition import IncrementalPCA
+    >>> from sklearn_fork.datasets import load_digits
+    >>> from sklearn_fork.decomposition import IncrementalPCA
     >>> from scipy import sparse
     >>> X, _ = load_digits(return_X_y=True)
     >>> transformer = IncrementalPCA(n_components=7, batch_size=200)
@@ -387,7 +387,7 @@ class IncrementalPCA(_BasePCA):
         --------
 
         >>> import numpy as np
-        >>> from sklearn.decomposition import IncrementalPCA
+        >>> from sklearn_fork.decomposition import IncrementalPCA
         >>> X = np.array([[-1, -1], [-2, -1], [-3, -2],
         ...               [1, 1], [2, 1], [3, 2]])
         >>> ipca = IncrementalPCA(n_components=2, batch_size=3)

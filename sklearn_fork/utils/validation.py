@@ -150,7 +150,7 @@ def _assert_all_finite(
             msg_err += (
                 f"\n{estimator_name} does not accept missing values"
                 " encoded as NaN natively. For supervised learning, you might want"
-                " to consider sklearn.ensemble.HistGradientBoostingClassifier and"
+                " to consider sklearn_fork.ensemble.HistGradientBoostingClassifier and"
                 " Regressor which accept missing values encoded as NaNs natively."
                 " Alternatively, it is possible to preprocess the data, for"
                 " instance by using an imputer transformer in a pipeline or drop"
@@ -1278,8 +1278,8 @@ def has_fit_parameter(estimator, parameter):
 
     Examples
     --------
-    >>> from sklearn.svm import SVC
-    >>> from sklearn.utils.validation import has_fit_parameter
+    >>> from sklearn_fork.svm import SVC
+    >>> from sklearn_fork.utils.validation import has_fit_parameter
     >>> has_fit_parameter(SVC(), "sample_weight")
     True
     """
@@ -1622,7 +1622,7 @@ def _check_psd_eigenvalues(lambdas, enable_warnings=False):
 
     Examples
     --------
-    >>> from sklearn.utils.validation import _check_psd_eigenvalues
+    >>> from sklearn_fork.utils.validation import _check_psd_eigenvalues
     >>> _check_psd_eigenvalues([1, 2])      # nominal case
     array([1, 2])
     >>> _check_psd_eigenvalues([5, 5j])     # significant imag part

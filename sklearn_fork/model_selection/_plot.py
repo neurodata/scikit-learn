@@ -8,8 +8,8 @@ class LearningCurveDisplay:
     """Learning Curve visualization.
 
     It is recommended to use
-    :meth:`~sklearn.model_selection.LearningCurveDisplay.from_estimator` to
-    create a :class:`~sklearn.model_selection.LearningCurveDisplay` instance.
+    :meth:`~sklearn_fork.model_selection.LearningCurveDisplay.from_estimator` to
+    create a :class:`~sklearn_fork.model_selection.LearningCurveDisplay` instance.
     All parameters are stored as attributes.
 
     Read more in the :ref:`User Guide <visualizations>`.
@@ -58,14 +58,14 @@ class LearningCurveDisplay:
 
     See Also
     --------
-    sklearn.model_selection.learning_curve : Compute the learning curve.
+    sklearn_fork.model_selection.learning_curve : Compute the learning curve.
 
     Examples
     --------
     >>> import matplotlib.pyplot as plt
-    >>> from sklearn.datasets import load_iris
-    >>> from sklearn.model_selection import LearningCurveDisplay, learning_curve
-    >>> from sklearn.tree import DecisionTreeClassifier
+    >>> from sklearn_fork.datasets import load_iris
+    >>> from sklearn_fork.model_selection import LearningCurveDisplay, learning_curve
+    >>> from sklearn_fork.tree import DecisionTreeClassifier
     >>> X, y = load_iris(return_X_y=True)
     >>> tree = DecisionTreeClassifier(random_state=0)
     >>> train_sizes, train_scores, test_scores = learning_curve(
@@ -106,7 +106,7 @@ class LearningCurveDisplay:
 
         negate_score : bool, default=False
             Whether or not to negate the scores obtained through
-            :func:`~sklearn.model_selection.learning_curve`. This is
+            :func:`~sklearn_fork.model_selection.learning_curve`. This is
             particularly useful when using the error denoted by `neg_*` in
             `scikit-learn`.
 
@@ -140,7 +140,7 @@ class LearningCurveDisplay:
 
         Returns
         -------
-        display : :class:`~sklearn.model_selection.LearningCurveDisplay`
+        display : :class:`~sklearn_fork.model_selection.LearningCurveDisplay`
             Object that stores computed values.
         """
         check_matplotlib_support(f"{self.__class__.__name__}.plot")
@@ -308,8 +308,8 @@ class LearningCurveDisplay:
 
             For int/None inputs, if the estimator is a classifier and `y` is
             either binary or multiclass,
-            :class:`~sklearn.model_selection.StratifiedKFold` is used. In all
-            other cases, :class:`~sklearn.model_selectionKFold` is used. These
+            :class:`~sklearn_fork.model_selection.StratifiedKFold` is used. In all
+            other cases, :class:`~sklearn_fork.model_selectionKFold` is used. These
             splitters are instantiated with `shuffle=False` so the splits will
             be the same across calls.
 
@@ -363,7 +363,7 @@ class LearningCurveDisplay:
 
         negate_score : bool, default=False
             Whether or not to negate the scores obtained through
-            :func:`~sklearn.model_selection.learning_curve`. This is
+            :func:`~sklearn_fork.model_selection.learning_curve`. This is
             particularly useful when using the error denoted by `neg_*` in
             `scikit-learn`.
 
@@ -397,15 +397,15 @@ class LearningCurveDisplay:
 
         Returns
         -------
-        display : :class:`~sklearn.model_selection.LearningCurveDisplay`
+        display : :class:`~sklearn_fork.model_selection.LearningCurveDisplay`
             Object that stores computed values.
 
         Examples
         --------
         >>> import matplotlib.pyplot as plt
-        >>> from sklearn.datasets import load_iris
-        >>> from sklearn.model_selection import LearningCurveDisplay
-        >>> from sklearn.tree import DecisionTreeClassifier
+        >>> from sklearn_fork.datasets import load_iris
+        >>> from sklearn_fork.model_selection import LearningCurveDisplay
+        >>> from sklearn_fork.tree import DecisionTreeClassifier
         >>> X, y = load_iris(return_X_y=True)
         >>> tree = DecisionTreeClassifier(random_state=0)
         >>> LearningCurveDisplay.from_estimator(tree, X, y)

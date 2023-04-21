@@ -2,12 +2,12 @@ import os
 import pytest
 import textwrap
 
-from sklearn import __version__
-from sklearn.utils._openmp_helpers import _openmp_parallelism_enabled
+from sklearn_fork import __version__
+from sklearn_fork.utils._openmp_helpers import _openmp_parallelism_enabled
 
 
 def test_openmp_parallelism_enabled():
-    # Check that sklearn is built with OpenMP-based parallelism enabled.
+    # Check that sklearn_fork is built with OpenMP-based parallelism enabled.
     # This test can be skipped by setting the environment variable
     # ``SKLEARN_SKIP_OPENMP_TEST``.
     if os.getenv("SKLEARN_SKIP_OPENMP_TEST"):
