@@ -414,7 +414,8 @@ ax1.set_xlabel("Clustering time (s)")
 plt.tight_layout()
 
 # %%
-# :class:`~sklearn_fork.cluster.KMeans` and :class:`~sklearn_fork.cluster.MiniBatchKMeans`
+# :class:`~sklearn_fork.cluster.KMeans` and
+# :class:`~sklearn_fork.cluster.MiniBatchKMeans`
 # suffer from the phenomenon called the `Curse of Dimensionality
 # <https://en.wikipedia.org/wiki/Curse_of_dimensionality>`_ for high dimensional
 # datasets such as text data. That is the reason why the overall scores improve

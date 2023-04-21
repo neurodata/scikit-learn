@@ -379,10 +379,12 @@ class SimpleImputer(_BaseImputer):
         self._validate_params()
         if self.verbose != "deprecated":
             warnings.warn(
-                "The 'verbose' parameter was deprecated in version "
-                "1.1 and will be removed in 1.3. A warning will "
-                "always be raised upon the removal of empty columns "
-                "in the future version.",
+                (
+                    "The 'verbose' parameter was deprecated in version "
+                    "1.1 and will be removed in 1.3. A warning will "
+                    "always be raised upon the removal of empty columns "
+                    "in the future version."
+                ),
                 FutureWarning,
             )
 
@@ -683,8 +685,9 @@ class SimpleImputer(_BaseImputer):
 
     def _more_tags(self):
         return {
-            "allow_nan": _is_pandas_na(self.missing_values)
-            or is_scalar_nan(self.missing_values)
+            "allow_nan": _is_pandas_na(self.missing_values) or is_scalar_nan(
+                self.missing_values
+            )
         }
 
     def get_feature_names_out(self, input_features=None):

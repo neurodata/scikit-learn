@@ -44,7 +44,7 @@ cdef class BaseTree:
     cdef Node* nodes                     # Array of nodes
 
     cdef SIZE_t value_stride             # The dimensionality of a vectorized output per sample
-    cdef double* value                   # Array of values prediction values for each node        
+    cdef double* value                   # Array of values prediction values for each node
 
     # Generic Methods: These are generic methods used by any tree.
     cdef int _resize(self, SIZE_t capacity) except -1 nogil
@@ -99,10 +99,10 @@ cdef class Tree(BaseTree):
     # The Supervised Tree object is a binary tree structure constructed by the
     # TreeBuilder. The tree structure is used for predictions and
     # feature importances.
-    # 
+
     # Value of upstream properties:
     # - value_stride = n_outputs * max_n_classes
-    # - value = (capacity, n_outputs, max_n_classes) array of values          
+    # - value = (capacity, n_outputs, max_n_classes) array of values
 
     # Input/Output layout for supervised tree
     cdef public SIZE_t n_features        # Number of features in X

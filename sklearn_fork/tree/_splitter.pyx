@@ -47,12 +47,12 @@ cdef inline void _init_split(SplitRecord* self, SIZE_t start_pos) noexcept nogil
     self.improvement = -INFINITY
 
 cdef class BaseSplitter:
-    """This is an abstract interface for splitters. 
+    """This is an abstract interface for splitters.
 
     For example, a tree model could be either supervisedly, or unsupervisedly computing splits on samples of
     covariates, labels, or both. Although scikit-learn currently only contains
     supervised tree methods, this class enables 3rd party packages to leverage
-    scikit-learn's Cython code for splitting. 
+    scikit-learn's Cython code for splitting.
 
     A splitter is usually used in conjunction with a criterion class, which explicitly handles
     computing the criteria, which we split on. The setting of that criterion class is handled
@@ -106,7 +106,7 @@ cdef class BaseSplitter:
 
     cdef int pointer_size(self) noexcept nogil:
         """Size of the pointer for split records.
-        
+
         Overriding this function allows one to use different subclasses of
         `SplitRecord`.
         """
@@ -149,7 +149,6 @@ cdef class Splitter(BaseSplitter):
         self.min_samples_leaf = min_samples_leaf
         self.min_weight_leaf = min_weight_leaf
         self.random_state = random_state
-
 
     def __reduce__(self):
         return (type(self), (self.criterion,
@@ -278,7 +277,7 @@ cdef class Splitter(BaseSplitter):
         SplitRecord current_split,
     ) noexcept nogil:
         """Check stopping conditions pre-split.
-        
+
         This is typically a metric that is cheaply computed given the
         current proposed split, which is stored as a the `current_split`
         argument.
@@ -288,14 +287,14 @@ cdef class Splitter(BaseSplitter):
         if (((current_split.pos - self.start) < min_samples_leaf) or
                 ((self.end - current_split.pos) < min_samples_leaf)):
             return 1
-        
+
         return 0
 
     cdef bint check_postsplit_conditions(
         self
     ) noexcept nogil:
         """Check stopping conditions after evaluating the split.
-        
+
         This takes some metric that is stored in the Criterion
         object and checks against internal stop metrics.
         """
@@ -305,7 +304,7 @@ cdef class Splitter(BaseSplitter):
         if ((self.criterion.weighted_n_left < min_weight_leaf) or
                 (self.criterion.weighted_n_right < min_weight_leaf)):
             return 1
-        
+
         return 0
 
 # Introduce a fused-class to make it possible to share the split implementation
@@ -316,7 +315,7 @@ cdef class Splitter(BaseSplitter):
 ctypedef fused Partitioner:
     DensePartitioner
     SparsePartitioner
-    
+
 cdef inline int node_split_best(
     Splitter splitter,
     Partitioner partitioner,
@@ -340,8 +339,6 @@ cdef inline int node_split_best(
 
     cdef DTYPE_t[::1] feature_values = splitter.feature_values
     cdef SIZE_t max_features = splitter.max_features
-    cdef SIZE_t min_samples_leaf = splitter.min_samples_leaf
-    cdef double min_weight_leaf = splitter.min_weight_leaf
     cdef UINT32_t* random_state = &splitter.rand_r_state
 
     cdef SplitRecord best_split, current_split
@@ -633,8 +630,6 @@ cdef inline int node_split_random(
     cdef SIZE_t n_features = splitter.n_features
 
     cdef SIZE_t max_features = splitter.max_features
-    cdef SIZE_t min_samples_leaf = splitter.min_samples_leaf
-    cdef double min_weight_leaf = splitter.min_weight_leaf
     cdef UINT32_t* random_state = &splitter.rand_r_state
 
     cdef SplitRecord best_split, current_split

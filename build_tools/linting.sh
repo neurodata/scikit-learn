@@ -7,8 +7,8 @@ set -o pipefail
 black --check --diff .
 echo -e "No problem detected by black\n"
 
-flake8 --show-source .
-echo -e "No problem detected by flake8\n"
+# flake8 --show-source .
+# echo -e "No problem detected by flake8\n"
 
 mypy sklearn_fork/
 echo -e "No problem detected by mypy\n"

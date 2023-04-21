@@ -72,8 +72,7 @@ def clone(estimator, *, safe=True):
 
 
 def _clone_parametrized(estimator, *, safe=True):
-    """Default implementation of clone. See :func:`sklearn_fork.base.clone` for details.
-    """
+    """Default implementation of clone. See :func:`sklearn_fork.base.clone` for details."""
 
     estimator_type = type(estimator)
     # XXX: not handling dictionaries
@@ -240,9 +239,11 @@ class BaseEstimator:
                 and self.__module__.startswith("sklearn_fork.")
             ):
                 warnings.warn(
-                    f"Parameter 'base_estimator' of {self.__class__.__name__} is"
-                    " deprecated in favor of 'estimator'. See"
-                    f" {self.__class__.__name__}'s docstring for more details.",
+                    (
+                        f"Parameter 'base_estimator' of {self.__class__.__name__} is"
+                        " deprecated in favor of 'estimator'. See"
+                        f" {self.__class__.__name__}'s docstring for more details."
+                    ),
                     FutureWarning,
                     stacklevel=2,
                 )
@@ -1036,8 +1037,9 @@ class _UnstableArchMixin:
 
     def _more_tags(self):
         return {
-            "non_deterministic": _IS_32BIT
-            or platform.machine().startswith(("ppc", "powerpc"))
+            "non_deterministic": _IS_32BIT or platform.machine().startswith(
+                ("ppc", "powerpc")
+            )
         }
 
 

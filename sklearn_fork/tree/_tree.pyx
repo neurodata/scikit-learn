@@ -310,7 +310,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
             if rc >= 0:
                 tree.max_depth = max_depth_seen
-        
+
         # free the memory created for the SplitRecord pointer
         free(split_ptr)
 
@@ -480,7 +480,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         """Adds node w/ partition ``[start, end)`` to the frontier. """
         cdef SplitRecord split
         cdef SplitRecord* split_ptr = <SplitRecord *>malloc(splitter.pointer_size())
-        
+
         cdef SIZE_t node_id
         cdef SIZE_t n_node_samples
         cdef SIZE_t n_constant_features = 0
@@ -545,7 +545,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
             res.improvement = 0.0
             res.impurity_left = impurity
             res.impurity_right = impurity
-        
+
         free(split_ptr)
         return 0
 
@@ -556,7 +556,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
 
 cdef class BaseTree:
     """Base class for Cython tree models.
-    
+
     Downstream classes must implement
     """
     cdef int _resize(
@@ -614,7 +614,7 @@ cdef class BaseTree:
         Node* node
     ) except -1 nogil:
         """Set split node data.
-        
+
         Parameters
         ----------
         split_node : SplitRecord*
@@ -633,7 +633,7 @@ cdef class BaseTree:
         Node* node
     ) except -1 nogil:
         """Set leaf node data.
-        
+
         Parameters
         ----------
         split_node : SplitRecord*
@@ -647,9 +647,12 @@ cdef class BaseTree:
         node.threshold = _TREE_UNDEFINED
         return 1
 
-    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:, :] X_ndarray,
-            SIZE_t sample_index,
-            Node *node) noexcept nogil:
+    cdef DTYPE_t _compute_feature(
+        self,
+        const DTYPE_t[:, :] X_ndarray,
+        SIZE_t sample_index,
+        Node *node
+    ) noexcept nogil:
         """Compute feature from a given data matrix, X.
 
         In axis-aligned trees, this is simply the value in the column of X
@@ -660,7 +663,7 @@ cdef class BaseTree:
         return feature
 
     cdef SIZE_t _add_node(
-        self, 
+        self,
         SIZE_t parent,
         bint is_left,
         bint is_leaf,
@@ -688,7 +691,7 @@ cdef class BaseTree:
             The number of samples in the node.
         weighted_n_node_samples : double
             The weight of the samples in the node.
-            
+
         Returns (size_t)(-1) on error.
         """
         cdef SIZE_t node_id = self.node_count
@@ -710,12 +713,12 @@ cdef class BaseTree:
 
         if is_leaf:
             if self._set_leaf_node(split_node, node) != 1:
-                 with gil:
-                     raise RuntimeError
+                with gil:
+                    raise RuntimeError
         else:
             if self._set_split_node(split_node, node) != 1:
-                 with gil:
-                     raise RuntimeError
+                with gil:
+                    raise RuntimeError
 
         self.node_count += 1
 
@@ -760,7 +763,7 @@ cdef class BaseTree:
                 # While node not a leaf
                 while node.left_child != _TREE_LEAF:
                     # ... and node.right_child != _TREE_LEAF:
-                    
+
                     # compute the feature value to compare against threshold
                     feature_value = self._compute_feature(X_ndarray, i, node)
                     if feature_value <= node.threshold:
@@ -785,8 +788,8 @@ cdef class BaseTree:
 
         # Extract input
         cdef const DTYPE_t[:] X_data = X.data
-        cdef const INT32_t[:] X_indices  = X.indices
-        cdef const INT32_t[:] X_indptr  = X.indptr
+        cdef const INT32_t[:] X_indices = X.indices
+        cdef const INT32_t[:] X_indptr = X.indptr
 
         cdef SIZE_t n_samples = X.shape[0]
         cdef SIZE_t n_features = X.shape[1]
@@ -917,8 +920,8 @@ cdef class BaseTree:
 
         # Extract input
         cdef const DTYPE_t[:] X_data = X.data
-        cdef const INT32_t[:] X_indices  = X.indices
-        cdef const INT32_t[:] X_indptr  = X.indptr
+        cdef const INT32_t[:] X_indices = X.indices
+        cdef const INT32_t[:] X_indptr = X.indptr
 
         cdef SIZE_t n_samples = X.shape[0]
         cdef SIZE_t n_features = X.shape[1]
@@ -1031,7 +1034,7 @@ cdef class BaseTree:
                     # ... and node.right_child != _TREE_LEAF:
                     self._compute_feature_importances(
                         importances, node)
-                        
+
                 node += 1
 
         for i in range(self.n_features):
@@ -1053,7 +1056,7 @@ cdef class BaseTree:
         Node* node
     ) noexcept nogil:
         """Compute feature importances from a Node in the Tree.
-        
+
         Wrapped in a private function to allow subclassing that
         computes feature importances.
         """

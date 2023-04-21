@@ -39,7 +39,7 @@ cdef class BaseCriterion:
     The downstream classes _must_ implement methods to compute the impurity
     in current node and in children nodes.
     This object stores methods on how to calculate how good a split is using
-    a set API. 
+    a set API.
     Samples in the "current" node are stored in `samples[start:end]` which is
     partitioned around `pos` (an index in `start:end`) so that:
        - the samples of left child node are stored in `samples[start:pos]`
@@ -163,10 +163,11 @@ cdef class BaseCriterion:
         SIZE_t end
     ) noexcept nogil:
         """Abstract method which will set sample pointers in the criterion.
-        The dataset array that we compute criteria on is assumed to consist of 'N' 
-        ordered samples or rows (i.e. sorted). Since we pass this by reference, we 
-        use sample pointers to move the start and end around to consider only a subset of data. 
+        The dataset array that we compute criteria on is assumed to consist of 'N'
+        ordered samples or rows (i.e. sorted). Since we pass this by reference, we
+        use sample pointers to move the start and end around to consider only a subset of data.
         This function should also update relevant statistics that the class uses to compute the final criterion.
+
         Parameters
         ----------
         start : SIZE_t

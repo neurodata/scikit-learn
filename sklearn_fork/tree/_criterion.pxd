@@ -19,7 +19,7 @@ from ._tree cimport UINT32_t         # Unsigned 32 bit integer
 
 
 cdef class BaseCriterion:
-    """Abstract interface for criterion."""    
+    """Abstract interface for criterion."""
 
     # Internal structures
     cdef const DOUBLE_t[:] sample_weight  # Sample weights
