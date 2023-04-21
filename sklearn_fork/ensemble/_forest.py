@@ -1364,6 +1364,11 @@ class RandomForestClassifier(ForestClassifier):
 
         .. versionadded:: 0.22
 
+    max_bins : int, default=None
+        The maximum number of bins to use for binning the numerical features.
+        This proceeds by computing the quantiles and bins for each column of ``X``
+        as is done in HGBT. If `None`, then will not apply binning.
+
     Attributes
     ----------
     estimator_ : :class:`~sklearn_fork.tree.DecisionTreeClassifier`
@@ -1713,7 +1718,11 @@ class RandomForestRegressor(ForestRegressor):
           `max_samples` should be in the interval `(0.0, 1.0]`.
 
         .. versionadded:: 0.22
-
+    max_bins : int, default=None
+        The maximum number of bins to use for binning the numerical features.
+        This proceeds by computing the quantiles and bins for each column of ``X``
+        as is done in HGBT. If `None`, then will not apply binning.
+        
     Attributes
     ----------
     estimator_ : :class:`~sklearn_fork.tree.DecisionTreeRegressor`
@@ -2060,7 +2069,11 @@ class ExtraTreesClassifier(ForestClassifier):
           `max_samples` should be in the interval `(0.0, 1.0]`.
 
         .. versionadded:: 0.22
-
+    max_bins : int, default=None
+        The maximum number of bins to use for binning the numerical features.
+        This proceeds by computing the quantiles and bins for each column of ``X``
+        as is done in HGBT. If `None`, then will not apply binning.
+        
     Attributes
     ----------
     estimator_ : :class:`~sklearn_fork.tree.ExtraTreesClassifier`
@@ -2401,7 +2414,11 @@ class ExtraTreesRegressor(ForestRegressor):
           `max_samples` should be in the interval `(0.0, 1.0]`.
 
         .. versionadded:: 0.22
-
+    max_bins : int, default=None
+        The maximum number of bins to use for binning the numerical features.
+        This proceeds by computing the quantiles and bins for each column of ``X``
+        as is done in HGBT. If `None`, then will not apply binning.
+        
     Attributes
     ----------
     estimator_ : :class:`~sklearn_fork.tree.ExtraTreeRegressor`
