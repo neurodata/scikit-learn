@@ -119,6 +119,7 @@ PARAM_VALIDATION_FUNCTION_LIST = [
     "sklearn_fork.covariance.empirical_covariance",
     "sklearn_fork.covariance.ledoit_wolf_shrinkage",
     "sklearn_fork.covariance.shrunk_covariance",
+    "sklearn_fork.datasets.clear_data_home",
     "sklearn_fork.datasets.dump_svmlight_file",
     "sklearn_fork.datasets.fetch_20newsgroups",
     "sklearn_fork.datasets.fetch_20newsgroups_vectorized",
@@ -130,9 +131,11 @@ PARAM_VALIDATION_FUNCTION_LIST = [
     "sklearn_fork.datasets.fetch_olivetti_faces",
     "sklearn_fork.datasets.fetch_rcv1",
     "sklearn_fork.datasets.fetch_species_distributions",
+    "sklearn_fork.datasets.get_data_home",
     "sklearn_fork.datasets.load_breast_cancer",
     "sklearn_fork.datasets.load_diabetes",
     "sklearn_fork.datasets.load_digits",
+    "sklearn_fork.datasets.load_files",
     "sklearn_fork.datasets.load_iris",
     "sklearn_fork.datasets.load_linnerud",
     "sklearn_fork.datasets.load_svmlight_file",
@@ -177,6 +180,7 @@ PARAM_VALIDATION_FUNCTION_LIST = [
     "sklearn_fork.metrics.balanced_accuracy_score",
     "sklearn_fork.metrics.brier_score_loss",
     "sklearn_fork.metrics.calinski_harabasz_score",
+    "sklearn_fork.metrics.completeness_score",
     "sklearn_fork.metrics.class_likelihood_ratios",
     "sklearn_fork.metrics.classification_report",
     "sklearn_fork.metrics.cluster.adjusted_mutual_info_score",
@@ -202,6 +206,7 @@ PARAM_VALIDATION_FUNCTION_LIST = [
     "sklearn_fork.metrics.get_scorer",
     "sklearn_fork.metrics.hamming_loss",
     "sklearn_fork.metrics.hinge_loss",
+    "sklearn_fork.metrics.homogeneity_score",
     "sklearn_fork.metrics.jaccard_score",
     "sklearn_fork.metrics.label_ranking_average_precision_score",
     "sklearn_fork.metrics.label_ranking_loss",
@@ -245,8 +250,10 @@ PARAM_VALIDATION_FUNCTION_LIST = [
     "sklearn_fork.metrics.roc_auc_score",
     "sklearn_fork.metrics.roc_curve",
     "sklearn_fork.metrics.top_k_accuracy_score",
+    "sklearn_fork.metrics.v_measure_score",
     "sklearn_fork.metrics.zero_one_loss",
     "sklearn_fork.model_selection.cross_validate",
+    "sklearn_fork.model_selection.permutation_test_score",
     "sklearn_fork.model_selection.train_test_split",
     "sklearn_fork.neighbors.sort_graph_by_row_values",
     "sklearn_fork.preprocessing.add_dummy_feature",
@@ -279,46 +286,22 @@ def test_function_param_validation(func_module):
 
 
 PARAM_VALIDATION_CLASS_WRAPPER_LIST = [
-    (
-        "sklearn_fork.cluster.affinity_propagation",
-        "sklearn_fork.cluster.AffinityPropagation",
-    ),
+    ("sklearn_fork.cluster.affinity_propagation", "sklearn_fork.cluster.AffinityPropagation"),
     ("sklearn_fork.cluster.mean_shift", "sklearn_fork.cluster.MeanShift"),
-    (
-        "sklearn_fork.cluster.spectral_clustering",
-        "sklearn_fork.cluster.SpectralClustering",
-    ),
-    (
-        "sklearn_fork.covariance.graphical_lasso",
-        "sklearn_fork.covariance.GraphicalLasso",
-    ),
+    ("sklearn_fork.cluster.spectral_clustering", "sklearn_fork.cluster.SpectralClustering"),
+    ("sklearn_fork.covariance.graphical_lasso", "sklearn_fork.covariance.GraphicalLasso"),
     ("sklearn_fork.covariance.ledoit_wolf", "sklearn_fork.covariance.LedoitWolf"),
     ("sklearn_fork.covariance.oas", "sklearn_fork.covariance.OAS"),
-    (
-        "sklearn_fork.decomposition.dict_learning",
-        "sklearn_fork.decomposition.DictionaryLearning",
-    ),
+    ("sklearn_fork.decomposition.dict_learning", "sklearn_fork.decomposition.DictionaryLearning"),
     ("sklearn_fork.decomposition.fastica", "sklearn_fork.decomposition.FastICA"),
-    (
-        "sklearn_fork.decomposition.non_negative_factorization",
-        "sklearn_fork.decomposition.NMF",
-    ),
-    (
-        "sklearn_fork.preprocessing.minmax_scale",
-        "sklearn_fork.preprocessing.MinMaxScaler",
-    ),
-    (
-        "sklearn_fork.preprocessing.power_transform",
-        "sklearn_fork.preprocessing.PowerTransformer",
-    ),
+    ("sklearn_fork.decomposition.non_negative_factorization", "sklearn_fork.decomposition.NMF"),
+    ("sklearn_fork.preprocessing.minmax_scale", "sklearn_fork.preprocessing.MinMaxScaler"),
+    ("sklearn_fork.preprocessing.power_transform", "sklearn_fork.preprocessing.PowerTransformer"),
     (
         "sklearn_fork.preprocessing.quantile_transform",
         "sklearn_fork.preprocessing.QuantileTransformer",
     ),
-    (
-        "sklearn_fork.preprocessing.robust_scale",
-        "sklearn_fork.preprocessing.RobustScaler",
-    ),
+    ("sklearn_fork.preprocessing.robust_scale", "sklearn_fork.preprocessing.RobustScaler"),
 ]
 
 
