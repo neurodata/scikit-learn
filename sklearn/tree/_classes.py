@@ -25,7 +25,6 @@ from numbers import Integral, Real
 import numpy as np
 from scipy.sparse import issparse
 
-<<<<<<< HEAD
 from sklearn.base import BaseEstimator
 from sklearn.base import ClassifierMixin
 from sklearn.base import clone
@@ -37,27 +36,10 @@ from sklearn.utils import check_random_state
 from sklearn.utils.validation import _check_sample_weight
 from sklearn.utils import compute_sample_weight
 from sklearn.utils.multiclass import check_classification_targets
-from sklearn.utils.validation import check_is_fitted
+from sklearn.utils.validation import (check_is_fitted, assert_all_finite,
+                                      _assert_all_finite_element_wise)
 from sklearn.utils._param_validation import Hidden, Interval, StrOptions
 from sklearn.utils._param_validation import RealNotInt
-=======
-from ..base import BaseEstimator
-from ..base import ClassifierMixin
-from ..base import clone
-from ..base import RegressorMixin
-from ..base import is_classifier
-from ..base import MultiOutputMixin
-from ..utils import Bunch
-from ..utils import check_random_state
-from ..utils.validation import _check_sample_weight
-from ..utils.validation import assert_all_finite
-from ..utils.validation import _assert_all_finite_element_wise
-from ..utils import compute_sample_weight
-from ..utils.multiclass import check_classification_targets
-from ..utils.validation import check_is_fitted
-from ..utils._param_validation import Hidden, Interval, StrOptions
-from ..utils._param_validation import RealNotInt
->>>>>>> main
 
 from ._criterion import BaseCriterion
 from ._splitter import BaseSplitter
@@ -194,9 +176,6 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         check_is_fitted(self)
         return self.tree_.n_leaves
 
-<<<<<<< HEAD
-    def fit(self, X, y=None, sample_weight=None, check_input=True):
-=======
     def _support_missing_values(self, X):
         return not issparse(X) and self._get_tags()["allow_nan"]
 
@@ -239,7 +218,6 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
     def _fit(
         self, X, y, sample_weight=None, check_input=True, feature_has_missing=None
     ):
->>>>>>> main
         self._validate_params()
         random_state = check_random_state(self.random_state)
 
@@ -254,20 +232,14 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 dtype=DTYPE, accept_sparse="csc", force_all_finite=False
             )
             check_y_params = dict(ensure_2d=False, dtype=None)
-<<<<<<< HEAD
             if y is not None or self._get_tags()["requires_y"]:
                 X, y = self._validate_data(
                     X, y, validate_separately=(check_X_params, check_y_params)
                 )
             else:
                 X = self._validate_data(X, **check_X_params)
-=======
-            X, y = self._validate_data(
-                X, y, validate_separately=(check_X_params, check_y_params)
-            )
 
             feature_has_missing = self._compute_feature_has_missing(X)
->>>>>>> main
             if issparse(X):
                 X.sort_indices()
 
@@ -415,6 +387,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             X,
             y,
             sample_weight,
+            feature_has_missing,
             min_samples_leaf,
             min_weight_leaf,
             max_leaf_nodes,
@@ -430,6 +403,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         X,
         y,
         sample_weight,
+        feature_has_missing,
         min_samples_leaf,
         min_weight_leaf,
         max_leaf_nodes,
@@ -447,6 +421,8 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             Y targets.
         sample_weight : Array-like
             Sample weights
+        feature_has_missing : Array-like
+            Boolean array indicating whether or not a feature has missing values.
         min_samples_leaf : float
             Number of samples required to be a leaf.
         min_weight_leaf : float

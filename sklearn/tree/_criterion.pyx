@@ -170,6 +170,25 @@ cdef class BaseCriterion:
                                  - (self.weighted_n_left /
                                     self.weighted_n_node_samples * impurity_left)))
 
+    cdef void set_sample_pointers(
+        self,
+        SIZE_t start,
+        SIZE_t end
+    ) noexcept nogil:
+        """Abstract method which will set sample pointers in the criterion.
+        The dataset array that we compute criteria on is assumed to consist of 'N' 
+        ordered samples or rows (i.e. sorted). Since we pass this by reference, we 
+        use sample pointers to move the start and end around to consider only a subset of data. 
+        This function should also update relevant statistics that the class uses to compute the final criterion.
+        Parameters
+        ----------
+        start : SIZE_t
+            The index of the first sample to be used on computation of criteria of the current node.
+        end : SIZE_t
+            The last sample used on this node
+        """
+        pass
+
     cdef void init_sum_missing(self):
         """Init sum_missing to hold sums for missing values."""
 
@@ -213,25 +232,6 @@ cdef inline void _move_sums_classification(
 
         weighted_n_1[0] = 0.0
         weighted_n_2[0] = criterion.weighted_n_node_samples
-
-    cdef void set_sample_pointers(
-        self,
-        SIZE_t start,
-        SIZE_t end
-    ) noexcept nogil:
-        """Abstract method which will set sample pointers in the criterion.
-        The dataset array that we compute criteria on is assumed to consist of 'N' 
-        ordered samples or rows (i.e. sorted). Since we pass this by reference, we 
-        use sample pointers to move the start and end around to consider only a subset of data. 
-        This function should also update relevant statistics that the class uses to compute the final criterion.
-        Parameters
-        ----------
-        start : SIZE_t
-            The index of the first sample to be used on computation of criteria of the current node.
-        end : SIZE_t
-            The last sample used on this node
-        """
-        pass
 
 
 cdef class Criterion(BaseCriterion):
@@ -387,39 +387,6 @@ cdef class ClassificationCriterion(Criterion):
 
         # Reset to pos=start
         self.reset()
-
-    cdef void init_sum_missing(self):
-        """Init sum_missing to hold sums for missing values."""
-        self.sum_missing = np.zeros((self.n_outputs, self.max_n_classes), dtype=np.float64)
-
-    cdef void init_missing(self, SIZE_t n_missing) noexcept nogil:
-        """Initialize sum_missing if there are missing values.
-
-        This method assumes that caller placed the missing samples in
-        self.sample_indices[-n_missing:]
-        """
-        cdef SIZE_t i, p, k, c
-        cdef DOUBLE_t w = 1.0
-
-        self.n_missing = n_missing
-        if n_missing == 0:
-            return
-
-        memset(&self.sum_missing[0, 0], 0, self.max_n_classes * self.n_outputs * sizeof(double))
-
-        self.weighted_n_missing = 0.0
-
-        # The missing samples are assumed to be in self.sample_indices[-n_missing:]
-        for p in range(self.end - n_missing, self.end):
-            i = self.sample_indices[p]
-            if self.sample_weight is not None:
-                w = self.sample_weight[i]
-
-            for k in range(self.n_outputs):
-                c = <SIZE_t> self.y[i, k]
-                self.sum_missing[k, c] += w
-
-            self.weighted_n_missing += w
 
     cdef void init_sum_missing(self):
         """Init sum_missing to hold sums for missing values."""
@@ -887,42 +854,6 @@ cdef class RegressionCriterion(Criterion):
 
             self.weighted_n_missing += w
 
-    cdef void init_sum_missing(self):
-        """Init sum_missing to hold sums for missing values."""
-        self.sum_missing = np.zeros(self.n_outputs, dtype=np.float64)
-
-    cdef void init_missing(self, SIZE_t n_missing) noexcept nogil:
-        """Initialize sum_missing if there are missing values.
-
-        This method assumes that caller placed the missing samples in
-        self.sample_indices[-n_missing:]
-        """
-        cdef SIZE_t i, p, k
-        cdef DOUBLE_t y_ik
-        cdef DOUBLE_t w_y_ik
-        cdef DOUBLE_t w = 1.0
-
-        self.n_missing = n_missing
-        if n_missing == 0:
-            return
-
-        memset(&self.sum_missing[0], 0, self.n_outputs * sizeof(double))
-
-        self.weighted_n_missing = 0.0
-
-        # The missing samples are assumed to be in self.sample_indices[-n_missing:]
-        for p in range(self.end - n_missing, self.end):
-            i = self.sample_indices[p]
-            if self.sample_weight is not None:
-                w = self.sample_weight[i]
-
-            for k in range(self.n_outputs):
-                y_ik = self.y[i, k]
-                w_y_ik = w * y_ik
-                self.sum_missing[k] += w_y_ik
-
-            self.weighted_n_missing += w
-
     cdef int reset(self) except -1 nogil:
         """Reset the criterion at pos=start."""
         self.pos = self.start
@@ -1210,13 +1141,6 @@ cdef class MAE(RegressionCriterion):
 
         # Reset to pos=start
         self.reset()
-
-    cdef void init_missing(self, SIZE_t n_missing) noexcept nogil:
-        """Raise error if n_missing != 0."""
-        if n_missing == 0:
-            return
-        with gil:
-            raise ValueError("missing values is not supported for MAE.")
 
     cdef void init_missing(self, SIZE_t n_missing) noexcept nogil:
         """Raise error if n_missing != 0."""

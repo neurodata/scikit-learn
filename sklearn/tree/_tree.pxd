@@ -44,8 +44,8 @@ cdef class BaseTree:
     cdef public SIZE_t capacity          # Capacity of tree, in terms of nodes
     cdef Node* nodes                     # Array of nodes
 
-    cdef SIZE_t value_stride             # The dimensionality of a vectorized output per sample
     cdef double* value                   # Array of values prediction values for each node        
+    cdef SIZE_t value_stride             # The dimensionality of a vectorized output per sample
 
     # Generic Methods: These are generic methods used by any tree.
     cdef int _resize(self, SIZE_t capacity) except -1 nogil
@@ -55,8 +55,7 @@ cdef class BaseTree:
         SIZE_t parent,
         bint is_left,
         bint is_leaf,
-        SIZE_t feature,
-        double threshold,
+        SplitRecord* split_node,
         double impurity,
         SIZE_t n_node_samples,
         double weighted_n_node_samples,

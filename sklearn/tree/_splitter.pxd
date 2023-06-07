@@ -110,6 +110,7 @@ cdef class Splitter(BaseSplitter):
     cdef bint check_presplit_conditions(
         self,
         SplitRecord current_split,
+        SIZE_t n_missing
     ) noexcept nogil
     cdef bint check_postsplit_conditions(
         self

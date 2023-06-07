@@ -283,27 +283,10 @@ cdef class Splitter(BaseSplitter):
 
         return self.criterion.node_impurity()
 
-cdef inline void shift_missing_values_to_left_if_required(
-    SplitRecord* best,
-    SIZE_t[::1] samples,
-    SIZE_t end,
-) nogil:
-    cdef SIZE_t i, p, current_end
-    # The partitioner partitions the data such that the missing values are in
-    # samples[-n_missing:] for the criterion to consume. If the missing values
-    # are going to the right node, then the missing values are already in the
-    # correct position. If the missing values go left, then we move the missing
-    # values to samples[best.pos:best.pos+n_missing] and update `best.pos`.
-    if best.n_missing > 0 and best.missing_go_to_left:
-        for p in range(best.n_missing):
-            i = best.pos + p
-            current_end = end - 1 - p
-            samples[i], samples[current_end] = samples[current_end], samples[i]
-        best.pos += best.n_missing
-
     cdef bint check_presplit_conditions(
         self,
         SplitRecord current_split,
+        SIZE_t n_missing,
     ) noexcept nogil:
         """Check stopping conditions pre-split.
         
@@ -312,11 +295,19 @@ cdef inline void shift_missing_values_to_left_if_required(
         argument.
         """
         cdef SIZE_t min_samples_leaf = self.min_samples_leaf
+        cdef SIZE_t p = current_split.pos
+        cdef SIZE_t start = self.start
+        cdef SIZE_t end_non_missing = self.end - n_missing
 
-        if (((current_split.pos - self.start) < min_samples_leaf) or
-                ((self.end - current_split.pos) < min_samples_leaf)):
+        if n_missing > 0:
+            n_left = p - start + n_missing
+            n_right = end_non_missing - p
+        else:
+            n_left = p - start
+            n_right = end_non_missing - p + n_missing
+
+        if  n_left < min_samples_leaf or n_right < min_samples_leaf:
             return 1
-        
         return 0
 
     cdef bint check_postsplit_conditions(
@@ -335,6 +326,25 @@ cdef inline void shift_missing_values_to_left_if_required(
             return 1
         
         return 0
+
+
+cdef inline void shift_missing_values_to_left_if_required(
+    SplitRecord* best,
+    SIZE_t[::1] samples,
+    SIZE_t end,
+) nogil:
+    cdef SIZE_t i, p, current_end
+    # The partitioner partitions the data such that the missing values are in
+    # samples[-n_missing:] for the criterion to consume. If the missing values
+    # are going to the right node, then the missing values are already in the
+    # correct position. If the missing values go left, then we move the missing
+    # values to samples[best.pos:best.pos+n_missing] and update `best.pos`.
+    if best.n_missing > 0 and best.missing_go_to_left:
+        for p in range(best.n_missing):
+            i = best.pos + p
+            current_end = end - 1 - p
+            samples[i], samples[current_end] = samples[current_end], samples[i]
+        best.pos += best.n_missing
 
 # Introduce a fused-class to make it possible to share the split implementation
 # between the dense and sparse cases in the node_split_best and node_split_random
@@ -490,23 +500,16 @@ cdef inline int node_split_best(
                 if p >= end_non_missing:
                     continue
 
-                if missing_go_to_left:
-                    n_left = p - start + n_missing
-                    n_right = end_non_missing - p
-                else:
-                    n_left = p - start
-                    n_right = end_non_missing - p + n_missing
-
-            # Reject if min_samples_leaf is not guaranteed
-            if splitter.check_presplit_conditions(current_split) == 1:
-                continue
+                # Reject if min_samples_leaf is not guaranteed
+                if splitter.check_presplit_conditions(current_split, n_missing) == 1:
+                    continue
 
                 current_split.pos = p
                 criterion.update(current_split.pos)
 
-            # Reject if min_weight_leaf is not satisfied
-            if splitter.check_postsplit_conditions() == 1:
-                continue
+                # Reject if min_weight_leaf is not satisfied
+                if splitter.check_postsplit_conditions() == 1:
+                    continue
 
                 current_proxy_improvement = criterion.proxy_impurity_improvement()
 
@@ -828,7 +831,7 @@ cdef inline int node_split_random(
         current_split.pos = partitioner.partition_samples(current_split.threshold)
 
         # Reject if min_samples_leaf is not guaranteed
-        if splitter.check_presplit_conditions(current_split) == 1:
+        if splitter.check_presplit_conditions(current_split, 0) == 1:
             continue
 
         # Evaluate split
