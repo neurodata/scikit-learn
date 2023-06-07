@@ -18,6 +18,7 @@ from libc.stdlib cimport free
 from libc.string cimport memcpy
 from libc.string cimport memset
 from libc.stdint cimport INTPTR_MAX
+from libc.math cimport isnan
 from libcpp.vector cimport vector
 from libcpp.algorithm cimport pop_heap
 from libcpp.algorithm cimport push_heap
@@ -33,6 +34,7 @@ cnp.import_array()
 
 from scipy.sparse import issparse
 from scipy.sparse import csr_matrix
+from scipy.sparse import isspmatrix_csr
 
 from ._utils cimport safe_realloc
 from ._utils cimport sizet_ptr_to_ndarray
@@ -95,6 +97,7 @@ cdef class TreeBuilder:
         object X,
         const DOUBLE_t[:, ::1] y,
         const DOUBLE_t[:] sample_weight=None,
+        const unsigned char[::1] feature_has_missing=None,
     ):
         """Build a decision tree from the training set (X, y)."""
         pass
@@ -168,6 +171,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         object X,
         const DOUBLE_t[:, ::1] y,
         const DOUBLE_t[:] sample_weight=None,
+        const unsigned char[::1] feature_has_missing=None,
     ):
         """Build a decision tree from the training set (X, y)."""
 
@@ -193,7 +197,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef double min_impurity_decrease = self.min_impurity_decrease
 
         # Recursive partition (without actual recursion)
-        splitter.init(X, y, sample_weight)
+        splitter.init(X, y, sample_weight, feature_has_missing)
 
         cdef SIZE_t start
         cdef SIZE_t end
@@ -271,7 +275,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
                 node_id = tree._add_node(parent, is_left, is_leaf, split_ptr,
                                          impurity, n_node_samples,
-                                         weighted_n_node_samples)
+                                         weighted_n_node_samples,
+                                         split.missing_go_to_left)
 
                 if node_id == INTPTR_MAX:
                     rc = -1
@@ -375,6 +380,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         object X,
         const DOUBLE_t[:, ::1] y,
         const DOUBLE_t[:] sample_weight=None,
+        const unsigned char[::1] feature_has_missing=None,
     ):
         """Build a decision tree from the training set (X, y)."""
 
@@ -386,7 +392,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         cdef SIZE_t max_leaf_nodes = self.max_leaf_nodes
 
         # Recursive partition (without actual recursion)
-        splitter.init(X, y, sample_weight)
+        splitter.init(X, y, sample_weight, feature_has_missing)
 
         cdef vector[FrontierRecord] frontier
         cdef FrontierRecord record
@@ -517,7 +523,8 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
                                  else _TREE_UNDEFINED,
                                  is_left, is_leaf,
                                  split_ptr, impurity, n_node_samples,
-                                 weighted_n_node_samples)
+                                 weighted_n_node_samples,
+                                 split.missing_go_to_left)
         if node_id == INTPTR_MAX:
             return -1
 
@@ -557,7 +564,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
 cdef class BaseTree:
     """Base class for Cython tree models.
     
-    Downstream classes must implement
+    Downstream classes must implement node_split.
     """
     cdef int _resize(
         self,
@@ -667,7 +674,8 @@ cdef class BaseTree:
         SplitRecord* split_node,
         double impurity,
         SIZE_t n_node_samples,
-        double weighted_n_node_samples
+        double weighted_n_node_samples,
+        unsigned char missing_go_to_left
     ) except -1 nogil:
         """Add a node to the tree.
         The new node registers itself as the child of its parent.
@@ -716,6 +724,7 @@ cdef class BaseTree:
             if self._set_split_node(split_node, node) != 1:
                  with gil:
                      raise RuntimeError
+            node.missing_go_to_left = missing_go_to_left
 
         self.node_count += 1
 
@@ -742,6 +751,7 @@ cdef class BaseTree:
         # Extract input
         cdef const DTYPE_t[:, :] X_ndarray = X
         cdef SIZE_t n_samples = X.shape[0]
+        cdef DTYPE_t X_i_node_feature
 
         # Initialize output
         cdef SIZE_t[:] out = np.zeros(n_samples, dtype=np.intp)
@@ -759,11 +769,9 @@ cdef class BaseTree:
 
                 # While node not a leaf
                 while node.left_child != _TREE_LEAF:
+                    X_i_node_feature = X_ndarray[i, node.feature]
                     # ... and node.right_child != _TREE_LEAF:
-                    
-                    # compute the feature value to compare against threshold
-                    feature_value = self._compute_feature(X_ndarray, i, node)
-                    if feature_value <= node.threshold:
+                    if X_ndarray[i, node.feature] <= node.threshold:
                         node = &self.nodes[node.left_child]
                     else:
                         node = &self.nodes[node.right_child]
@@ -776,7 +784,7 @@ cdef class BaseTree:
         """Finds the terminal region (=leaf node) for each sample in sparse X.
         """
         # Check input
-        if not isinstance(X, csr_matrix):
+        if not isspmatrix_csr(X):
             raise ValueError("X should be in csr_matrix format, got %s"
                              % type(X))
 
@@ -908,7 +916,7 @@ cdef class BaseTree:
         """Finds the decision path (=node) for each sample in X."""
 
         # Check input
-        if not isinstance(X, csr_matrix):
+        if not isspmatrix_csr(X):
             raise ValueError("X should be in csr_matrix format, got %s"
                              % type(X))
 
@@ -1916,7 +1924,7 @@ cdef _build_pruned_tree(
             new_node_id = tree._add_node(
                 parent, is_left, is_leaf, &split,
                 node.impurity, node.n_node_samples,
-                node.weighted_n_node_samples)
+                node.weighted_n_node_samples, node.missing_go_to_left)
 
             if new_node_id == INTPTR_MAX:
                 rc = -1

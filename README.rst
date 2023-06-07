@@ -41,8 +41,8 @@
 .. |Scikit-ImageMinVersion| replace:: 0.16.2
 .. |PandasMinVersion| replace:: 1.0.5
 .. |SeabornMinVersion| replace:: 0.9.0
-.. |PytestMinVersion| replace:: 5.3.1
-.. |PlotlyMinVersion| replace:: 5.10.0
+.. |PytestMinVersion| replace:: 7.1.2
+.. |PlotlyMinVersion| replace:: 5.14.0
 
 =================
 Scikit-learn-tree
