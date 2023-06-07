@@ -760,18 +760,20 @@ cdef class BaseTree:
         cdef Node* node = NULL
         cdef SIZE_t i = 0
 
-        # the feature value
-        cdef DTYPE_t feature_value = 0
-
         with nogil:
             for i in range(n_samples):
                 node = self.nodes
 
                 # While node not a leaf
                 while node.left_child != _TREE_LEAF:
-                    X_i_node_feature = X_ndarray[i, node.feature]
+                    X_i_node_feature = self._compute_feature(X_ndarray, i, node)
                     # ... and node.right_child != _TREE_LEAF:
-                    if X_ndarray[i, node.feature] <= node.threshold:
+                    if isnan(X_i_node_feature):
+                        if node.missing_go_to_left:
+                            node = &self.nodes[node.left_child]
+                        else:
+                            node = &self.nodes[node.right_child]
+                    elif X_i_node_feature <= node.threshold:
                         node = &self.nodes[node.left_child]
                     else:
                         node = &self.nodes[node.right_child]
