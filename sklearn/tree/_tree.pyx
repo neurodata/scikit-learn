@@ -654,9 +654,12 @@ cdef class BaseTree:
         node.threshold = _TREE_UNDEFINED
         return 1
 
-    cdef DTYPE_t _compute_feature(self, const DTYPE_t[:, :] X_ndarray,
-            SIZE_t sample_index,
-            Node *node) noexcept nogil:
+    cdef DTYPE_t _compute_feature(
+        self,
+        const DTYPE_t[:, :] X_ndarray,
+        SIZE_t sample_index,
+        Node *node
+    ) noexcept nogil:
         """Compute feature from a given data matrix, X.
 
         In axis-aligned trees, this is simply the value in the column of X
