@@ -1321,6 +1321,14 @@ cdef class Tree(BaseTree):
     def value(self):
         return self._get_value_ndarray()[:self.node_count]
 
+    @property
+    def leaf_nodes_samples(self):
+        leaf_node_samples = dict()
+        keys = self._get_value_samples_keys()
+        for node_id in keys:
+            leaf_node_samples[node_id] = self._get_value_samples_ndarray(node_id)
+        return leaf_node_samples
+
     # TODO: Convert n_classes to cython.integral memory view once
     #  https://github.com/cython/cython/issues/5243 is fixed
     def __cinit__(self, int n_features, cnp.ndarray n_classes, int n_outputs):
@@ -1406,6 +1414,27 @@ cdef class Tree(BaseTree):
                self.capacity * sizeof(Node))
         memcpy(self.value, cnp.PyArray_DATA(value_ndarray),
                self.capacity * self.value_stride * sizeof(double))
+
+    cdef cnp.ndarray _get_value_samples_ndarray(self, SIZE_t node_id):
+        """Wraps value_samples as a 2-d NumPy array per node_id."""
+        cdef int i, j
+        cdef int n_samples = self.value_samples[node_id].size()
+        cdef DOUBLE_t[:, :] leaf_node_samples = np.empty(shape=(n_samples, self.n_outputs), dtype=np.float64)
+
+        for i in range(n_samples):
+            for j in range(self.n_outputs):
+                leaf_node_samples[i, j] = self.value_samples[node_id][i][j]
+        return leaf_node_samples
+
+    cdef cnp.ndarray _get_value_samples_keys(self):
+        """Wraps value_samples keys as a 1-d NumPy array of keys."""
+        cdef SIZE_t[:] keys = np.empty(len(self.value_samples), dtype=np.uintp)
+        cdef unsigned int i = 0
+        
+        for key in self.value_samples:
+            keys[i] = key.first
+            i += 1
+        return keys
 
     cdef cnp.ndarray _get_value_ndarray(self):
         """Wraps value as a 3-d NumPy array.
