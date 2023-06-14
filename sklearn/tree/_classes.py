@@ -400,6 +400,9 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             random_state,
         )
 
+        if self.store_leaf_values:
+            self.leaf_nodes_samples_ = self.tree_.leaf_nodes_samples
+
         return self
 
     def _build_tree(
@@ -585,23 +588,40 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             else:
                 return proba[:, :, 0]
 
-    def _get_leaf_node_samples(self, X):
+    def get_leaf_node_samples(self, X, check_input=True):
+        """For each datapoint x in X, get the training samples in the leaf node.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Dataset to apply the forest to.
+
+        Returns
+        -------
+        leaf_nodes_samples : a list of array-like of shape
+                (n_leaf_node_samples, n_outputs)
+            Each sample is represented by the indices of the training samples that
+            reached the leaf node. The ``n_leaf_node_samples`` may vary between
+            samples, since the number of samples that fall in a leaf node is
+            variable.
+        """
+        if not self.store_leaf_values:
+            raise ValueError(
+                "leaf node samples are not stored when store_leaf_values=False"
+            )
+
         # get indices of leaves per sample (n_samples,)
-        X_leaves = self.apply(X)
-        n_samples = X_leaves.shape
+        X_leaves = self.apply(X, check_input=check_input)
+        n_samples = X_leaves.shape[0]
 
         # get array of samples per leaf (n_node_samples, n_outputs)
         leaf_samples = self.tree_.leaf_nodes_samples
-        max_n_classes = max(self.n_classes_)
 
-        proba = np.zeros((n_samples, max_n_classes, self.n_outputs_))
-        for leaf_id in X_leaves:
-            # (n_node_samples, n_outputs)
-            leaf_node_samples = leaf_samples[leaf_id]
-
-            for idx, class_id in enumerate(self.classes_):
-                proba[:, idx, :] += np.sum(leaf_node_samples == class_id, axis=0)
-        return proba
+        leaf_nodes_samples = []
+        for idx in range(n_samples):
+            leaf_id = X_leaves[idx]
+            leaf_nodes_samples.append(leaf_samples[leaf_id])
+        return leaf_nodes_samples
 
     def predict_quantiles(self, X, quantiles=0.5, method="nearest", check_input=True):
         """Predict class or regression value for X at given quantiles.
@@ -625,7 +645,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         """
         if not self.store_leaf_values:
             raise RuntimeError(
-                "Predicting quantiles requires that the tree stores leaf samples."
+                "Predicting quantiles requires that the tree stores leaf node samples."
             )
 
         check_is_fitted(self)
@@ -676,9 +696,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 )
                 for k in range(self.n_outputs_):
                     for i in range(n_quantiles):
-                        class_pred_per_sample = (
-                            proba[:, i, k].squeeze().astype(int)
-                        )
+                        class_pred_per_sample = proba[:, i, k].squeeze().astype(int)
                         predictions[:, i, k] = self.classes_[k].take(
                             class_pred_per_sample, axis=0
                         )
@@ -1020,6 +1038,9 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         ``help(sklearn.tree._tree.Tree)`` for attributes of Tree object and
         :ref:`sphx_glr_auto_examples_tree_plot_unveil_tree_structure.py`
         for basic usage of these attributes.
+
+    leaf_nodes_samples_ : dict
+        A dictionary of leaf node index and the y_train samples in that leaf.
 
     See Also
     --------

@@ -2662,13 +2662,11 @@ def test_leaf_node_samples(tree_name):
 
     # error should be raised if trying to predict quantiles
     assert hasattr(tree, "predict_quantiles")
-    for meth in ["predict_quantiles"]:
+    for meth in ["predict_quantiles", "get_leaf_node_samples"]:
         if hasattr(tree, meth):
             with pytest.raises(
                 RuntimeError,
-                match=(
-                    "Predicting quantiles requires that the tree stores leaf samples."
-                ),
+                match="leaf node samples",
             ):
                 getattr(tree, meth)(X_small)
 

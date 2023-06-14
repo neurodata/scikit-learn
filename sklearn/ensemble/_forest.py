@@ -720,6 +720,139 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
         return X_binned
 
+    def predict_quantiles(self, X, quantiles=0.5, method="closest_observation"):
+        """Predict class or regression value for X at given quantiles.
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix} of shape (n_samples, n_features)
+            Input data.
+        quantiles : float, optional
+            The quantiles at which to evaluate, by default 0.5 (median).
+        method : str, optional
+            The method to interpolate, by default 'linear'. Can be any keyword
+            argument accepted by :func:`np.quantile`.
+        check_input : bool, optional
+            Whether or not to check input, by default True.
+
+        Returns
+        -------
+        y : ndarray of shape (n_samples, n_quantiles) or
+                (n_samples, n_quantiles, n_outputs)
+            The predicted values.
+        """
+        if not self.store_leaf_values:
+            raise RuntimeError(
+                "Quantile prediction is not available when store_leaf_values=False"
+            )
+        check_is_fitted(self)
+        # Check data
+        X = self._validate_X_predict(X)
+
+        if not isinstance(quantiles, (np.ndarray, list)):
+            quantiles = np.array([quantiles])
+
+        # if we trained a binning tree, then we should re-bin the data
+        # XXX: this is inefficient and should be improved to be in line with what
+        # the Histogram Gradient Boosting Tree does, where the binning thresholds
+        # are passed into the tree itself, thus allowing us to set the node feature
+        # value thresholds within the tree itself.
+        if self.max_bins is not None:
+            X = self._bin_data(X, is_training_data=False).astype(DTYPE)
+
+        # Assign chunk of trees to jobs
+        # n_jobs, _, _ = _partition_estimators(self.n_estimators, self.n_jobs)
+
+        # avoid storing the output of every estimator by summing them here
+        if self.n_outputs_ > 1:
+            y_hat = np.zeros(
+                (X.shape[0], len(quantiles), self.n_outputs_), dtype=np.float64
+            )
+        else:
+            y_hat = np.zeros((X.shape[0], len(quantiles)), dtype=np.float64)
+
+        # get (n_samples, n_estimators) indicator of leaf nodes
+        X_leaves = self.apply(X)
+
+        # we now want to aggregate all leaf samples across all trees for each sample
+        for idx in range(X.shape[0]):
+            # get leaf nodes for this sample
+            leaf_nodes = X_leaves[idx, :]
+
+            # (n_total_leaf_samples, n_outputs)
+            leaf_node_samples = np.vstack(
+                (
+                    est.leaf_nodes_samples_[leaf_nodes[jdx]]
+                    for jdx, est in enumerate(self.estimators_)
+                )
+            )
+
+            # get quantiles across all leaf node samples
+            y_hat[idx, ...] = np.quantile(
+                leaf_node_samples, quantiles, axis=0, method=method
+            )
+
+            if is_classifier(self):
+                if self.n_outputs_ == 1:
+                    for i in range(len(quantiles)):
+                        class_pred_per_sample = y_hat[idx, i, :].squeeze().astype(int)
+                        y_hat[idx, ...] = self.classes_.take(
+                            class_pred_per_sample, axis=0
+                        )
+                else:
+                    for k in range(self.n_outputs_):
+                        for i in range(len(quantiles)):
+                            class_pred_per_sample = (
+                                y_hat[idx, i, k].squeeze().astype(int)
+                            )
+                            y_hat[idx, i, k] = self.classes_[k].take(
+                                class_pred_per_sample, axis=0
+                            )
+        return y_hat
+
+    def get_leaf_node_samples(self, X):
+        """For each datapoint x in X, get the training samples in the leaf node.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Dataset to apply the forest to.
+
+        Returns
+        -------
+        leaf_node_samples : a list of array-like of shape
+                (n_leaf_node_samples, n_outputs)
+            Each sample is represented by the indices of the training samples that
+            reached the leaf node. The ``n_leaf_node_samples`` may vary between
+            samples, since the number of samples that fall in a leaf node is
+            variable.
+        """
+        check_is_fitted(self)
+        # Check data
+        X = self._validate_X_predict(X)
+
+        # if we trained a binning tree, then we should re-bin the data
+        # XXX: this is inefficient and should be improved to be in line with what
+        # the Histogram Gradient Boosting Tree does, where the binning thresholds
+        # are passed into the tree itself, thus allowing us to set the node feature
+        # value thresholds within the tree itself.
+        if self.max_bins is not None:
+            X = self._bin_data(X, is_training_data=False).astype(DTYPE)
+
+        # Assign chunk of trees to jobs
+        n_jobs, _, _ = _partition_estimators(self.n_estimators, self.n_jobs)
+
+        # avoid storing the output of every estimator by summing them here
+        result = Parallel(n_jobs=n_jobs, verbose=self.verbose)(
+            delayed(_accumulate_leaf_nodes_samples)(e.get_leaf_node_samples, X)
+            for e in self.estimators_
+        )
+        leaf_nodes_samples = result[0]
+        for result_ in result[1:]:
+            for i, node_samples in enumerate(result_):
+                leaf_nodes_samples[i] = np.vstack((leaf_nodes_samples[i], node_samples))
+        return leaf_nodes_samples
+
 
 def _accumulate_prediction(predict, X, out, lock):
     """
@@ -737,22 +870,15 @@ def _accumulate_prediction(predict, X, out, lock):
                 out[i] += prediction[i]
 
 
-def _accumulate_prediction_quantiles(
-    predict_quantiles, X, quantiles, method, out, lock
-):
+def _accumulate_leaf_nodes_samples(func, X):
     """
     This is a utility function for joblib's Parallel.
 
     It can't go locally in ForestClassifier or ForestRegressor, because joblib
     complains that it cannot pickle it when placed there.
     """
-    prediction = predict_quantiles(X, quantiles, method, check_input=False)
-    with lock:
-        if len(out) == 1:
-            out[0] += prediction
-        else:
-            for i in range(len(out)):
-                out[i] += prediction[i]
+    leaf_nodes_samples = func(X, check_input=False)
+    return leaf_nodes_samples
 
 
 class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
@@ -944,65 +1070,6 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
 
             return predictions
 
-    def predict_quantiles(self, X, quantiles=0.5, method="linear"):
-        """Predict class or regression value for X at given quantiles.
-
-        Parameters
-        ----------
-        X : {array-like, sparse matrix} of shape (n_samples, n_features)
-            Input data.
-        quantiles : float, optional
-            The quantiles at which to evaluate, by default 0.5 (median).
-        method : str, optional
-            The method to interpolate, by default 'linear'. Can be any keyword
-            argument accepted by :func:`np.quantile`.
-        check_input : bool, optional
-            Whether or not to check input, by default True.
-
-        Returns
-        -------
-        y : ndarray of shape (n_samples, n_quantiles) or (n_samples, n_quantiles, n_outputs)
-            The predicted values.
-        """
-        check_is_fitted(self)
-        # Check data
-        X = self._validate_X_predict(X)
-
-        if not isinstance(quantiles, (np.ndarray, list)):
-            quantiles = np.array([quantiles])
-
-        # if we trained a binning tree, then we should re-bin the data
-        # XXX: this is inefficient and should be improved to be in line with what
-        # the Histogram Gradient Boosting Tree does, where the binning thresholds
-        # are passed into the tree itself, thus allowing us to set the node feature
-        # value thresholds within the tree itself.
-        if self.max_bins is not None:
-            X = self._bin_data(X, is_training_data=False).astype(DTYPE)
-
-        # Assign chunk of trees to jobs
-        n_jobs, _, _ = _partition_estimators(self.n_estimators, self.n_jobs)
-
-        # avoid storing the output of every estimator by summing them here
-        if self.n_outputs_ > 1:
-            y_hat = np.zeros(
-                (X.shape[0], len(quantiles), self.n_outputs_), dtype=np.float64
-            )
-        else:
-            y_hat = np.zeros((X.shape[0], len(quantiles)), dtype=np.float64)
-
-        # Parallel loop
-        lock = threading.Lock()
-        Parallel(n_jobs=n_jobs, verbose=self.verbose, require="sharedmem")(
-            delayed(_accumulate_prediction_quantiles)(
-                e.predict_quantiles, X, quantiles, method, [y_hat], lock
-            )
-            for e in self.estimators_
-        )
-
-        y_hat /= len(self.estimators_)
-
-        return y_hat
-
     def predict_proba(self, X):
         """
         Predict class probabilities for X.
@@ -1136,65 +1203,6 @@ class ForestRegressor(RegressorMixin, BaseForest, metaclass=ABCMeta):
             max_bins=max_bins,
             store_leaf_values=store_leaf_values,
         )
-
-    def predict_quantiles(self, X, quantiles=0.5, method="linear"):
-        """Predict class or regression value for X at given quantiles.
-
-        Parameters
-        ----------
-        X : {array-like, sparse matrix} of shape (n_samples, n_features)
-            Input data.
-        quantiles : float, optional
-            The quantiles at which to evaluate, by default 0.5 (median).
-        method : str, optional
-            The method to interpolate, by default 'linear'. Can be any keyword
-            argument accepted by :func:`np.quantile`.
-        check_input : bool, optional
-            Whether or not to check input, by default True.
-
-        Returns
-        -------
-        y : ndarray of shape (n_samples, n_quantiles) or (n_samples, n_quantiles, n_outputs)
-            The predicted values.
-        """
-        check_is_fitted(self)
-        # Check data
-        X = self._validate_X_predict(X)
-
-        if not isinstance(quantiles, (np.ndarray, list)):
-            quantiles = np.array([quantiles])
-
-        # if we trained a binning tree, then we should re-bin the data
-        # XXX: this is inefficient and should be improved to be in line with what
-        # the Histogram Gradient Boosting Tree does, where the binning thresholds
-        # are passed into the tree itself, thus allowing us to set the node feature
-        # value thresholds within the tree itself.
-        if self.max_bins is not None:
-            X = self._bin_data(X, is_training_data=False).astype(DTYPE)
-
-        # Assign chunk of trees to jobs
-        n_jobs, _, _ = _partition_estimators(self.n_estimators, self.n_jobs)
-
-        # avoid storing the output of every estimator by summing them here
-        if self.n_outputs_ > 1:
-            y_hat = np.zeros(
-                (X.shape[0], len(quantiles), self.n_outputs_), dtype=np.float64
-            )
-        else:
-            y_hat = np.zeros((X.shape[0], len(quantiles)), dtype=np.float64)
-
-        # Parallel loop
-        lock = threading.Lock()
-        Parallel(n_jobs=n_jobs, verbose=self.verbose, require="sharedmem")(
-            delayed(_accumulate_prediction_quantiles)(
-                e.predict_quantiles, X, quantiles, method, [y_hat], lock
-            )
-            for e in self.estimators_
-        )
-
-        y_hat /= len(self.estimators_)
-
-        return y_hat
 
     def predict(self, X):
         """

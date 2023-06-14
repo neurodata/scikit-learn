@@ -2026,9 +2026,12 @@ def test_multioutput_quantiles(name):
     est.fit(X_train, y_train)
 
     y_pred = est.predict_quantiles(X_test, quantiles=[0.25, 0.5, 0.75])
-    print(y_pred.shape)
-    print(y_pred[:, 1, :])
-    print(y_test)
     assert_array_almost_equal(y_pred[:, 1, :], y_test)
     assert_array_almost_equal(y_pred[:, 0, :], y_test)
     assert_array_almost_equal(y_pred[:, 2, :], y_test)
+
+    # test the leaf nodes samples
+    leaf_nodes_samples = est.get_leaf_node_samples(X_test)
+    assert len(leaf_nodes_samples) == len(X_test)
+    for node_samples in leaf_nodes_samples:
+        assert node_samples.shape[1] == est.n_outputs_
