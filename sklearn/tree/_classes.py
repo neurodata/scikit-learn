@@ -120,6 +120,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         "max_leaf_nodes": [Interval(Integral, 2, None, closed="left"), None],
         "min_impurity_decrease": [Interval(Real, 0.0, None, closed="left")],
         "ccp_alpha": [Interval(Real, 0.0, None, closed="left")],
+        "store_leaf_values": [bool],
     }
 
     @abstractmethod
@@ -138,6 +139,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         min_impurity_decrease,
         class_weight=None,
         ccp_alpha=0.0,
+        store_leaf_values=False,
     ):
         self.criterion = criterion
         self.splitter = splitter
@@ -151,6 +153,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         self.min_impurity_decrease = min_impurity_decrease
         self.class_weight = class_weight
         self.ccp_alpha = ccp_alpha
+        self.store_leaf_values = store_leaf_values
 
     def get_depth(self):
         """Return the depth of the decision tree.
@@ -483,6 +486,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 min_weight_leaf,
                 max_depth,
                 self.min_impurity_decrease,
+                self.store_leaf_values,
             )
         else:
             builder = BestFirstTreeBuilder(
@@ -493,6 +497,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 max_depth,
                 max_leaf_nodes,
                 self.min_impurity_decrease,
+                self.store_leaf_values,
             )
 
         builder.build(self.tree_, X, y, sample_weight, feature_has_missing)
@@ -576,6 +581,51 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
 
             else:
                 return proba[:, :, 0]
+
+    def predict_quantiles(self, X, quantiles=0.5, method="linear", check_input=True):
+        """Predict class or regression value for X at given quantiles.
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix} of shape (n_samples, n_features)
+            Input data.
+        quantiles : float, optional
+            The quantiles at which to evaluate, by default 0.5 (median).
+        method : str, optional
+            The method to interpolate, by default 'linear'. Can be any keyword
+            argument accepted by :func:`np.quantile`.
+        check_input : bool, optional
+            Whether or not to check input, by default True.
+
+        Returns
+        -------
+        predictions : array-like of shape (n_samples, n_outputs, len(quantiles))
+            The predicted quantiles.
+        """
+        check_is_fitted(self)
+
+        # Check data
+        X = self._validate_X_predict(X, check_input)
+
+        if not isinstance(quantiles, (np.ndarray, list)):
+            quantiles = np.array([quantiles])
+
+        # get indices of leaves per sample
+        X_leaves = self.apply(X)
+
+        # get array of samples per leaf
+        leaf_samples = self.tree_.leaf_nodes_samples
+
+        # compute quantiles
+        predictions = np.zeros((X.shape[0], self.n_outputs_, len(quantiles)))
+        for idx, leaf_id in enumerate(X_leaves):
+            # predict by taking the quantil across the samples in the leaf for
+            # each output
+            predictions[idx, :, :] = np.quantile(
+                leaf_samples[leaf_id], quantiles, axis=0, method=method
+            )
+
+        return predictions
 
     def apply(self, X, check_input=True):
         """Return the index of the leaf that each sample is predicted as.
@@ -851,6 +901,16 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
 
         .. versionadded:: 0.22
 
+    store_leaf_values : bool, default=False
+        Whether to store the samples that fall into leaves in the ``tree_`` attribute.
+        Each leaf will store a 2D array corresponding to the samples that fall into it
+        keyed by node_id.
+
+        XXX: This is currently experimental and may change without notice.
+        Moreover, it can be improved upon since storing the samples twice is not ideal.
+        One could instead store the indices in ``y_train`` that fall into each leaf,
+        which would lower RAM/diskspace usage.
+
     Attributes
     ----------
     classes_ : ndarray of shape (n_classes,) or list of ndarray
@@ -965,6 +1025,7 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         min_impurity_decrease=0.0,
         class_weight=None,
         ccp_alpha=0.0,
+        store_leaf_values=False,
     ):
         super().__init__(
             criterion=criterion,
@@ -979,6 +1040,7 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
             random_state=random_state,
             min_impurity_decrease=min_impurity_decrease,
             ccp_alpha=ccp_alpha,
+            store_leaf_values=store_leaf_values,
         )
 
     def fit(self, X, y, sample_weight=None, check_input=True):
@@ -1327,6 +1389,7 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
         max_leaf_nodes=None,
         min_impurity_decrease=0.0,
         ccp_alpha=0.0,
+        store_leaf_values=False,
     ):
         super().__init__(
             criterion=criterion,
@@ -1340,6 +1403,7 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
             random_state=random_state,
             min_impurity_decrease=min_impurity_decrease,
             ccp_alpha=ccp_alpha,
+            store_leaf_values=store_leaf_values,
         )
 
     def fit(self, X, y, sample_weight=None, check_input=True):
@@ -1653,6 +1717,7 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
         min_impurity_decrease=0.0,
         class_weight=None,
         ccp_alpha=0.0,
+        store_leaf_values=False,
     ):
         super().__init__(
             criterion=criterion,
@@ -1667,6 +1732,7 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
             min_impurity_decrease=min_impurity_decrease,
             random_state=random_state,
             ccp_alpha=ccp_alpha,
+            store_leaf_values=store_leaf_values,
         )
 
 
@@ -1880,6 +1946,7 @@ class ExtraTreeRegressor(DecisionTreeRegressor):
         min_impurity_decrease=0.0,
         max_leaf_nodes=None,
         ccp_alpha=0.0,
+        store_leaf_values=False,
     ):
         super().__init__(
             criterion=criterion,
@@ -1893,4 +1960,5 @@ class ExtraTreeRegressor(DecisionTreeRegressor):
             min_impurity_decrease=min_impurity_decrease,
             random_state=random_state,
             ccp_alpha=ccp_alpha,
+            store_leaf_values=store_leaf_values,
         )

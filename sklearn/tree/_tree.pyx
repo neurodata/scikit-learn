@@ -319,11 +319,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                         "impurity": split.impurity_left,
                         "n_constant_features": n_constant_features})
                 elif self.store_leaf_values and is_leaf:
-                    with gil:
-                        print('Storing leaf values...')
-
                     # copy leaf values to leaf_values array
-                    splitter.node_samples(&tree.value_samples[node_id])
+                    splitter.node_samples(tree.value_samples[node_id])
 
                 if depth > max_depth_seen:
                     max_depth_seen = depth
@@ -1382,6 +1379,7 @@ cdef class Tree(BaseTree):
         d["node_count"] = self.node_count
         d["nodes"] = self._get_node_ndarray()
         d["values"] = self._get_value_ndarray()
+        d['value_samples'] = self.leaf_nodes_samples
         return d
 
     def __setstate__(self, d):
@@ -1415,11 +1413,20 @@ cdef class Tree(BaseTree):
         memcpy(self.value, cnp.PyArray_DATA(value_ndarray),
                self.capacity * self.value_stride * sizeof(double))
 
+        # store the leaf node samples if they exist
+        value_samples_dict = d['value_samples']
+        for node_id, leaf_samples in value_samples_dict.items():
+            self.value_samples[node_id].resize(leaf_samples.shape[0])
+            for idx in range(leaf_samples.shape[0]):
+                for jdx in range(leaf_samples.shape[1]):
+                    self.value_samples[node_id][idx].push_back(leaf_samples[idx, jdx])
+
+
     cdef cnp.ndarray _get_value_samples_ndarray(self, SIZE_t node_id):
         """Wraps value_samples as a 2-d NumPy array per node_id."""
         cdef int i, j
         cdef int n_samples = self.value_samples[node_id].size()
-        cdef DOUBLE_t[:, :] leaf_node_samples = np.empty(shape=(n_samples, self.n_outputs), dtype=np.float64)
+        cdef cnp.ndarray[DOUBLE_t, ndim=2, mode='c'] leaf_node_samples = np.empty(shape=(n_samples, self.n_outputs), dtype=np.float64)
 
         for i in range(n_samples):
             for j in range(self.n_outputs):
@@ -1428,7 +1435,7 @@ cdef class Tree(BaseTree):
 
     cdef cnp.ndarray _get_value_samples_keys(self):
         """Wraps value_samples keys as a 1-d NumPy array of keys."""
-        cdef SIZE_t[:] keys = np.empty(len(self.value_samples), dtype=np.uintp)
+        cdef cnp.ndarray[SIZE_t, ndim=1, mode='c'] keys = np.empty(len(self.value_samples), dtype=np.intp)
         cdef unsigned int i = 0
         
         for key in self.value_samples:

@@ -890,7 +890,7 @@ def test_pickle():
         else:
             X, y = diabetes.data, diabetes.target
 
-        est = TreeEstimator(random_state=0)
+        est = TreeEstimator(random_state=0, store_leaf_values=True)
         est.fit(X, y)
         score = est.score(X, y)
 
@@ -909,6 +909,7 @@ def test_pickle():
             "n_node_samples",
             "weighted_n_node_samples",
             "value",
+            "leaf_nodes_samples",
         ]
         fitted_attribute = {
             attribute: getattr(est.tree_, attribute) for attribute in attributes
@@ -923,14 +924,25 @@ def test_pickle():
             score == score2
         ), "Failed to generate same score  after pickling with {0}".format(name)
         for attribute in fitted_attribute:
-            assert_array_equal(
-                getattr(est2.tree_, attribute),
-                fitted_attribute[attribute],
-                err_msg=(
-                    f"Failed to generate same attribute {attribute} after pickling with"
-                    f" {name}"
-                ),
-            )
+            if attribute == "leaf_nodes_samples":
+                for key in fitted_attribute[attribute].keys():
+                    assert_array_equal(
+                        getattr(est2.tree_, attribute)[key],
+                        fitted_attribute[attribute][key],
+                        err_msg=(
+                            f"Failed to generate same attribute {attribute} after"
+                            f" pickling with {name}"
+                        ),
+                    )
+            else:
+                assert_array_equal(
+                    getattr(est2.tree_, attribute),
+                    fitted_attribute[attribute],
+                    err_msg=(
+                        f"Failed to generate same attribute {attribute} after pickling"
+                        f" with {name}"
+                    ),
+                )
 
 
 def test_multioutput():
@@ -2634,3 +2646,32 @@ def test_sample_weight_non_uniform(make_data, Tree):
     tree_samples_removed.fit(X[1::2, :], y[1::2])
 
     assert_allclose(tree_samples_removed.predict(X), tree_with_sw.predict(X))
+
+
+@pytest.mark.parametrize(
+    "tree_name",
+    ALL_TREES,
+)
+def test_leaf_node_samples(tree_name):
+    """Test getting leaf node samples from fitted tree."""
+    tree = ALL_TREES[tree_name](random_state=0, store_leaf_values=False)
+    tree.fit(X_small, y_small)
+
+    # Check that the leaf node samples are not stored by default
+    assert tree.tree_.leaf_nodes_samples == dict()
+
+    quantile_tree = ALL_TREES[tree_name](random_state=0, store_leaf_values=True)
+    quantile_tree.fit(X_small, y_small)
+
+    score = tree.score(X_small, y_small)
+    new_score = quantile_tree.score(X_small, y_small)
+    assert np.isclose(score, new_score)
+
+    # Check that the leaf node samples are what they should be
+    X_leaves = quantile_tree.apply(X_small)
+    for idx in range(X_leaves.shape[0]):
+        leaf_idx = X_leaves[idx]
+        assert y_small[idx] in quantile_tree.tree_.leaf_nodes_samples[leaf_idx]
+    assert set(np.unique(X_leaves)) == set(
+        quantile_tree.tree_.leaf_nodes_samples.keys()
+    )
