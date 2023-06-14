@@ -606,7 +606,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             variable.
         """
         if not self.store_leaf_values:
-            raise ValueError(
+            raise RuntimeError(
                 "leaf node samples are not stored when store_leaf_values=False"
             )
 
