@@ -229,8 +229,6 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef SIZE_t max_depth_seen = -1
         cdef int rc = 0
 
-        cdef int node_idx
-
         cdef stack[StackRecord] builder_stack
         cdef StackRecord stack_record
 
@@ -456,6 +454,9 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
                     node.feature = _TREE_UNDEFINED
                     node.threshold = _TREE_UNDEFINED
 
+                    if self.store_leaf_values:
+                        # copy leaf values to leaf_values array
+                        splitter.node_samples(tree.value_samples[record.node_id])
                 else:
                     # Node is expandable
 
@@ -1421,7 +1422,6 @@ cdef class Tree(BaseTree):
                 for jdx in range(leaf_samples.shape[1]):
                     self.value_samples[node_id][idx].push_back(leaf_samples[idx, jdx])
 
-
     cdef cnp.ndarray _get_value_samples_ndarray(self, SIZE_t node_id):
         """Wraps value_samples as a 2-d NumPy array per node_id."""
         cdef int i, j
@@ -1437,7 +1437,7 @@ cdef class Tree(BaseTree):
         """Wraps value_samples keys as a 1-d NumPy array of keys."""
         cdef cnp.ndarray[SIZE_t, ndim=1, mode='c'] keys = np.empty(len(self.value_samples), dtype=np.intp)
         cdef unsigned int i = 0
-        
+
         for key in self.value_samples:
             keys[i] = key.first
             i += 1

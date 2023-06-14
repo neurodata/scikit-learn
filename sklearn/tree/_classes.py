@@ -556,6 +556,9 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         """
         check_is_fitted(self)
         X = self._validate_X_predict(X, check_input)
+
+        # proba is a count matrix of leaves that fall into
+        # (n_samples, n_outputs, max_n_classes) array
         proba = self.tree_.predict(X)
         n_samples = X.shape[0]
 
@@ -582,7 +585,25 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             else:
                 return proba[:, :, 0]
 
-    def predict_quantiles(self, X, quantiles=0.5, method="linear", check_input=True):
+    def _get_leaf_node_samples(self, X):
+        # get indices of leaves per sample (n_samples,)
+        X_leaves = self.apply(X)
+        n_samples = X_leaves.shape
+
+        # get array of samples per leaf (n_node_samples, n_outputs)
+        leaf_samples = self.tree_.leaf_nodes_samples
+        max_n_classes = max(self.n_classes_)
+
+        proba = np.zeros((n_samples, max_n_classes, self.n_outputs_))
+        for leaf_id in X_leaves:
+            # (n_node_samples, n_outputs)
+            leaf_node_samples = leaf_samples[leaf_id]
+
+            for idx, class_id in enumerate(self.classes_):
+                proba[:, idx, :] += np.sum(leaf_node_samples == class_id, axis=0)
+        return proba
+
+    def predict_quantiles(self, X, quantiles=0.5, method="nearest", check_input=True):
         """Predict class or regression value for X at given quantiles.
 
         Parameters
@@ -602,6 +623,11 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         predictions : array-like of shape (n_samples, n_outputs, len(quantiles))
             The predicted quantiles.
         """
+        if not self.store_leaf_values:
+            raise RuntimeError(
+                "Predicting quantiles requires that the tree stores leaf samples."
+            )
+
         check_is_fitted(self)
 
         # Check data
@@ -613,19 +639,58 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         # get indices of leaves per sample
         X_leaves = self.apply(X)
 
-        # get array of samples per leaf
+        # get array of samples per leaf (n_node_samples, n_outputs)
         leaf_samples = self.tree_.leaf_nodes_samples
 
-        # compute quantiles
-        predictions = np.zeros((X.shape[0], self.n_outputs_, len(quantiles)))
+        # compute quantiles (n_samples, n_quantiles, n_outputs)
+        n_samples = X.shape[0]
+        n_quantiles = len(quantiles)
+        proba = np.zeros((n_samples, n_quantiles, self.n_outputs_))
         for idx, leaf_id in enumerate(X_leaves):
-            # predict by taking the quantil across the samples in the leaf for
+            # predict by taking the quantile across the samples in the leaf for
             # each output
-            predictions[idx, :, :] = np.quantile(
+            proba[idx, ...] = np.quantile(
                 leaf_samples[leaf_id], quantiles, axis=0, method=method
             )
 
-        return predictions
+        # Classification
+        if is_classifier(self):
+            if self.n_outputs_ == 1:
+                # return the class with the highest probability for each quantile
+                # (n_samples, n_quantiles)
+                class_preds = np.zeros(
+                    (n_samples, n_quantiles), dtype=self.classes_.dtype
+                )
+                for i in range(n_quantiles):
+                    class_pred_per_sample = (
+                        proba[:, i, :].squeeze().astype(self.classes_.dtype)
+                    )
+                    class_preds[:, i] = self.classes_.take(
+                        class_pred_per_sample, axis=0
+                    )
+                return class_preds
+            else:
+                class_type = self.classes_[0].dtype
+                predictions = np.zeros(
+                    (n_samples, n_quantiles, self.n_outputs_), dtype=class_type
+                )
+                for k in range(self.n_outputs_):
+                    for i in range(n_quantiles):
+                        class_pred_per_sample = (
+                            proba[:, i, k].squeeze().astype(int)
+                        )
+                        predictions[:, i, k] = self.classes_[k].take(
+                            class_pred_per_sample, axis=0
+                        )
+
+                return predictions
+        # Regression
+        else:
+            if self.n_outputs_ == 1:
+                return proba[:, :, 0]
+
+            else:
+                return proba
 
     def apply(self, X, check_input=True):
         """Return the index of the leaf that each sample is predicted as.

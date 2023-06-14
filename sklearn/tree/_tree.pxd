@@ -126,7 +126,7 @@ cdef class Tree(BaseTree):
     cdef cnp.ndarray _get_node_ndarray(self)
     cdef cnp.ndarray _get_value_samples_ndarray(self, SIZE_t node_id)
     cdef cnp.ndarray _get_value_samples_keys(self)
-    
+
     cpdef cnp.ndarray predict(self, object X)
 
 # =============================================================================
@@ -148,7 +148,7 @@ cdef class TreeBuilder:
     cdef SIZE_t max_depth               # Maximal tree depth
     cdef double min_impurity_decrease   # Impurity threshold for early stopping
 
-    cdef unsigned char store_leaf_values # Whether to store leaf values
+    cdef unsigned char store_leaf_values    # Whether to store leaf values
 
     cpdef build(
         self,

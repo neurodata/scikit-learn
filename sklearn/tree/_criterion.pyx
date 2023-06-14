@@ -282,6 +282,7 @@ cdef class Criterion(BaseCriterion):
             for k in range(self.n_outputs):
                 dest[i].push_back(self.y[j, k])
 
+
 cdef inline void _move_sums_classification(
     ClassificationCriterion criterion,
     double[:, ::1] sum_1,
