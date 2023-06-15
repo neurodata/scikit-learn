@@ -719,7 +719,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
         return X_binned
 
-    def predict_quantiles(self, X, quantiles=0.5, method="closest_observation"):
+    def predict_quantiles(self, X, quantiles=0.5, method="nearest"):
         """Predict class or regression value for X at given quantiles.
 
         Parameters
