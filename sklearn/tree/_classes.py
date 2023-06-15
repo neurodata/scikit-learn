@@ -31,6 +31,7 @@ from sklearn.base import clone
 from sklearn.base import RegressorMixin
 from sklearn.base import is_classifier
 from sklearn.base import MultiOutputMixin
+from sklearn.base import _fit_context
 from sklearn.utils import Bunch
 from sklearn.utils import check_random_state
 from sklearn.utils.validation import _check_sample_weight
@@ -183,7 +184,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
     def _support_missing_values(self, X):
         return not issparse(X) and self._get_tags()["allow_nan"]
 
-    def _compute_feature_has_missing(self, X):
+    def _compute_missing_values_in_feature_mask(self, X):
         """Return boolean mask denoting if there are missing values for each feature.
 
         This method also ensures that X is finite.
@@ -195,7 +196,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
 
         Returns
         -------
-        feature_has_missing : ndarray of shape (n_features,), or None
+        missing_values_in_feature_mask : ndarray of shape (n_features,), or None
             Missing value mask. If missing values are not supported or there
             are no missing values, return None.
         """
@@ -216,13 +217,17 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         if not np.isnan(overall_sum):
             return None
 
-        feature_has_missing = _any_isnan_axis0(X)
-        return feature_has_missing
+        missing_values_in_feature_mask = _any_isnan_axis0(X)
+        return missing_values_in_feature_mask
 
     def _fit(
-        self, X, y, sample_weight=None, check_input=True, feature_has_missing=None
+        self,
+        X,
+        y,
+        sample_weight=None,
+        check_input=True,
+        missing_values_in_feature_mask=None,
     ):
-        self._validate_params()
         random_state = check_random_state(self.random_state)
 
         if check_input:
@@ -230,7 +235,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             # We can't pass multi_output=True because that would allow y to be
             # csr.
 
-            # _compute_feature_has_missing will check for finite values and
+            # _compute_missing_values_in_feature_mask will check for finite values and
             # compute the missing mask if the tree supports missing values
             check_X_params = dict(
                 dtype=DTYPE, accept_sparse="csc", force_all_finite=False
@@ -243,7 +248,9 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             else:
                 X = self._validate_data(X, **check_X_params)
 
-            feature_has_missing = self._compute_feature_has_missing(X)
+            missing_values_in_feature_mask = (
+                self._compute_missing_values_in_feature_mask(X)
+            )
             if issparse(X):
                 X.sort_indices()
 
@@ -391,7 +398,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             X,
             y,
             sample_weight,
-            feature_has_missing,
+            missing_values_in_feature_mask,
             min_samples_leaf,
             min_weight_leaf,
             max_leaf_nodes,
@@ -410,7 +417,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         X,
         y,
         sample_weight,
-        feature_has_missing,
+        missing_values_in_feature_mask,
         min_samples_leaf,
         min_weight_leaf,
         max_leaf_nodes,
@@ -503,7 +510,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 self.store_leaf_values,
             )
 
-        builder.build(self.tree_, X, y, sample_weight, feature_has_missing)
+        builder.build(self.tree_, X, y, sample_weight, missing_values_in_feature_mask)
 
         if self.n_outputs_ == 1 and is_classifier(self):
             self.n_classes_ = self.n_classes_[0]
@@ -1129,6 +1136,7 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
             store_leaf_values=store_leaf_values,
         )
 
+    @_fit_context(prefer_skip_nested_validation=True)
     def fit(self, X, y, sample_weight=None, check_input=True):
         """Build a decision tree classifier from the training set (X, y).
 
@@ -1492,6 +1500,7 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
             store_leaf_values=store_leaf_values,
         )
 
+    @_fit_context(prefer_skip_nested_validation=True)
     def fit(self, X, y, sample_weight=None, check_input=True):
         """Build a decision tree regressor from the training set (X, y).
 
