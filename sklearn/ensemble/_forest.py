@@ -788,7 +788,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
             # get quantiles across all leaf node samples
             y_hat[idx, ...] = np.quantile(
-                leaf_node_samples, quantiles, axis=0, method=method
+                leaf_node_samples, quantiles, axis=0, interpolation=method
             )
 
             if is_classifier(self):

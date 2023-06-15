@@ -677,7 +677,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             # predict by taking the quantile across the samples in the leaf for
             # each output
             proba[idx, ...] = np.quantile(
-                leaf_samples[leaf_id], quantiles, axis=0, method=method
+                leaf_samples[leaf_id], quantiles, axis=0, interpolation=method
             )
 
         # Classification
