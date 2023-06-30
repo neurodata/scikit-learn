@@ -63,13 +63,6 @@ from sklearn.ensemble._hist_gradient_boosting.binning import _BinMapper
 from sklearn.exceptions import DataConversionWarning
 from sklearn.metrics import accuracy_score, r2_score
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.tree import (
-    BaseDecisionTree,
-    DecisionTreeClassifier,
-    DecisionTreeRegressor,
-    ExtraTreeClassifier,
-    ExtraTreeRegressor,
-)
 from sklearn.utils import check_random_state, compute_sample_weight
 from sklearn.utils._openmp_helpers import _openmp_effective_n_threads
 from sklearn.utils._param_validation import Interval, RealNotInt, StrOptions
@@ -82,6 +75,13 @@ from sklearn.utils.validation import (
     check_is_fitted,
 )
 
+from ..tree import (
+    BaseDecisionTree,
+    DecisionTreeClassifier,
+    DecisionTreeRegressor,
+    ExtraTreeClassifier,
+    ExtraTreeRegressor,
+)
 from ..tree._tree import DOUBLE, DTYPE
 
 __all__ = [
@@ -822,6 +822,11 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             samples, since the number of samples that fall in a leaf node is
             variable. Each array-like has shape (n_leaf_node_samples, n_outputs).
         """
+        if not self.store_leaf_values:
+            raise RuntimeError(
+                "Leaf node samples are not available when store_leaf_values=False"
+            )
+
         check_is_fitted(self)
         # Check data
         X = self._validate_X_predict(X)
@@ -1520,6 +1525,9 @@ class RandomForestClassifier(ForestClassifier):
 
         .. versionadded:: 0.22
 
+    store_leaf_values : bool, default=False
+        Whether to store the leaf values in the ``get_leaf_node_samples`` function.
+
     Attributes
     ----------
     estimator_ : :class:`~sklearn.tree.DecisionTreeClassifier`
@@ -1879,6 +1887,9 @@ class RandomForestRegressor(ForestRegressor):
 
         .. versionadded:: 0.22
 
+    store_leaf_values : bool, default=False
+        Whether to store the leaf values in the ``get_leaf_node_samples`` function.
+
     Attributes
     ----------
     estimator_ : :class:`~sklearn.tree.DecisionTreeRegressor`
@@ -2232,6 +2243,9 @@ class ExtraTreesClassifier(ForestClassifier):
 
         .. versionadded:: 0.22
 
+    store_leaf_values : bool, default=False
+        Whether to store the leaf values in the ``get_leaf_node_samples`` function.
+
     Attributes
     ----------
     estimator_ : :class:`~sklearn.tree.ExtraTreesClassifier`
@@ -2575,6 +2589,9 @@ class ExtraTreesRegressor(ForestRegressor):
           `max_samples` should be in the interval `(0.0, 1.0]`.
 
         .. versionadded:: 0.22
+
+    store_leaf_values : bool, default=False
+        Whether to store the leaf values in the ``get_leaf_node_samples`` function.
 
     Attributes
     ----------
