@@ -121,9 +121,16 @@ cdef class BaseSplitter:
 cdef class Splitter(BaseSplitter):
     """Abstract interface for supervised splitters."""
 
-    def __cinit__(self, Criterion criterion, SIZE_t max_features,
-                  SIZE_t min_samples_leaf, double min_weight_leaf,
-                  object random_state, bint breiman_short, *argv):
+    def __cinit__(
+        self,
+        Criterion criterion,
+        SIZE_t max_features,
+        SIZE_t min_samples_leaf,
+        double min_weight_leaf,
+        object random_state,
+        bint breiman_short,
+        *argv
+    ):
         """
         Parameters
         ----------
@@ -242,7 +249,7 @@ cdef class Splitter(BaseSplitter):
 
         self.sample_weight = sample_weight
 
-        self.criterion.init(
+         self.criterion.init(
             self.y,
             self.sample_weight,
             self.weighted_n_samples,

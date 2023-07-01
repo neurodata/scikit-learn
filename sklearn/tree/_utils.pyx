@@ -13,6 +13,7 @@
 from libc.math cimport isnan
 from libc.math cimport log as ln
 from libc.stdlib cimport free, realloc
+from libcpp.vector cimport vector
 
 import numpy as np
 
@@ -85,12 +86,16 @@ cdef inline double log(double x) noexcept nogil:
     return ln(x) / ln(2.0)
 
 
-cdef inline void setup_cat_cache(BITSET_t* cachebits, BITSET_t cat_split,
-                                 INT32_t n_categories) nogil:
+cdef inline void setup_cat_cache(
+    vector[BITSET_t]& cachebits,
+    BITSET_t cat_split,
+    INT32_t n_categories
+) noexcept nogil:
     """Populate the bits of the category cache from a split.
+
     Attributes
     ----------
-    cachebits : BITSET_t*
+    cachebits : Reference of vector[BITSET_t]
         This is a pointer to the output array. The size of the array should be
         ``ceil(n_categories / 64)``. This function assumes the required
         memory is allocated for the array by the caller.
@@ -110,7 +115,10 @@ cdef inline void setup_cat_cache(BITSET_t* cachebits, BITSET_t cat_split,
     """
     cdef INT32_t j
     cdef UINT32_t rng_seed, val
+
+    # cache_size is equal to cachebits.size()
     cdef SIZE_t cache_size = (n_categories + 63) // 64
+
     if n_categories > 0:
         if cat_split & 1:
             # RandomSplitter
@@ -129,15 +137,22 @@ cdef inline void setup_cat_cache(BITSET_t* cachebits, BITSET_t cat_split,
             cachebits[0] = cat_split
 
 
-cdef inline bint goes_left(DTYPE_t feature_value, SplitValue split,
-                           INT32_t n_categories, BITSET_t *cachebits) nogil:
+cdef inline bint goes_left(
+    DTYPE_t feature_value,
+    SplitValue split,
+    INT32_t n_categories,
+    vector[BITSET_t]& cachebits
+) noexcept nogil:
     """Determine whether a sample goes to the left or right child node.
+
     For numerical features, ``(-inf, split.threshold]`` is the left child, and
     ``(split.threshold, inf)`` the right child.
+
     For categorical features, if the corresponding bit for the category is set
     in cachebits, the left child isused, and if not set, the right child. If
     the given input category is larger than the ``n_categories``, the right
     child is assumed.
+
     Attributes
     ----------
     feature_value : DTYPE_t
@@ -149,9 +164,10 @@ cdef inline bint goes_left(DTYPE_t feature_value, SplitValue split,
         The number of categories present in the feature in question. The
         feature is considered a numerical one and not a categorical one if
         n_categories is negative.
-    cachebits : BITSET_t*
+    cachebits : Reference of vector[BITSET_t]
         The array containing the expantion of split.cat_split. The function
         setup_cat_cache is the one filling it.
+
     Returns
     -------
     result : bint

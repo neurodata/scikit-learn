@@ -120,13 +120,13 @@ cdef class Tree(BaseTree):
     # - value = (capacity, n_outputs, max_n_classes) array of values
 
     # Input/Output layout for supervised tree
-    cdef public SIZE_t n_features        # Number of features in X
-    cdef SIZE_t* n_classes               # Number of classes in y[:, k]
-    cdef public SIZE_t n_outputs         # Number of outputs in y
-    cdef public SIZE_t max_n_classes     # max(n_classes)
+    cdef public SIZE_t n_features       # Number of features in X
+    cdef SIZE_t* n_classes              # Number of classes in y[:, k]
+    cdef public SIZE_t n_outputs        # Number of outputs in y
+    cdef public SIZE_t max_n_classes    # max(n_classes)
 
-    cdef INT32_t[:] n_categories         # (n_features,) array of number of categories per feature
-                                         # is <0 for non-categorial (i.e. -1)
+    cdef INT32_t[:] n_categories        # (n_features,) array of number of categories per feature
+    #                                   # is <0 for non-categorial (i.e. -1)
 
     # Enables the use of tree to store distributions of the output to allow
     # arbitrary usage of the the leaves. This is used in the quantile

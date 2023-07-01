@@ -90,12 +90,19 @@ cdef double rand_uniform(double low, double high,
 cdef double log(double x) noexcept nogil
 
 
-cdef void setup_cat_cache(BITSET_t* cachebits, UINT64_t cat_split,
-                          INT32_t n_categories) nogil
+cdef void setup_cat_cache(
+    vector[BITSET_t]& cachebits,
+    UINT64_t cat_split,
+    INT32_t n_categories
+) noexcept nogil
 
 
-cdef bint goes_left(DTYPE_t feature_value, SplitValue split,
-                    INT32_t n_categories, BITSET_t* cachebits) nogil
+cdef bint goes_left(
+    DTYPE_t feature_value,
+    SplitValue split,
+    INT32_t n_categories,
+    vector[BITSET_t]& cachebits
+) noexcept nogil
 
 # =============================================================================
 # WeightedPQueue data structure

@@ -20,21 +20,22 @@ from ._tree cimport INT32_t  # Signed 32 bit integer
 from ._tree cimport SIZE_t  # Type for indices and counters
 from ._tree cimport UINT32_t  # Unsigned 32 bit integer
 from ._tree cimport UINT64_t  # Unsigned 64 bit integer
-from ._utils cimport SplitValue
+
+from ._utils cimport SplitValue, BITSET_t
 
 cdef struct SplitRecord:
     # Data to track sample split
-    SIZE_t feature         # Which feature to split on.
-    SIZE_t pos             # Split samples array at the given position,
-    #                      # i.e. count of samples below threshold for feature.
-    #                      # pos is >= end if the node is a leaf.
-    SplitValue split_value # Generalized threshold for categorical and
-                           # non-categorical features
-    double improvement     # Impurity improvement given parent node.
-    double impurity_left   # Impurity of the left split.
-    double impurity_right  # Impurity of the right split.
+    SIZE_t feature          # Which feature to split on.
+    SIZE_t pos              # Split samples array at the given position,
+    #                       # i.e. count of samples below threshold for feature.
+    #                       # pos is >= end if the node is a leaf.
+    SplitValue split_value  # Generalized threshold for categorical and
+    #                       # non-categorical features
+    double improvement      # Impurity improvement given parent node.
+    double impurity_left    # Impurity of the left split.
+    double impurity_right   # Impurity of the right split.
     unsigned char missing_go_to_left  # Controls if missing values go to the left node.
-    SIZE_t n_missing       # Number of missing values for the feature being split on
+    SIZE_t n_missing        # Number of missing values for the feature being split on
 
 cdef class BaseSplitter:
     """Abstract interface for splitter."""
@@ -99,15 +100,15 @@ cdef class BaseSplitter:
     cdef int pointer_size(self) noexcept nogil
 
 cdef class Splitter(BaseSplitter):
-    cdef public Criterion criterion      # Impurity criterion
+    cdef public Criterion criterion     # Impurity criterion
     cdef const DOUBLE_t[:, ::1] y
 
-    cdef INT32_t[:] n_categories         # (n_features,) array giving number of
-                                         # categories (<0 for non-categorical)
-    cdef BITSET_t[:] cat_cache           # Cache buffer for fast categorical split evaluation
-    cdef bint breiman_shortcut           # Whether decision trees are allowed to use the
-                                         # Breiman shortcut for categorical features
-                                         # during binary classification.
+    cdef INT32_t[:] n_categories        # (n_features,) array giving number of
+    #                                   # categories (<0 for non-categorical)
+    cdef BITSET_t[:] cat_cache          # Cache buffer for fast categorical split evaluation
+    cdef bint breiman_shortcut          # Whether decision trees are allowed to use the
+    #                                   # Breiman shortcut for categorical features
+    #                                   # during binary classification.
 
     cdef int init(
         self,
