@@ -80,7 +80,7 @@ NODE_DTYPE = np.asarray(<Node[:1]>(&dummy)).dtype
 cdef class TreeBuilder:
     """Interface for different tree building strategies."""
 
-    cpdef initialize_node_queue(object X, np.ndarray y,
+    cpdef initialize_node_queue(self, Tree tree, object X, np.ndarray y,
                 np.ndarray sample_weight=None):
         """Initialize a list of roots"""
         pass
@@ -132,13 +132,14 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
     def __cinit__(self, Splitter splitter, SIZE_t min_samples_split,
                   SIZE_t min_samples_leaf, double min_weight_leaf,
                   SIZE_t max_depth, double min_impurity_decrease,
-                  np.ndarray initial_roots):
+                  object initial_roots=None):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
         self.min_samples_leaf = min_samples_leaf
         self.min_weight_leaf = min_weight_leaf
         self.max_depth = max_depth
         self.min_impurity_decrease = min_impurity_decrease
+        self.initial_roots = initial_roots
 
     def __reduce__(self):
       """Reduce re-implementation, for pickling."""
@@ -146,12 +147,12 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                                      self.min_samples_leaf,
                                      self.min_weight_leaf,
                                      self.max_depth,
-                                     self.min_impurity_decrease))
+                                     self.min_impurity_decrease,
+                                     self.initial_roots))
 
-    cpdef initialize_node_queue(object X, np.ndarray y,
+    cpdef initialize_node_queue(self, Tree tree, object X, np.ndarray y,
                 np.ndarray sample_weight=None):
         """Initialize a list of roots"""
-        # check input
         X, y, sample_weight = self._check_input(X, y, sample_weight)
 
         cdef DOUBLE_t* sample_weight_ptr = NULL
@@ -196,6 +197,11 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef object X_new = np.array(X_list)
         cdef np.ndarray y_new = np.array(y_list)
 
+        cdef Splitter splitter = self.splitter
+        splitter.init(X_new, y_new, sample_weight_ptr)
+
+        self.initial_roots = false_roots
+
     cpdef build(self, Tree tree, object X, np.ndarray y,
                 np.ndarray sample_weight=None):
         """Build a decision tree from the training set (X, y)."""
@@ -225,8 +231,11 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef SIZE_t min_samples_split = self.min_samples_split
         cdef double min_impurity_decrease = self.min_impurity_decrease
 
-        # Recursive partition (without actual recursion)
-        splitter.init(X, y, sample_weight_ptr)
+        if self.initial_roots:
+            pass
+        else:
+            # Recursive partition (without actual recursion)
+            splitter.init(X, y, sample_weight_ptr)
 
         cdef SIZE_t start
         cdef SIZE_t end
@@ -249,14 +258,24 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef Stack stack = Stack(INITIAL_STACK_SIZE)
         cdef StackRecord stack_record
 
-        with nogil:
+        if self.initial_roots:
+            # push reached leaf nodes onto stack
+            for key, value in reversed(sorted(self.initial_roots.items())):
+                end += value[0]
+                rc = stack.push(start, end, value[1], key[0], key[1],
+                                tree.impurity[key[0]], 0)
+                start += value[0]
+                if rc == -1:
+                    # got return code -1 - out-of-memory
+                    raise MemoryError()
+        else:
             # push root node onto stack
             rc = stack.push(0, n_node_samples, 0, _TREE_UNDEFINED, 0, INFINITY, 0)
             if rc == -1:
                 # got return code -1 - out-of-memory
-                with gil:
-                    raise MemoryError()
+                raise MemoryError()
 
+        with nogil:
             while not stack.is_empty():
                 stack.pop(&stack_record)
 
@@ -291,10 +310,17 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                     is_leaf = (is_leaf or split.pos >= end or
                                (split.improvement + EPSILON <
                                 min_impurity_decrease))
-
-                node_id = tree._add_node(parent, is_left, is_leaf, split.feature,
-                                         split.threshold, impurity, n_node_samples,
-                                         weighted_n_node_samples)
+                with gil:
+                    if parent in self.initial_roots:
+                        node_id = tree._update_node(parent, is_left, is_leaf,
+                                                    split.feature, split.threshold,
+                                                    impurity, n_node_samples,
+                                                    weighted_n_node_samples)
+                    else:
+                        node_id = tree._add_node(parent, is_left, is_leaf,
+                                                 split.feature, split.threshold,
+                                                 impurity, n_node_samples,
+                                                 weighted_n_node_samples)
 
                 if node_id == SIZE_MAX:
                     rc = -1
