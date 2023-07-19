@@ -528,7 +528,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
                     node.left_child = _TREE_LEAF
                     node.right_child = _TREE_LEAF
                     node.feature = _TREE_UNDEFINED
-                    node.split_value.threshold = _TREE_UNDEFINED
+                    node.threshold = _TREE_UNDEFINED
 
                     if self.store_leaf_values:
                         # copy leaf values to leaf_values array
@@ -728,13 +728,13 @@ cdef class CategoryCacheMgr:
 
     def __cinit__(self):
         self.n_nodes = 0
-        self.bits = NULL
+        # self.bits = NULL
 
     cdef void populate(
         self,
         Node *nodes,
         SIZE_t n_nodes,
-        INT32_t[:] n_categories
+        const INT32_t[:] n_categories
     ) noexcept:
         """Populate the category cache memory.
 
@@ -755,9 +755,9 @@ cdef class CategoryCacheMgr:
         -----
         The category cache memory is stored as a ragged array of shape
         (n_nodes, # categories in each feature), represented by a vector of
-        vectors of BITSET_t.
+        vectors of UINT64_t.
 
-        The BITSET_t type is a custom type used for storing category cache values.
+        The UINT64_t type is a custom type used for storing category cache values.
 
         This method modifies the `self.bits` attribute of the `CategoryCacheMgr`
         instance to store the populated cache memory.
@@ -765,17 +765,17 @@ cdef class CategoryCacheMgr:
         cdef SIZE_t i
         cdef INT32_t ncat
 
-        if nodes == NULL or n_categories == NULL:
+        if nodes == NULL or n_categories is None:
             return
 
         self.n_nodes = n_nodes
         
-        # initialize bits as a vector of vectors of BITSET_t
+        # initialize bits as a vector of vectors of UINT64_t
         # it is essentially a ragged array of shape (n_nodes, # categories in each feature)
-        self.bits = vector[vector[BITSET_t]](self.n_nodes)
+        self.bits = vector[vector[UINT64_t]](self.n_nodes)
 
         for i in range(n_nodes):
-            self.bits[i] = NULL
+            # self.bits[i] = NULL
 
             # if the node is a split-node, then we need to allocate memory for the cache
             if nodes[i].left_child != _TREE_LEAF:
@@ -783,12 +783,12 @@ cdef class CategoryCacheMgr:
                 ncat = n_categories[nodes[i].feature]
                 if ncat > 0:
                     cache_size = (ncat + 63) // 64
-                    self.bits[i] = vector[BITSET_t](cache_size)
+                    self.bits[i] = vector[UINT64_t](cache_size)
 
                     # allocate values to the cache for this node
                     setup_cat_cache(
                         self.bits[i],
-                        nodes[i].split_value.cat_split,
+                        nodes[i].cat_split,
                         ncat
                     )
 
@@ -835,8 +835,8 @@ cdef class BaseTree:
             else:
                 capacity = 2 * self.capacity
 
-        safe_realloc(&self.nodes, capacity, sizeof(Node))
-        safe_realloc(&self.value, capacity * self.value_stride, sizeof(double))
+        safe_realloc(&self.nodes, capacity)
+        safe_realloc(&self.value, capacity * self.value_stride)
 
         # value memory is initialised to 0 to enable classifier argmax
         if capacity > self.capacity:
@@ -867,7 +867,9 @@ cdef class BaseTree:
         """
         # left_child and right_child will be set later for a split node
         node.feature = split_node.feature
-        node.split_value = split_node.split_value
+        node.threshold = split_node.threshold
+        node.cat_split = split_node.cat_split
+        # node.split_value = split_node.split_value
         return 1
 
     cdef int _set_leaf_node(
@@ -887,7 +889,8 @@ cdef class BaseTree:
         node.left_child = _TREE_LEAF
         node.right_child = _TREE_LEAF
         node.feature = _TREE_UNDEFINED
-        node.split_value = _TREE_UNDEFINED
+        node.threshold = _TREE_UNDEFINED
+        node.cat_split = _TREE_UNDEFINED
         return 1
 
     cdef DTYPE_t _compute_feature(
@@ -1004,14 +1007,16 @@ cdef class BaseTree:
         # initialize Cache to go over categorical features
         cache_mgr = CategoryCacheMgr()
         cache_mgr.populate(self.nodes, self.node_count, self.n_categories)
-        cdef vector[vector[BITSET_t]] cat_caches = cache_mgr.bits
-        cdef vector[BITSET_t] cache = NULL
+        cdef vector[vector[UINT64_t]] cat_caches = cache_mgr.bits
+        # cdef vector[UINT64_t] cache = NULL
+
+        cdef const INT32_t[:] n_categories = self.n_categories
 
         # apply Cache to speed up categorical "apply"
-        cache_mgr = CategoryCacheMgr()
-        cache_mgr.populate(self.nodes, self.node_count, self.n_categories)
-        cdef BITSET_t** cat_caches = cache_mgr.bits
-        cdef BITSET_t* cache = NULL
+        # cache_mgr = CategoryCacheMgr()
+        # cache_mgr.populate(self.nodes, self.node_count, self.n_categories)
+        # cdef UINT64_t** cat_caches = cache_mgr.bits
+        # cdef UINT64_t* cache = NULL
 
         with nogil:
             for i in range(n_samples):
@@ -1029,8 +1034,11 @@ cdef class BaseTree:
                             node = &self.nodes[node.right_child]
                     elif goes_left(
                         X_i_node_feature,
-                        node.split_value,
-                        self.n_categories[node.feature],
+                        # node.split_value,
+                        # node.threshold,
+                        # self.n_categories[node.feature],
+                        node,
+                        n_categories,
                         cache
                     ):
                         node = &self.nodes[node.left_child]
@@ -1073,9 +1081,10 @@ cdef class BaseTree:
         # initialize Cache to go over categorical features
         cache_mgr = CategoryCacheMgr()
         cache_mgr.populate(self.nodes, self.node_count, self.n_categories)
-        cdef vector[vector[BITSET_t]] cat_caches = cache_mgr.bits
-        cdef vector[BITSET_t] cache = NULL
+        cdef vector[vector[UINT64_t]] cat_caches = cache_mgr.bits
+        # cdef vector[UINT64_t] cache = NULL
 
+        cdef const INT32_t[:] n_categories = self.n_categories
         # feature_to_sample as a data structure records the last seen sample
         # for each feature; functionally, it is an efficient way to identify
         # which features are nonzero in the present sample.
@@ -1105,8 +1114,11 @@ cdef class BaseTree:
 
                     if goes_left(
                         feature_value,
-                        node.split_value,
-                        self.n_categories[node.feature],
+                        # node.split_value,
+                        # node.threshold,
+                        # self.n_categories[node.feature],
+                        node,
+                        n_categories,
                         cache
                     ):
                         cache = cat_caches[node.left_child]
@@ -1151,6 +1163,8 @@ cdef class BaseTree:
             n_samples * (1 + self.max_depth), dtype=np.intp
         )
 
+        cdef const INT32_t[:] n_categories = self.n_categories
+
         # Initialize auxiliary data-structure
         cdef Node* node = NULL
         cdef SIZE_t i = 0
@@ -1158,8 +1172,8 @@ cdef class BaseTree:
         # initialize Cache to go over categorical features
         cache_mgr = CategoryCacheMgr()
         cache_mgr.populate(self.nodes, self.node_count, self.n_categories)
-        cdef vector[vector[BITSET_t]] cat_caches = cache_mgr.bits
-        cdef vector[BITSET_t] cache = NULL
+        cdef vector[vector[UINT64_t]] cat_caches = cache_mgr.bits
+        # cdef vector[UINT64_t] cache = NULL
 
         # the feature index
         cdef DOUBLE_t feature
@@ -1180,8 +1194,11 @@ cdef class BaseTree:
                     feature = self._compute_feature(X_ndarray, i, node)
                     if goes_left(
                         feature,
-                        node.split_value,
-                        self.n_categories[node.feature],
+                        # node.split_value,
+                        # node.threshold,
+                        # self.n_categories[node.feature],
+                        node,
+                        n_categories,
                         cache
                     ):
                         cache = cat_caches[node.left_child]
@@ -1236,8 +1253,10 @@ cdef class BaseTree:
         # initialize Cache to go over categorical features
         cache_mgr = CategoryCacheMgr()
         cache_mgr.populate(self.nodes, self.node_count, self.n_categories)
-        cdef vector[vector[BITSET_t]] cat_caches = cache_mgr.bits
-        cdef vector[BITSET_t] cache = NULL
+        cdef vector[vector[UINT64_t]] cat_caches = cache_mgr.bits
+        # cdef vector[UINT64_t] cache = NULL
+
+        cdef const INT32_t[:] n_categories = self.n_categories
 
         # feature_to_sample as a data structure records the last seen sample
         # for each feature; functionally, it is an efficient way to identify
@@ -1274,9 +1293,15 @@ cdef class BaseTree:
                     else:
                         feature_value = 0.
 
-                    if goes_left(feature_value, node.split_value,
-                                 self.n_categories[node.feature],
-                                 cache):
+                    if goes_left(
+                        feature_value, 
+                        #  node.split_value,
+                        #  node.threshold, 
+                        #  self.n_categories[node.feature],
+                        node,
+                        n_categories,
+                        cache
+                    ):
                         cache = cat_caches[node.left_child]
                         node = &self.nodes[node.left_child]
                     else:
@@ -1605,13 +1630,13 @@ cdef class Tree(BaseTree):
 
     @property
     def n_categories(self):
-        return np.asarray(self.n_categories)
+        return int32_ptr_to_ndarray(self.n_categories, self.n_features).copy()
 
     # TODO: Convert n_classes to cython.integral memory view once
     #  https://github.com/cython/cython/issues/5243 is fixed
     def __cinit__(
         self, int n_features, cnp.ndarray n_classes, int n_outputs,
-        np.ndarray[INT32_t, ndim=1] n_categories
+        cnp.ndarray[INT32_t, ndim=1] n_categories
     ):
         """Constructor."""
         cdef SIZE_t dummy = 0
@@ -1625,8 +1650,12 @@ cdef class Tree(BaseTree):
         self.n_classes = NULL
         safe_realloc(&self.n_classes, n_outputs)
 
+        self.n_categories = NULL
+        safe_realloc(&self.n_categories, n_features)
+
         # n-categories is a 1D array of size n_features
-        self.n_categories = n_categories
+        # self.n_categories = np.empty(n_features, dtype=np.int32)
+        # self.n_categories = n_categories
 
         self.max_n_classes = np.max(n_classes)
         self.value_stride = n_outputs * self.max_n_classes
@@ -1648,7 +1677,7 @@ cdef class Tree(BaseTree):
         self.value_samples = unordered_map[SIZE_t, vector[vector[DOUBLE_t]]]()
 
         # Ensure cython and numpy node sizes match up
-        np_node_size = <SIZE_t> (<np.dtype> NODE_DTYPE).itemsize
+        np_node_size = <SIZE_t> (<cnp.dtype> NODE_DTYPE).itemsize
         node_size = <SIZE_t> sizeof(Node)
         if (np_node_size != node_size):
             raise TypeError('Size of numpy NODE_DTYPE ({} bytes) does not'
@@ -1661,13 +1690,14 @@ cdef class Tree(BaseTree):
         free(self.n_classes)
         free(self.value)
         free(self.nodes)
+        free(self.n_categories)
 
     def __reduce__(self):
         """Reduce re-implementation, for pickling."""
         return (Tree, (self.n_features,
                        sizet_ptr_to_ndarray(self.n_classes, self.n_outputs),
                        self.n_outputs,
-                       self.n_categories),
+                       int32_ptr_to_ndarray(self.n_categories, self.n_features)),
                        self.__getstate__())
 
     def __getstate__(self):

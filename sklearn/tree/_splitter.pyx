@@ -21,6 +21,7 @@ from cython cimport final
 from libc.math cimport isnan
 from libc.stdlib cimport qsort
 from libc.string cimport memcpy
+from libc.string cimport memset
 cimport numpy as cnp
 
 from ._criterion cimport Criterion
@@ -32,7 +33,7 @@ from scipy.sparse import issparse
 from ._utils cimport RAND_R_MAX, log, rand_int, rand_uniform
 from ._utils cimport setup_cat_cache
 from ._utils cimport goes_left
-from ._utils cimport (BITSET_t, bs_get, bs_set, bs_flip_all,
+from ._utils cimport (UINT64_t, bs_get, bs_set, bs_flip_all,
                       bs_from_template)
 
 cdef double INFINITY = np.inf
@@ -49,7 +50,7 @@ cdef inline void _init_split(SplitRecord* self, SIZE_t start_pos) noexcept nogil
     self.impurity_right = INFINITY
     self.pos = start_pos
     self.feature = 0
-    self.split_value.threshold = 0.
+    self.threshold = 0.
     self.improvement = -INFINITY
     self.missing_go_to_left = False
     self.n_missing = 0
@@ -152,7 +153,7 @@ cdef class Splitter(BaseSplitter):
         double min_weight_leaf,
         object random_state,
         const cnp.int8_t[:] monotonic_cst,
-        bint breiman_short, 
+        bint breiman_shortcut, 
         *argv
     ):
         """
@@ -192,7 +193,7 @@ cdef class Splitter(BaseSplitter):
         self.random_state = random_state
 
         self.breiman_shortcut = breiman_shortcut
-        self.cat_cache = NULL
+        # self.cat_cache = NULL
     
         self.monotonic_cst = monotonic_cst
         self.with_monotonic_cst = monotonic_cst is not None
@@ -203,7 +204,8 @@ cdef class Splitter(BaseSplitter):
                              self.min_samples_leaf,
                              self.min_weight_leaf,
                              self.random_state,
-                             self.monotonic_cst), self.__getstate__())
+                             self.monotonic_cst,
+                             self.breiman_shortcut), self.__getstate__())
 
     cdef int init(
         self,
@@ -281,7 +283,7 @@ cdef class Splitter(BaseSplitter):
 
         self.sample_weight = sample_weight
 
-         self.criterion.init(
+        self.criterion.init(
             self.y,
             self.sample_weight,
             self.weighted_n_samples,
@@ -306,9 +308,9 @@ cdef class Splitter(BaseSplitter):
         # If needed, allocate cache space for categorical splits
         cdef INT32_t max_n_categories = max(self.n_categories)
         if max_n_categories > 0:
-            cache_size = (max_n_categories + 63) // 64
-            self.cat_cache = np.empty_like(cache_size, dtype=BITSET_t)
-            # safe_realloc(&self.cat_cache, cache_size, sizeof(BITSET_t))
+            cache_size = <int>((max_n_categories + 63) // 64)
+            self.cat_cache = np.zeros(cache_size, dtype=np.uint64)
+            # safe_realloc(&self.cat_cache, cache_size, sizeof(UINT64_t))
 
         return 0
 
@@ -419,14 +421,9 @@ cdef class Splitter(BaseSplitter):
         and produces a sorted list of category values.
         """
         cdef:
-            SIZE_t[:] samples = self.samples
             DTYPE_t[:] Xf = self.feature_values
-            DOUBLE_t[:] y = self.y
-            SIZE_t y_stride = self.y_stride
-            DOUBLE_t[:] sample_weight = self.sample_weight
-            DOUBLE_t w
             SIZE_t cat, localcat
-            SIZE_t q, partition_end
+            SIZE_t partition_end
             DTYPE_t sort_value[64]
             DTYPE_t sort_density[64]
 
@@ -435,10 +432,20 @@ cdef class Splitter(BaseSplitter):
         memset(sort_value, 0, 64 * sizeof(DTYPE_t))
         memset(sort_density, 0, 64 * sizeof(DTYPE_t))
 
-        for q in range(start, end):
-            cat = <SIZE_t> Xf[q]
-            w = sample_weight[samples[q]] if sample_weight else 1.0
-            sort_value[cat] += w * (y[y_stride * samples[q]])
+        cdef int i, k, p
+        cdef DOUBLE_t w = 1.0
+
+        # apply a sorting over the y values
+        # since we are in binary classification, there is only one column of y
+        for p in range(start, end):
+            # get the categorical variable value
+            cat = <SIZE_t> Xf[p]
+
+            # apply sorting with weighting by sample weight
+            i = self.samples[p]
+            if self.sample_weight is not None:
+                w = self.sample_weight[i]
+            sort_value[cat] += w * (self.y[i, 0])
             sort_density[cat] += w
 
         for localcat in range(ncat_present):

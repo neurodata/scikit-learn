@@ -7,20 +7,20 @@
 # License: BSD 3 clause
 
 # See _utils.pyx for details.
+import cython
+from libcpp.vector cimport vector
 
 cimport numpy as cnp
 
 from sklearn.neighbors._quad_tree cimport Cell
 
-from ._tree cimport Node
 
 ctypedef cnp.npy_float32 DTYPE_t          # Type of X
 ctypedef cnp.npy_float64 DOUBLE_t         # Type of y, sample_weight
 ctypedef cnp.npy_intp SIZE_t              # Type for indices and counters
 ctypedef cnp.npy_int32 INT32_t            # Signed 32 bit integer
 ctypedef cnp.npy_uint32 UINT32_t          # Unsigned 32 bit integer
-ctypedef np.npy_uint64 UINT64_t           # Unsigned 64 bit integer
-ctypedef UINT64_t BITSET_t
+ctypedef cnp.npy_uint64 UINT64_t          # Unsigned 64 bit integer
 
 cdef enum:
     # Max value for our rand_r replacement (near the bottom).
@@ -31,13 +31,13 @@ cdef enum:
     RAND_R_MAX = 2147483647
 
 
-ctypedef union SplitValue:
+cdef union SplitValue:
     # Union type to generalize the concept of a threshold to categorical
     # features. The floating point view, i.e. ``SplitValue.threshold`` is used
     # for numerical features, where feature values less than or equal to the
     # threshold go left, and values greater than the threshold go right.
     #
-    # For categorical features, the BITSET_t view (`SplitValue.cat_split``) is
+    # For categorical features, the UINT64_t view (`SplitValue.cat_split``) is
     # used. It works in one of two ways, indicated by the value of its least
     # significant bit (LSB). If the LSB is 0, then cat_split acts as a bitfield
     # for up to 64 categories, sending samples left if the bit corresponding to
@@ -48,7 +48,40 @@ ctypedef union SplitValue:
     # method allows up to 2**31 category values, but can only be used for
     # RandomSplitter.
     DOUBLE_t threshold
-    BITSET_t cat_split
+    UINT64_t cat_split
+
+cdef struct SplitRecord:
+    # Data to track sample split
+    SIZE_t feature         # Which feature to split on.
+    SIZE_t pos             # Split samples array at the given position,
+    #                      # i.e. count of samples below threshold for feature.
+    #                      # pos is >= end if the node is a leaf.
+    # SplitValue split_value # Generalized threshold for categorical and
+                           # non-categorical features
+    DOUBLE_t threshold
+    UINT64_t cat_split
+    double improvement     # Impurity improvement given parent node.
+    double impurity_left   # Impurity of the left split.
+    double impurity_right  # Impurity of the right split.
+    double lower_bound     # Lower bound on value of both children for monotonicity
+    double upper_bound     # Upper bound on value of both children for monotonicity
+    unsigned char missing_go_to_left  # Controls if missing values go to the left node.
+    SIZE_t n_missing        # Number of missing values for the feature being split on
+
+cdef struct Node:
+    # Base storage structure for the nodes in a Tree object
+
+    SIZE_t left_child                    # id of the left child of the node
+    SIZE_t right_child                   # id of the right child of the node
+    SIZE_t feature                       # Feature used for splitting the node
+    # SplitValue split_value               # Generalized threshold for categorical and
+                                         # non-categorical features
+    DOUBLE_t threshold
+    UINT64_t cat_split
+    DOUBLE_t impurity                    # Impurity of the node (i.e., the value of the criterion)
+    SIZE_t n_node_samples                # Number of samples at the node
+    DOUBLE_t weighted_n_node_samples     # Weighted number of samples at the node
+    unsigned char missing_go_to_left     # Whether features have missing values
 
 
 # safe_realloc(&p, n) resizes the allocation of p to n * sizeof(*p) bytes or
@@ -70,15 +103,15 @@ ctypedef fused realloc_ptr:
     (void**)
     (INT32_t*)
     (UINT32_t*)
-    (BITSET_t*)
+    (UINT64_t*)
 
-cdef realloc_ptr safe_realloc(realloc_ptr* p, size_t nelems, size_t elem_bytes) except * nogil
+cdef realloc_ptr safe_realloc(realloc_ptr* p, size_t nelems) except * nogil
 
 
 cdef cnp.ndarray sizet_ptr_to_ndarray(SIZE_t* data, SIZE_t size)
 
 
-cdef np.ndarray int32_ptr_to_ndarray(INT32_t* data, SIZE_t size)
+cdef cnp.ndarray int32_ptr_to_ndarray(INT32_t* data, SIZE_t size)
 
 
 cdef SIZE_t rand_int(SIZE_t low, SIZE_t high,
@@ -93,7 +126,7 @@ cdef double log(double x) noexcept nogil
 
 
 cdef void setup_cat_cache(
-    vector[BITSET_t]& cachebits,
+    vector[UINT64_t]& cachebits,
     UINT64_t cat_split,
     INT32_t n_categories
 ) noexcept nogil
@@ -101,9 +134,12 @@ cdef void setup_cat_cache(
 
 cdef bint goes_left(
     DTYPE_t feature_value,
-    SplitValue split,
-    INT32_t n_categories,
-    vector[BITSET_t]& cachebits
+    # SplitValue split,
+    # DOUBLE_t threshold,
+    # INT32_t n_categories,
+    Node* node,
+    const INT32_t[:] n_categories,
+    vector[UINT64_t]& cachebits
 ) noexcept nogil
 
 # =============================================================================
@@ -155,11 +191,11 @@ cdef class WeightedMedianCalculator:
     cdef DOUBLE_t get_median(self) noexcept nogil
 
 
-cdef BITSET_t bs_set(BITSET_t value, SIZE_t i) noexcept nogil
-cdef BITSET_t bs_reset(BITSET_t value, SIZE_t i) noexcept nogil
-cdef BITSET_t bs_flip(BITSET_t value, SIZE_t i) noexcept nogil
-cdef BITSET_t bs_flip_all(BITSET_t value, SIZE_t n_low_bits) noexcept nogil
-cdef bint bs_get(BITSET_t value, SIZE_t i) noexcept nogil
-cdef BITSET_t bs_from_template(UINT64_t template,
+cdef UINT64_t bs_set(UINT64_t value, SIZE_t i) noexcept nogil
+cdef UINT64_t bs_reset(UINT64_t value, SIZE_t i) noexcept nogil
+cdef UINT64_t bs_flip(UINT64_t value, SIZE_t i) noexcept nogil
+cdef UINT64_t bs_flip_all(UINT64_t value, SIZE_t n_low_bits) noexcept nogil
+cdef bint bs_get(UINT64_t value, SIZE_t i) noexcept nogil
+cdef UINT64_t bs_from_template(UINT64_t template,
                                INT32_t *cat_offs,
                                SIZE_t ncats_present) noexcept nogil
