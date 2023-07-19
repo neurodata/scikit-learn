@@ -2787,6 +2787,7 @@ def test_multioutput_quantiles():
         assert y_hat.shape == (4, 3, 2)
 
 
+<<<<<<< Updated upstream
 @pytest.mark.parametrize('name', ALL_TREES)
 @pytest.mark.parametrize('categorical', ['invalid string', [[0]],
                                          [False, False, False], [1, 2], [-3],
@@ -2812,23 +2813,36 @@ def test_no_sparse_with_categorical(name):
         Tree(categorical=[6, 10]).fit(X, y).predict(X_sparse)
 
 
+=======
+# Added from NOCATS PR: https://github.com/scikit-learn/scikit-learn/pull/12866/
+>>>>>>> Stashed changes
 def _make_categorical(n_rows: int, n_numerical: int, n_categorical: int,
                       cat_size: int, n_num_meaningful: int,
                       n_cat_meaningful: int, regression: bool,
                       return_tuple: bool, random_state: int):
 
     from sklearn.preprocessing import OneHotEncoder
+<<<<<<< Updated upstream
     rng = np.random.RandomState(random_state)
 
     numeric = rng.standard_normal((n_rows, n_numerical))
     categorical = rng.randint(0, cat_size, (n_rows, n_categorical))
+=======
+    np.random.seed(random_state)
+    numeric = np.random.standard_normal((n_rows, n_numerical))
+    categorical = np.random.randint(0, cat_size, (n_rows, n_categorical))
+>>>>>>> Stashed changes
     categorical_ohe = OneHotEncoder(categories='auto').fit_transform(
         categorical[:, :n_cat_meaningful])
 
     data_meaningful = np.hstack((numeric[:, :n_num_meaningful],
                                  categorical_ohe.todense()))
     _, cols = data_meaningful.shape
+<<<<<<< Updated upstream
     coefs = rng.standard_normal(cols)
+=======
+    coefs = np.random.standard_normal(cols)
+>>>>>>> Stashed changes
     y = np.dot(data_meaningful, coefs)
     y = np.asarray(y).reshape(-1)
     X = np.hstack((numeric, categorical))

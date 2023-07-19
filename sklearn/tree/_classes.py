@@ -124,6 +124,11 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         "min_impurity_decrease": [Interval(Real, 0.0, None, closed="left")],
         "ccp_alpha": [Interval(Real, 0.0, None, closed="left")],
         "store_leaf_values": ["boolean"],
+<<<<<<< Updated upstream
+=======
+        "monotonic_cst": ["array-like", None],
+        "categorical": ["array-like", StrOptions({"all"}), None],
+>>>>>>> Stashed changes
     }
 
     @abstractmethod
@@ -143,6 +148,11 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         class_weight=None,
         ccp_alpha=0.0,
         store_leaf_values=False,
+<<<<<<< Updated upstream
+=======
+        monotonic_cst=None,
+        categorical=None,
+>>>>>>> Stashed changes
     ):
         self.criterion = criterion
         self.splitter = splitter
@@ -157,6 +167,11 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         self.class_weight = class_weight
         self.ccp_alpha = ccp_alpha
         self.store_leaf_values = store_leaf_values
+<<<<<<< Updated upstream
+=======
+        self.monotonic_cst = monotonic_cst
+        self.categorical = categorical
+>>>>>>> Stashed changes
 
     def get_depth(self):
         """Return the depth of the decision tree.
@@ -389,6 +404,53 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             else:
                 sample_weight = expanded_class_weight
 
+        # Validate categorical features
+        if self.categorical is None:
+            categorical = np.array([], dtype=np.int)
+        elif isinstance(self.categorical, str):
+            if self.categorical == 'all':
+                categorical = np.arange(self.n_features_)
+            else:
+                raise ValueError("Invalid value for categorical: {}. Allowed"
+                                 " strings are 'all'"
+                                 "".format(self.categorical))
+        else:
+            categorical = np.atleast_1d(self.categorical).flatten()
+        if categorical.dtype == np.bool:
+            if categorical.size != self.n_features_:
+                raise ValueError("Invalid value for categorical: Shape of "
+                                 "boolean parameter categorical must "
+                                 "be (n_features,)")
+            categorical = np.nonzero(categorical)[0]
+        if (np.size(categorical) > self.n_features_ or
+            (categorical.size > 0 and
+             (categorical.min() < 0 or
+              categorical.max() >= self.n_features_))):
+            raise ValueError("Invalid value for categorical: Invalid shape or "
+                             "feature index for parameter categorical "
+                             "invalid.")
+        if issparse(X):
+            if categorical.size > 0:
+                raise NotImplementedError("Categorical features not supported"
+                                          " with sparse inputs")
+        else:
+            if np.any(X[:, categorical].astype(np.int) < 0):
+                raise ValueError("Invalid value for categorical: given values "
+                                 "for categorical features must be "
+                                 "non-negative.")
+
+        # Calculate n_categories and verify they are all at least 1% populated
+        n_cat_present = np.array([np.unique(X[:, i].astype(np.int)).size
+                                  if i in categorical else -1
+                                  for i in range(self.n_features_)],
+                                 dtype=np.int32)
+        if np.any((n_cat_present < 0.01 * n_cat_present)[categorical]):
+            warnings.warn("At least one categorical feature has less than 1%"
+                          " of its categories present in the sample. Runtime"
+                          " and memory usage will be much smaller if you"
+                          " represent the categories as sequential integers.",
+                          UserWarning)
+
         # Set min_weight_leaf from min_weight_fraction_leaf
         if sample_weight is None:
             min_weight_leaf = self.min_weight_fraction_leaf * n_samples
@@ -401,6 +463,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             y,
             sample_weight,
             missing_values_in_feature_mask,
+            categorical=categorical,
             min_samples_leaf,
             min_weight_leaf,
             max_leaf_nodes,
@@ -420,6 +483,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         y,
         sample_weight,
         missing_values_in_feature_mask,
+        categorical,
         min_samples_leaf,
         min_weight_leaf,
         max_leaf_nodes,
@@ -437,6 +501,11 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             Y targets.
         sample_weight : Array-like
             Sample weights
+        missing_values_in_feature_mask : ndarray of shape (n_features,), or None
+            Missing value mask. If missing values are not supported or there
+            are no missing values, return None.
+        categorical : ndarray of shape (n_categorical_features,)
+            Indices of categorical features.
         min_samples_leaf : float
             Number of samples required to be a leaf.
         min_weight_leaf : float
@@ -453,6 +522,10 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
 
         n_samples = X.shape[0]
 
+        n_categories = np.array([np.int(X[:, i].max()) + 1 if i in categorical
+                            else -1 for i in range(self.n_features_)],
+                        dtype=np.int32)
+    
         # Build tree
         criterion = self.criterion
         if not isinstance(criterion, BaseCriterion):
@@ -467,6 +540,14 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             # might be shared and modified concurrently during parallel fitting
             criterion = copy.deepcopy(criterion)
 
+        if is_classifier(self):
+            breiman_shortcut = (self.n_classes_.tolist() == [2] and
+                                (isinstance(criterion, _criterion.Gini) or
+                                 isinstance(criterion, _criterion.Entropy)))
+        else:
+            breiman_shortcut = isinstance(criterion, _criterion.MSE)
+
+
         SPLITTERS = SPARSE_SPLITTERS if issparse(X) else DENSE_SPLITTERS
 
         splitter = self.splitter
@@ -477,16 +558,30 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 min_samples_leaf,
                 min_weight_leaf,
                 random_state,
+<<<<<<< Updated upstream
+=======
+                monotonic_cst,
+                breiman_shortcut,
+>>>>>>> Stashed changes
             )
-
+        
+        # once splitter is inferred, we want to error-check that the splitter
+        # supports certain number of categorical data
+        if (not isinstance(splitter, _splitter.RandomSplitter) and
+                np.max(n_categories) > 64):
+            raise ValueError("Categorical features with greater than 64"
+                             " categories not supported with DecisionTree;"
+                             " try ExtraTree.")
+        
         if is_classifier(self):
-            self.tree_ = Tree(self.n_features_in_, self.n_classes_, self.n_outputs_)
+            self.tree_ = Tree(self.n_features_in_, self.n_classes_, self.n_outputs_, n_categories)
         else:
             self.tree_ = Tree(
                 self.n_features_in_,
                 # TODO: tree shouldn't need this in this case
                 np.array([1] * self.n_outputs_, dtype=np.intp),
                 self.n_outputs_,
+                n_categories,
             )
 
         # Use BestFirst if max_leaf_nodes given; use DepthFirst otherwise
@@ -511,7 +606,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 self.min_impurity_decrease,
                 self.store_leaf_values,
             )
-        builder.build(self.tree_, X, y, sample_weight, missing_values_in_feature_mask)
+        builder.build(self.tree_, X, y, sample_weight, missing_values_in_feature_mask, n_categories)
 
         if self.n_outputs_ == 1 and is_classifier(self):
             self.n_classes_ = self.n_classes_[0]
@@ -537,6 +632,9 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 X.indices.dtype != np.intc or X.indptr.dtype != np.intc
             ):
                 raise ValueError("No support for np.int64 index based sparse matrices")
+            if issparse(X) and np.any(self.tree_.n_categories > 0):
+                raise NotImplementedError("Categorical features not supported"
+                                          " with sparse inputs")
         else:
             # The number of features is checked regardless of `check_input`
             self._check_n_features(X, reset=False)
@@ -1003,6 +1101,41 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         One could instead store the indices in ``y_train`` that fall into each leaf,
         which would lower RAM/diskspace usage.
 
+<<<<<<< Updated upstream
+=======
+    monotonic_cst : array-like of int of shape (n_features), default=None
+        Indicates the monotonicity constraint to enforce on each feature.
+          - 1: monotonic increase
+          - 0: no constraint
+          - -1: monotonic decrease
+
+        If monotonic_cst is None, no constraints are applied.
+
+        Monotonicity constraints are not supported for:
+          - multiclass classifications (i.e. when `n_classes > 2`),
+          - multioutput classifications (i.e. when `n_outputs_ > 1`),
+          - classifications trained on data with missing values.
+
+        The constraints hold over the probability of the positive class.
+
+        Read more in the :ref:`User Guide <monotonic_cst_gbdt>`.
+
+        .. versionadded:: 1.4
+
+    categorical : array-like or str
+        Array of feature indices, boolean array of length n_features,
+        ``'all'`` or `None`. Indicates which features should be
+        considered as categorical rather than ordinal. For decision trees,
+        the maximum number of categories is 64. In practice, the limit will
+        often be lower because the process of searching for the best possible
+        split grows exponentially with the number of categories. However, a
+        shortcut due to Breiman (1984) is used when fitting data with binary
+        labels using the ``Gini`` or ``Entropy`` criteria. In this case,
+        the runtime is linear in the number of categories. Extra-random trees
+        have an upper limit of :math:`2^{31}` categories, and runtimes
+        linear in the number of categories.
+
+>>>>>>> Stashed changes
     Attributes
     ----------
     classes_ : ndarray of shape (n_classes,) or list of ndarray
@@ -1121,6 +1254,11 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         class_weight=None,
         ccp_alpha=0.0,
         store_leaf_values=False,
+<<<<<<< Updated upstream
+=======
+        monotonic_cst=None,
+        categorical=None
+>>>>>>> Stashed changes
     ):
         super().__init__(
             criterion=criterion,
@@ -1136,6 +1274,7 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
             min_impurity_decrease=min_impurity_decrease,
             ccp_alpha=ccp_alpha,
             store_leaf_values=store_leaf_values,
+            categorical=categorical,
         )
 
     @_fit_context(prefer_skip_nested_validation=True)
@@ -1396,6 +1535,37 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
         One could instead store the indices in ``y_train`` that fall into each leaf,
         which would lower RAM/diskspace usage.
 
+<<<<<<< Updated upstream
+=======
+    monotonic_cst : array-like of int of shape (n_features), default=None
+        Indicates the monotonicity constraint to enforce on each feature.
+          - 1: monotonic increase
+          - 0: no constraint
+          - -1: monotonic decrease
+
+        If monotonic_cst is None, no constraints are applied.
+
+        Monotonicity constraints are not supported for:
+          - multioutput regressions (i.e. when `n_outputs_ > 1`),
+          - regressions trained on data with missing values.
+
+        Read more in the :ref:`User Guide <monotonic_cst_gbdt>`.
+
+        .. versionadded:: 1.4
+
+    categorical : array-like or str
+        Array of feature indices, boolean array of length n_features,
+        ``'all'`` or `None`. Indicates which features should be
+        considered as categorical rather than ordinal. For decision trees,
+        the maximum number of categories is 64. In practice, the limit will
+        often be lower because the process of searching for the best possible
+        split grows exponentially with the number of categories. However, a
+        shortcut due to Breiman (1984) is used when fitting data using the
+        ``MSE`` criterion. In this case, the runtime is linear in the number
+        of categories. Extra-random trees have an upper limit of :math:`2^{31}`
+        categories, and runtimes linear in the number of categories.
+
+>>>>>>> Stashed changes
     Attributes
     ----------
     feature_importances_ : ndarray of shape (n_features,)
@@ -1495,6 +1665,11 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
         min_impurity_decrease=0.0,
         ccp_alpha=0.0,
         store_leaf_values=False,
+<<<<<<< Updated upstream
+=======
+        monotonic_cst=None,
+        categorical=None
+>>>>>>> Stashed changes
     ):
         super().__init__(
             criterion=criterion,
@@ -1509,6 +1684,11 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
             min_impurity_decrease=min_impurity_decrease,
             ccp_alpha=ccp_alpha,
             store_leaf_values=store_leaf_values,
+<<<<<<< Updated upstream
+=======
+            monotonic_cst=monotonic_cst,
+            categorical=categorical,
+>>>>>>> Stashed changes
         )
 
     @_fit_context(prefer_skip_nested_validation=True)
@@ -1733,6 +1913,35 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
         One could instead store the indices in ``y_train`` that fall into each leaf,
         which would lower RAM/diskspace usage.
 
+<<<<<<< Updated upstream
+=======
+    monotonic_cst : array-like of int of shape (n_features), default=None
+        Indicates the monotonicity constraint to enforce on each feature.
+          - 1: monotonic increase
+          - 0: no constraint
+          - -1: monotonic decrease
+
+        If monotonic_cst is None, no constraints are applied.
+
+        Monotonicity constraints are not supported for:
+          - multiclass classifications (i.e. when `n_classes > 2`),
+          - multioutput classifications (i.e. when `n_outputs_ > 1`),
+          - classifications trained on data with missing values.
+
+        The constraints hold over the probability of the positive class.
+
+        Read more in the :ref:`User Guide <monotonic_cst_gbdt>`.
+
+        .. versionadded:: 1.4
+
+    categorical : array-like or str
+        Array of feature indices, boolean array of length n_features,
+        ``'all'`` or `None`. Indicates which features should be
+        considered as categorical rather than ordinal. Extra-random trees
+        have an upper limit of :math:`2^{31}` categories, and runtimes
+        linear in the number of categories.
+
+>>>>>>> Stashed changes
     Attributes
     ----------
     classes_ : ndarray of shape (n_classes,) or list of ndarray
@@ -1834,6 +2043,11 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
         class_weight=None,
         ccp_alpha=0.0,
         store_leaf_values=False,
+<<<<<<< Updated upstream
+=======
+        monotonic_cst=None,
+        categorical=None
+>>>>>>> Stashed changes
     ):
         super().__init__(
             criterion=criterion,
@@ -1849,6 +2063,11 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
             random_state=random_state,
             ccp_alpha=ccp_alpha,
             store_leaf_values=store_leaf_values,
+<<<<<<< Updated upstream
+=======
+            monotonic_cst=monotonic_cst,
+            categorical=categorical,
+>>>>>>> Stashed changes
         )
 
 
@@ -1989,6 +2208,32 @@ class ExtraTreeRegressor(DecisionTreeRegressor):
         One could instead store the indices in ``y_train`` that fall into each leaf,
         which would lower RAM/diskspace usage.
 
+<<<<<<< Updated upstream
+=======
+    monotonic_cst : array-like of int of shape (n_features), default=None
+        Indicates the monotonicity constraint to enforce on each feature.
+          - 1: monotonic increase
+          - 0: no constraint
+          - -1: monotonic decrease
+
+        If monotonic_cst is None, no constraints are applied.
+
+        Monotonicity constraints are not supported for:
+          - multioutput regressions (i.e. when `n_outputs_ > 1`),
+          - regressions trained on data with missing values.
+
+        Read more in the :ref:`User Guide <monotonic_cst_gbdt>`.
+
+        .. versionadded:: 1.4
+
+    categorical : array-like or str
+        Array of feature indices, boolean array of length n_features,
+        ``'all'`` or `None`. Indicates which features should be
+        considered as categorical rather than ordinal. Extra-random trees
+        have an upper limit of :math:`2^{31}` categories, and runtimes
+        linear in the number of categories.
+
+>>>>>>> Stashed changes
     Attributes
     ----------
     max_features_ : int
@@ -2073,6 +2318,11 @@ class ExtraTreeRegressor(DecisionTreeRegressor):
         max_leaf_nodes=None,
         ccp_alpha=0.0,
         store_leaf_values=False,
+<<<<<<< Updated upstream
+=======
+        monotonic_cst=None,
+        categorical=None
+>>>>>>> Stashed changes
     ):
         super().__init__(
             criterion=criterion,
@@ -2087,4 +2337,9 @@ class ExtraTreeRegressor(DecisionTreeRegressor):
             random_state=random_state,
             ccp_alpha=ccp_alpha,
             store_leaf_values=store_leaf_values,
+<<<<<<< Updated upstream
+=======
+            monotonic_cst=monotonic_cst,
+            categorical=categorical,
+>>>>>>> Stashed changes
         )
