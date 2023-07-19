@@ -725,7 +725,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         ----------
         X : {array-like, sparse matrix} of shape (n_samples, n_features)
             Input data.
-        quantiles : float, optional
+        quantiles : array-like, float, optional
             The quantiles at which to evaluate, by default 0.5 (median).
         method : str, optional
             The method to interpolate, by default 'linear'. Can be any keyword
@@ -746,7 +746,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         X = self._validate_X_predict(X)
 
         if not isinstance(quantiles, (np.ndarray, list)):
-            quantiles = np.array([quantiles])
+            quantiles = np.atleast_1d(np.array(quantiles))
 
         # if we trained a binning tree, then we should re-bin the data
         # XXX: this is inefficient and should be improved to be in line with what
@@ -785,7 +785,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
             # get quantiles across all leaf node samples
             y_hat[idx, ...] = np.quantile(
-                leaf_node_samples, quantiles, axis=0, interpolation=method
+                leaf_node_samples, quantiles, axis=0, method=method
             )
 
             if is_classifier(self):

@@ -84,51 +84,67 @@ FOREST_CLASSIFIERS_REGRESSORS: Dict[str, Any] = FOREST_CLASSIFIERS.copy()
 FOREST_CLASSIFIERS_REGRESSORS.update(FOREST_REGRESSORS)
 
 
-pytest.mark.parametrize('model', FOREST_CLASSIFIERS_REGRESSORS)
-@pytest.mark.parametrize('data_params', [
-    {'n_rows': 10000,
-     'n_numerical': 10,
-     'n_categorical': 5,
-     'cat_size': 3,
-     'n_num_meaningful': 1,
-     'n_cat_meaningful': 2},
-    {'n_rows': 1000,
-     'n_numerical': 0,
-     'n_categorical': 5,
-     'cat_size': 3,
-     'n_num_meaningful': 0,
-     'n_cat_meaningful': 3},
-    {'n_rows': 1000,
-     'n_numerical': 5,
-     'n_categorical': 5,
-     'cat_size': 64,
-     'n_num_meaningful': 0,
-     'n_cat_meaningful': 2},
-    {'n_rows': 1000,
-     'n_numerical': 5,
-     'n_categorical': 5,
-     'cat_size': 3,
-     'n_num_meaningful': 0,
-     'n_cat_meaningful': 3}])
+pytest.mark.parametrize("model", FOREST_CLASSIFIERS_REGRESSORS)
+
+
+@pytest.mark.parametrize(
+    "data_params",
+    [
+        {
+            "n_rows": 10000,
+            "n_numerical": 10,
+            "n_categorical": 5,
+            "cat_size": 3,
+            "n_num_meaningful": 1,
+            "n_cat_meaningful": 2,
+        },
+        {
+            "n_rows": 1000,
+            "n_numerical": 0,
+            "n_categorical": 5,
+            "cat_size": 3,
+            "n_num_meaningful": 0,
+            "n_cat_meaningful": 3,
+        },
+        {
+            "n_rows": 1000,
+            "n_numerical": 5,
+            "n_categorical": 5,
+            "cat_size": 64,
+            "n_num_meaningful": 0,
+            "n_cat_meaningful": 2,
+        },
+        {
+            "n_rows": 1000,
+            "n_numerical": 5,
+            "n_categorical": 5,
+            "cat_size": 3,
+            "n_num_meaningful": 0,
+            "n_cat_meaningful": 3,
+        },
+    ],
+)
 def test_categorical_data(model, data_params):
     # DecisionTrees are too slow for large category sizes.
-    if data_params['cat_size'] > 8 and 'RandomForest' in model:
+    if data_params["cat_size"] > 8 and "RandomForest" in model:
         pass
 
     X, y, meaningful_features = _make_categorical(
         **data_params,
         regression=model in FOREST_REGRESSORS,
         return_tuple=True,
-        random_state=42)
+        random_state=42,
+    )
     rows, cols = X.shape
-    categorical_features = (np.arange(data_params['n_categorical']) +
-                            data_params['n_numerical'])
+    categorical_features = (
+        np.arange(data_params["n_categorical"]) + data_params["n_numerical"]
+    )
 
     model = FOREST_CLASSIFIERS_REGRESSORS[model](
-        random_state=42, categorical=categorical_features,
-        n_estimators=100).fit(X, y)
+        random_state=42, categorical=categorical_features, n_estimators=100
+    ).fit(X, y)
     fi = model.feature_importances_
-    bad_features = np.array([True]*cols)
+    bad_features = np.array([True] * cols)
     bad_features[meaningful_features] = False
 
     good_ones = fi[meaningful_features]
