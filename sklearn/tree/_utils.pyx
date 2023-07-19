@@ -173,7 +173,7 @@ cdef inline bint goes_left(
     result : bint
         Indicating whether the left branch should be used.
     """
-    cdef SIZE_t idx, shift
+    cdef SIZE_t idx
     cdef INT32_t n_categories_feature = n_categories[node.feature]
 
     if n_categories_feature < 0:

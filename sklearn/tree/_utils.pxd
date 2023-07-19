@@ -57,7 +57,7 @@ cdef struct SplitRecord:
     #                      # i.e. count of samples below threshold for feature.
     #                      # pos is >= end if the node is a leaf.
     # SplitValue split_value # Generalized threshold for categorical and
-                           # non-categorical features
+    #                      # non-categorical features
     DOUBLE_t threshold
     UINT64_t cat_split
     double improvement     # Impurity improvement given parent node.
@@ -74,8 +74,8 @@ cdef struct Node:
     SIZE_t left_child                    # id of the left child of the node
     SIZE_t right_child                   # id of the right child of the node
     SIZE_t feature                       # Feature used for splitting the node
-    # SplitValue split_value               # Generalized threshold for categorical and
-                                         # non-categorical features
+    # SplitValue split_value             # Generalized threshold for categorical and
+    #                                    # non-categorical features
     DOUBLE_t threshold
     UINT64_t cat_split
     DOUBLE_t impurity                    # Impurity of the node (i.e., the value of the criterion)

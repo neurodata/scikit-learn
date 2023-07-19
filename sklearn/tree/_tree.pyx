@@ -769,7 +769,7 @@ cdef class CategoryCacheMgr:
             return
 
         self.n_nodes = n_nodes
-        
+
         # initialize bits as a vector of vectors of UINT64_t
         # it is essentially a ragged array of shape (n_nodes, # categories in each feature)
         self.bits = vector[vector[UINT64_t]](self.n_nodes)
@@ -1168,7 +1168,7 @@ cdef class BaseTree:
         # Initialize auxiliary data-structure
         cdef Node* node = NULL
         cdef SIZE_t i = 0
-        
+
         # initialize Cache to go over categorical features
         cache_mgr = CategoryCacheMgr()
         cache_mgr.populate(self.nodes, self.node_count, self.n_categories)
@@ -1249,7 +1249,7 @@ cdef class BaseTree:
         cdef DTYPE_t* X_sample = NULL
         cdef SIZE_t i = 0
         cdef INT32_t k = 0
-        
+
         # initialize Cache to go over categorical features
         cache_mgr = CategoryCacheMgr()
         cache_mgr.populate(self.nodes, self.node_count, self.n_categories)
@@ -1294,9 +1294,9 @@ cdef class BaseTree:
                         feature_value = 0.
 
                     if goes_left(
-                        feature_value, 
+                        feature_value,
                         #  node.split_value,
-                        #  node.threshold, 
+                        #  node.threshold,
                         #  self.n_categories[node.feature],
                         node,
                         n_categories,
@@ -1698,7 +1698,7 @@ cdef class Tree(BaseTree):
                        sizet_ptr_to_ndarray(self.n_classes, self.n_outputs),
                        self.n_outputs,
                        int32_ptr_to_ndarray(self.n_categories, self.n_features)),
-                       self.__getstate__())
+                self.__getstate__())
 
     def __getstate__(self):
         """Getstate re-implementation, for pickling."""

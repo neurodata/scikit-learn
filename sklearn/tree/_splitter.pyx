@@ -31,10 +31,6 @@ import numpy as np
 from scipy.sparse import issparse
 
 from ._utils cimport RAND_R_MAX, log, rand_int, rand_uniform
-from ._utils cimport setup_cat_cache
-from ._utils cimport goes_left
-from ._utils cimport (UINT64_t, bs_get, bs_set, bs_flip_all,
-                      bs_from_template)
 
 cdef double INFINITY = np.inf
 
@@ -153,7 +149,7 @@ cdef class Splitter(BaseSplitter):
         double min_weight_leaf,
         object random_state,
         const cnp.int8_t[:] monotonic_cst,
-        bint breiman_shortcut, 
+        bint breiman_shortcut,
         *argv
     ):
         """
@@ -193,8 +189,6 @@ cdef class Splitter(BaseSplitter):
         self.random_state = random_state
 
         self.breiman_shortcut = breiman_shortcut
-        # self.cat_cache = NULL
-    
         self.monotonic_cst = monotonic_cst
         self.with_monotonic_cst = monotonic_cst is not None
 
@@ -423,7 +417,6 @@ cdef class Splitter(BaseSplitter):
         cdef:
             DTYPE_t[:] Xf = self.feature_values
             SIZE_t cat, localcat
-            SIZE_t partition_end
             DTYPE_t sort_value[64]
             DTYPE_t sort_density[64]
 
@@ -432,7 +425,7 @@ cdef class Splitter(BaseSplitter):
         memset(sort_value, 0, 64 * sizeof(DTYPE_t))
         memset(sort_density, 0, 64 * sizeof(DTYPE_t))
 
-        cdef int i, k, p
+        cdef int i, p
         cdef DOUBLE_t w = 1.0
 
         # apply a sorting over the y values
@@ -920,8 +913,6 @@ cdef inline int node_split_random(
     cdef SIZE_t n_visited_features = 0
     cdef DTYPE_t min_feature_value
     cdef DTYPE_t max_feature_value
-
-    cdef UINT64_t ui
 
     _init_split(&best_split, end)
 
