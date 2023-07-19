@@ -10,6 +10,7 @@
 # License: BSD 3 clause
 
 # See _splitter.pyx for details.
+cimport numpy as cnp
 
 from libcpp.vector cimport vector
 
@@ -25,15 +26,17 @@ from ._utils cimport SplitValue, BITSET_t
 
 cdef struct SplitRecord:
     # Data to track sample split
-    SIZE_t feature          # Which feature to split on.
-    SIZE_t pos              # Split samples array at the given position,
-    #                       # i.e. count of samples below threshold for feature.
-    #                       # pos is >= end if the node is a leaf.
-    SplitValue split_value  # Generalized threshold for categorical and
-    #                       # non-categorical features
-    double improvement      # Impurity improvement given parent node.
-    double impurity_left    # Impurity of the left split.
-    double impurity_right   # Impurity of the right split.
+    SIZE_t feature         # Which feature to split on.
+    SIZE_t pos             # Split samples array at the given position,
+    #                      # i.e. count of samples below threshold for feature.
+    #                      # pos is >= end if the node is a leaf.
+    SplitValue split_value # Generalized threshold for categorical and
+                           # non-categorical features
+    double improvement     # Impurity improvement given parent node.
+    double impurity_left   # Impurity of the left split.
+    double impurity_right  # Impurity of the right split.
+    double lower_bound     # Lower bound on value of both children for monotonicity
+    double upper_bound     # Upper bound on value of both children for monotonicity
     unsigned char missing_go_to_left  # Controls if missing values go to the left node.
     SIZE_t n_missing        # Number of missing values for the feature being split on
 
@@ -93,7 +96,9 @@ cdef class BaseSplitter:
         self,
         double impurity,   # Impurity of the node
         SplitRecord* split,
-        SIZE_t* n_constant_features
+        SIZE_t* n_constant_features,
+        double lower_bound,
+        double upper_bound,
     ) except -1 nogil
     cdef void node_value(self, double* dest) noexcept nogil
     cdef double node_impurity(self) noexcept nogil
@@ -109,6 +114,14 @@ cdef class Splitter(BaseSplitter):
     cdef bint breiman_shortcut          # Whether decision trees are allowed to use the
     #                                   # Breiman shortcut for categorical features
     #                                   # during binary classification.
+
+    # Monotonicity constraints for each feature.
+    # The encoding is as follows:
+    #   -1: monotonic decrease
+    #    0: no constraint
+    #   +1: monotonic increase
+    cdef const cnp.int8_t[:] monotonic_cst
+    cdef bint with_monotonic_cst
 
     cdef int init(
         self,
@@ -128,6 +141,14 @@ cdef class Splitter(BaseSplitter):
         SIZE_t n_missing,
         bint missing_go_to_left,
     ) noexcept nogil
+
     cdef bint check_postsplit_conditions(
         self
+    ) noexcept nogil
+
+    cdef void clip_node_value(
+        self,
+        double* dest,
+        double lower_bound,
+        double upper_bound
     ) noexcept nogil
