@@ -35,7 +35,7 @@ cdef class CategoryCacheMgr:
     cdef void populate(
         self,
         Node* nodes,
-        SIZE_t n_nodes, 
+        SIZE_t n_nodes,
         INT32_t[:] n_categories
     ) noexcept
 
