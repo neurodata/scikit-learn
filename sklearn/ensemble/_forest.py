@@ -1533,12 +1533,12 @@ class RandomForestClassifier(ForestClassifier):
     max_bins : int, default=255
         The maximum number of bins to use for non-missing values.
 
-        **Experimental feature**
+        **This is an experimental feature**.
 
     store_leaf_values : bool, default=False
         Whether to store the leaf values in the ``get_leaf_node_samples`` function.
 
-        **Experimental feature**
+        **This is an experimental feature**.
 
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
@@ -1925,12 +1925,12 @@ class RandomForestRegressor(ForestRegressor):
         The maximum number of bins to use for non-missing values. Used for
         speeding up training time.
 
-        **Experimental feature**
+        **This is an experimental feature**.
 
     store_leaf_values : bool, default=False
         Whether to store the leaf values in the ``get_leaf_node_samples`` function.
 
-        **Experimental feature**
+        **This is an experimental feature**.
 
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
@@ -2307,31 +2307,12 @@ class ExtraTreesClassifier(ForestClassifier):
     max_bins : int, default=255
         The maximum number of bins to use for non-missing values.
 
-        **Experimental feature**
+        **This is an experimental feature**.
 
     store_leaf_values : bool, default=False
         Whether to store the leaf values in the ``get_leaf_node_samples`` function.
 
-        **Experimental feature**
-
-    monotonic_cst : array-like of int of shape (n_features), default=None
-        Indicates the monotonicity constraint to enforce on each feature.
-          - 1: monotonically increasing
-          - 0: no constraint
-          - -1: monotonically decreasing
-
-        If monotonic_cst is None, no constraints are applied.
-
-        Monotonicity constraints are not supported for:
-          - multiclass classifications (i.e. when `n_classes > 2`),
-          - multioutput classifications (i.e. when `n_outputs_ > 1`),
-          - classifications trained on data with missing values.
-
-        The constraints hold over the probability of the positive class.
-
-        Read more in the :ref:`User Guide <monotonic_cst_gbdt>`.
-
-        .. versionadded:: 1.4
+        **This is an experimental feature**.
 
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
@@ -2702,12 +2683,12 @@ class ExtraTreesRegressor(ForestRegressor):
     max_bins : int, default=255
         The maximum number of bins to use for non-missing values.
 
-        **Experimental feature**
+        **This is an experimental feature**.
 
     store_leaf_values : bool, default=False
         Whether to store the leaf values in the ``get_leaf_node_samples`` function.
 
-        **Experimental feature**
+        **This is an experimental feature**.
 
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
@@ -2989,6 +2970,9 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
         and add more estimators to the ensemble, otherwise, just fit a whole
         new forest. See :term:`Glossary <warm_start>` and
         :ref:`gradient_boosting_warm_start` for details.
+
+    store_leaf_values : bool, default=False
+        Whether to store the leaf values in the ``get_leaf_node_samples`` function.
 
     Attributes
     ----------
