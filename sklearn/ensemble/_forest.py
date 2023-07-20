@@ -725,7 +725,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         ----------
         X : {array-like, sparse matrix} of shape (n_samples, n_features)
             Input data.
-        quantiles : float, optional
+        quantiles : array-like, float, optional
             The quantiles at which to evaluate, by default 0.5 (median).
         method : str, optional
             The method to interpolate, by default 'linear'. Can be any keyword
@@ -746,7 +746,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         X = self._validate_X_predict(X)
 
         if not isinstance(quantiles, (np.ndarray, list)):
-            quantiles = np.array([quantiles])
+            quantiles = np.atleast_1d(np.array(quantiles))
 
         # if we trained a binning tree, then we should re-bin the data
         # XXX: this is inefficient and should be improved to be in line with what
@@ -1559,6 +1559,17 @@ class RandomForestClassifier(ForestClassifier):
 
         .. versionadded:: 1.4
 
+    categorical : array-like or str
+        Array of feature indices, boolean array of length n_features,
+        ``'all'`` or `None`. Indicates which features should be
+        considered as categorical rather than ordinal. For decision trees,
+        the maximum number of categories is 64. In practice, the limit will
+        often be lower because the process of searching for the best possible
+        split grows exponentially with the number of categories. However, a
+        shortcut due to Breiman (1984) is used when fitting data with binary
+        labels using the ``Gini`` or ``Entropy`` criteria. In this case,
+        the runtime is linear in the number of categories.
+
     Attributes
     ----------
     estimator_ : :class:`~sklearn.tree.DecisionTreeClassifier`
@@ -1702,6 +1713,7 @@ class RandomForestClassifier(ForestClassifier):
         max_bins=None,
         store_leaf_values=False,
         monotonic_cst=None,
+        categorical=None,
     ):
         super().__init__(
             estimator=DecisionTreeClassifier(),
@@ -1719,6 +1731,7 @@ class RandomForestClassifier(ForestClassifier):
                 "ccp_alpha",
                 "store_leaf_values",
                 "monotonic_cst",
+                "categorical",
             ),
             bootstrap=bootstrap,
             oob_score=oob_score,
@@ -1742,6 +1755,7 @@ class RandomForestClassifier(ForestClassifier):
         self.min_impurity_decrease = min_impurity_decrease
         self.monotonic_cst = monotonic_cst
         self.ccp_alpha = ccp_alpha
+        self.categorical = categorical
 
 
 class RandomForestRegressor(ForestRegressor):
@@ -1948,6 +1962,17 @@ class RandomForestRegressor(ForestRegressor):
 
         .. versionadded:: 1.4
 
+    categorical : array-like or str
+        Array of feature indices, boolean array of length n_features,
+        ``'all'`` or `None`. Indicates which features should be
+        considered as categorical rather than ordinal. For decision trees,
+        the maximum number of categories is 64. In practice, the limit will
+        often be lower because the process of searching for the best possible
+        split grows exponentially with the number of categories. However, a
+        shortcut due to Breiman (1984) is used when fitting data with binary
+        labels using the ``Gini`` or ``Entropy`` criteria. In this case,
+        the runtime is linear in the number of categories.
+
     Attributes
     ----------
     estimator_ : :class:`~sklearn.tree.DecisionTreeRegressor`
@@ -2078,6 +2103,7 @@ class RandomForestRegressor(ForestRegressor):
         max_bins=None,
         store_leaf_values=False,
         monotonic_cst=None,
+        categorical=None,
     ):
         super().__init__(
             estimator=DecisionTreeRegressor(),
@@ -2095,6 +2121,7 @@ class RandomForestRegressor(ForestRegressor):
                 "ccp_alpha",
                 "store_leaf_values",
                 "monotonic_cst",
+                "categorical",
             ),
             bootstrap=bootstrap,
             oob_score=oob_score,
@@ -2117,6 +2144,7 @@ class RandomForestRegressor(ForestRegressor):
         self.min_impurity_decrease = min_impurity_decrease
         self.ccp_alpha = ccp_alpha
         self.monotonic_cst = monotonic_cst
+        self.categorical = categorical
 
 
 class ExtraTreesClassifier(ForestClassifier):
@@ -2333,24 +2361,16 @@ class ExtraTreesClassifier(ForestClassifier):
 
         .. versionadded:: 1.4
 
-    monotonic_cst : array-like of int of shape (n_features), default=None
-        Indicates the monotonicity constraint to enforce on each feature.
-          - 1: monotonically increasing
-          - 0: no constraint
-          - -1: monotonically decreasing
-
-        If monotonic_cst is None, no constraints are applied.
-
-        Monotonicity constraints are not supported for:
-          - multiclass classifications (i.e. when `n_classes > 2`),
-          - multioutput classifications (i.e. when `n_outputs_ > 1`),
-          - classifications trained on data with missing values.
-
-        The constraints hold over the probability of the positive class.
-
-        Read more in the :ref:`User Guide <monotonic_cst_gbdt>`.
-
-        .. versionadded:: 1.4
+    categorical : array-like or str
+        Array of feature indices, boolean array of length n_features,
+        ``'all'`` or `None`. Indicates which features should be
+        considered as categorical rather than ordinal. For decision trees,
+        the maximum number of categories is 64. In practice, the limit will
+        often be lower because the process of searching for the best possible
+        split grows exponentially with the number of categories. However, a
+        shortcut due to Breiman (1984) is used when fitting data with binary
+        labels using the ``Gini`` or ``Entropy`` criteria. In this case,
+        the runtime is linear in the number of categories.
 
     Attributes
     ----------
@@ -2484,6 +2504,7 @@ class ExtraTreesClassifier(ForestClassifier):
         max_bins=None,
         store_leaf_values=False,
         monotonic_cst=None,
+        categorical=None,
     ):
         super().__init__(
             estimator=ExtraTreeClassifier(),
@@ -2501,6 +2522,7 @@ class ExtraTreesClassifier(ForestClassifier):
                 "ccp_alpha",
                 "store_leaf_values",
                 "monotonic_cst",
+                "categorical",
             ),
             bootstrap=bootstrap,
             oob_score=oob_score,
@@ -2524,6 +2546,7 @@ class ExtraTreesClassifier(ForestClassifier):
         self.min_impurity_decrease = min_impurity_decrease
         self.ccp_alpha = ccp_alpha
         self.monotonic_cst = monotonic_cst
+        self.categorical = categorical
 
 
 class ExtraTreesRegressor(ForestRegressor):
@@ -2725,6 +2748,17 @@ class ExtraTreesRegressor(ForestRegressor):
 
         .. versionadded:: 1.4
 
+    categorical : array-like or str
+        Array of feature indices, boolean array of length n_features,
+        ``'all'`` or `None`. Indicates which features should be
+        considered as categorical rather than ordinal. For decision trees,
+        the maximum number of categories is 64. In practice, the limit will
+        often be lower because the process of searching for the best possible
+        split grows exponentially with the number of categories. However, a
+        shortcut due to Breiman (1984) is used when fitting data with binary
+        labels using the ``Gini`` or ``Entropy`` criteria. In this case,
+        the runtime is linear in the number of categories.
+
     Attributes
     ----------
     estimator_ : :class:`~sklearn.tree.ExtraTreeRegressor`
@@ -2840,6 +2874,7 @@ class ExtraTreesRegressor(ForestRegressor):
         max_bins=None,
         store_leaf_values=False,
         monotonic_cst=None,
+        categorical=None,
     ):
         super().__init__(
             estimator=ExtraTreeRegressor(),
@@ -2857,6 +2892,7 @@ class ExtraTreesRegressor(ForestRegressor):
                 "ccp_alpha",
                 "store_leaf_values",
                 "monotonic_cst",
+                "categorical",
             ),
             bootstrap=bootstrap,
             oob_score=oob_score,
@@ -2879,6 +2915,7 @@ class ExtraTreesRegressor(ForestRegressor):
         self.min_impurity_decrease = min_impurity_decrease
         self.ccp_alpha = ccp_alpha
         self.monotonic_cst = monotonic_cst
+        self.categorical = categorical
 
 
 class RandomTreesEmbedding(TransformerMixin, BaseForest):
@@ -2990,6 +3027,17 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
         new forest. See :term:`Glossary <warm_start>` and
         :ref:`gradient_boosting_warm_start` for details.
 
+    categorical : array-like or str
+        Array of feature indices, boolean array of length n_features,
+        ``'all'`` or `None`. Indicates which features should be
+        considered as categorical rather than ordinal. For decision trees,
+        the maximum number of categories is 64. In practice, the limit will
+        often be lower because the process of searching for the best possible
+        split grows exponentially with the number of categories. However, a
+        shortcut due to Breiman (1984) is used when fitting data with binary
+        labels using the ``Gini`` or ``Entropy`` criteria. In this case,
+        the runtime is linear in the number of categories.
+
     Attributes
     ----------
     estimator_ : :class:`~sklearn.tree.ExtraTreeRegressor` instance
@@ -3094,6 +3142,7 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
         verbose=0,
         warm_start=False,
         store_leaf_values=False,
+        categorical=None,
     ):
         super().__init__(
             estimator=ExtraTreeRegressor(),
@@ -3109,6 +3158,7 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
                 "min_impurity_decrease",
                 "random_state",
                 "store_leaf_values",
+                "categorical",
             ),
             bootstrap=False,
             oob_score=False,
@@ -3127,6 +3177,7 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
         self.max_leaf_nodes = max_leaf_nodes
         self.min_impurity_decrease = min_impurity_decrease
         self.sparse_output = sparse_output
+        self.categorical = categorical
 
     def _set_oob_score_and_attributes(self, X, y, scoring_function=None):
         raise NotImplementedError("OOB score not supported by tree embedding")
