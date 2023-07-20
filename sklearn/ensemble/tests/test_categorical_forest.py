@@ -22,7 +22,6 @@ from sklearn.ensemble import (
     RandomForestRegressor,
     RandomTreesEmbedding,
 )
-from sklearn.tree.tests.test_tree import _make_categorical
 from sklearn.utils.validation import check_random_state
 
 # toy sample
@@ -85,6 +84,49 @@ FOREST_CLASSIFIERS_REGRESSORS.update(FOREST_REGRESSORS)
 
 
 pytest.mark.parametrize("model", FOREST_CLASSIFIERS_REGRESSORS)
+
+
+def _make_categorical(
+    n_rows: int,
+    n_numerical: int,
+    n_categorical: int,
+    cat_size: int,
+    n_num_meaningful: int,
+    n_cat_meaningful: int,
+    regression: bool,
+    return_tuple: bool,
+    random_state: int,
+):
+    from sklearn.preprocessing import OneHotEncoder
+
+    rng = np.random.RandomState(random_state)
+
+    numeric = rng.standard_normal((n_rows, n_numerical))
+    categorical = rng.randint(0, cat_size, (n_rows, n_categorical))
+    categorical_ohe = OneHotEncoder(categories="auto").fit_transform(
+        categorical[:, :n_cat_meaningful]
+    )
+
+    data_meaningful = np.hstack(
+        (numeric[:, :n_num_meaningful], categorical_ohe.todense())
+    )
+    _, cols = data_meaningful.shape
+    coefs = rng.standard_normal(cols)
+    y = np.dot(data_meaningful, coefs)
+    y = np.asarray(y).reshape(-1)
+    X = np.hstack((numeric, categorical))
+
+    if not regression:
+        y = (y < y.mean()).astype(int)
+
+    meaningful_features = np.r_[
+        np.arange(n_num_meaningful), np.arange(n_cat_meaningful) + n_numerical
+    ]
+
+    if return_tuple:
+        return X, y, meaningful_features
+    else:
+        return {"X": X, "y": y, "meaningful_features": meaningful_features}
 
 
 @pytest.mark.parametrize(
