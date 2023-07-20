@@ -777,16 +777,21 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
             # (n_total_leaf_samples, n_outputs)
             leaf_node_samples = np.vstack(
-                (
+                [
                     est.leaf_nodes_samples_[leaf_nodes[jdx]]
                     for jdx, est in enumerate(self.estimators_)
-                )
+                ]
             )
 
             # get quantiles across all leaf node samples
-            y_hat[idx, ...] = np.quantile(
-                leaf_node_samples, quantiles, axis=0, interpolation=method
-            )
+            try:
+                y_hat[idx, ...] = np.quantile(
+                    leaf_node_samples, quantiles, axis=0, method=method
+                )
+            except TypeError:
+                y_hat[idx, ...] = np.quantile(
+                    leaf_node_samples, quantiles, axis=0, interpolation=method
+                )
 
             if is_classifier(self):
                 if self.n_outputs_ == 1:
