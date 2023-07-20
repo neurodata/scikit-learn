@@ -32,7 +32,12 @@ cdef class CategoryCacheMgr:
     cdef SIZE_t n_nodes
     cdef vector[vector[UINT64_t]] bits
 
-    cdef void populate(self, Node* nodes, SIZE_t n_nodes, INT32_t[:] n_categories)
+    cdef void populate(
+        self,
+        Node* nodes,
+        SIZE_t n_nodes, 
+        INT32_t[:] n_categories
+    ) noexcept
 
 
 cdef class BaseTree:
