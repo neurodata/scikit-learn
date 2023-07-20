@@ -129,7 +129,7 @@ def _make_categorical(
         return {"X": X, "y": y, "meaningful_features": meaningful_features}
 
 
-@pytest.mark.parametrize('model', FOREST_CLASSIFIERS_REGRESSORS)
+@pytest.mark.parametrize("model", FOREST_CLASSIFIERS_REGRESSORS)
 @pytest.mark.parametrize(
     "data_params",
     [
