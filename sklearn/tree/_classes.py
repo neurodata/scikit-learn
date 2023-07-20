@@ -416,9 +416,6 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             random_state,
         )
 
-        if self.store_leaf_values:
-            self.leaf_nodes_samples_ = self.tree_.leaf_nodes_samples
-
         return self
 
     def _build_tree(
@@ -1117,9 +1114,6 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         ``help(sklearn.tree._tree.Tree)`` for attributes of Tree object and
         :ref:`sphx_glr_auto_examples_tree_plot_unveil_tree_structure.py`
         for basic usage of these attributes.
-
-    leaf_nodes_samples_ : dict
-        A dictionary of leaf node index and the y_train samples in that leaf.
 
     See Also
     --------
