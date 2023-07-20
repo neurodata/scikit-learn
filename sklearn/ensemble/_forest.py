@@ -2708,7 +2708,7 @@ class ExtraTreesRegressor(ForestRegressor):
         Whether to store the leaf values in the ``get_leaf_node_samples`` function.
 
         **Experimental feature**
-        
+
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
           - 1: monotonically increasing
