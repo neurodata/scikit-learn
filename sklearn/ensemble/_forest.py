@@ -1533,8 +1533,12 @@ class RandomForestClassifier(ForestClassifier):
     max_bins : int, default=255
         The maximum number of bins to use for non-missing values.
 
+        **Experimental feature**
+
     store_leaf_values : bool, default=False
         Whether to store the leaf values in the ``get_leaf_node_samples`` function.
+
+        **Experimental feature**
 
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
@@ -1921,8 +1925,12 @@ class RandomForestRegressor(ForestRegressor):
         The maximum number of bins to use for non-missing values. Used for
         speeding up training time.
 
+        **Experimental feature**
+
     store_leaf_values : bool, default=False
         Whether to store the leaf values in the ``get_leaf_node_samples`` function.
+
+        **Experimental feature**
 
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
@@ -2299,8 +2307,12 @@ class ExtraTreesClassifier(ForestClassifier):
     max_bins : int, default=255
         The maximum number of bins to use for non-missing values.
 
+        **Experimental feature**
+
     store_leaf_values : bool, default=False
         Whether to store the leaf values in the ``get_leaf_node_samples`` function.
+
+        **Experimental feature**
 
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
@@ -2690,9 +2702,13 @@ class ExtraTreesRegressor(ForestRegressor):
     max_bins : int, default=255
         The maximum number of bins to use for non-missing values.
 
+        **Experimental feature**
+
     store_leaf_values : bool, default=False
         Whether to store the leaf values in the ``get_leaf_node_samples`` function.
 
+        **Experimental feature**
+        
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
           - 1: monotonically increasing
