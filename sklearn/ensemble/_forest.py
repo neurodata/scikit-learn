@@ -778,7 +778,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             # (n_total_leaf_samples, n_outputs)
             leaf_node_samples = np.vstack(
                 [
-                    est.leaf_nodes_samples_[leaf_nodes[jdx]]
+                    est.tree_.leaf_nodes_samples[leaf_nodes[jdx]]
                     for jdx, est in enumerate(self.estimators_)
                 ]
             )

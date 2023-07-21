@@ -651,7 +651,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
 
         Returns
         -------
-        leaf_nodes_samples : a list of array-like
+        leaf_nodes_samples : a list of array-like of length (n_samples,)
             Each sample is represented by the indices of the training samples that
             reached the leaf node. The ``n_leaf_node_samples`` may vary between
             samples, since the number of samples that fall in a leaf node is
