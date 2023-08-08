@@ -237,8 +237,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
             # Recursive partition (without actual recursion)
             splitter.init(X, y, sample_weight_ptr)
 
-        cdef SIZE_t start
-        cdef SIZE_t end
+        cdef SIZE_t start = 0
+        cdef SIZE_t end = 0
         cdef SIZE_t depth
         cdef SIZE_t parent
         cdef bint is_left
@@ -248,17 +248,17 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef SplitRecord split
         cdef SIZE_t node_id
 
+        cdef bint first = not self.initial_roots
         cdef double impurity = INFINITY
         cdef SIZE_t n_constant_features
         cdef bint is_leaf
-        cdef bint first = 1
-        cdef SIZE_t max_depth_seen = -1
+        cdef SIZE_t max_depth_seen = -1 if first else tree.max_depth
         cdef int rc = 0
 
         cdef Stack stack = Stack(INITIAL_STACK_SIZE)
         cdef StackRecord stack_record
 
-        if self.initial_roots:
+        if not first:
             # push reached leaf nodes onto stack
             for key, value in reversed(sorted(self.initial_roots.items())):
                 end += value[0]
@@ -356,176 +356,6 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
             raise MemoryError()
 
         self.initial_roots = None
-
-    cpdef update(self, Tree tree, object X, np.ndarray y,
-                 np.ndarray sample_weight=None):
-        """Update a decision tree with the training set (X, y)."""
-
-        # check input
-        X, y, sample_weight = self._check_input(X, y, sample_weight)
-
-        cdef DOUBLE_t* sample_weight_ptr = NULL
-        if sample_weight is not None:
-            sample_weight_ptr = <DOUBLE_t*> sample_weight.data
-
-        # organize samples by decision paths
-        paths = tree.decision_path(X)
-        cdef int PARENT
-        cdef int CHILD
-        false_roots = {}
-        X_copy = {}
-        y_copy = {}
-        for i in range(X.shape[0]):
-            depth_i = paths[i].indices.shape[0] - 1
-            PARENT = depth_i - 1
-            CHILD = depth_i
-
-            if PARENT < 0:
-                parent_i = 0
-            else:
-                parent_i = paths[i].indices[PARENT]
-            child_i = paths[i].indices[CHILD]
-            left = 0
-            if tree.children_left[parent_i] == child_i:
-                left = 1
-
-            if (parent_i, left) in false_roots:
-                false_roots[(parent_i, left)][0] += 1
-                X_copy[(parent_i, left)].append(X[i])
-                y_copy[(parent_i, left)].append(y[i])
-            else:
-                false_roots[(parent_i, left)] = [1, depth_i]
-                X_copy[(parent_i, left)] = [X[i]]
-                y_copy[(parent_i, left)] = [y[i]]
-
-        X_list = []
-        y_list = []
-        for key, value in reversed(sorted(X_copy.items())):
-            X_list = X_list + value
-            y_list = y_list + y_copy[key]
-        cdef object X_new = np.array(X_list)
-        cdef np.ndarray y_new = np.array(y_list)
-
-        # Parameters
-        cdef Splitter splitter = self.splitter
-        cdef SIZE_t max_depth = self.max_depth
-        cdef SIZE_t min_samples_leaf = self.min_samples_leaf
-        cdef double min_weight_leaf = self.min_weight_leaf
-        cdef SIZE_t min_samples_split = self.min_samples_split
-        cdef double min_impurity_decrease = self.min_impurity_decrease
-
-        # Recursive partition (without actual recursion)
-        splitter.init(X_new, y_new, sample_weight_ptr)
-
-        cdef SIZE_t start = 0
-        cdef SIZE_t end = 0
-        cdef SIZE_t depth
-        cdef SIZE_t parent
-        cdef bint is_left
-        cdef SIZE_t n_node_samples = splitter.n_samples
-        cdef double weighted_n_samples = splitter.weighted_n_samples
-        cdef double weighted_n_node_samples
-        cdef SplitRecord split
-        cdef SIZE_t node_id
-
-        cdef double impurity
-        cdef SIZE_t n_constant_features
-        cdef bint is_leaf
-        cdef SIZE_t max_depth_seen = tree.max_depth
-        cdef int rc = 0
-
-        cdef Stack stack = Stack(INITIAL_STACK_SIZE)
-        cdef StackRecord stack_record
-
-        # push reached leaf nodes onto stack
-        for key, value in reversed(sorted(false_roots.items())):
-            end += value[0]
-            rc = stack.push(start, end, value[1], key[0], key[1],
-                            tree.impurity[key[0]], 0)
-            start += value[0]
-            if rc == -1:
-                # got return code -1 - out-of-memory
-                raise MemoryError()
-
-        with nogil:
-            while not stack.is_empty():
-                stack.pop(&stack_record)
-
-                start = stack_record.start
-                end = stack_record.end
-                depth = stack_record.depth
-                parent = stack_record.parent
-                is_left = stack_record.is_left
-                impurity = stack_record.impurity
-                n_constant_features = stack_record.n_constant_features
-
-                n_node_samples = end - start
-                splitter.node_reset(start, end, &weighted_n_node_samples)
-
-                is_leaf = (depth >= max_depth or
-                           n_node_samples < min_samples_split or
-                           n_node_samples < 2 * min_samples_leaf or
-                           weighted_n_node_samples < 2 * min_weight_leaf)
-
-                if first:
-                    impurity = splitter.node_impurity()
-                    first = 0
-
-                # impurity == 0 with tolerance due to rounding errors
-                is_leaf = is_leaf or impurity <= EPSILON
-
-                if not is_leaf:
-                    splitter.node_split(impurity, &split, &n_constant_features)
-                    # If EPSILON=0 in the below comparison, float precision
-                    # issues stop splitting, producing trees that are
-                    # dissimilar to v0.18
-                    is_leaf = (is_leaf or split.pos >= end or
-                               (split.improvement + EPSILON <
-                                min_impurity_decrease))
-
-                with gil:
-                    if parent in false_roots:
-                        node_id = tree._update_node(parent, is_left, is_leaf,
-                                                    split.feature, split.threshold,
-                                                    impurity, n_node_samples,
-                                                    weighted_n_node_samples)
-                    else:
-                        node_id = tree._add_node(parent, is_left, is_leaf,
-                                                 split.feature, split.threshold,
-                                                 impurity, n_node_samples,
-                                                 weighted_n_node_samples)
-
-                if node_id == SIZE_MAX:
-                    rc = -1
-                    break
-
-                # Store value for all nodes, to facilitate tree/model
-                # inspection and interpretation
-                splitter.node_value(tree.value + node_id * tree.value_stride)
-
-                if not is_leaf:
-                    # Push right child on stack
-                    rc = stack.push(split.pos, end, depth + 1, node_id, 0,
-                                    split.impurity_right, n_constant_features)
-                    if rc == -1:
-                        break
-
-                    # Push left child on stack
-                    rc = stack.push(start, split.pos, depth + 1, node_id, 1,
-                                    split.impurity_left, n_constant_features)
-                    if rc == -1:
-                        break
-
-                if depth > max_depth_seen:
-                    max_depth_seen = depth
-
-            if rc >= 0:
-                rc = tree._resize_c(tree.node_count)
-
-            if rc >= 0:
-                tree.max_depth = max_depth_seen
-        if rc == -1:
-            raise MemoryError()
 
 # Best first builder ----------------------------------------------------------
 

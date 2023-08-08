@@ -1051,7 +1051,8 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
             y = np.ascontiguousarray(y, dtype=DOUBLE)
 
         # Update tree
-        self.builder_.update(self.tree_, X, y, sample_weight)
+        self.builder_.initialize_node_queue(self.tree_, X, y, sample_weight)
+        self.builder_.build(self.tree_, X, y, sample_weight)
 
         self._prune_tree()
 
