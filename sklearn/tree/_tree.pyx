@@ -270,6 +270,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                     raise MemoryError()
         else:
             # push root node onto stack
+            self.initial_roots = {}
             rc = stack.push(0, n_node_samples, 0, _TREE_UNDEFINED, 0, INFINITY, 0)
             if rc == -1:
                 # got return code -1 - out-of-memory
@@ -353,6 +354,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                 tree.max_depth = max_depth_seen
         if rc == -1:
             raise MemoryError()
+
+        self.initial_roots = None
 
     cpdef update(self, Tree tree, object X, np.ndarray y,
                  np.ndarray sample_weight=None):

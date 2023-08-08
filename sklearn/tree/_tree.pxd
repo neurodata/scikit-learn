@@ -102,6 +102,7 @@ cdef class TreeBuilder:
     cdef double min_weight_leaf         # Minimum weight in a leaf
     cdef SIZE_t max_depth               # Maximal tree depth
     cdef double min_impurity_decrease   # Impurity threshold for early stopping
+    cdef object initial_roots
 
     cpdef initialize_node_queue(self, Tree tree, object X, np.ndarray y,
                 np.ndarray sample_weight=*)
