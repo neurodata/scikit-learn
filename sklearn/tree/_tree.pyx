@@ -64,8 +64,8 @@ cdef extern from "<stack>" namespace "std" nogil:
 from numpy import float32 as DTYPE
 from numpy import float64 as DOUBLE
 
-cdef double INFINITY = np.inf
-cdef double EPSILON = np.finfo('double').eps
+cdef double INFINITY = cnp.inf
+cdef double EPSILON = cnp.finfo('double').eps
 
 # Some handy constants (BestFirstTreeBuilder)
 cdef int IS_FIRST = 1
@@ -83,7 +83,7 @@ cdef SIZE_t _TREE_UNDEFINED = TREE_UNDEFINED
 # can construct a `dtype`-object for. See https://stackoverflow.com/q/62448946
 # for a more detailed explanation.
 cdef Node dummy
-NODE_DTYPE = np.asarray(<Node[:1]>(&dummy)).dtype
+NODE_DTYPE = cnp.asarray(<Node[:1]>(&dummy)).dtype
 
 # =============================================================================
 # TreeBuilder
@@ -126,21 +126,21 @@ cdef class TreeBuilder:
             X.sort_indices()
 
             if X.data.dtype != DTYPE:
-                X.data = np.ascontiguousarray(X.data, dtype=DTYPE)
+                X.data = cnp.ascontiguousarray(X.data, dtype=DTYPE)
 
-            if X.indices.dtype != np.int32 or X.indptr.dtype != np.int32:
-                raise ValueError("No support for np.int64 index based "
+            if X.indices.dtype != cnp.int32 or X.indptr.dtype != cnp.int32:
+                raise ValueError("No support for cnp.int64 index based "
                                  "sparse matrices")
 
         elif X.dtype != DTYPE:
             # since we have to copy we will make it fortran for efficiency
-            X = np.asfortranarray(X, dtype=DTYPE)
+            X = cnp.asfortranarray(X, dtype=DTYPE)
 
         # TODO: This check for y seems to be redundant, as it is also
         #  present in the BaseDecisionTree's fit method, and therefore
         #  can be removed.
         if y.base.dtype != DOUBLE or not y.base.flags.contiguous:
-            y = np.ascontiguousarray(y, dtype=DOUBLE)
+            y = cnp.ascontiguousarray(y, dtype=DOUBLE)
 
         if (
             sample_weight is not None and
@@ -149,7 +149,7 @@ cdef class TreeBuilder:
                 not sample_weight.base.flags.contiguous
             )
         ):
-            sample_weight = np.asarray(sample_weight, dtype=DOUBLE, order="C")
+            sample_weight = cnp.asarray(sample_weight, dtype=DOUBLE, order="C")
 
         return X, y, sample_weight
 
@@ -247,8 +247,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         for key, value in reversed(sorted(X_copy.items())):
             X_list = X_list + value
             y_list = y_list + y_copy[key]
-        cdef object X_new = np.array(X_list)
-        cdef np.ndarray y_new = np.array(y_list)
+        cdef object X_new = cnp.array(X_list)
+        cdef cnp.ndarray y_new = cnp.array(y_list)
 
         cdef Splitter splitter = self.splitter
         splitter.init(X_new, y_new, sample_weight_ptr)
@@ -413,7 +413,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                     else:
                         node_id = tree._add_node(parent, is_left, is_leaf,
                                                  split_ptr, impurity, n_node_samples,
-                                                 weighted_n_node_samples, 
+                                                 weighted_n_node_samples,
                                                  split.missing_go_to_left)
 
                 if node_id == INTPTR_MAX:
@@ -557,7 +557,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         SIZE_t max_leaf_nodes,
         double min_impurity_decrease,
         unsigned char store_leaf_values=False,
-        np.ndarray initial_roots,
+        cnp.ndarray initial_roots,
     ):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
@@ -1035,7 +1035,7 @@ cdef class BaseTree:
         unsigned char missing_go_to_left
     ) except -1 nogil:
         """Update a node on the tree.
-        
+
         The updated node remains on the same position.
         Returns (size_t)(-1) on error.
         """
@@ -1065,7 +1065,7 @@ cdef class BaseTree:
 
         return node_id
 
-    cpdef np.ndarray predict(self, object X):
+    cpdef cnp.ndarray predict(self, object X):
         """Predict target for X."""
         out = self._get_value_ndarray().take(self.apply(X), axis=0,
                                              mode='clip')
@@ -1084,12 +1084,12 @@ cdef class BaseTree:
         """Finds the terminal region (=leaf node) for each sample in X."""
 
         # Check input
-        if not isinstance(X, np.ndarray):
-            raise ValueError("X should be in np.ndarray format, got %s"
+        if not isinstance(X, cnp.ndarray):
+            raise ValueError("X should be in cnp.ndarray format, got %s"
                              % type(X))
 
         if X.dtype != DTYPE:
-            raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
+            raise ValueError("X.dtype should be cnp.float32, got %s" % X.dtype)
 
         # Extract input
         cdef const DTYPE_t[:, :] X_ndarray = X
@@ -1097,7 +1097,7 @@ cdef class BaseTree:
         cdef DTYPE_t X_i_node_feature
 
         # Initialize output
-        cdef SIZE_t[:] out = np.zeros(n_samples, dtype=np.intp)
+        cdef SIZE_t[:] out = cnp.zeros(n_samples, dtype=cnp.intp)
 
         # Initialize auxiliary data-structure
         cdef Node* node = NULL
@@ -1123,7 +1123,7 @@ cdef class BaseTree:
 
                 out[i] = <SIZE_t>(node - self.nodes)  # node offset
 
-        return np.asarray(out)
+        return cnp.asarray(out)
 
     cdef inline cnp.ndarray _apply_sparse_csr(self, object X):
         """Finds the terminal region (=leaf node) for each sample in sparse X.
@@ -1134,7 +1134,7 @@ cdef class BaseTree:
                              % type(X))
 
         if X.dtype != DTYPE:
-            raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
+            raise ValueError("X.dtype should be cnp.float32, got %s" % X.dtype)
 
         # Extract input
         cdef const DTYPE_t[:] X_data = X.data
@@ -1145,7 +1145,7 @@ cdef class BaseTree:
         cdef SIZE_t n_features = X.shape[1]
 
         # Initialize output
-        cdef SIZE_t[:] out = np.zeros(n_samples, dtype=np.intp)
+        cdef SIZE_t[:] out = cnp.zeros(n_samples, dtype=cnp.intp)
 
         # Initialize auxiliary data-structure
         cdef DTYPE_t feature_value = 0.
@@ -1191,7 +1191,7 @@ cdef class BaseTree:
             free(X_sample)
             free(feature_to_sample)
 
-        return np.asarray(out)
+        return cnp.asarray(out)
 
     cpdef object decision_path(self, object X):
         """Finds the decision path (=node) for each sample in X."""
@@ -1204,21 +1204,21 @@ cdef class BaseTree:
         """Finds the decision path (=node) for each sample in X."""
 
         # Check input
-        if not isinstance(X, np.ndarray):
-            raise ValueError("X should be in np.ndarray format, got %s"
+        if not isinstance(X, cnp.ndarray):
+            raise ValueError("X should be in cnp.ndarray format, got %s"
                              % type(X))
 
         if X.dtype != DTYPE:
-            raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
+            raise ValueError("X.dtype should be cnp.float32, got %s" % X.dtype)
 
         # Extract input
         cdef const DTYPE_t[:, :] X_ndarray = X
         cdef SIZE_t n_samples = X.shape[0]
 
         # Initialize output
-        cdef SIZE_t[:] indptr = np.zeros(n_samples + 1, dtype=np.intp)
-        cdef SIZE_t[:] indices = np.zeros(
-            n_samples * (1 + self.max_depth), dtype=np.intp
+        cdef SIZE_t[:] indptr = cnp.zeros(n_samples + 1, dtype=cnp.intp)
+        cdef SIZE_t[:] indices = cnp.zeros(
+            n_samples * (1 + self.max_depth), dtype=cnp.intp
         )
 
         # Initialize auxiliary data-structure
@@ -1251,7 +1251,7 @@ cdef class BaseTree:
                 indptr[i + 1] += 1
 
         indices = indices[:indptr[n_samples]]
-        cdef SIZE_t[:] data = np.ones(shape=len(indices), dtype=np.intp)
+        cdef SIZE_t[:] data = cnp.ones(shape=len(indices), dtype=cnp.intp)
         out = csr_matrix((data, indices, indptr),
                          shape=(n_samples, self.node_count))
 
@@ -1266,7 +1266,7 @@ cdef class BaseTree:
                              % type(X))
 
         if X.dtype != DTYPE:
-            raise ValueError("X.dtype should be np.float32, got %s" % X.dtype)
+            raise ValueError("X.dtype should be cnp.float32, got %s" % X.dtype)
 
         # Extract input
         cdef const DTYPE_t[:] X_data = X.data
@@ -1277,9 +1277,9 @@ cdef class BaseTree:
         cdef SIZE_t n_features = X.shape[1]
 
         # Initialize output
-        cdef SIZE_t[:] indptr = np.zeros(n_samples + 1, dtype=np.intp)
-        cdef SIZE_t[:] indices = np.zeros(
-            n_samples * (1 + self.max_depth), dtype=np.intp
+        cdef SIZE_t[:] indptr = cnp.zeros(n_samples + 1, dtype=cnp.intp)
+        cdef SIZE_t[:] indices = cnp.zeros(
+            n_samples * (1 + self.max_depth), dtype=cnp.intp
         )
 
         # Initialize auxiliary data-structure
@@ -1335,7 +1335,7 @@ cdef class BaseTree:
             free(feature_to_sample)
 
         indices = indices[:indptr[n_samples]]
-        cdef SIZE_t[:] data = np.ones(shape=len(indices), dtype=np.intp)
+        cdef SIZE_t[:] data = cnp.ones(shape=len(indices), dtype=cnp.intp)
         out = csr_matrix((data, indices, indptr),
                          shape=(n_samples, self.node_count))
 
@@ -1348,11 +1348,11 @@ cdef class BaseTree:
 
         Returns
         -------
-        depths : ndarray of shape (self.node_count,), dtype=np.int64
+        depths : ndarray of shape (self.node_count,), dtype=cnp.int64
             The depth of each node in the tree.
         """
         cdef:
-            cnp.int64_t[::1] depths = np.empty(self.node_count, dtype=np.int64)
+            cnp.int64_t[::1] depths = cnp.empty(self.node_count, dtype=cnp.int64)
             cnp.npy_intp[:] children_left = self.children_left
             cnp.npy_intp[:] children_right = self.children_right
             cnp.npy_intp node_id
@@ -1377,7 +1377,7 @@ cdef class BaseTree:
         cdef double normalizer = 0.
         cdef int i = 0
 
-        cdef cnp.float64_t[:] importances = np.zeros(self.n_features)
+        cdef cnp.float64_t[:] importances = cnp.zeros(self.n_features)
 
         with nogil:
             while node != end_node:
@@ -1392,14 +1392,14 @@ cdef class BaseTree:
             importances[i] /= nodes[0].weighted_n_node_samples
 
         if normalize:
-            normalizer = np.sum(importances)
+            normalizer = cnp.sum(importances)
 
             if normalizer > 0.0:
                 # Avoid dividing by zero (e.g., when root is pure)
                 for i in range(self.n_features):
                     importances[i] /= normalizer
 
-        return np.asarray(importances)
+        return cnp.asarray(importances)
 
     cdef void _compute_feature_importances(
         self,
@@ -1454,10 +1454,10 @@ cdef class BaseTree:
             point.
         """
         cdef:
-            double[::1] weight_stack = np.zeros(self.node_count,
-                                                dtype=np.float64)
-            SIZE_t[::1] node_idx_stack = np.zeros(self.node_count,
-                                                  dtype=np.intp)
+            double[::1] weight_stack = cnp.zeros(self.node_count,
+                                                dtype=cnp.float64)
+            SIZE_t[::1] node_idx_stack = cnp.zeros(self.node_count,
+                                                  dtype=cnp.intp)
             SIZE_t sample_idx
             SIZE_t feature_idx
             int stack_size
@@ -1602,7 +1602,7 @@ cdef class Tree(BaseTree):
 
     @property
     def n_leaves(self):
-        return np.sum(np.logical_and(
+        return cnp.sum(cnp.logical_and(
             self.children_left == -1,
             self.children_right == -1))
 
@@ -1647,7 +1647,7 @@ cdef class Tree(BaseTree):
     def __cinit__(self, int n_features, cnp.ndarray n_classes, int n_outputs):
         """Constructor."""
         cdef SIZE_t dummy = 0
-        size_t_dtype = np.array(dummy).dtype
+        size_t_dtype = cnp.array(dummy).dtype
 
         n_classes = _check_n_classes(n_classes, size_t_dtype)
 
@@ -1657,7 +1657,7 @@ cdef class Tree(BaseTree):
         self.n_classes = NULL
         safe_realloc(&self.n_classes, n_outputs)
 
-        self.max_n_classes = np.max(n_classes)
+        self.max_n_classes = cnp.max(n_classes)
         self.value_stride = n_outputs * self.max_n_classes
 
         cdef SIZE_t k
@@ -1716,7 +1716,7 @@ cdef class Tree(BaseTree):
         node_ndarray = _check_node_ndarray(node_ndarray, expected_dtype=NODE_DTYPE)
         value_ndarray = _check_value_ndarray(
             value_ndarray,
-            expected_dtype=np.dtype(np.float64),
+            expected_dtype=cnp.dtype(cnp.float64),
             expected_shape=value_shape
         )
 
@@ -1741,7 +1741,7 @@ cdef class Tree(BaseTree):
         """Wraps value_samples as a 2-d NumPy array per node_id."""
         cdef int i, j
         cdef int n_samples = self.value_samples[node_id].size()
-        cdef cnp.ndarray[DOUBLE_t, ndim=2, mode='c'] leaf_node_samples = np.empty(shape=(n_samples, self.n_outputs), dtype=np.float64)
+        cdef cnp.ndarray[DOUBLE_t, ndim=2, mode='c'] leaf_node_samples = cnp.empty(shape=(n_samples, self.n_outputs), dtype=cnp.float64)
 
         for i in range(n_samples):
             for j in range(self.n_outputs):
@@ -1750,7 +1750,7 @@ cdef class Tree(BaseTree):
 
     cdef cnp.ndarray _get_value_samples_keys(self):
         """Wraps value_samples keys as a 1-d NumPy array of keys."""
-        cdef cnp.ndarray[SIZE_t, ndim=1, mode='c'] keys = np.empty(len(self.value_samples), dtype=np.intp)
+        cdef cnp.ndarray[SIZE_t, ndim=1, mode='c'] keys = cnp.empty(len(self.value_samples), dtype=cnp.intp)
         cdef unsigned int i = 0
 
         for key in self.value_samples:
@@ -1985,8 +1985,8 @@ cdef class _PathFinder(_CCPPruneController):
     cdef UINT32_t count
 
     def __cinit__(self,  int node_count):
-        self.ccp_alphas = np.zeros(shape=(node_count), dtype=np.float64)
-        self.impurities = np.zeros(shape=(node_count), dtype=np.float64)
+        self.ccp_alphas = cnp.zeros(shape=(node_count), dtype=cnp.float64)
+        self.impurities = cnp.zeros(shape=(node_count), dtype=cnp.float64)
         self.count = 0
 
     cdef void save_metrics(self,
@@ -2030,34 +2030,34 @@ cdef _cost_complexity_prune(unsigned char[:] leaves_in_subtree,  # OUT
         DOUBLE_t total_sum_weights = weighted_n_node_samples[0]
         DOUBLE_t[:] impurity = orig_tree.impurity
         # weighted impurity of each node
-        DOUBLE_t[:] r_node = np.empty(shape=n_nodes, dtype=np.float64)
+        DOUBLE_t[:] r_node = cnp.empty(shape=n_nodes, dtype=cnp.float64)
 
         SIZE_t[:] child_l = orig_tree.children_left
         SIZE_t[:] child_r = orig_tree.children_right
-        SIZE_t[:] parent = np.zeros(shape=n_nodes, dtype=np.intp)
+        SIZE_t[:] parent = cnp.zeros(shape=n_nodes, dtype=cnp.intp)
 
         stack[CostComplexityPruningRecord] ccp_stack
         CostComplexityPruningRecord stack_record
         SIZE_t node_idx
         stack[SIZE_t] node_indices_stack
 
-        SIZE_t[:] n_leaves = np.zeros(shape=n_nodes, dtype=np.intp)
-        DOUBLE_t[:] r_branch = np.zeros(shape=n_nodes, dtype=np.float64)
+        SIZE_t[:] n_leaves = cnp.zeros(shape=n_nodes, dtype=cnp.intp)
+        DOUBLE_t[:] r_branch = cnp.zeros(shape=n_nodes, dtype=cnp.float64)
         DOUBLE_t current_r
         SIZE_t leaf_idx
         SIZE_t parent_idx
 
         # candidate nodes that can be pruned
-        unsigned char[:] candidate_nodes = np.zeros(shape=n_nodes,
-                                                    dtype=np.uint8)
+        unsigned char[:] candidate_nodes = cnp.zeros(shape=n_nodes,
+                                                    dtype=cnp.uint8)
         # nodes in subtree
-        unsigned char[:] in_subtree = np.ones(shape=n_nodes, dtype=np.uint8)
+        unsigned char[:] in_subtree = cnp.ones(shape=n_nodes, dtype=cnp.uint8)
         SIZE_t pruned_branch_node_idx
         DOUBLE_t subtree_alpha
         DOUBLE_t effective_alpha
         SIZE_t n_pruned_leaves
         DOUBLE_t r_diff
-        DOUBLE_t max_float64 = np.finfo(np.float64).max
+        DOUBLE_t max_float64 = cnp.finfo(cnp.float64).max
 
     # find parent node ids and leaves
     with nogil:
@@ -2185,8 +2185,8 @@ def _build_pruned_tree_ccp(
 
     cdef:
         SIZE_t n_nodes = orig_tree.node_count
-        unsigned char[:] leaves_in_subtree = np.zeros(
-            shape=n_nodes, dtype=np.uint8)
+        unsigned char[:] leaves_in_subtree = cnp.zeros(
+            shape=n_nodes, dtype=cnp.uint8)
 
     pruning_controller = _AlphaPruner(ccp_alpha=ccp_alpha)
 
@@ -2217,8 +2217,8 @@ def ccp_pruning_path(Tree orig_tree):
             corresponding alpha value in ``ccp_alphas``.
     """
     cdef:
-        unsigned char[:] leaves_in_subtree = np.zeros(
-            shape=orig_tree.node_count, dtype=np.uint8)
+        unsigned char[:] leaves_in_subtree = cnp.zeros(
+            shape=orig_tree.node_count, dtype=cnp.uint8)
 
     path_finder = _PathFinder(orig_tree.node_count)
 
@@ -2226,8 +2226,8 @@ def ccp_pruning_path(Tree orig_tree):
 
     cdef:
         UINT32_t total_items = path_finder.count
-        DOUBLE_t[:] ccp_alphas = np.empty(shape=total_items, dtype=np.float64)
-        DOUBLE_t[:] impurities = np.empty(shape=total_items, dtype=np.float64)
+        DOUBLE_t[:] ccp_alphas = cnp.empty(shape=total_items, dtype=cnp.float64)
+        DOUBLE_t[:] impurities = cnp.empty(shape=total_items, dtype=cnp.float64)
         UINT32_t count = 0
 
     while count < total_items:
@@ -2236,8 +2236,8 @@ def ccp_pruning_path(Tree orig_tree):
         count += 1
 
     return {
-        'ccp_alphas': np.asarray(ccp_alphas),
-        'impurities': np.asarray(impurities),
+        'ccp_alphas': cnp.asarray(ccp_alphas),
+        'impurities': cnp.asarray(impurities),
     }
 
 
