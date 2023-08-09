@@ -296,7 +296,6 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef double weighted_n_node_samples
         cdef SIZE_t node_id
 
-        cdef bint first = not self.initial_roots
         cdef SplitRecord split
         cdef SplitRecord* split_ptr = <SplitRecord *>malloc(splitter.pointer_size())
 
@@ -312,7 +311,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef stack[StackRecord] builder_stack
         cdef StackRecord stack_record
 
-        if not first:
+        if self.initial_roots:
             # push reached leaf nodes onto stack
             for key, value in reversed(sorted(self.initial_roots.items())):
                 end += value[0]
@@ -372,9 +371,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                            n_node_samples < 2 * min_samples_leaf or
                            weighted_n_node_samples < 2 * min_weight_leaf)
 
-                if first:
+                if not self.initial_roots:
                     impurity = splitter.node_impurity()
-                    first = 0
 
                 # impurity == 0 with tolerance due to rounding errors
                 is_leaf = is_leaf or impurity <= EPSILON
@@ -1048,13 +1046,14 @@ cdef class BaseTree:
         node.weighted_n_node_samples = weighted_n_node_samples
 
         if is_leaf:
-            node.left_child = _TREE_LEAF
-            node.right_child = _TREE_LEAF
-            node.feature = _TREE_UNDEFINED
-            node.threshold = _TREE_UNDEFINED
+            if self._set_leaf_node(split_node, node) != 1:
+                with gil:
+                    raise RuntimeError
         else:
-            node.feature = split_node.feature
-            node.threshold = split_node.threshold
+            if self._set_split_node(split_node, node) != 1:
+                with gil:
+                    raise RuntimeError
+            node.missing_go_to_left = missing_go_to_left
 
         return node_id
 
