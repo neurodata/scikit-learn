@@ -92,7 +92,6 @@ NODE_DTYPE = np.asarray(<Node[:1]>(&dummy)).dtype
 cdef class TreeBuilder:
     """Interface for different tree building strategies."""
 
-
     cpdef initialize_node_queue(
         self,
         Tree tree,
@@ -191,13 +190,13 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         self.initial_roots = initial_roots
 
     def __reduce__(self):
-      """Reduce re-implementation, for pickling."""
-      return(DepthFirstTreeBuilder, (self.splitter, self.min_samples_split,
-                                     self.min_samples_leaf,
-                                     self.min_weight_leaf,
-                                     self.max_depth,
-                                     self.min_impurity_decrease,
-                                     self.initial_roots))
+        """Reduce re-implementation, for pickling."""
+        return(DepthFirstTreeBuilder, (self.splitter, self.min_samples_split,
+                                       self.min_samples_leaf,
+                                       self.min_weight_leaf,
+                                       self.max_depth,
+                                       self.min_impurity_decrease,
+                                       self.initial_roots))
 
     cpdef initialize_node_queue(
         self,
@@ -566,14 +565,13 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         self.store_leaf_values = store_leaf_values
 
     def __reduce__(self):
-      """Reduce re-implementation, for pickling."""
-      return(BestFirstTreeBuilder, (self.splitter, self.min_samples_split,
-                                    self.min_samples_leaf,
-                                    self.min_weight_leaf, self.max_depth,
-                                    self.max_leaf_nodes,
-                                    self.min_impurity_decrease,
-                                    self.store_leaf_values))
-
+        """Reduce re-implementation, for pickling."""
+        return(BestFirstTreeBuilder, (self.splitter, self.min_samples_split,
+                                      self.min_samples_leaf,
+                                      self.min_weight_leaf, self.max_depth,
+                                      self.max_leaf_nodes,
+                                      self.min_impurity_decrease,
+                                      self.store_leaf_values))
 
     cpdef build(
         self,

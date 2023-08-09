@@ -37,8 +37,8 @@ from sklearn.base import (
 from sklearn.utils import Bunch, check_random_state, compute_sample_weight
 from sklearn.utils._param_validation import Hidden, Interval, RealNotInt, StrOptions
 from sklearn.utils.multiclass import (
-    check_classification_targets,
     _check_partial_fit_first_call,
+    check_classification_targets,
 )
 from sklearn.utils.validation import (
     _assert_all_finite_element_wise,
@@ -237,6 +237,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         self,
         X,
         y,
+        classes=None,
         sample_weight=None,
         check_input=True,
         missing_values_in_feature_mask=None,
@@ -302,36 +303,47 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
 
             self.n_outputs_ = y.shape[1]
 
-            if self.class_weight is not None:
-                y_original = np.copy(y)
-                expanded_class_weight = compute_sample_weight(
-                    self.class_weight, y_original
-                )
+            if is_classification:
+                check_classification_targets(y)
+                y = np.copy(y)
 
-            self.classes_ = []
-            self.n_classes_ = []
+                self.classes_ = []
+                self.n_classes_ = []
 
-            y_encoded = np.zeros(y.shape, dtype=int)
-            if classes is not None:
-                classes = np.atleast_1d(classes)
-                if classes.ndim == 1:
-                    classes = np.array([classes])
+                if self.class_weight is not None:
+                    y_original = np.copy(y)
 
-                for k in classes:
-                    self.classes_.append(np.array(k))
-                    self.n_classes_.append(np.array(k).shape[0])
+                y_encoded = np.zeros(y.shape, dtype=int)
+                if classes is not None:
+                    classes = np.atleast_1d(classes)
+                    if classes.ndim == 1:
+                        classes = np.array([classes])
 
-                for i in range(n_samples):
-                    for j in range(self.n_outputs_):
-                        y_encoded[i, j] = np.where(self.classes_[j] == y[i, j])[0][0]
-            else:
-                for k in range(self.n_outputs_):
-                    classes_k, y_encoded[:, k] = np.unique(y[:, k], return_inverse=True)
-                    self.classes_.append(classes_k)
-                    self.n_classes_.append(classes_k.shape[0])
+                    for k in classes:
+                        self.classes_.append(np.array(k))
+                        self.n_classes_.append(np.array(k).shape[0])
 
-            y = y_encoded
-            self.n_classes_ = np.array(self.n_classes_, dtype=np.intp)
+                    for i in range(n_samples):
+                        for j in range(self.n_outputs_):
+                            y_encoded[i, j] = np.where(self.classes_[j] == y[i, j])[0][
+                                0
+                            ]
+                else:
+                    for k in range(self.n_outputs_):
+                        classes_k, y_encoded[:, k] = np.unique(
+                            y[:, k], return_inverse=True
+                        )
+                        self.classes_.append(classes_k)
+                        self.n_classes_.append(classes_k.shape[0])
+
+                y = y_encoded
+
+                if self.class_weight is not None:
+                    expanded_class_weight = compute_sample_weight(
+                        self.class_weight, y_original
+                    )
+
+                self.n_classes_ = np.array(self.n_classes_, dtype=np.intp)
 
             if getattr(y, "dtype", None) != DOUBLE or not y.flags.contiguous:
                 y = np.ascontiguousarray(y, dtype=DOUBLE)
@@ -529,7 +541,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 monotonic_cst,
             )
 
-        if is_classification:
+        if is_classifier(self):
             self.tree_ = Tree(self.n_features_in_, self.n_classes_, self.n_outputs_)
         else:
             self.tree_ = Tree(
@@ -564,7 +576,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
 
         self.builder_.build(self.tree_, X, y, sample_weight)
 
-        if self.n_outputs_ == 1 and is_classification:
+        if self.n_outputs_ == 1 and is_classifier(self):
             self.n_classes_ = self.n_classes_[0]
             self.classes_ = self.classes_[0]
 
@@ -1767,6 +1779,7 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
             y,
             sample_weight=sample_weight,
             check_input=check_input,
+            classes=classes,
         )
         return self
 
