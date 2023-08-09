@@ -174,7 +174,7 @@ cdef class TreeBuilder:
     cdef double min_weight_leaf         # Minimum weight in a leaf
     cdef SIZE_t max_depth               # Maximal tree depth
     cdef double min_impurity_decrease   # Impurity threshold for early stopping
-    cdef object initial_roots
+    cdef object initial_roots           # Leaf nodes for streaming updates
 
     cdef unsigned char store_leaf_values    # Whether to store leaf values
 
