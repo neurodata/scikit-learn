@@ -283,9 +283,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef SIZE_t min_samples_split = self.min_samples_split
         cdef double min_impurity_decrease = self.min_impurity_decrease
 
-        if self.initial_roots:
-            pass
-        else:
+        if not self.initial_roots:
             # Recursive partition (without actual recursion)
             splitter.init(X, y, sample_weight, missing_values_in_feature_mask)
 
