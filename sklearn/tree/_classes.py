@@ -37,7 +37,10 @@ from sklearn.base import (
 )
 from sklearn.utils import Bunch, check_random_state, compute_sample_weight
 from sklearn.utils._param_validation import Hidden, Interval, RealNotInt, StrOptions
-from sklearn.utils.multiclass import check_classification_targets, _check_partial_fit_first_call
+from sklearn.utils.multiclass import (
+    check_classification_targets,
+    _check_partial_fit_first_call,
+)
 from sklearn.utils.validation import (
     _assert_all_finite_element_wise,
     _check_sample_weight,
@@ -331,8 +334,6 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             y = y_encoded
             self.n_classes_ = np.array(self.n_classes_, dtype=np.intp)
 
-                self.n_classes_ = np.array(self.n_classes_, dtype=np.intp)
-
             if getattr(y, "dtype", None) != DOUBLE or not y.flags.contiguous:
                 y = np.ascontiguousarray(y, dtype=DOUBLE)
 
@@ -363,21 +364,17 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 if is_classification:
                     max_features = max(1, int(np.sqrt(self.n_features_in_)))
                     warnings.warn(
-                        (
-                            "`max_features='auto'` has been deprecated in 1.1 "
-                            "and will be removed in 1.3. To keep the past behaviour, "
-                            "explicitly set `max_features='sqrt'`."
-                        ),
+                        "`max_features='auto'` has been deprecated in 1.1 "
+                        "and will be removed in 1.3. To keep the past behaviour, "
+                        "explicitly set `max_features='sqrt'`.",
                         FutureWarning,
                     )
                 else:
                     max_features = self.n_features_in_
                     warnings.warn(
-                        (
-                            "`max_features='auto'` has been deprecated in 1.1 "
-                            "and will be removed in 1.3. To keep the past behaviour, "
-                            "explicitly set `max_features=1.0'`."
-                        ),
+                        "`max_features='auto'` has been deprecated in 1.1 "
+                        "and will be removed in 1.3. To keep the past behaviour, "
+                        "explicitly set `max_features=1.0'`.",
                         FutureWarning,
                     )
             elif self.max_features == "sqrt":

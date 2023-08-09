@@ -99,6 +99,7 @@ cdef class TreeBuilder:
         object X,
         const DOUBLE_t[:, ::1] y,
         const DOUBLE_t[:] sample_weight=None,
+        const unsigned char[::1] missing_values_in_feature_mask=None,
     ):
         """Build a decision tree from the training set (X, y)."""
         pass
@@ -177,8 +178,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         double min_weight_leaf,
         SIZE_t max_depth,
         double min_impurity_decrease,
+        cnp.ndarray initial_roots=None,
         unsigned char store_leaf_values=False,
-        object initial_roots=None
     ):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
@@ -204,13 +205,10 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         object X,
         const DOUBLE_t[:, ::1] y,
         const DOUBLE_t[:] sample_weight=None,
+        const unsigned char[::1] missing_values_in_feature_mask=None,
     ):
         """Initialize a list of roots"""
         X, y, sample_weight = self._check_input(X, y, sample_weight)
-
-        cdef DOUBLE_t* sample_weight_ptr = NULL
-        if sample_weight is not None:
-            sample_weight_ptr = <DOUBLE_t*> sample_weight.data
 
         # organize samples by decision paths
         paths = tree.decision_path(X)
@@ -248,10 +246,10 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
             X_list = X_list + value
             y_list = y_list + y_copy[key]
         cdef object X_new = np.array(X_list)
-        cdef np.ndarray y_new = np.array(y_list)
+        cdef cnp.ndarray y_new = np.array(y_list)
 
         cdef Splitter splitter = self.splitter
-        splitter.init(X_new, y_new, sample_weight_ptr)
+        splitter.init(X_new, y_new, sample_weight, missing_values_in_feature_mask)
 
         self.initial_roots = false_roots
 
@@ -290,7 +288,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
             pass
         else:
             # Recursive partition (without actual recursion)
-            splitter.init(X, y, sample_weight_ptr, missing_values_in_feature_mask)
+            splitter.init(X, y, sample_weight, missing_values_in_feature_mask)
 
         cdef SIZE_t start = 0
         cdef SIZE_t end = 0
@@ -321,7 +319,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
             # push reached leaf nodes onto stack
             for key, value in reversed(sorted(self.initial_roots.items())):
                 end += value[0]
-                rc = builder_stack.push({
+                builder_stack.push({
                     "start": 0,
                     "end": end,
                     "depth": value[1],
@@ -339,7 +337,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         else:
             # push root node onto stack
             self.initial_roots = {}
-            rc = builder_stack.push({
+            builder_stack.push({
                 "start": 0,
                 "end": n_node_samples,
                 "depth": 0,
@@ -407,13 +405,12 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                     if parent in self.initial_roots:
                         node_id = tree._update_node(parent, is_left, is_leaf,
                                                     split_ptr, impurity, n_node_samples,
-                                                    impurity, n_node_samples,
                                                     weighted_n_node_samples,
                                                     split.missing_go_to_left)
                     else:
                         node_id = tree._add_node(parent, is_left, is_leaf,
                                                  split_ptr, impurity, n_node_samples,
-                                                 weighted_n_node_samples, 
+                                                 weighted_n_node_samples,
                                                  split.missing_go_to_left)
 
                 if node_id == INTPTR_MAX:
@@ -556,8 +553,8 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         SIZE_t max_depth,
         SIZE_t max_leaf_nodes,
         double min_impurity_decrease,
+        cnp.ndarray initial_roots=None,
         unsigned char store_leaf_values=False,
-        np.ndarray initial_roots,
     ):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
@@ -1035,7 +1032,7 @@ cdef class BaseTree:
         unsigned char missing_go_to_left
     ) except -1 nogil:
         """Update a node on the tree.
-        
+
         The updated node remains on the same position.
         Returns (size_t)(-1) on error.
         """
@@ -1047,7 +1044,7 @@ cdef class BaseTree:
 
         if node_id >= self.capacity:
             if self._resize_c() != 0:
-                return SIZE_MAX
+                return INTPTR_MAX
 
         cdef Node* node = &self.nodes[node_id]
         node.impurity = impurity
@@ -1064,14 +1061,6 @@ cdef class BaseTree:
             node.threshold = split_node.threshold
 
         return node_id
-
-    cpdef np.ndarray predict(self, object X):
-        """Predict target for X."""
-        out = self._get_value_ndarray().take(self.apply(X), axis=0,
-                                             mode='clip')
-        if self.n_outputs == 1:
-            out = out.reshape(X.shape[0], self.max_n_classes)
-        return out
 
     cpdef cnp.ndarray apply(self, object X):
         """Finds the terminal region (=leaf node) for each sample in X."""

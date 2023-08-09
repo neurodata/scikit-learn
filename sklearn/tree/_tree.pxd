@@ -74,13 +74,6 @@ cdef class BaseTree:
         double weighted_n_node_samples,
         unsigned char missing_go_to_left
     ) except -1 nogil
-    
-    cdef np.ndarray _get_value_ndarray(self)
-    cdef np.ndarray _get_node_ndarray(self)
-
-
-    cdef SIZE_t value_stride             # The dimensionality of a vectorized output per sample
-    cdef double* value                   # Array of values prediction values for each node
 
     # Generic Methods: These are generic methods used by any tree.
     cdef int _resize(self, SIZE_t capacity) except -1 nogil
@@ -191,6 +184,7 @@ cdef class TreeBuilder:
       object X,
       const DOUBLE_t[:, ::1] y,
       const DOUBLE_t[:] sample_weight=*,
+      const unsigned char[::1] missing_values_in_feature_mask=*,
     )
 
     cpdef build(
