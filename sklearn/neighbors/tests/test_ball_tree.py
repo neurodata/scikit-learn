@@ -3,10 +3,11 @@ import itertools
 import numpy as np
 import pytest
 from numpy.testing import assert_array_almost_equal
+
 from sklearn.neighbors._ball_tree import BallTree
 from sklearn.utils import check_random_state
-from sklearn.utils.validation import check_array
 from sklearn.utils._testing import _convert_container
+from sklearn.utils.validation import check_array
 
 rng = np.random.RandomState(10)
 V_mahalanobis = rng.rand(3, 3)
@@ -14,23 +15,11 @@ V_mahalanobis = np.dot(V_mahalanobis, V_mahalanobis.T)
 
 DIMENSION = 3
 
-METRICS = {
-    "euclidean": {},
-    "manhattan": {},
-    "minkowski": dict(p=3),
-    "chebyshev": {},
-    "seuclidean": dict(V=rng.random_sample(DIMENSION)),
-    "wminkowski": dict(p=3, w=rng.random_sample(DIMENSION)),
-    "mahalanobis": dict(V=V_mahalanobis),
-}
-
 DISCRETE_METRICS = ["hamming", "canberra", "braycurtis"]
 
 BOOLEAN_METRICS = [
-    "matching",
     "jaccard",
     "dice",
-    "kulsinski",
     "rogerstanimoto",
     "russellrao",
     "sokalmichener",
@@ -85,3 +74,20 @@ def test_array_object_type():
     X = np.array([(1, 2, 3), (2, 5), (5, 5, 1, 2)], dtype=object)
     with pytest.raises(ValueError, match="setting an array element with a sequence"):
         BallTree(X)
+
+
+def test_bad_pyfunc_metric():
+    def wrong_returned_value(x, y):
+        return "1"
+
+    def one_arg_func(x):
+        return 1.0  # pragma: no cover
+
+    X = np.ones((5, 2))
+    msg = "Custom distance function must accept two vectors and return a float."
+    with pytest.raises(TypeError, match=msg):
+        BallTree(X, metric=wrong_returned_value)
+
+    msg = "takes 1 positional argument but 2 were given"
+    with pytest.raises(TypeError, match=msg):
+        BallTree(X, metric=one_arg_func)
