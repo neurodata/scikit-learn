@@ -17,7 +17,6 @@ randomized trees. Single and multi-output problems are both handled.
 
 import copy
 import numbers
-import warnings
 from abc import ABCMeta, abstractmethod
 from math import ceil
 from numbers import Integral, Real
@@ -374,20 +373,8 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             if self.max_features == "auto":
                 if is_classification:
                     max_features = max(1, int(np.sqrt(self.n_features_in_)))
-                    warnings.warn(
-                        "`max_features='auto'` has been deprecated in 1.1 "
-                        "and will be removed in 1.3. To keep the past behaviour, "
-                        "explicitly set `max_features='sqrt'`.",
-                        FutureWarning,
-                    )
                 else:
                     max_features = self.n_features_in_
-                    warnings.warn(
-                        "`max_features='auto'` has been deprecated in 1.1 "
-                        "and will be removed in 1.3. To keep the past behaviour, "
-                        "explicitly set `max_features=1.0'`.",
-                        FutureWarning,
-                    )
             elif self.max_features == "sqrt":
                 max_features = max(1, int(np.sqrt(self.n_features_in_)))
             elif self.max_features == "log2":
