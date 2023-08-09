@@ -25,7 +25,6 @@ from numbers import Integral, Real
 import numpy as np
 from scipy.sparse import issparse
 
-from ..utils.deprecation import deprecated
 from sklearn.base import (
     BaseEstimator,
     ClassifierMixin,
