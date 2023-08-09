@@ -50,17 +50,31 @@ cdef class BaseTree:
     cdef SIZE_t value_stride             # = n_outputs * max_n_classes
 
     # Methods
-    cdef SIZE_t _add_node(self, SIZE_t parent, bint is_left, bint is_leaf,
-                          SIZE_t feature, double threshold, double impurity,
-                          SIZE_t n_node_samples,
-                          double weighted_n_node_samples) nogil except -1
-    cdef SIZE_t _update_node(self, SIZE_t parent, bint is_left, bint is_leaf,
-                             SIZE_t feature, double threshold, double impurity,
-                             SIZE_t n_node_samples,
-                             double weighted_n_node_samples) nogil except -1
     cdef int _resize(self, SIZE_t capacity) nogil except -1
     cdef int _resize_c(self, SIZE_t capacity=*) nogil except -1
-
+    cdef SIZE_t _add_node(
+        self,
+        SIZE_t parent,
+        bint is_left,
+        bint is_leaf,
+        SplitRecord* split_node,
+        double impurity,
+        SIZE_t n_node_samples,
+        double weighted_n_node_samples,
+        unsigned char missing_go_to_left
+    ) except -1 nogil
+    cdef SIZE_t _update_node(
+        self,
+        SIZE_t parent,
+        bint is_left,
+        bint is_leaf,
+        SplitRecord* split_node,
+        double impurity,
+        SIZE_t n_node_samples,
+        double weighted_n_node_samples,
+        unsigned char missing_go_to_left
+    ) except -1 nogil
+    
     cdef np.ndarray _get_value_ndarray(self)
     cdef np.ndarray _get_node_ndarray(self)
 
