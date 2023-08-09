@@ -283,9 +283,11 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef SIZE_t min_samples_split = self.min_samples_split
         cdef double min_impurity_decrease = self.min_impurity_decrease
 
-        if not self.initial_roots:
+        cdef bint first = 1
+        if self.initial_roots is not None:
             # Recursive partition (without actual recursion)
             splitter.init(X, y, sample_weight, missing_values_in_feature_mask)
+            first = 0
 
         cdef SIZE_t start = 0
         cdef SIZE_t end = 0
@@ -311,7 +313,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef stack[StackRecord] builder_stack
         cdef StackRecord stack_record
 
-        if self.initial_roots:
+        if not first:
             # push reached leaf nodes onto stack
             for key, value in reversed(sorted(self.initial_roots.items())):
                 end += value[0]
@@ -371,8 +373,9 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                            n_node_samples < 2 * min_samples_leaf or
                            weighted_n_node_samples < 2 * min_weight_leaf)
 
-                if not self.initial_roots:
+                if first:
                     impurity = splitter.node_impurity()
+                    first=0
 
                 # impurity == 0 with tolerance due to rounding errors
                 is_leaf = is_leaf or impurity <= EPSILON
