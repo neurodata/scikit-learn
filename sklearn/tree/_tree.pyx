@@ -177,8 +177,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         double min_weight_leaf,
         SIZE_t max_depth,
         double min_impurity_decrease,
-        cnp.ndarray initial_roots=None,
         unsigned char store_leaf_values=False,
+        cnp.ndarray initial_roots=None,
     ):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
@@ -311,13 +311,14 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef int rc = 0
 
         cdef stack[StackRecord] builder_stack
+        cdef stack[StackRecord] update_stack
         cdef StackRecord stack_record
 
         if not first:
             # push reached leaf nodes onto stack
             for key, value in reversed(sorted(self.initial_roots.items())):
                 end += value[0]
-                builder_stack.push({
+                update_stack.push({
                     "start": 0,
                     "end": end,
                     "depth": value[1],
@@ -334,7 +335,6 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                     raise MemoryError()
         else:
             # push root node onto stack
-            self.initial_roots = {}
             builder_stack.push({
                 "start": 0,
                 "end": n_node_samples,
@@ -351,6 +351,131 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                 raise MemoryError()
 
         with nogil:
+            while not update_stack.empty():
+                stack_record = update_stack.top()
+                update_stack.pop()
+
+                start = stack_record.start
+                end = stack_record.end
+                depth = stack_record.depth
+                parent = stack_record.parent
+                is_left = stack_record.is_left
+                impurity = stack_record.impurity
+                n_constant_features = stack_record.n_constant_features
+                lower_bound = stack_record.lower_bound
+                upper_bound = stack_record.upper_bound
+
+                n_node_samples = end - start
+                splitter.node_reset(start, end, &weighted_n_node_samples)
+
+                is_leaf = (depth >= max_depth or
+                           n_node_samples < min_samples_split or
+                           n_node_samples < 2 * min_samples_leaf or
+                           weighted_n_node_samples < 2 * min_weight_leaf)
+
+                # impurity == 0 with tolerance due to rounding errors
+                is_leaf = is_leaf or impurity <= EPSILON
+
+                if not is_leaf:
+                    splitter.node_split(
+                        impurity,
+                        split_ptr,
+                        &n_constant_features,
+                        lower_bound,
+                        upper_bound
+                    )
+
+                    # assign local copy of SplitRecord to assign
+                    # pos, improvement, and impurity scores
+                    split = deref(split_ptr)
+
+                    # If EPSILON=0 in the below comparison, float precision
+                    # issues stop splitting, producing trees that are
+                    # dissimilar to v0.18
+                    is_leaf = (is_leaf or split.pos >= end or
+                               (split.improvement + EPSILON <
+                                min_impurity_decrease))
+
+                    node_id = tree._update_node(parent, is_left, is_leaf,
+                                                split_ptr, impurity, n_node_samples,
+                                                weighted_n_node_samples,
+                                                split.missing_go_to_left)
+
+                if node_id == INTPTR_MAX:
+                    rc = -1
+                    break
+
+                # Store value for all nodes, to facilitate tree/model
+                # inspection and interpretation
+                splitter.node_value(tree.value + node_id * tree.value_stride)
+                if splitter.with_monotonic_cst:
+                    splitter.clip_node_value(tree.value + node_id * tree.value_stride, lower_bound, upper_bound)
+
+                if not is_leaf:
+                    if (
+                        not splitter.with_monotonic_cst or
+                        splitter.monotonic_cst[split.feature] == 0
+                    ):
+                        # Split on a feature with no monotonicity constraint
+
+                        # Current bounds must always be propagated to both children.
+                        # If a monotonic constraint is active, bounds are used in
+                        # node value clipping.
+                        left_child_min = right_child_min = lower_bound
+                        left_child_max = right_child_max = upper_bound
+                    elif splitter.monotonic_cst[split.feature] == 1:
+                        # Split on a feature with monotonic increase constraint
+                        left_child_min = lower_bound
+                        right_child_max = upper_bound
+
+                        # Lower bound for right child and upper bound for left child
+                        # are set to the same value.
+                        middle_value = splitter.criterion.middle_value()
+                        right_child_min = middle_value
+                        left_child_max = middle_value
+                    else:  # i.e. splitter.monotonic_cst[split.feature] == -1
+                        # Split on a feature with monotonic decrease constraint
+                        right_child_min = lower_bound
+                        left_child_max = upper_bound
+
+                        # Lower bound for left child and upper bound for right child
+                        # are set to the same value.
+                        middle_value = splitter.criterion.middle_value()
+                        left_child_min = middle_value
+                        right_child_max = middle_value
+
+                    # Push right child on stack
+                    builder_stack.push({
+                        "start": split.pos,
+                        "end": end,
+                        "depth": depth + 1,
+                        "parent": node_id,
+                        "is_left": 0,
+                        "impurity": split.impurity_right,
+                        "n_constant_features": n_constant_features,
+                        "lower_bound": right_child_min,
+                        "upper_bound": right_child_max,
+                    })
+
+                    # Push left child on stack
+                    builder_stack.push({
+                        "start": start,
+                        "end": split.pos,
+                        "depth": depth + 1,
+                        "parent": node_id,
+                        "is_left": 1,
+                        "impurity": split.impurity_left,
+                        "n_constant_features": n_constant_features,
+                        "lower_bound": left_child_min,
+                        "upper_bound": left_child_max,
+                    })
+                elif self.store_leaf_values and is_leaf:
+                    # copy leaf values to leaf_values array
+                    splitter.node_samples(tree.value_samples[node_id])
+
+                if depth > max_depth_seen:
+                    max_depth_seen = depth
+
             while not builder_stack.empty():
                 stack_record = builder_stack.top()
                 builder_stack.pop()
@@ -399,17 +524,11 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                     is_leaf = (is_leaf or split.pos >= end or
                                (split.improvement + EPSILON <
                                 min_impurity_decrease))
-                with gil:
-                    if parent in self.initial_roots:
-                        node_id = tree._update_node(parent, is_left, is_leaf,
-                                                    split_ptr, impurity, n_node_samples,
-                                                    weighted_n_node_samples,
-                                                    split.missing_go_to_left)
-                    else:
-                        node_id = tree._add_node(parent, is_left, is_leaf,
-                                                 split_ptr, impurity, n_node_samples,
-                                                 weighted_n_node_samples,
-                                                 split.missing_go_to_left)
+
+                node_id = tree._add_node(parent, is_left, is_leaf,
+                                         split_ptr, impurity, n_node_samples,
+                                         weighted_n_node_samples,
+                                         split.missing_go_to_left)
 
                 if node_id == INTPTR_MAX:
                     rc = -1
@@ -551,8 +670,8 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         SIZE_t max_depth,
         SIZE_t max_leaf_nodes,
         double min_impurity_decrease,
-        cnp.ndarray initial_roots=None,
         unsigned char store_leaf_values=False,
+        cnp.ndarray initial_roots=None,
     ):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
