@@ -320,7 +320,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
             for key, value in reversed(sorted(self.initial_roots.items())):
                 end += value[0]
                 update_stack.push({
-                    "start": 0,
+                    "start": start,
                     "end": end,
                     "depth": value[1],
                     "parent": key[0],
