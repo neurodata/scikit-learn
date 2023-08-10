@@ -196,6 +196,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                                        self.min_weight_leaf,
                                        self.max_depth,
                                        self.min_impurity_decrease,
+                                       self.store_leaf_values,
                                        self.initial_roots))
 
     cpdef initialize_node_queue(
@@ -283,11 +284,11 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef SIZE_t min_samples_split = self.min_samples_split
         cdef double min_impurity_decrease = self.min_impurity_decrease
 
-        cdef bint first = 1
-        if self.initial_roots is not None:
+        cdef bint first = 0
+        if self.initial_roots is None:
             # Recursive partition (without actual recursion)
             splitter.init(X, y, sample_weight, missing_values_in_feature_mask)
-            first = 0
+            first = 1
 
         cdef SIZE_t start = 0
         cdef SIZE_t end = 0
@@ -681,6 +682,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         self.max_leaf_nodes = max_leaf_nodes
         self.min_impurity_decrease = min_impurity_decrease
         self.store_leaf_values = store_leaf_values
+        self.initial_roots = initial_roots
 
     def __reduce__(self):
         """Reduce re-implementation, for pickling."""
@@ -689,7 +691,8 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
                                       self.min_weight_leaf, self.max_depth,
                                       self.max_leaf_nodes,
                                       self.min_impurity_decrease,
-                                      self.store_leaf_values))
+                                      self.store_leaf_values,
+                                      self.initial_roots))
 
     cpdef build(
         self,
