@@ -52,6 +52,10 @@ cdef class BaseTree:
     # Methods
     cdef int _resize(self, SIZE_t capacity) except -1 nogil
     cdef int _resize_c(self, SIZE_t capacity=*) except -1 nogil
+
+    # Generic Methods: These are generic methods used by any tree.
+    cdef int _resize(self, SIZE_t capacity) except -1 nogil
+    cdef int _resize_c(self, SIZE_t capacity=*) except -1 nogil
     cdef SIZE_t _add_node(
         self,
         SIZE_t parent,
@@ -64,21 +68,6 @@ cdef class BaseTree:
         unsigned char missing_go_to_left
     ) except -1 nogil
     cdef SIZE_t _update_node(
-        self,
-        SIZE_t parent,
-        bint is_left,
-        bint is_leaf,
-        SplitRecord* split_node,
-        double impurity,
-        SIZE_t n_node_samples,
-        double weighted_n_node_samples,
-        unsigned char missing_go_to_left
-    ) except -1 nogil
-
-    # Generic Methods: These are generic methods used by any tree.
-    cdef int _resize(self, SIZE_t capacity) except -1 nogil
-    cdef int _resize_c(self, SIZE_t capacity=*) except -1 nogil
-    cdef SIZE_t _add_node(
         self,
         SIZE_t parent,
         bint is_left,
