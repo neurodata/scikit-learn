@@ -295,7 +295,6 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         is_classification = False
         if y is not None:
             is_classification = is_classifier(self)
-
             y = np.atleast_1d(y)
             expanded_class_weight = None
 
@@ -564,8 +563,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 self.min_impurity_decrease,
                 self.store_leaf_values,
             )
-
-        self.builder_.build(self.tree_, X, y, sample_weight)
+        self.builder_.build(self.tree_, X, y, sample_weight, missing_values_in_feature_mask)
 
         if self.n_outputs_ == 1 and is_classifier(self):
             self.n_classes_ = self.n_classes_[0]

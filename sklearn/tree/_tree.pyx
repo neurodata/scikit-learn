@@ -526,10 +526,9 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                                (split.improvement + EPSILON <
                                 min_impurity_decrease))
 
-                node_id = tree._add_node(parent, is_left, is_leaf,
-                                         split_ptr, impurity, n_node_samples,
-                                         weighted_n_node_samples,
-                                         split.missing_go_to_left)
+                node_id = tree._add_node(parent, is_left, is_leaf, split_ptr,
+                                         impurity, n_node_samples,
+                                         weighted_n_node_samples, split.missing_go_to_left)
 
                 if node_id == INTPTR_MAX:
                     rc = -1

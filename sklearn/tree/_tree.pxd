@@ -46,16 +46,14 @@ cdef class BaseTree:
     cdef public SIZE_t node_count        # Counter for node IDs
     cdef public SIZE_t capacity          # Capacity of tree, in terms of nodes
     cdef Node* nodes                     # Array of nodes
-    cdef double* value                   # (capacity, n_outputs, max_n_classes) array of values
-    cdef SIZE_t value_stride             # = n_outputs * max_n_classes
 
-    # Methods
-    cdef int _resize(self, SIZE_t capacity) except -1 nogil
-    cdef int _resize_c(self, SIZE_t capacity=*) except -1 nogil
+    cdef SIZE_t value_stride             # The dimensionality of a vectorized output per sample
+    cdef double* value                   # Array of values prediction values for each node
 
     # Generic Methods: These are generic methods used by any tree.
     cdef int _resize(self, SIZE_t capacity) except -1 nogil
     cdef int _resize_c(self, SIZE_t capacity=*) except -1 nogil
+
     cdef SIZE_t _add_node(
         self,
         SIZE_t parent,
@@ -175,6 +173,8 @@ cdef class TreeBuilder:
       const DOUBLE_t[:] sample_weight=*,
       const unsigned char[::1] missing_values_in_feature_mask=*,
     )
+
+    cdef unsigned char store_leaf_values    # Whether to store leaf values
 
     cpdef build(
         self,
