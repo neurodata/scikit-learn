@@ -1303,7 +1303,9 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         self : DecisionTreeClassifier
             Fitted estimator.
         """
-
+        self._validate_params()
+        
+        # validate input parameters
         first_call = _check_partial_fit_first_call(self, classes=classes)
 
         # Fit if no tree exists yet
