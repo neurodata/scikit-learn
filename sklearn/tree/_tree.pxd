@@ -174,8 +174,6 @@ cdef class TreeBuilder:
       const unsigned char[::1] missing_values_in_feature_mask=*,
     )
 
-    cdef unsigned char store_leaf_values    # Whether to store leaf values
-
     cpdef build(
         self,
         Tree tree,
