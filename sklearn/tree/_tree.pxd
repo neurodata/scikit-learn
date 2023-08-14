@@ -5,6 +5,7 @@
 #          Arnaud Joly <arnaud.v.joly@gmail.com>
 #          Jacob Schreiber <jmschreiber91@gmail.com>
 #          Nelson Liu <nelson@nelsonliu.me>
+#          Haoyin Xu <haoyinxu@gmail.com>
 #
 # License: BSD 3 clause
 
@@ -52,7 +53,19 @@ cdef class BaseTree:
     # Generic Methods: These are generic methods used by any tree.
     cdef int _resize(self, SIZE_t capacity) except -1 nogil
     cdef int _resize_c(self, SIZE_t capacity=*) except -1 nogil
+
     cdef SIZE_t _add_node(
+        self,
+        SIZE_t parent,
+        bint is_left,
+        bint is_leaf,
+        SplitRecord* split_node,
+        double impurity,
+        SIZE_t n_node_samples,
+        double weighted_n_node_samples,
+        unsigned char missing_go_to_left
+    ) except -1 nogil
+    cdef SIZE_t _update_node(
         self,
         SIZE_t parent,
         bint is_left,
@@ -80,12 +93,14 @@ cdef class BaseTree:
     cdef int _set_split_node(
         self,
         SplitRecord* split_node,
-        Node* node
+        Node* node,
+        SIZE_t node_id,
     ) except -1 nogil
     cdef int _set_leaf_node(
         self,
         SplitRecord* split_node,
-        Node* node
+        Node* node,
+        SIZE_t node_id,
     ) except -1 nogil
     cdef DTYPE_t _compute_feature(
         self,
@@ -148,8 +163,18 @@ cdef class TreeBuilder:
     cdef double min_weight_leaf         # Minimum weight in a leaf
     cdef SIZE_t max_depth               # Maximal tree depth
     cdef double min_impurity_decrease   # Impurity threshold for early stopping
+    cdef object initial_roots           # Leaf nodes for streaming updates
 
     cdef unsigned char store_leaf_values    # Whether to store leaf values
+
+    cpdef initialize_node_queue(
+      self,
+      Tree tree,
+      object X,
+      const DOUBLE_t[:, ::1] y,
+      const DOUBLE_t[:] sample_weight=*,
+      const unsigned char[::1] missing_values_in_feature_mask=*,
+    )
 
     cpdef build(
         self,
