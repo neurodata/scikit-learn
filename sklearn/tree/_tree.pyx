@@ -214,6 +214,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         paths = tree.decision_path(X)
         cdef int PARENT
         cdef int CHILD
+        cdef int i
         false_roots = {}
         X_copy = {}
         y_copy = {}
@@ -1018,7 +1019,7 @@ cdef class BaseTree:
         self.capacity = capacity
         return 0
 
-    cdef inline int _set_split_node(
+    cdef int _set_split_node(
         self,
         SplitRecord* split_node,
         Node* node,
@@ -1040,7 +1041,7 @@ cdef class BaseTree:
         node.threshold = split_node.threshold
         return 1
 
-    cdef inline int _set_leaf_node(
+    cdef int _set_leaf_node(
         self,
         SplitRecord* split_node,
         Node* node,
