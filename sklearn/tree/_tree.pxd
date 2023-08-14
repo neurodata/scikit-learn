@@ -93,12 +93,14 @@ cdef class BaseTree:
     cdef int _set_split_node(
         self,
         SplitRecord* split_node,
-        Node* node
+        Node* node,
+        SIZE_t node_id,
     ) except -1 nogil
     cdef int _set_leaf_node(
         self,
         SplitRecord* split_node,
-        Node* node
+        Node* node,
+        SIZE_t node_id,
     ) except -1 nogil
     cdef DTYPE_t _compute_feature(
         self,

@@ -1018,10 +1018,11 @@ cdef class BaseTree:
         self.capacity = capacity
         return 0
 
-    cdef int _set_split_node(
+    cdef inline int _set_split_node(
         self,
         SplitRecord* split_node,
-        Node* node
+        Node* node,
+        SIZE_t node_id,
     ) except -1 nogil:
         """Set split node data.
 
@@ -1031,16 +1032,19 @@ cdef class BaseTree:
             The pointer to the record of the split node data.
         node : Node*
             The pointer to the node that will hold the split node.
+        node_id : SIZE_t
+            The index of the node.
         """
         # left_child and right_child will be set later for a split node
         node.feature = split_node.feature
         node.threshold = split_node.threshold
         return 1
 
-    cdef int _set_leaf_node(
+    cdef inline int _set_leaf_node(
         self,
         SplitRecord* split_node,
-        Node* node
+        Node* node,
+        SIZE_t node_id,
     ) except -1 nogil:
         """Set leaf node data.
 
@@ -1050,6 +1054,8 @@ cdef class BaseTree:
             The pointer to the record of the leaf node data.
         node : Node*
             The pointer to the node that will hold the leaf node.
+        node_id : SIZE_t
+            The index of the node.
         """
         node.left_child = _TREE_LEAF
         node.right_child = _TREE_LEAF
@@ -1125,11 +1131,11 @@ cdef class BaseTree:
                 self.nodes[parent].right_child = node_id
 
         if is_leaf:
-            if self._set_leaf_node(split_node, node) != 1:
+            if self._set_leaf_node(split_node, node, node_id) != 1:
                 with gil:
                     raise RuntimeError
         else:
-            if self._set_split_node(split_node, node) != 1:
+            if self._set_split_node(split_node, node, node_id) != 1:
                 with gil:
                     raise RuntimeError
             node.missing_go_to_left = missing_go_to_left
@@ -1170,11 +1176,11 @@ cdef class BaseTree:
         node.weighted_n_node_samples = weighted_n_node_samples
 
         if is_leaf:
-            if self._set_leaf_node(split_node, node) != 1:
+            if self._set_leaf_node(split_node, node, node_id) != 1:
                 with gil:
                     raise RuntimeError
         else:
-            if self._set_split_node(split_node, node) != 1:
+            if self._set_split_node(split_node, node, node_id) != 1:
                 with gil:
                     raise RuntimeError
             node.missing_go_to_left = missing_go_to_left
