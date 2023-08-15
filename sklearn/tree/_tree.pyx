@@ -191,7 +191,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
     def __reduce__(self):
         """Reduce re-implementation, for pickling."""
-        return(DepthFirstTreeBuilder, (self.splitter, self.min_samples_split,
+        return(DepthFirstTreeBuilder, (self.splitter,
+                                       self.min_samples_split,
                                        self.min_samples_leaf,
                                        self.min_weight_leaf,
                                        self.max_depth,
@@ -686,9 +687,11 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
 
     def __reduce__(self):
         """Reduce re-implementation, for pickling."""
-        return(BestFirstTreeBuilder, (self.splitter, self.min_samples_split,
+        return(BestFirstTreeBuilder, (self.splitter,
+                                      self.min_samples_split,
                                       self.min_samples_leaf,
-                                      self.min_weight_leaf, self.max_depth,
+                                      self.min_weight_leaf,
+                                      self.max_depth,
                                       self.max_leaf_nodes,
                                       self.min_impurity_decrease,
                                       self.store_leaf_values,
