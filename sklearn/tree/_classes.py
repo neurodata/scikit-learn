@@ -240,10 +240,10 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         self,
         X,
         y,
-        classes=None,
         sample_weight=None,
         check_input=True,
         missing_values_in_feature_mask=None,
+        classes=None,
     ):
         random_state = check_random_state(self.random_state)
 
@@ -1252,8 +1252,6 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
 
         classes : array-like of shape (n_classes,), default=None
             List of all the classes that can possibly appear in the y vector.
-            Must be provided at the first call to partial_fit, can be omitted
-            in subsequent calls.
 
         Returns
         -------
@@ -1269,7 +1267,7 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         )
         return self
 
-    def partial_fit(self, X, y, classes=None, sample_weight=None, check_input=True):
+    def partial_fit(self, X, y, sample_weight=None, check_input=True, classes=None):
         """Update a decision tree classifier from the training set (X, y).
 
         Parameters
@@ -1282,11 +1280,6 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         y : array-like of shape (n_samples,) or (n_samples, n_outputs)
             The target values (class labels) as integers or strings.
 
-        classes : array-like of shape (n_classes,), default=None
-            List of all the classes that can possibly appear in the y vector.
-            Must be provided at the first call to partial_fit, can be omitted
-            in subsequent calls.
-
         sample_weight : array-like of shape (n_samples,), default=None
             Sample weights. If None, then samples are equally weighted. Splits
             that would create child nodes with net zero or negative weight are
@@ -1297,6 +1290,11 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         check_input : bool, default=True
             Allow to bypass several input checking.
             Don't use this parameter unless you know what you do.
+
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
+            Must be provided at the first call to partial_fit, can be omitted
+            in subsequent calls.
 
         Returns
         -------
