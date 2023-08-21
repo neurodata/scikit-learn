@@ -67,7 +67,11 @@ from sklearn.utils import check_random_state, compute_sample_weight
 from sklearn.utils._openmp_helpers import _openmp_effective_n_threads
 from sklearn.utils._param_validation import Interval, RealNotInt, StrOptions
 from sklearn.utils._tags import _safe_tags
-from sklearn.utils.multiclass import check_classification_targets, type_of_target
+from sklearn.utils.multiclass import (
+    _check_partial_fit_first_call,
+    check_classification_targets,
+    type_of_target,
+)
 from sklearn.utils.parallel import Parallel, delayed
 from sklearn.utils.validation import (
     _check_feature_names_in,
@@ -165,6 +169,7 @@ def _parallel_build_trees(
     class_weight=None,
     n_samples_bootstrap=None,
     missing_values_in_feature_mask=None,
+    classes=None,
 ):
     """
     Private function used to fit a single tree in parallel."""
@@ -197,6 +202,7 @@ def _parallel_build_trees(
             sample_weight=curr_sample_weight,
             check_input=False,
             missing_values_in_feature_mask=missing_values_in_feature_mask,
+            classes=classes,
         )
     else:
         tree._fit(
@@ -205,6 +211,50 @@ def _parallel_build_trees(
             sample_weight=sample_weight,
             check_input=False,
             missing_values_in_feature_mask=missing_values_in_feature_mask,
+            classes=classes,
+        )
+
+    return tree
+
+
+def _parallel_update_trees(
+    tree,
+    bootstrap,
+    X,
+    y,
+    sample_weight,
+    tree_idx,
+    n_trees,
+    verbose=0,
+    class_weight=None,
+    n_samples_bootstrap=None,
+    classes=None,
+):
+    """
+    Private function used to fit a single tree in parallel."""
+    if verbose > 1:
+        print("Updating tree %d of %d" % (tree_idx + 1, n_trees))
+
+    if bootstrap:
+        n_samples = X.shape[0]
+        indices = _generate_sample_indices(
+            tree.random_state, n_samples, n_samples_bootstrap
+        )
+
+        tree.partial_fit(
+            X[indices, :],
+            y[indices],
+            sample_weight=sample_weight,
+            check_input=False,
+            classes=classes,
+        )
+    else:
+        tree.partial_fit(
+            X,
+            y,
+            sample_weight=sample_weight,
+            check_input=False,
+            classes=classes,
         )
 
     return tree
@@ -351,7 +401,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         return sparse_hstack(indicators).tocsr(), n_nodes_ptr
 
     @_fit_context(prefer_skip_nested_validation=True)
-    def fit(self, X, y, sample_weight=None):
+    def fit(self, X, y, sample_weight=None, classes=None):
         """
         Build a forest of trees from the training set (X, y).
 
@@ -372,6 +422,9 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             ignored while searching for a split in each node. In the case of
             classification, splits are also ignored if they would result in any
             single class carrying a negative weight in either child node.
+
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
 
         Returns
         -------
@@ -412,11 +465,9 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         y = np.atleast_1d(y)
         if y.ndim == 2 and y.shape[1] == 1:
             warn(
-                (
-                    "A column-vector y was passed when a 1d array was"
-                    " expected. Please change the shape of y to "
-                    "(n_samples,), for example using ravel()."
-                ),
+                "A column-vector y was passed when a 1d array was"
+                " expected. Please change the shape of y to "
+                "(n_samples,), for example using ravel().",
                 DataConversionWarning,
                 stacklevel=2,
             )
@@ -440,7 +491,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
         self.n_outputs_ = y.shape[1]
 
-        y, expanded_class_weight = self._validate_y_class_weight(y)
+        y, expanded_class_weight = self._validate_y_class_weight(y, classes=classes)
 
         if getattr(y, "dtype", None) != DOUBLE or not y.flags.contiguous:
             y = np.ascontiguousarray(y, dtype=DOUBLE)
@@ -555,6 +606,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
                     class_weight=self.class_weight,
                     n_samples_bootstrap=n_samples_bootstrap,
                     missing_values_in_feature_mask=missing_values_in_feature_mask,
+                    classes=classes,
                 )
                 for i, t in enumerate(trees)
             )
@@ -662,11 +714,9 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         for k in range(n_outputs):
             if (n_oob_pred == 0).any():
                 warn(
-                    (
-                        "Some inputs do not have OOB scores. This probably means "
-                        "too few trees were used to compute any reliable OOB "
-                        "estimates."
-                    ),
+                    "Some inputs do not have OOB scores. This probably means "
+                    "too few trees were used to compute any reliable OOB "
+                    "estimates.",
                     UserWarning,
                 )
                 n_oob_pred[n_oob_pred == 0] = 1
@@ -1031,7 +1081,7 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             y, np.argmax(self.oob_decision_function_, axis=1)
         )
 
-    def _validate_y_class_weight(self, y):
+    def _validate_y_class_weight(self, y, classes=None):
         check_classification_targets(y)
 
         y = np.copy(y)
@@ -1044,12 +1094,28 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
         self.n_classes_ = []
 
         y_store_unique_indices = np.zeros(y.shape, dtype=int)
-        for k in range(self.n_outputs_):
-            classes_k, y_store_unique_indices[:, k] = np.unique(
-                y[:, k], return_inverse=True
-            )
-            self.classes_.append(classes_k)
-            self.n_classes_.append(classes_k.shape[0])
+        if classes is not None:
+            classes = np.atleast_1d(classes)
+            if classes.ndim == 1:
+                classes = np.array([classes])
+
+            for k in classes:
+                self.classes_.append(np.array(k))
+                self.n_classes_.append(np.array(k).shape[0])
+
+            for i in range(y.shape[0]):
+                for j in range(self.n_outputs_):
+                    y_store_unique_indices[i, j] = np.where(
+                        self.classes_[j] == y[i, j]
+                    )[0][0]
+        else:
+            for k in range(self.n_outputs_):
+                classes_k, y_store_unique_indices[:, k] = np.unique(
+                    y[:, k], return_inverse=True
+                )
+                self.classes_.append(classes_k)
+                self.n_classes_.append(classes_k.shape[0])
+
         y = y_store_unique_indices
 
         if self.class_weight is not None:
@@ -1084,6 +1150,234 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
                 expanded_class_weight = compute_sample_weight(class_weight, y_original)
 
         return y, expanded_class_weight
+
+    def partial_fit(self, X, y, sample_weight=None, classes=None):
+        """Update a decision tree classifier from the training set (X, y).
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix} of shape (n_samples, n_features)
+            The training input samples. Internally, it will be converted to
+            ``dtype=np.float32`` and if a sparse matrix is provided
+            to a sparse ``csc_matrix``.
+
+        y : array-like of shape (n_samples,) or (n_samples, n_outputs)
+            The target values (class labels) as integers or strings.
+
+        sample_weight : array-like of shape (n_samples,), default=None
+            Sample weights. If None, then samples are equally weighted. Splits
+            that would create child nodes with net zero or negative weight are
+            ignored while searching for a split in each node. Splits are also
+            ignored if they would result in any single class carrying a
+            negative weight in either child node.
+
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
+            Must be provided at the first call to partial_fit, can be omitted
+            in subsequent calls.
+
+        Returns
+        -------
+        self : object
+            Returns the instance itself.
+        """
+        self._validate_params()
+
+        # validate input parameters
+        first_call = _check_partial_fit_first_call(self, classes=classes)
+
+        # Fit if no tree exists yet
+        if first_call:
+            self.fit(
+                X,
+                y,
+                sample_weight=sample_weight,
+                classes=classes,
+            )
+            return self
+
+        if issparse(y):
+            raise ValueError("sparse multilabel-indicator for y is not supported.")
+
+        X, y = self._validate_data(
+            X,
+            y,
+            multi_output=True,
+            accept_sparse="csc",
+            dtype=DTYPE,
+            force_all_finite=False,
+        )
+        # _compute_missing_values_in_feature_mask checks if X has missing values and
+        # will raise an error if the underlying tree base estimator can't handle missing
+        # values. Only the criterion is required to determine if the tree supports
+        # missing values.
+        estimator = type(self.estimator)(criterion=self.criterion)
+        missing_values_in_feature_mask = (
+            estimator._compute_missing_values_in_feature_mask(
+                X, estimator_name=self.__class__.__name__
+            )
+        )
+
+        if sample_weight is not None:
+            sample_weight = _check_sample_weight(sample_weight, X)
+
+        if issparse(X):
+            # Pre-sort indices to avoid that each individual tree of the
+            # ensemble sorts the indices.
+            X.sort_indices()
+
+        y = np.atleast_1d(y)
+        if y.ndim == 2 and y.shape[1] == 1:
+            warn(
+                "A column-vector y was passed when a 1d array was"
+                " expected. Please change the shape of y to "
+                "(n_samples,), for example using ravel().",
+                DataConversionWarning,
+                stacklevel=2,
+            )
+
+        if y.ndim == 1:
+            # reshape is necessary to preserve the data contiguity against vs
+            # [:, np.newaxis] that does not.
+            y = np.reshape(y, (-1, 1))
+
+        if self.criterion == "poisson":
+            if np.any(y < 0):
+                raise ValueError(
+                    "Some value(s) of y are negative which is "
+                    "not allowed for Poisson regression."
+                )
+            if np.sum(y) <= 0:
+                raise ValueError(
+                    "Sum of y is not strictly positive which "
+                    "is necessary for Poisson regression."
+                )
+
+        self.n_outputs_ = y.shape[1]
+
+        y, expanded_class_weight = self._validate_y_class_weight(y)
+
+        if getattr(y, "dtype", None) != DOUBLE or not y.flags.contiguous:
+            y = np.ascontiguousarray(y, dtype=DOUBLE)
+
+        if expanded_class_weight is not None:
+            if sample_weight is not None:
+                sample_weight = sample_weight * expanded_class_weight
+            else:
+                sample_weight = expanded_class_weight
+
+        if not self.bootstrap and self.max_samples is not None:
+            raise ValueError(
+                "`max_sample` cannot be set if `bootstrap=False`. "
+                "Either switch to `bootstrap=True` or set "
+                "`max_sample=None`."
+            )
+        elif self.bootstrap:
+            n_samples_bootstrap = _get_n_samples_bootstrap(
+                n_samples=X.shape[0], max_samples=self.max_samples
+            )
+        else:
+            n_samples_bootstrap = None
+
+        self._validate_estimator()
+
+        if not self.bootstrap and self.oob_score:
+            raise ValueError("Out of bag estimation only available if bootstrap=True")
+
+        random_state = check_random_state(self.random_state)
+
+        if self.max_bins is not None:
+            # `_openmp_effective_n_threads` is used to take cgroups CPU quotes
+            # into account when determine the maximum number of threads to use.
+            n_threads = _openmp_effective_n_threads()
+
+            # Bin the data
+            # For ease of use of the API, the user-facing GBDT classes accept the
+            # parameter max_bins, which doesn't take into account the bin for
+            # missing values (which is always allocated). However, since max_bins
+            # isn't the true maximal number of bins, all other private classes
+            # (binmapper, histbuilder...) accept n_bins instead, which is the
+            # actual total number of bins. Everywhere in the code, the
+            # convention is that n_bins == max_bins + 1
+            n_bins = self.max_bins + 1  # + 1 for missing values
+            self._bin_mapper = _BinMapper(
+                n_bins=n_bins,
+                # is_categorical=self.is_categorical_,
+                known_categories=None,
+                random_state=random_state,
+                n_threads=n_threads,
+            )
+
+            # XXX: in order for this to work with the underlying tree submodule's Cython
+            # code, we need to convert this into the original data's DTYPE because
+            # the Cython code assumes that `DTYPE` is used.
+            # The proper implementation will be a lot more complicated and should be
+            # tackled once scikit-learn has finalized their inclusion of missing data
+            # and categorical support for decision trees
+            X = self._bin_data(X, is_training_data=True)  # .astype(DTYPE)
+        else:
+            self._bin_mapper = None
+
+        # We draw from the random state to get the random state we
+        # would have got if we hadn't used a warm_start.
+        random_state.randint(MAX_INT, size=len(self.estimators_))
+
+        # Parallel loop: we prefer the threading backend as the Cython code
+        # for fitting the trees is internally releasing the Python GIL
+        # making threading more efficient than multiprocessing in
+        # that case. However, for joblib 0.12+ we respect any
+        # parallel_backend contexts set at a higher level,
+        # since correctness does not rely on using threads.
+        trees = Parallel(
+            n_jobs=self.n_jobs,
+            verbose=self.verbose,
+            prefer="threads",
+        )(
+            delayed(_parallel_update_trees)(
+                t,
+                self.bootstrap,
+                X,
+                y,
+                sample_weight,
+                i,
+                len(self.estimators_),
+                verbose=self.verbose,
+                class_weight=self.class_weight,
+                n_samples_bootstrap=n_samples_bootstrap,
+                classes=classes,
+            )
+            for i, t in enumerate(self.estimators_)
+        )
+
+        if self.oob_score and (
+            n_more_estimators > 0 or not hasattr(self, "oob_score_")
+        ):
+            y_type = type_of_target(y)
+            if y_type in ("multiclass-multioutput", "unknown"):
+                # FIXME: we could consider to support multiclass-multioutput if
+                # we introduce or reuse a constructor parameter (e.g.
+                # oob_score) allowing our user to pass a callable defining the
+                # scoring strategy on OOB sample.
+                raise ValueError(
+                    "The type of target cannot be used to compute OOB "
+                    f"estimates. Got {y_type} while only the following are "
+                    "supported: continuous, continuous-multioutput, binary, "
+                    "multiclass, multilabel-indicator."
+                )
+
+            if callable(self.oob_score):
+                self._set_oob_score_and_attributes(
+                    X, y, scoring_function=self.oob_score
+                )
+            else:
+                self._set_oob_score_and_attributes(X, y)
+
+        # Decapsulate classes_ attributes
+        if hasattr(self, "classes_") and self.n_outputs_ == 1:
+            self.n_classes_ = self.n_classes_[0]
+            self.classes_ = self.classes_[0]
+
+        return self
 
     def predict(self, X):
         """
@@ -3164,7 +3458,7 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
     def _set_oob_score_and_attributes(self, X, y, scoring_function=None):
         raise NotImplementedError("OOB score not supported by tree embedding")
 
-    def fit(self, X, y=None, sample_weight=None):
+    def fit(self, X, y=None, sample_weight=None, classes=None):
         """
         Fit estimator.
 
@@ -3185,17 +3479,20 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
             classification, splits are also ignored if they would result in any
             single class carrying a negative weight in either child node.
 
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
+
         Returns
         -------
         self : object
             Returns the instance itself.
         """
         # Parameters are validated in fit_transform
-        self.fit_transform(X, y, sample_weight=sample_weight)
+        self.fit_transform(X, y, sample_weight=sample_weight, classes=classes)
         return self
 
     @_fit_context(prefer_skip_nested_validation=True)
-    def fit_transform(self, X, y=None, sample_weight=None):
+    def fit_transform(self, X, y=None, sample_weight=None, classes=None):
         """
         Fit estimator and transform dataset.
 
@@ -3215,6 +3512,9 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
             classification, splits are also ignored if they would result in any
             single class carrying a negative weight in either child node.
 
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
+
         Returns
         -------
         X_transformed : sparse matrix of shape (n_samples, n_out)
@@ -3222,7 +3522,7 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
         """
         rnd = check_random_state(self.random_state)
         y = rnd.uniform(size=_num_samples(X))
-        super().fit(X, y, sample_weight=sample_weight)
+        super().fit(X, y, sample_weight=sample_weight, classes=classes)
 
         self.one_hot_encoder_ = OneHotEncoder(sparse_output=self.sparse_output)
         output = self.one_hot_encoder_.fit_transform(self.apply(X))
