@@ -1335,8 +1335,10 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
                     )
 
         if X.shape[1] != self.n_features_in_:
-            msg = "Number of features %d does not match previous data %d."
-            raise ValueError(msg % (X.shape[1], self.n_features_in_))
+            raise ValueError(
+                f"X has {X.shape[1]} features, but {self.__class__.__name__} "
+                f"is expecting {self.n_features_in_} features as input."
+            )
 
         y = np.atleast_1d(y)
 
