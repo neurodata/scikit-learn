@@ -525,13 +525,13 @@ def test_shuffle_dont_convert_to_array():
     a_s, b_s, c_s, d_s, e_s = shuffle(a, b, c, d, e, random_state=0)
 
     assert a_s == ["c", "b", "a"]
-    assert isinstance(a_s) == list
+    assert isinstance(a_s, list)
 
     assert_array_equal(b_s, ["c", "b", "a"])
     assert b_s.dtype == object
 
     assert c_s == [3, 2, 1]
-    assert isinstance(c_s) == list
+    assert isinstance(c_s, list)
 
     assert_array_equal(d_s, np.array([["c", 2], ["b", 1], ["a", 0]], dtype=object))
     assert type(d_s) == MockDataFrame
