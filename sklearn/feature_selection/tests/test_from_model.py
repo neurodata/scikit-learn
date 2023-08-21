@@ -10,7 +10,11 @@ from sklearn.base import BaseEstimator
 from sklearn.cross_decomposition import CCA, PLSCanonical, PLSRegression
 from sklearn.datasets import make_friedman1
 from sklearn.decomposition import PCA
-from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
+from sklearn.ensemble import (
+    HistGradientBoostingClassifier,
+    RandomForestClassifier,
+    RandomForestRegressor,
+)
 from sklearn.exceptions import NotFittedError
 from sklearn.feature_selection import SelectFromModel
 from sklearn.linear_model import (
