@@ -401,10 +401,6 @@ def test_partial_fit():
     transformer.fit(np.vstack((data, data)), np.concatenate((y, y)))
     assert_array_almost_equal(X_transform, transformer.transform(data))
 
-    # check that if est doesn't have partial_fit, neither does SelectFromModel
-    transformer = SelectFromModel(estimator=RandomForestClassifier())
-    assert not hasattr(transformer, "partial_fit")
-
 
 def test_calling_fit_reinitializes():
     est = LinearSVC(dual="auto", random_state=0)

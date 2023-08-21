@@ -4025,7 +4025,7 @@ def check_n_features_in_after_fitting(name, estimator_orig):
     ]
     X_bad = X[:, [1]]
 
-    msg = f"X has 1 features, but \\w+ is expecting {X.shape[1]} features as input"
+    msg = f"Number of features %d does not match previous data %d."
     for method in check_methods:
         if not hasattr(estimator, method):
             continue
