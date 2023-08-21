@@ -728,7 +728,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
         return oob_pred
 
-    def _validate_y_class_weight(self, y):
+    def _validate_y_class_weight(self, y, classes=None):
         # Default implementation
         return y, None
 
