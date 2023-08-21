@@ -465,9 +465,11 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         y = np.atleast_1d(y)
         if y.ndim == 2 and y.shape[1] == 1:
             warn(
-                "A column-vector y was passed when a 1d array was"
-                " expected. Please change the shape of y to "
-                "(n_samples,), for example using ravel().",
+                (
+                    "A column-vector y was passed when a 1d array was"
+                    " expected. Please change the shape of y to "
+                    "(n_samples,), for example using ravel()."
+                ),
                 DataConversionWarning,
                 stacklevel=2,
             )
@@ -714,9 +716,11 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         for k in range(n_outputs):
             if (n_oob_pred == 0).any():
                 warn(
-                    "Some inputs do not have OOB scores. This probably means "
-                    "too few trees were used to compute any reliable OOB "
-                    "estimates.",
+                    (
+                        "Some inputs do not have OOB scores. This probably means "
+                        "too few trees were used to compute any reliable OOB "
+                        "estimates."
+                    ),
                     UserWarning,
                 )
                 n_oob_pred[n_oob_pred == 0] = 1
@@ -1212,11 +1216,6 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
         # values. Only the criterion is required to determine if the tree supports
         # missing values.
         estimator = type(self.estimator)(criterion=self.criterion)
-        missing_values_in_feature_mask = (
-            estimator._compute_missing_values_in_feature_mask(
-                X, estimator_name=self.__class__.__name__
-            )
-        )
 
         if sample_weight is not None:
             sample_weight = _check_sample_weight(sample_weight, X)
@@ -1229,9 +1228,11 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
         y = np.atleast_1d(y)
         if y.ndim == 2 and y.shape[1] == 1:
             warn(
-                "A column-vector y was passed when a 1d array was"
-                " expected. Please change the shape of y to "
-                "(n_samples,), for example using ravel().",
+                (
+                    "A column-vector y was passed when a 1d array was"
+                    " expected. Please change the shape of y to "
+                    "(n_samples,), for example using ravel()."
+                ),
                 DataConversionWarning,
                 stacklevel=2,
             )
@@ -1328,7 +1329,7 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
         # that case. However, for joblib 0.12+ we respect any
         # parallel_backend contexts set at a higher level,
         # since correctness does not rely on using threads.
-        trees = Parallel(
+        Parallel(
             n_jobs=self.n_jobs,
             verbose=self.verbose,
             prefer="threads",
@@ -1349,9 +1350,7 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             for i, t in enumerate(self.estimators_)
         )
 
-        if self.oob_score and (
-            n_more_estimators > 0 or not hasattr(self, "oob_score_")
-        ):
+        if self.oob_score:
             y_type = type_of_target(y)
             if y_type in ("multiclass-multioutput", "unknown"):
                 # FIXME: we could consider to support multiclass-multioutput if
