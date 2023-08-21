@@ -413,16 +413,16 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
 
         # build the actual tree now with the parameters
         self._build_tree(
-            X,
-            y,
-            sample_weight,
-            missing_values_in_feature_mask,
-            min_samples_leaf,
-            min_weight_leaf,
-            max_leaf_nodes,
-            min_samples_split,
-            max_depth,
-            random_state,
+            X=X,
+            y=y,
+            sample_weight=sample_weight,
+            missing_values_in_feature_mask=missing_values_in_feature_mask,
+            min_samples_leaf=min_samples_leaf,
+            min_weight_leaf=min_weight_leaf,
+            max_leaf_nodes=max_leaf_nodes,
+            min_samples_split=min_samples_split,
+            max_depth=max_depth,
+            random_state=random_state,
         )
 
         return self
@@ -1269,7 +1269,7 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         )
         return self
 
-    def partial_fit(self, X, y, classes=None, sample_weight=None, check_input=True):
+    def partial_fit(self, X, y, sample_weight=None, classes=None, check_input=True):
         """Update a decision tree classifier from the training set (X, y).
 
         Parameters
