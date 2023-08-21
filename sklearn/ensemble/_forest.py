@@ -1211,11 +1211,6 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             dtype=DTYPE,
             force_all_finite=False,
         )
-        # _compute_missing_values_in_feature_mask checks if X has missing values and
-        # will raise an error if the underlying tree base estimator can't handle missing
-        # values. Only the criterion is required to determine if the tree supports
-        # missing values.
-        estimator = type(self.estimator)(criterion=self.criterion)
 
         if sample_weight is not None:
             sample_weight = _check_sample_weight(sample_weight, X)
