@@ -405,6 +405,7 @@ def test_partial_fit():
     transformer = SelectFromModel(estimator=RandomForestRegressor())
     assert not hasattr(transformer, "partial_fit")
 
+
 def test_calling_fit_reinitializes():
     est = LinearSVC(dual="auto", random_state=0)
     transformer = SelectFromModel(estimator=est)
