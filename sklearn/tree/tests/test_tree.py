@@ -2413,8 +2413,8 @@ def test_min_sample_split_1_error(Tree):
     # min_samples_split=1 is invalid
     tree = Tree(min_samples_split=1)
     msg = (
-        r"'min_samples_split' .* must be an int in the range \[2, inf\) "
-        r"or a float in the range \(0.0, 1.0\]"
+        r"'min_samples_split' .* must be an int in the range \[2, inf\)"
+        r".* a float in the range \(0.0, 1.0\]"
     )
     with pytest.raises(ValueError, match=msg):
         tree.fit(X, y)
