@@ -1200,9 +1200,6 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             )
             return self
 
-        if issparse(y):
-            raise ValueError("sparse multilabel-indicator for y is not supported.")
-
         X, y = self._validate_data(
             X,
             y,
@@ -1210,7 +1207,11 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             accept_sparse="csc",
             dtype=DTYPE,
             force_all_finite=False,
+            reset=first_call,
         )
+
+        if issparse(y):
+            raise ValueError("sparse multilabel-indicator for y is not supported.")
 
         if sample_weight is not None:
             sample_weight = _check_sample_weight(sample_weight, X)
@@ -1370,7 +1371,6 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
         if hasattr(self, "classes_") and self.n_outputs_ == 1:
             self.n_classes_ = self.n_classes_[0]
             self.classes_ = self.classes_[0]
-
         return self
 
     def predict(self, X):
