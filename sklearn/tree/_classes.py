@@ -1135,6 +1135,9 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
     builder_ : TreeBuilder instance
         The underlying TreeBuilder object.
 
+    min_samples_split_ : float
+        The minimum number of samples needed to split a node in the tree building.
+
     See Also
     --------
     DecisionTreeRegressor : A decision tree regressor.
@@ -1652,6 +1655,9 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
     builder_ : TreeBuilder instance
         The underlying TreeBuilder object.
 
+    min_samples_split_ : float
+        The minimum number of samples needed to split a node in the tree building.
+
     See Also
     --------
     DecisionTreeClassifier : A decision tree classifier.
@@ -2033,6 +2039,9 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
     builder_ : TreeBuilder instance
         The underlying TreeBuilder object.
 
+    min_samples_split_ : float
+        The minimum number of samples needed to split a node in the tree building.
+
     See Also
     --------
     ExtraTreeRegressor : An extremely randomized tree regressor.
@@ -2297,6 +2306,9 @@ class ExtraTreeRegressor(DecisionTreeRegressor):
 
     builder_ : TreeBuilder instance
         The underlying TreeBuilder object.
+
+    min_samples_split_ : float
+        The minimum number of samples needed to split a node in the tree building.
 
     See Also
     --------
