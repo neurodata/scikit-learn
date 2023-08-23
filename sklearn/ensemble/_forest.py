@@ -1252,17 +1252,6 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
 
         self.n_outputs_ = y.shape[1]
 
-        y, expanded_class_weight = self._validate_y_class_weight(y)
-
-        if getattr(y, "dtype", None) != DOUBLE or not y.flags.contiguous:
-            y = np.ascontiguousarray(y, dtype=DOUBLE)
-
-        if expanded_class_weight is not None:
-            if sample_weight is not None:
-                sample_weight = sample_weight * expanded_class_weight
-            else:
-                sample_weight = expanded_class_weight
-
         if not self.bootstrap and self.max_samples is not None:
             raise ValueError(
                 "`max_sample` cannot be set if `bootstrap=False`. "
@@ -1367,10 +1356,6 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             else:
                 self._set_oob_score_and_attributes(X, y)
 
-        # Decapsulate classes_ attributes
-        if hasattr(self, "classes_") and self.n_outputs_ == 1:
-            self.n_classes_ = self.n_classes_[0]
-            self.classes_ = self.classes_[0]
         return self
 
     def predict(self, X):

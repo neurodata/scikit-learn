@@ -319,7 +319,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
         if not first:
             # push reached leaf nodes onto stack
-            for key, value in reversed(sorted(self.initial_roots.items())):
+            for key, value in sorted(self.initial_roots.items()):
                 end += value[0]
                 update_stack.push({
                     "start": start,
