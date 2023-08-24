@@ -1323,13 +1323,10 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
         # would have got if we hadn't used a warm_start.
         random_state.randint(MAX_INT, size=len(self.estimators_))
 
-        # Parallel loop: we prefer the threading backend as the Cython code
-        # for fitting the trees is internally releasing the Python GIL
-        # making threading more efficient than multiprocessing in
-        # that case. However, for joblib 0.12+ we respect any
-        # parallel_backend contexts set at a higher level,
-        # since correctness does not rely on using threads.
-        Parallel(
+        # Copy estimator list
+        trees = self.estimators_
+
+        trees = Parallel(
             n_jobs=self.n_jobs,
             verbose=self.verbose,
             prefer="threads",
@@ -1341,14 +1338,17 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
                 y,
                 sample_weight,
                 i,
-                len(self.estimators_),
+                len(trees),
                 verbose=self.verbose,
                 class_weight=self.class_weight,
                 n_samples_bootstrap=n_samples_bootstrap,
                 classes=classes[0],
             )
-            for i, t in enumerate(self.estimators_)
+            for i, t in enumerate(trees)
         )
+
+        # Update estimator references
+        self.estimators_ = trees
 
         if self.oob_score:
             y_type = type_of_target(y)
