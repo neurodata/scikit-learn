@@ -1345,7 +1345,7 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
                 verbose=self.verbose,
                 class_weight=self.class_weight,
                 n_samples_bootstrap=n_samples_bootstrap,
-                classes=classes,
+                classes=classes[0],
             )
             for i, t in enumerate(self.estimators_)
         )
