@@ -268,16 +268,6 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         # check input
         X, y, sample_weight = self._check_input(X, y, sample_weight)
 
-        # Initial capacity
-        cdef int init_capacity
-
-        if tree.max_depth <= 10:
-            init_capacity = <int> (2 ** (tree.max_depth + 1)) - 1
-        else:
-            init_capacity = 2047
-
-        tree._resize(init_capacity)
-
         # Parameters
         cdef Splitter splitter = self.splitter
         cdef SIZE_t max_depth = self.max_depth
@@ -286,10 +276,19 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef SIZE_t min_samples_split = self.min_samples_split
         cdef double min_impurity_decrease = self.min_impurity_decrease
 
+        # Initial capacity
+        cdef int init_capacity
         cdef bint first = 0
         if self.initial_roots is None:
             # Recursive partition (without actual recursion)
             splitter.init(X, y, sample_weight, missing_values_in_feature_mask)
+
+            if tree.max_depth <= 10:
+                init_capacity = <int> (2 ** (tree.max_depth + 1)) - 1
+            else:
+                init_capacity = 2047
+
+            tree._resize(init_capacity)
             first = 1
 
         cdef SIZE_t start = 0
