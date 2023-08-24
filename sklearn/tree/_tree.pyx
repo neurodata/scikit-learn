@@ -1147,7 +1147,7 @@ cdef class BaseTree:
 
         return node_id
 
-    cdef SIZE_t _update_node(
+    cdef inline SIZE_t _update_node(
         self,
         SIZE_t parent,
         bint is_left,
