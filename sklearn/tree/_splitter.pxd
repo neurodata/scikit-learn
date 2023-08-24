@@ -126,7 +126,7 @@ cdef class Splitter(BaseSplitter):
     # Methods that allow modifications to stopping conditions
     cdef bint check_presplit_conditions(
         self,
-        SplitRecord current_split,
+        SplitRecord* current_split,
         SIZE_t n_missing,
         bint missing_go_to_left,
     ) noexcept nogil
