@@ -327,9 +327,9 @@ cdef class Splitter(BaseSplitter):
 
         return self.criterion.node_impurity()
 
-    cdef bint check_presplit_conditions(
+    cdef inline bint check_presplit_conditions(
         self,
-        SplitRecord current_split,
+        SplitRecord* current_split,
         SIZE_t n_missing,
         bint missing_go_to_left,
     ) noexcept nogil:
@@ -356,7 +356,7 @@ cdef class Splitter(BaseSplitter):
 
         return 0
 
-    cdef bint check_postsplit_conditions(
+    cdef inline bint check_postsplit_conditions(
         self
     ) noexcept nogil:
         """Check stopping conditions after evaluating the split.
@@ -571,7 +571,7 @@ cdef inline int node_split_best(
                 else:
                     n_left = current_split.pos - splitter.start
                     n_right = end_non_missing - current_split.pos + n_missing
-                if splitter.check_presplit_conditions(current_split, n_missing, missing_go_to_left) == 1:
+                if splitter.check_presplit_conditions(&current_split, n_missing, missing_go_to_left) == 1:
                     continue
 
                 criterion.update(current_split.pos)
@@ -914,7 +914,7 @@ cdef inline int node_split_random(
         current_split.pos = partitioner.partition_samples(current_split.threshold)
 
         # Reject if min_samples_leaf is not guaranteed
-        if splitter.check_presplit_conditions(current_split, 0, 0) == 1:
+        if splitter.check_presplit_conditions(&current_split, 0, 0) == 1:
             continue
 
         # Evaluate split
