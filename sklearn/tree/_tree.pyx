@@ -220,10 +220,12 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         X_copy = {}
         y_copy = {}
         for i in range(X.shape[0]):
+            # collect depths from the node paths
             depth_i = paths[i].indices.shape[0] - 1
             PARENT = depth_i - 1
             CHILD = depth_i
 
+            # find leaf node's & their parent node's IDs
             if PARENT < 0:
                 parent_i = 0
             else:
@@ -231,8 +233,11 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
             child_i = paths[i].indices[CHILD]
             left = 0
             if tree.children_left[parent_i] == child_i:
-                left = 1
+                left = 1  # leaf node is left child
 
+            # organize samples by the leaf they fall into (false root)
+            # leaf nodes are marked by parent node and
+            # their relative position (left or right child)
             if (parent_i, left) in false_roots:
                 false_roots[(parent_i, left)][0] += 1
                 X_copy[(parent_i, left)].append(X[i])
@@ -244,12 +249,15 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
         X_list = []
         y_list = []
+
+        # reorder the samples according to parent node IDs
         for key, value in reversed(sorted(X_copy.items())):
             X_list = X_list + value
             y_list = y_list + y_copy[key]
         cdef object X_new = np.array(X_list)
         cdef cnp.ndarray y_new = np.array(y_list)
 
+        # initialize the splitter using sorted samples
         cdef Splitter splitter = self.splitter
         splitter.init(X_new, y_new, sample_weight, missing_values_in_feature_mask)
 
