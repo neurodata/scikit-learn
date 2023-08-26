@@ -283,11 +283,13 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef double min_weight_leaf = self.min_weight_leaf
         cdef SIZE_t min_samples_split = self.min_samples_split
         cdef double min_impurity_decrease = self.min_impurity_decrease
+        cdef unsigned char store_leaf_values = self.store_leaf_values
+        cdef cnp.ndarray initial_roots = self.initial_roots
 
         # Initial capacity
         cdef int init_capacity
         cdef bint first = 0
-        if self.initial_roots is None:
+        if initial_roots is None:
             # Recursive partition (without actual recursion)
             splitter.init(X, y, sample_weight, missing_values_in_feature_mask)
 
@@ -326,7 +328,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
         if not first:
             # push reached leaf nodes onto stack
-            for key, value in reversed(sorted(self.initial_roots.items())):
+            for key, value in reversed(sorted(initial_roots.items())):
                 end += value[0]
                 update_stack.push({
                     "start": start,
@@ -479,7 +481,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                         "lower_bound": left_child_min,
                         "upper_bound": left_child_max,
                     })
-                elif self.store_leaf_values and is_leaf:
+                elif store_leaf_values and is_leaf:
                     # copy leaf values to leaf_values array
                     splitter.node_samples(tree.value_samples[node_id])
 
@@ -607,7 +609,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                         "lower_bound": left_child_min,
                         "upper_bound": left_child_max,
                     })
-                elif self.store_leaf_values and is_leaf:
+                elif store_leaf_values and is_leaf:
                     # copy leaf values to leaf_values array
                     splitter.node_samples(tree.value_samples[node_id])
 
@@ -720,6 +722,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         # Parameters
         cdef Splitter splitter = self.splitter
         cdef SIZE_t max_leaf_nodes = self.max_leaf_nodes
+        cdef unsigned char store_leaf_values = self.store_leaf_values
 
         # Recursive partition (without actual recursion)
         splitter.init(X, y, sample_weight, missing_values_in_feature_mask)
@@ -778,7 +781,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
                     node.feature = _TREE_UNDEFINED
                     node.threshold = _TREE_UNDEFINED
 
-                    if self.store_leaf_values:
+                    if store_leaf_values:
                         # copy leaf values to leaf_values array
                         splitter.node_samples(tree.value_samples[record.node_id])
                 else:
