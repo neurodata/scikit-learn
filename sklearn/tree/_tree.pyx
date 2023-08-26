@@ -178,7 +178,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         SIZE_t max_depth,
         double min_impurity_decrease,
         unsigned char store_leaf_values=False,
-        object initial_roots=None,
+        cnp.ndarray initial_roots=None,
     ):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
@@ -261,7 +261,8 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef Splitter splitter = self.splitter
         splitter.init(X_new, y_new, sample_weight, missing_values_in_feature_mask)
 
-        self.initial_roots = false_roots
+        # convert dict to numpy array and store value
+        self.initial_roots = np.array(list(false_roots.items()))
 
     cpdef build(
         self,
@@ -284,7 +285,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef SIZE_t min_samples_split = self.min_samples_split
         cdef double min_impurity_decrease = self.min_impurity_decrease
         cdef unsigned char store_leaf_values = self.store_leaf_values
-        initial_roots = self.initial_roots
+        cdef cnp.ndarray initial_roots = self.initial_roots
 
         # Initial capacity
         cdef int init_capacity
@@ -300,6 +301,11 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
             tree._resize(init_capacity)
             first = 1
+        else:
+            # convert numpy array back to dict
+            false_roots = {}
+            for key_value_pair in initial_roots:
+                false_roots[tuple(key_value_pair[0])] = key_value_pair[1]
 
         cdef SIZE_t start = 0
         cdef SIZE_t end = 0
@@ -328,7 +334,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
         if not first:
             # push reached leaf nodes onto stack
-            for key, value in reversed(sorted(initial_roots.items())):
+            for key, value in reversed(sorted(false_roots.items())):
                 end += value[0]
                 update_stack.push({
                     "start": start,
@@ -682,7 +688,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         SIZE_t max_leaf_nodes,
         double min_impurity_decrease,
         unsigned char store_leaf_values=False,
-        object initial_roots=None,
+        cnp.ndarray initial_roots=None,
     ):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
