@@ -1332,7 +1332,6 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
         Parallel(
             n_jobs=self.n_jobs,
             verbose=self.verbose,
-            prefer="threads",
         )(
             delayed(_parallel_update_trees)(
                 t,
