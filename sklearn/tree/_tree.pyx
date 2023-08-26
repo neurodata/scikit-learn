@@ -178,7 +178,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         SIZE_t max_depth,
         double min_impurity_decrease,
         unsigned char store_leaf_values=False,
-        cnp.ndarray initial_roots=None,
+        object initial_roots=None,
     ):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
@@ -284,7 +284,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef SIZE_t min_samples_split = self.min_samples_split
         cdef double min_impurity_decrease = self.min_impurity_decrease
         cdef unsigned char store_leaf_values = self.store_leaf_values
-        cdef cnp.ndarray initial_roots = self.initial_roots
+        initial_roots = self.initial_roots
 
         # Initial capacity
         cdef int init_capacity
@@ -682,7 +682,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         SIZE_t max_leaf_nodes,
         double min_impurity_decrease,
         unsigned char store_leaf_values=False,
-        cnp.ndarray initial_roots=None,
+        object initial_roots=None,
     ):
         self.splitter = splitter
         self.min_samples_split = min_samples_split
