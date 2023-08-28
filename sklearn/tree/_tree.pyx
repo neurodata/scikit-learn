@@ -220,10 +220,12 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         X_copy = {}
         y_copy = {}
         for i in range(X.shape[0]):
+            # collect depths from the node paths
             depth_i = paths[i].indices.shape[0] - 1
             PARENT = depth_i - 1
             CHILD = depth_i
 
+            # find leaf node's & their parent node's IDs
             if PARENT < 0:
                 parent_i = 0
             else:
@@ -231,8 +233,11 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
             child_i = paths[i].indices[CHILD]
             left = 0
             if tree.children_left[parent_i] == child_i:
-                left = 1
+                left = 1  # leaf node is left child
 
+            # organize samples by the leaf they fall into (false root)
+            # leaf nodes are marked by parent node and
+            # their relative position (left or right child)
             if (parent_i, left) in false_roots:
                 false_roots[(parent_i, left)][0] += 1
                 X_copy[(parent_i, left)].append(X[i])
@@ -244,16 +249,20 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
         X_list = []
         y_list = []
+
+        # reorder the samples according to parent node IDs
         for key, value in reversed(sorted(X_copy.items())):
             X_list = X_list + value
             y_list = y_list + y_copy[key]
         cdef object X_new = np.array(X_list)
         cdef cnp.ndarray y_new = np.array(y_list)
 
+        # initialize the splitter using sorted samples
         cdef Splitter splitter = self.splitter
         splitter.init(X_new, y_new, sample_weight, missing_values_in_feature_mask)
 
-        self.initial_roots = false_roots
+        # convert dict to numpy array and store value
+        self.initial_roots = np.array(list(false_roots.items()))
 
     cpdef build(
         self,
@@ -275,11 +284,13 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
         cdef double min_weight_leaf = self.min_weight_leaf
         cdef SIZE_t min_samples_split = self.min_samples_split
         cdef double min_impurity_decrease = self.min_impurity_decrease
+        cdef unsigned char store_leaf_values = self.store_leaf_values
+        cdef cnp.ndarray initial_roots = self.initial_roots
 
         # Initial capacity
         cdef int init_capacity
         cdef bint first = 0
-        if self.initial_roots is None:
+        if initial_roots is None:
             # Recursive partition (without actual recursion)
             splitter.init(X, y, sample_weight, missing_values_in_feature_mask)
 
@@ -290,6 +301,14 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
             tree._resize(init_capacity)
             first = 1
+        else:
+            # convert numpy array back to dict
+            false_roots = {}
+            for key_value_pair in initial_roots:
+                false_roots[tuple(key_value_pair[0])] = key_value_pair[1]
+
+            # reset the root array
+            self.initial_roots = None
 
         cdef SIZE_t start = 0
         cdef SIZE_t end = 0
@@ -318,7 +337,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
         if not first:
             # push reached leaf nodes onto stack
-            for key, value in reversed(sorted(self.initial_roots.items())):
+            for key, value in reversed(sorted(false_roots.items())):
                 end += value[0]
                 update_stack.push({
                     "start": start,
@@ -332,9 +351,6 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                     "upper_bound": INFINITY,
                 })
                 start += value[0]
-                if rc == -1:
-                    # got return code -1 - out-of-memory
-                    raise MemoryError()
         else:
             # push root node onto stack
             builder_stack.push({
@@ -348,9 +364,6 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                 "lower_bound": -INFINITY,
                 "upper_bound": INFINITY,
             })
-            if rc == -1:
-                # got return code -1 - out-of-memory
-                raise MemoryError()
 
         with nogil:
             while not update_stack.empty():
@@ -398,10 +411,10 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                                (split.improvement + EPSILON <
                                 min_impurity_decrease))
 
-                    node_id = tree._update_node(parent, is_left, is_leaf,
-                                                split_ptr, impurity, n_node_samples,
-                                                weighted_n_node_samples,
-                                                split.missing_go_to_left)
+                node_id = tree._update_node(parent, is_left, is_leaf,
+                                            split_ptr, impurity, n_node_samples,
+                                            weighted_n_node_samples,
+                                            split.missing_go_to_left)
 
                 if node_id == INTPTR_MAX:
                     rc = -1
@@ -471,7 +484,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                         "lower_bound": left_child_min,
                         "upper_bound": left_child_max,
                     })
-                elif self.store_leaf_values and is_leaf:
+                elif store_leaf_values and is_leaf:
                     # copy leaf values to leaf_values array
                     splitter.node_samples(tree.value_samples[node_id])
 
@@ -599,7 +612,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                         "lower_bound": left_child_min,
                         "upper_bound": left_child_max,
                     })
-                elif self.store_leaf_values and is_leaf:
+                elif store_leaf_values and is_leaf:
                     # copy leaf values to leaf_values array
                     splitter.node_samples(tree.value_samples[node_id])
 
@@ -617,8 +630,6 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
         if rc == -1:
             raise MemoryError()
-
-        self.initial_roots = None
 
 # Best first builder ----------------------------------------------------------
 cdef struct FrontierRecord:
@@ -712,6 +723,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         # Parameters
         cdef Splitter splitter = self.splitter
         cdef SIZE_t max_leaf_nodes = self.max_leaf_nodes
+        cdef unsigned char store_leaf_values = self.store_leaf_values
 
         # Recursive partition (without actual recursion)
         splitter.init(X, y, sample_weight, missing_values_in_feature_mask)
@@ -770,7 +782,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
                     node.feature = _TREE_UNDEFINED
                     node.threshold = _TREE_UNDEFINED
 
-                    if self.store_leaf_values:
+                    if store_leaf_values:
                         # copy leaf values to leaf_values array
                         splitter.node_samples(tree.value_samples[record.node_id])
                 else:
