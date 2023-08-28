@@ -307,6 +307,9 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
             for key_value_pair in initial_roots:
                 false_roots[tuple(key_value_pair[0])] = key_value_pair[1]
 
+            # reset the root array
+            self.initial_roots = None
+
         cdef SIZE_t start = 0
         cdef SIZE_t end = 0
         cdef SIZE_t depth
@@ -348,9 +351,6 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                     "upper_bound": INFINITY,
                 })
                 start += value[0]
-                if rc == -1:
-                    # got return code -1 - out-of-memory
-                    raise MemoryError()
         else:
             # push root node onto stack
             builder_stack.push({
@@ -364,9 +364,6 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                 "lower_bound": -INFINITY,
                 "upper_bound": INFINITY,
             })
-            if rc == -1:
-                # got return code -1 - out-of-memory
-                raise MemoryError()
 
         with nogil:
             while not update_stack.empty():
@@ -414,10 +411,10 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                                (split.improvement + EPSILON <
                                 min_impurity_decrease))
 
-                    node_id = tree._update_node(parent, is_left, is_leaf,
-                                                split_ptr, impurity, n_node_samples,
-                                                weighted_n_node_samples,
-                                                split.missing_go_to_left)
+                node_id = tree._update_node(parent, is_left, is_leaf,
+                                            split_ptr, impurity, n_node_samples,
+                                            weighted_n_node_samples,
+                                            split.missing_go_to_left)
 
                 if node_id == INTPTR_MAX:
                     rc = -1
@@ -633,8 +630,6 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
 
         if rc == -1:
             raise MemoryError()
-
-        self.initial_roots = None
 
 # Best first builder ----------------------------------------------------------
 cdef struct FrontierRecord:
