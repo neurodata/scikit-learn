@@ -982,7 +982,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
 cdef class BaseTree:
     """Base class for Cython tree models.
 
-    Downstream classes must implement
+    Downstream classes must implement methods to actually traverse the tree.
     """
     cdef int _resize(
         self,
@@ -1712,6 +1712,10 @@ cdef class Tree(BaseTree):
     weighted_n_node_samples : array of double, shape [node_count]
         weighted_n_node_samples[i] holds the weighted number of training samples
         reaching node i.
+
+    leaf_node_samples : dict of node id to numpy array of shapes (n_samples_node, n_features)
+        A dictionary mapping leaf nodes to the samples of data that are used
+        to fit the prediction at each leaf.
     """
     # Wrap for outside world.
     # WARNING: these reference the current `nodes` and `value` buffers, which
