@@ -102,6 +102,8 @@ cdef class BaseSplitter:
     cdef int pointer_size(self) noexcept nogil
 
 cdef class Splitter(BaseSplitter):
+    """Base class for supervised splitters."""
+    
     cdef public Criterion criterion      # Impurity criterion
     cdef const DOUBLE_t[:, ::1] y
 
