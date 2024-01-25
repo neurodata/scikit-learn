@@ -695,7 +695,6 @@ cdef inline int node_split_random(
     cdef bint has_missing = 0
     cdef intp_t n_left, n_right
     cdef bint missing_go_to_left
-    cdef bint separate_nan_and_non_nans = 0
     cdef intp_t p
 
     cdef intp_t[::1] samples = splitter.samples
@@ -728,6 +727,13 @@ cdef inline int node_split_random(
     _init_split(&best_split, end)
 
     partitioner.init_node_split(start, end)
+
+    # constants to compare to
+    cdef intp_t MISSING_RIGHT_WITH_THRESHOLD = 1
+    cdef intp_t MISSING_LEFT_WITH_THRESHOLD = 2
+    cdef intp_t MISSING_TO_LEFT = 3
+    cdef intp_t MISSING_TO_RIGHT = 4
+    cdef intp_t missing_policy = 0
 
     # Sample up to max_features without replacement using a
     # Fisher-Yates-based algorithm (using the local variables `f_i` and
@@ -803,16 +809,20 @@ cdef inline int node_split_random(
         # In addition, we either randomly split the non-missing values
         # or we split entirely by separating the non-missing
         # and missing-values
-        separate_nan_and_non_nans = has_missing and (rand_int(0, 2, random_state) == 1)
+        # separate_nan_and_non_nans = has_missing and (rand_int(0, 2, random_state) == 1)
 
-        # TODO: refactor to allow the following 4 options to occur uniformly
-        # missing-to-right with-threshold
-        # missing-to-left with-threshold
-        # missing-to-left
-        # missing-to-right
+        # missing policy is either one of:
+        # - 0 = no missing values
+        # - 1 (MISSING_RIGHT_WITH_THRESHOLD) = go to the right with random threshold for non-missing
+        # - 2 (MISSING_LEFT_WITH_THRESHOLD) = go to the left with random threshold for non-missing
+        # - 3 (MISSING_TO_LEFT) = go to the left and non-missing to right
+        # - 4 (MISSING_TO_RIGHT) = go to the right and non-missing to left
+        missing_policy = has_missing * rand_int(1, 5, random_state)
 
-        if separate_nan_and_non_nans:
-            missing_go_to_left = 0
+        # either separate all missing and non-missing to the right or left
+        if missing_policy == MISSING_TO_LEFT or missing_policy == MISSING_TO_RIGHT:
+            missing_go_to_left = missing_policy == MISSING_TO_LEFT
+
             p = end - n_missing
             n_left, n_right = end - start - n_missing, n_missing
 
@@ -835,6 +845,7 @@ cdef inline int node_split_random(
                 current_split.n_missing = n_missing
                 current_split.pos = p
                 best_split = current_split
+        # or sample a random threshold and move missing to the left, or right, or there are no missing values
         else:
             # Draw a random threshold
             current_split.threshold = rand_uniform(
@@ -842,13 +853,9 @@ cdef inline int node_split_random(
                 max_feature_value,
                 random_state,
             )
-
-            if has_missing:
-                # If there are missing values, then we randomly make all missing
-                # values go to the right, or left
-                missing_go_to_left = rand_int(0, 2, random_state)
-            else:
-                missing_go_to_left = 0
+            
+            assert (missing_policy == MISSING_LEFT_WITH_THRESHOLD) or (missing_policy == MISSING_RIGHT_WITH_THRESHOLD) or (missing_policy == 0)
+            missing_go_to_left = missing_policy == MISSING_LEFT_WITH_THRESHOLD
             criterion.missing_go_to_left = missing_go_to_left
 
             if current_split.threshold == max_feature_value:
