@@ -408,7 +408,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                 if not is_leaf:
                     splitter.node_split(
                         &parent_record,
-                        &split,
+                        split_ptr,
                     )
 
                     # assign local copy of SplitRecord to assign
@@ -1189,7 +1189,7 @@ cdef class BaseTree:
         """Update a node on the tree.
 
         The updated node remains on the same position.
-        
+
         Returns (intp_t)(-1) on error.
         """
         cdef intp_t node_id
