@@ -347,7 +347,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                     )
 
                 self.n_classes_ = np.array(self.n_classes_, dtype=np.intp)
-
+                self._n_classes_ = self.n_classes_
             if getattr(y, "dtype", None) != DOUBLE or not y.flags.contiguous:
                 y = np.ascontiguousarray(y, dtype=DOUBLE)
 
@@ -1132,6 +1132,9 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
     min_samples_split_ : float
         The minimum number of samples needed to split a node in the tree building.
 
+    min_weight_leaf_ : float
+        The minimum number of weighted samples in a leaf.
+
     See Also
     --------
     DecisionTreeRegressor : A decision tree regressor.
@@ -1382,7 +1385,7 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         if not isinstance(criterion, BaseCriterion):
             if is_classifier(self):
                 criterion = CRITERIA_CLF[self.criterion](
-                    self.n_outputs_, self.n_classes_
+                    self.n_outputs_, self._n_classes_
                 )
             else:
                 criterion = CRITERIA_REG[self.criterion](self.n_outputs_, n_samples)
