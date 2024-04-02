@@ -1386,9 +1386,9 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         monotonic_cst = self.monotonic_cst_
 
         # Build tree
-        # Note: this reconstructs the builder with the same state it had during the initial fit.
-        # This is necessary because the builder is not saved as part of the class, and thus
-        # the state may be lost if pickled/unpickled.
+        # Note: this reconstructs the builder with the same state it had during the
+        # initial fit. This is necessary because the builder is not saved as part
+        # of the class, and thus the state may be lost if pickled/unpickled.
         n_samples = X.shape[0]
         criterion = self.criterion
         if not isinstance(criterion, BaseCriterion):
