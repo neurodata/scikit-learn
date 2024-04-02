@@ -1135,6 +1135,9 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
     min_weight_leaf_ : float
         The minimum number of weighted samples in a leaf.
 
+    min_samples_leaf_ : int
+        The minimum number of samples needed for a leaf node.
+
     monotonic_cst_ : array-like of int of shape (n_features,)
         The monotonicity constraints enforced on each feature.
 
@@ -1707,6 +1710,9 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
     monotonic_cst_ : array-like of int of shape (n_features,)
         The monotonicity constraints enforced on each feature.
 
+    min_samples_leaf_ : int
+        The minimum number of samples needed for a leaf node.
+
     See Also
     --------
     DecisionTreeClassifier : A decision tree classifier.
@@ -2095,6 +2101,9 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
     monotonic_cst_ : array-like of int of shape (n_features,)
         The monotonicity constraints enforced on each feature.
 
+    min_samples_leaf_ : int
+        The minimum number of samples needed for a leaf node.
+
     See Also
     --------
     ExtraTreeRegressor : An extremely randomized tree regressor.
@@ -2365,6 +2374,9 @@ class ExtraTreeRegressor(DecisionTreeRegressor):
 
     monotonic_cst_ : array-like of int of shape (n_features,)
         The monotonicity constraints enforced on each feature.
+
+    min_samples_leaf_ : int
+        The minimum number of samples needed for a leaf node.
 
     See Also
     --------
