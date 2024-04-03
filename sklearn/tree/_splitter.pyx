@@ -576,10 +576,10 @@ cdef inline intp_t node_split_best(
         # The second search will have all the missing values going to the left node.
         # If there are no missing values, then we search only once for the most
         # optimal split.
-        n_searches = 2 if has_missing and not self.missing_car else 1
+        n_searches = 2 if has_missing and not splitter.missing_car else 1
 
         for i in range(n_searches):
-            if self.missing_car:
+            if splitter.missing_car:
                 missing_go_to_left = rand_int(0, 2, random_state)
             else:
                 missing_go_to_left = i == 1
@@ -662,7 +662,7 @@ cdef inline intp_t node_split_best(
 
         # Evaluate when there are missing values and all missing values goes
         # to the right node and non-missing values goes to the left node.
-        if has_missing and not self.missing_car:
+        if has_missing and not splitter.missing_car:
             evaluate_missing_values_to_right(
                 start,
                 end,
@@ -720,14 +720,15 @@ cdef inline void evaluate_missing_values_to_right(
     intp_t end,
     intp_t n_missing,
     intp_t min_samples_leaf,
-    double min_weight_leaf,
-    BaseCriterion criterion,
+    float64_t min_weight_leaf,
+    Criterion criterion,
     SplitRecord current_split,
     SplitRecord best_split,
-    double best_proxy_improvement
+    float64_t best_proxy_improvement
 ) nogil:
     cdef intp_t n_left, n_right, p
     cdef intp_t missing_go_to_left = 0
+    cdef float64_t current_proxy_improvement = -INFINITY
 
     n_left = end - start - n_missing
     n_right = n_missing
