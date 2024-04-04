@@ -2603,7 +2603,9 @@ def test_missing_value_is_predictive():
 
 
 def test_missing_value_is_not_predictive_with_mcar():
-    """Check the tree doesnt learns when the missing value is forced to be unpredictive."""
+    """Check the tree doesnt learns when the missing value is forced to be
+    unpredictive.
+    """
     rng = np.random.RandomState(0)
     n_samples = 1000
 
