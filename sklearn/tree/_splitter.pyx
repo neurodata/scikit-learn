@@ -579,10 +579,10 @@ cdef inline intp_t node_split_best(
         n_searches = 2 if has_missing and not splitter.missing_car else 1
 
         for i in range(n_searches):
-            if splitter.missing_car:
-                missing_go_to_left = rand_int(0, 2, random_state)
-            else:
+            if not splitter.missing_car:
                 missing_go_to_left = i == 1
+            else:
+                missing_go_to_left = rand_int(0, 2, random_state)
             criterion.missing_go_to_left = missing_go_to_left
             criterion.reset()
 
@@ -663,17 +663,25 @@ cdef inline intp_t node_split_best(
         # Evaluate when there are missing values and all missing values goes
         # to the right node and non-missing values goes to the left node.
         if has_missing and not splitter.missing_car:
-            evaluate_missing_values_to_right(
-                start,
-                end,
-                n_missing,
-                min_samples_leaf,
-                min_weight_leaf,
-                criterion,
-                current_split,
-                best_split,
-                best_proxy_improvement
-            )
+            n_left, n_right = end - start - n_missing, n_missing
+            p = end - n_missing
+            missing_go_to_left = 0
+
+            if not (n_left < min_samples_leaf or n_right < min_samples_leaf):
+                criterion.missing_go_to_left = missing_go_to_left
+                criterion.update(p)
+
+                if not ((criterion.weighted_n_left < min_weight_leaf) or
+                        (criterion.weighted_n_right < min_weight_leaf)):
+                    current_proxy_improvement = criterion.proxy_impurity_improvement()
+
+                    if current_proxy_improvement > best_proxy_improvement:
+                        best_proxy_improvement = current_proxy_improvement
+                        current_split.threshold = INFINITY
+                        current_split.missing_go_to_left = missing_go_to_left
+                        current_split.n_missing = n_missing
+                        current_split.pos = p
+                        best_split = current_split
 
     # Reorganize into samples[start:best_split.pos] + samples[best_split.pos:end]
     if best_split.pos < end:
@@ -713,42 +721,6 @@ cdef inline intp_t node_split_best(
     parent_record.n_constant_features = n_total_constants
     split[0] = best_split
     return 0
-
-
-cdef inline void evaluate_missing_values_to_right(
-    intp_t start,
-    intp_t end,
-    intp_t n_missing,
-    intp_t min_samples_leaf,
-    float64_t min_weight_leaf,
-    Criterion criterion,
-    SplitRecord current_split,
-    SplitRecord best_split,
-    float64_t best_proxy_improvement
-) nogil:
-    cdef intp_t n_left, n_right, p
-    cdef intp_t missing_go_to_left = 0
-    cdef float64_t current_proxy_improvement = -INFINITY
-
-    n_left = end - start - n_missing
-    n_right = n_missing
-    p = end - n_missing
-
-    if not (n_left < min_samples_leaf or n_right < min_samples_leaf):
-        criterion.missing_go_to_left = missing_go_to_left
-        criterion.update(p)
-
-        if not ((criterion.weighted_n_left < min_weight_leaf) or
-                (criterion.weighted_n_right < min_weight_leaf)):
-            current_proxy_improvement = criterion.proxy_impurity_improvement()
-
-            if current_proxy_improvement > best_proxy_improvement:
-                best_proxy_improvement = current_proxy_improvement
-                current_split.threshold = INFINITY
-                current_split.missing_go_to_left = missing_go_to_left
-                current_split.n_missing = n_missing
-                current_split.pos = p
-                best_split = current_split
 
 
 # Sort n-element arrays pointed to by feature_values and samples, simultaneously,

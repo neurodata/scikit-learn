@@ -1974,6 +1974,9 @@ class RandomForestClassifier(ForestClassifier):
 
         .. versionadded:: 1.4
 
+    missing_car : bool, default=False
+        Whether the missing values are missing completely at random (CAR).
+
     Attributes
     ----------
     estimator_ : :class:`~sklearn.tree.DecisionTreeClassifier`
@@ -2749,6 +2752,9 @@ class ExtraTreesClassifier(ForestClassifier):
 
         .. versionadded:: 1.4
 
+    missing_car : bool, default=False
+        Whether the missing values are missing completely at random (CAR).
+
     Attributes
     ----------
     estimator_ : :class:`~sklearn.tree.ExtraTreeClassifier`
@@ -2879,6 +2885,7 @@ class ExtraTreesClassifier(ForestClassifier):
         max_bins=None,
         store_leaf_values=False,
         monotonic_cst=None,
+        missing_car=False,
     ):
         super().__init__(
             estimator=ExtraTreeClassifier(),
@@ -2896,6 +2903,7 @@ class ExtraTreesClassifier(ForestClassifier):
                 "ccp_alpha",
                 "store_leaf_values",
                 "monotonic_cst",
+                "missing_car",
             ),
             bootstrap=bootstrap,
             oob_score=oob_score,
@@ -2907,6 +2915,7 @@ class ExtraTreesClassifier(ForestClassifier):
             max_samples=max_samples,
             max_bins=max_bins,
             store_leaf_values=store_leaf_values,
+            missing_car=missing_car,
         )
 
         self.criterion = criterion

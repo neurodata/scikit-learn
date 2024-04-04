@@ -129,6 +129,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         "ccp_alpha": [Interval(Real, 0.0, None, closed="left")],
         "store_leaf_values": ["boolean"],
         "monotonic_cst": ["array-like", None],
+        "missing_car": ["boolean"],
     }
 
     @abstractmethod
@@ -1156,6 +1157,9 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
 
         .. versionadded:: 1.4
 
+    missing_car : bool, default=False
+        Whether the missing values are missing completely at random (CAR).
+
     Attributes
     ----------
     classes_ : ndarray of shape (n_classes,) or list of ndarray
@@ -2062,6 +2066,9 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
 
         .. versionadded:: 1.4
 
+    missing_car : bool, default=False
+        Whether the missing values are missing completely at random (CAR).
+
     Attributes
     ----------
     classes_ : ndarray of shape (n_classes,) or list of ndarray
@@ -2176,6 +2183,7 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
         ccp_alpha=0.0,
         store_leaf_values=False,
         monotonic_cst=None,
+        missing_car=False,
     ):
         super().__init__(
             criterion=criterion,
@@ -2192,6 +2200,7 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
             ccp_alpha=ccp_alpha,
             store_leaf_values=store_leaf_values,
             monotonic_cst=monotonic_cst,
+            missing_car=missing_car,
         )
 
 
