@@ -43,6 +43,67 @@ cdef struct ParentInfo:
     float64_t impurity              # the impurity of the parent
     intp_t n_constant_features      # the number of constant features found in parent
 
+# A record on the stack for depth-first tree growing
+cdef struct StackRecord:
+    intp_t start
+    intp_t end
+    intp_t depth
+    intp_t parent
+    bint is_left
+    float64_t impurity
+    intp_t n_constant_features
+    float64_t lower_bound
+    float64_t upper_bound
+
+cdef extern from "<stack>" namespace "std" nogil:
+    cdef cppclass stack[T]:
+        ctypedef T value_type
+        stack() except +
+        bint empty()
+        void pop()
+        void push(T&) except +  # Raise c++ exception for bad_alloc -> MemoryError
+        T& top()
+
+cdef struct BuildEnv:
+    # Parameters
+    intp_t max_depth
+    intp_t min_samples_leaf
+    float64_t min_weight_leaf
+    intp_t min_samples_split
+    float64_t min_impurity_decrease
+
+    unsigned char store_leaf_values
+
+    # Initial capacity
+    intp_t init_capacity
+    bint first
+
+    intp_t start
+    intp_t end
+    intp_t depth
+    intp_t parent
+    bint is_left
+    intp_t n_node_samples
+    float64_t weighted_n_node_samples
+    intp_t node_id
+    float64_t right_child_min, left_child_min, right_child_max, left_child_max
+
+    SplitRecord* split
+
+    float64_t middle_value
+    bint is_leaf
+    intp_t max_depth_seen
+
+    intp_t rc
+
+    stack[StackRecord] builder_stack
+    stack[StackRecord] update_stack
+    stack[StackRecord]* target_stack
+    StackRecord stack_record
+
+    ParentInfo parent_record
+
+
 cdef class BaseTree:
 
     # Inner structures: values are stored separately from node structure,
