@@ -2354,7 +2354,9 @@ def test_splitter_serializable(Splitter):
     n_outputs, n_classes = 2, np.array([3, 2], dtype=np.intp)
 
     criterion = CRITERIA_CLF["gini"](n_outputs, n_classes)
-    splitter = Splitter(criterion, max_features, 5, 0.5, rng, monotonic_cst=None)
+    splitter = Splitter(
+        criterion, max_features, 5, 0.5, rng, monotonic_cst=None, missing_car=False
+    )
     splitter_serialize = pickle.dumps(splitter)
 
     splitter_back = pickle.loads(splitter_serialize)
@@ -2603,6 +2605,37 @@ def test_missing_value_is_predictive():
 
     assert tree.score(X_train, y_train) >= 0.85
     assert tree.score(X_test, y_test) >= 0.85
+
+
+def test_missing_value_is_not_predictive_with_mcar():
+    """Check the tree doesnt learns when the missing value is forced to be
+    unpredictive.
+    """
+    rng = np.random.RandomState(0)
+    n_samples = 1000
+
+    X = rng.standard_normal(size=(n_samples, 10))
+    y = rng.randint(0, high=2, size=n_samples)
+
+    # Create a predictive feature using `y` and with some noise
+    X_random_mask = rng.choice([False, True], size=n_samples, p=[0.9, 0.1])
+    y_mask = y.copy().astype(bool)
+    y_mask[X_random_mask] = ~y_mask[X_random_mask]
+
+    X_predictive = rng.standard_normal(size=n_samples)
+    X_predictive[y_mask] = np.nan
+
+    X[:, 5] = X_predictive
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=rng)
+    tree = DecisionTreeClassifier(random_state=rng, missing_car=True).fit(
+        X_train, y_train
+    )
+    non_mcar_tree = DecisionTreeClassifier(random_state=rng, missing_car=False).fit(
+        X_train, y_train
+    )
+
+    non_mcar_tree.score(X_test, y_test) > tree.score(X_test, y_test) + 0.2
 
 
 @pytest.mark.parametrize(

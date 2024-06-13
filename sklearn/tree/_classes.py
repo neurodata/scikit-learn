@@ -129,6 +129,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         "ccp_alpha": [Interval(Real, 0.0, None, closed="left")],
         "store_leaf_values": ["boolean"],
         "monotonic_cst": ["array-like", None],
+        "missing_car": ["boolean"],
     }
 
     @abstractmethod
@@ -149,6 +150,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         ccp_alpha=0.0,
         store_leaf_values=False,
         monotonic_cst=None,
+        missing_car=False,
     ):
         self.criterion = criterion
         self.splitter = splitter
@@ -164,6 +166,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         self.ccp_alpha = ccp_alpha
         self.store_leaf_values = store_leaf_values
         self.monotonic_cst = monotonic_cst
+        self.missing_car = missing_car
 
     def get_depth(self):
         """Return the depth of the decision tree.
@@ -532,6 +535,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 min_weight_leaf,
                 random_state,
                 monotonic_cst,
+                self.missing_car,
             )
 
         if is_classifier(self):
@@ -614,6 +618,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             min_weight_leaf,
             random_state,
             monotonic_cst,
+            self.missing_car,
         )
 
         # Use BestFirst if max_leaf_nodes given; use DepthFirst otherwise
@@ -1152,6 +1157,9 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
 
         .. versionadded:: 1.4
 
+    missing_car : bool, default=False
+        Whether the missing values are missing completely at random (CAR).
+
     Attributes
     ----------
     classes_ : ndarray of shape (n_classes,) or list of ndarray
@@ -1280,6 +1288,7 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
         ccp_alpha=0.0,
         store_leaf_values=False,
         monotonic_cst=None,
+        missing_car=False,
     ):
         super().__init__(
             criterion=criterion,
@@ -1296,6 +1305,7 @@ class DecisionTreeClassifier(ClassifierMixin, BaseDecisionTree):
             monotonic_cst=monotonic_cst,
             ccp_alpha=ccp_alpha,
             store_leaf_values=store_leaf_values,
+            missing_car=missing_car,
         )
 
     @_fit_context(prefer_skip_nested_validation=True)
@@ -1784,6 +1794,7 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
         ccp_alpha=0.0,
         store_leaf_values=False,
         monotonic_cst=None,
+        missing_car=False,
     ):
         super().__init__(
             criterion=criterion,
@@ -1799,6 +1810,7 @@ class DecisionTreeRegressor(RegressorMixin, BaseDecisionTree):
             ccp_alpha=ccp_alpha,
             store_leaf_values=store_leaf_values,
             monotonic_cst=monotonic_cst,
+            missing_car=missing_car,
         )
 
     @_fit_context(prefer_skip_nested_validation=True)
@@ -2054,6 +2066,9 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
 
         .. versionadded:: 1.4
 
+    missing_car : bool, default=False
+        Whether the missing values are missing completely at random (CAR).
+
     Attributes
     ----------
     classes_ : ndarray of shape (n_classes,) or list of ndarray
@@ -2168,6 +2183,7 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
         ccp_alpha=0.0,
         store_leaf_values=False,
         monotonic_cst=None,
+        missing_car=False,
     ):
         super().__init__(
             criterion=criterion,
@@ -2184,6 +2200,7 @@ class ExtraTreeClassifier(DecisionTreeClassifier):
             ccp_alpha=ccp_alpha,
             store_leaf_values=store_leaf_values,
             monotonic_cst=monotonic_cst,
+            missing_car=missing_car,
         )
 
 
