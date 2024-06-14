@@ -599,16 +599,12 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             n_samples,
             self.max_samples,
         )
-        for estimator in self.estimators_:
-            unsampled_indices = _generate_unsampled_indices(
-                estimator.random_state,
-                n_samples,
-                n_samples_bootstrap,
-            )
-
-            y_pred = self._get_oob_predictions(estimator, X[unsampled_indices, :])
-            oob_pred[unsampled_indices, ...] += y_pred
-            n_oob_pred[unsampled_indices, :] += 1
+        lock = threading.Lock()
+        Parallel(n_jobs=self.n_jobs, verbose=self.verbose, require="sharedmem")(
+            delayed(_accumulate_oob_prediction)(self._get_oob_predictions, e, X, n_samples, n_samples_bootstrap,
+                                                oob_pred, n_oob_pred, e.random_state, lock)
+            for e in self.estimators_
+        )
 
         for k in range(n_outputs):
             if (n_oob_pred == 0).any():
@@ -735,6 +731,25 @@ def _accumulate_prediction(predict, X, out, lock):
         else:
             for i in range(len(out)):
                 out[i] += prediction[i]
+
+
+def _accumulate_oob_prediction(predict, tree, X, n_samples, n_samples_bootstrap, out, out_count, random_state, lock):
+    """
+    This is a utility function for joblib's Parallel.
+
+    It can't go locally in ForestClassifier or ForestRegressor, because joblib
+    complains that it cannot pickle it when placed there.
+    """
+    unsampled_indices = _generate_unsampled_indices(
+        random_state,
+        n_samples,
+        n_samples_bootstrap,
+    )
+
+    prediction = predict(tree, X[unsampled_indices, :])
+    with lock:
+        out[unsampled_indices, ...] += prediction
+        out_count[unsampled_indices, :] += 1
 
 
 class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
