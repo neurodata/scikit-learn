@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 #
-# Copyright (C) 2007-2009 Cournapeau David <cournape@gmail.com>
-#               2010 Fabian Pedregosa <fabian.pedregosa@inria.fr>
+# Authors: The scikit-learn developers
 # License: 3-clause BSD
 
 import importlib
@@ -225,16 +224,16 @@ extension_config = {
         {"sources": ["_cdnmf_fast.pyx"], "include_np": True},
     ],
     "ensemble": [
-        {"sources": ["_gradient_boosting.pyx"], "include_np": True},
+        {"sources": ["_gradient_boosting.pyx"], "language": "c++", "include_np": True},
     ],
     "ensemble._hist_gradient_boosting": [
-        {"sources": ["_gradient_boosting.pyx"]},
-        {"sources": ["histogram.pyx"]},
-        {"sources": ["splitting.pyx"]},
-        {"sources": ["_binning.pyx"]},
-        {"sources": ["_predictor.pyx"]},
-        {"sources": ["_bitset.pyx"]},
-        {"sources": ["common.pyx"]},
+        {"sources": ["_gradient_boosting.pyx"], "language": "c++", "include_np": True},
+        {"sources": ["histogram.pyx"], "include_np": True},
+        {"sources": ["splitting.pyx"], "include_np": True},
+        {"sources": ["_binning.pyx"], "include_np": True},
+        {"sources": ["_predictor.pyx"], "include_np": True},
+        {"sources": ["_bitset.pyx"], "include_np": True},
+        {"sources": ["common.pyx"], "include_np": True},
     ],
     "feature_extraction": [
         {"sources": ["_hashing_fast.pyx"], "language": "c++", "include_np": True},
@@ -314,7 +313,7 @@ extension_config = {
         {"sources": ["_ball_tree.pyx.tp"], "include_np": True},
         {"sources": ["_kd_tree.pyx.tp"], "include_np": True},
         {"sources": ["_partition_nodes.pyx"], "language": "c++", "include_np": True},
-        {"sources": ["_quad_tree.pyx"], "include_np": True},
+        {"sources": ["_quad_tree.pyx"], "language": "c++", "include_np": True},
     ],
     "svm": [
         {
@@ -378,9 +377,24 @@ extension_config = {
             "include_np": True,
             "optimization_level": "O3",
         },
-        {"sources": ["_splitter.pyx"], "include_np": True, "optimization_level": "O3"},
-        {"sources": ["_criterion.pyx"], "include_np": True, "optimization_level": "O3"},
-        {"sources": ["_utils.pyx"], "include_np": True, "optimization_level": "O3"},
+        {
+            "sources": ["_splitter.pyx"],
+            "include_np": True,
+            "language": "c++",
+            "optimization_level": "O3",
+        },
+        {
+            "sources": ["_criterion.pyx"],
+            "include_np": True,
+            "language": "c++",
+            "optimization_level": "O3",
+        },
+        {
+            "sources": ["_utils.pyx"],
+            "include_np": True,
+            "language": "c++",
+            "optimization_level": "O3",
+        },
     ],
     "utils": [
         {"sources": ["sparsefuncs_fast.pyx"]},
@@ -589,7 +603,6 @@ def setup_package():
             "Programming Language :: Python :: 3.11",
             "Programming Language :: Python :: 3.12",
             "Programming Language :: Python :: Implementation :: CPython",
-            "Programming Language :: Python :: Implementation :: PyPy",
         ],
         cmdclass=cmdclass,
         python_requires=python_requires,

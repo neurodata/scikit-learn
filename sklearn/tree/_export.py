@@ -2,24 +2,23 @@
 This module defines export functions for decision trees.
 """
 
-# Authors: Gilles Louppe <g.louppe@gmail.com>
-#          Peter Prettenhofer <peter.prettenhofer@gmail.com>
-#          Brian Holt <bdholt1@gmail.com>
-#          Noel Dawe <noel@dawe.me>
-#          Satrajit Gosh <satrajit.ghosh@gmail.com>
-#          Trevor Stephens <trev.stephens@gmail.com>
-#          Li Li <aiki.nogard@gmail.com>
-#          Giuseppe Vettigli <vettigli@gmail.com>
-# License: BSD 3 clause
+# Authors: The scikit-learn developers
+# SPDX-License-Identifier: BSD-3-Clause
 from collections.abc import Iterable
 from io import StringIO
 from numbers import Integral
 
 import numpy as np
 
-from ..base import is_classifier
-from ..utils._param_validation import HasMethods, Interval, StrOptions, validate_params
-from ..utils.validation import check_array, check_is_fitted
+from sklearn.base import is_classifier
+from sklearn.utils._param_validation import (
+    HasMethods,
+    Interval,
+    StrOptions,
+    validate_params,
+)
+from sklearn.utils.validation import check_array, check_is_fitted
+
 from . import DecisionTreeClassifier, DecisionTreeRegressor, _criterion, _tree
 from ._reingold_tilford import Tree, buchheim
 
