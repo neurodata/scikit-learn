@@ -132,6 +132,7 @@ cdef class Splitter(BaseSplitter):
         float64_t min_weight_leaf,
         object random_state,
         const int8_t[:] monotonic_cst,
+        bint missing_car,
         *argv
     ):
         """
@@ -157,8 +158,17 @@ cdef class Splitter(BaseSplitter):
             The user inputted random state to be used for pseudo-randomness
 
         monotonic_cst : const int8_t[:]
-            Monotonicity constraints
+            Indicates the monotonicity constraint to enforce on each feature.
+            - 1: monotonic increase
+            - 0: no constraint
+            - -1: monotonic decrease
 
+            If monotonic_cst is None, no constraints are applied.
+
+        missing_car : bool
+            Indicates if the missing-values should be assumed as missing completely
+            at random. If that is the case, the missing values will be randomly
+            assigned to the left or right child of the split.
         """
         self.criterion = criterion
 
@@ -171,14 +181,18 @@ cdef class Splitter(BaseSplitter):
         self.random_state = random_state
         self.monotonic_cst = monotonic_cst
         self.with_monotonic_cst = monotonic_cst is not None
+        self.missing_car = missing_car
 
     def __reduce__(self):
-        return (type(self), (self.criterion,
-                             self.max_features,
-                             self.min_samples_leaf,
-                             self.min_weight_leaf,
-                             self.random_state,
-                             self.monotonic_cst.base if self.monotonic_cst is not None else None), self.__getstate__())
+        return (type(self), (
+            self.criterion,
+            self.max_features,
+            self.min_samples_leaf,
+            self.min_weight_leaf,
+            self.random_state,
+            self.monotonic_cst.base if self.monotonic_cst is not None else None,
+            self.missing_car,
+        ), self.__getstate__())
 
     cdef int init(
         self,
@@ -549,10 +563,13 @@ cdef inline intp_t node_split_best(
         # The second search will have all the missing values going to the left node.
         # If there are no missing values, then we search only once for the most
         # optimal split.
-        n_searches = 2 if has_missing else 1
+        n_searches = 2 if has_missing and not splitter.missing_car else 1
 
         for i in range(n_searches):
-            missing_go_to_left = i == 1
+            if not splitter.missing_car:
+                missing_go_to_left = i == 1
+            else:
+                missing_go_to_left = rand_int(0, 2, random_state)
             criterion.missing_go_to_left = missing_go_to_left
             criterion.reset()
 
@@ -621,7 +638,7 @@ cdef inline intp_t node_split_best(
 
         # Evaluate when there are missing values and all missing values goes
         # to the right node and non-missing values goes to the left node.
-        if has_missing:
+        if has_missing and not splitter.missing_car:
             n_left, n_right = end - start - n_missing, n_missing
             p = end - n_missing
             missing_go_to_left = 0

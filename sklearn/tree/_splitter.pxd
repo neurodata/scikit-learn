@@ -88,6 +88,7 @@ cdef class Splitter(BaseSplitter):
 
     cdef public Criterion criterion      # Impurity criterion
     cdef const float64_t[:, ::1] y
+    cdef bint missing_car
 
     # Monotonicity constraints for each feature.
     # The encoding is as follows:
