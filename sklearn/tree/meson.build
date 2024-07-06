@@ -2,8 +2,14 @@ tree_extension_metadata = {
   '_tree':
     {'sources': ['_tree.pyx'],
      'override_options': ['cython_language=cpp', 'optimization=3']},
+  '_sort':
+    {'sources': ['_sort.pyx'],
+     'override_options': ['cython_language=cpp', 'optimization=3']},
   '_splitter':
     {'sources': ['_splitter.pyx'],
+     'override_options': ['cython_language=cpp', 'optimization=3']},
+  '_partitioner':
+    {'sources': ['_partitioner.pyx'],
      'override_options': ['cython_language=cpp', 'optimization=3']},
   '_criterion':
     {'sources': ['_criterion.pyx'],

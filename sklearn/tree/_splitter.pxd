@@ -4,6 +4,7 @@
 # See _splitter.pyx for details.
 from libcpp.vector cimport vector
 
+from ._partitioner cimport Partitioner, DensePartitioner, SparsePartitioner
 from ._criterion cimport BaseCriterion, Criterion
 from ._tree cimport ParentInfo
 from ..utils._typedefs cimport float32_t, float64_t, intp_t, int8_t, int32_t, uint32_t
