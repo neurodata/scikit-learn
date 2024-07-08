@@ -1,12 +1,69 @@
-# Authors: The scikit-learn developers
+# Authors: Gilles Louppe <g.louppe@gmail.com>
+#          Peter Prettenhofer <peter.prettenhofer@gmail.com>
+#          Brian Holt <bdholt1@gmail.com>
+#          Joel Nothman <joel.nothman@gmail.com>
+#          Arnaud Joly <arnaud.v.joly@gmail.com>
+#          Jacob Schreiber <jmschreiber91@gmail.com>
+#          Adam Li <adam2392@gmail.com>
+#          Jong Shin <jshinm@gmail.com>
+#          Samuel Carliles <scarlil1@jhu.edu>
+#
+# License: BSD 3 clause
 # SPDX-License-Identifier: BSD-3-Clause
 
 # See _splitter.pyx for details.
 from libcpp.vector cimport vector
 
+from ._partitioner cimport Partitioner, DensePartitioner, SparsePartitioner
 from ._criterion cimport BaseCriterion, Criterion
 from ._tree cimport ParentInfo
+
 from ..utils._typedefs cimport float32_t, float64_t, intp_t, int8_t, int32_t, uint32_t
+
+from ._events cimport EventBroker, EventHandler
+
+
+cdef enum NodeSplitEvent:
+    SORT_FEATURE = 1
+
+cdef struct NodeSortFeatureEventData:
+    intp_t feature
+    intp_t is_left
+
+cdef struct NodeSplitEventData:
+    intp_t feature
+    float64_t threshold
+
+# NICE IDEAS THAT DON'T APPEAR POSSIBLE
+# - accessing elements of a memory view of cython extension types in a nogil block/function
+# - storing cython extension types in cpp vectors
+#
+# despite the fact that we can access scalar extension type properties in such a context,
+# as for instance node_split_best does with Criterion and Partition,
+# and we can access the elements of a memory view of primitive types in such a context
+#
+# SO WHERE DOES THAT LEAVE US
+# - we can transform these into cpp vectors of structs
+#   and with some minor casting irritations everything else works ok
+ctypedef void* SplitConditionEnv
+ctypedef bint (*SplitConditionFunction)(
+    Splitter splitter,
+    intp_t split_feature,
+    intp_t split_pos,
+    float64_t split_value,
+    intp_t n_missing,
+    bint missing_go_to_left,
+    float64_t lower_bound,
+    float64_t upper_bound,
+    SplitConditionEnv split_condition_env
+) noexcept nogil
+
+cdef struct SplitConditionClosure:
+    SplitConditionFunction f
+    SplitConditionEnv e
+
+cdef class SplitCondition:
+    cdef SplitConditionClosure c
 
 
 cdef struct SplitRecord:
@@ -21,6 +78,13 @@ cdef struct SplitRecord:
     float64_t impurity_right  # Impurity of the right split.
     unsigned char missing_go_to_left  # Controls if missing values go to the left node.
     intp_t n_missing            # Number of missing values for the feature being split on
+
+ctypedef void* SplitRecordFactoryEnv
+ctypedef SplitRecord* (*SplitRecordFactory)(SplitRecordFactoryEnv env) except NULL nogil
+
+cdef struct SplitRecordFactoryClosure:
+    SplitRecordFactory f
+    SplitRecordFactoryEnv e
 
 cdef class BaseSplitter:
     """Abstract interface for splitter."""
@@ -50,6 +114,8 @@ cdef class BaseSplitter:
     cdef intp_t end                      # End position for the current node
 
     cdef const float64_t[:] sample_weight
+
+    cdef SplitRecordFactoryClosure split_record_factory
 
     # The samples vector `samples` is maintained by the Splitter object such
     # that the samples contained in a node are contiguous. With this setting,
@@ -82,6 +148,7 @@ cdef class BaseSplitter:
     cdef void node_value(self, float64_t* dest) noexcept nogil
     cdef float64_t node_impurity(self) noexcept nogil
     cdef intp_t pointer_size(self) noexcept nogil
+    cdef SplitRecord* create_split_record(self) except NULL nogil
 
 cdef class Splitter(BaseSplitter):
     """Base class for supervised splitters."""
@@ -96,6 +163,15 @@ cdef class Splitter(BaseSplitter):
     #   +1: monotonic increase
     cdef const int8_t[:] monotonic_cst
     cdef bint with_monotonic_cst
+
+    cdef SplitCondition min_samples_leaf_condition
+    cdef SplitCondition min_weight_leaf_condition
+    cdef SplitCondition monotonic_constraint_condition
+
+    cdef vector[SplitConditionClosure] presplit_conditions
+    cdef vector[SplitConditionClosure] postsplit_conditions
+
+    cdef EventBroker event_broker
 
     cdef int init(
         self,

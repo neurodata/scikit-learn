@@ -1,5 +1,16 @@
-# Authors: The scikit-learn developers
+# Authors: Gilles Louppe <g.louppe@gmail.com>
+#          Peter Prettenhofer <peter.prettenhofer@gmail.com>
+#          Brian Holt <bdholt1@gmail.com>
+#          Joel Nothman <joel.nothman@gmail.com>
+#          Arnaud Joly <arnaud.v.joly@gmail.com>
+#          Jacob Schreiber <jmschreiber91@gmail.com>
+#          Nelson Liu <nelson@nelsonliu.me>
+#          Haoyin Xu <haoyinxu@gmail.com>
+#          Samuel Carliles <scarlil1@jhu.edu>
+#
+# License: BSD 3 clause
 # SPDX-License-Identifier: BSD-3-Clause
+
 
 # See _tree.pyx for details.
 
@@ -10,6 +21,8 @@ from libcpp.unordered_map cimport unordered_map
 from libcpp.vector cimport vector
 
 from ..utils._typedefs cimport float32_t, float64_t, intp_t, int32_t, uint32_t
+
+from ._events cimport EventBroker, EventHandler
 
 from ._splitter cimport SplitRecord, Splitter
 
@@ -34,6 +47,88 @@ cdef struct ParentInfo:
     float64_t upper_bound           # the upper bound of the parent's impurity
     float64_t impurity              # the impurity of the parent
     intp_t n_constant_features      # the number of constant features found in parent
+
+# A record on the stack for depth-first tree growing
+cdef struct StackRecord:
+    intp_t start
+    intp_t end
+    intp_t depth
+    intp_t parent
+    bint is_left
+    float64_t impurity
+    intp_t n_constant_features
+    float64_t lower_bound
+    float64_t upper_bound
+
+cdef extern from "<stack>" namespace "std" nogil:
+    cdef cppclass stack[T]:
+        ctypedef T value_type
+        stack() except +
+        bint empty()
+        void pop()
+        void push(T&) except +  # Raise c++ exception for bad_alloc -> MemoryError
+        T& top()
+
+cdef enum TreeBuildStatus:
+    OK = 0
+    EXCEPTION_OR_MEMORY_ERROR = -1
+    EVENT_ERROR = -2
+
+cdef struct BuildEnv:
+    # Parameters
+    intp_t max_depth
+    intp_t min_samples_leaf
+    float64_t min_weight_leaf
+    intp_t min_samples_split
+    float64_t min_impurity_decrease
+
+    unsigned char store_leaf_values
+
+    # Initial capacity
+    intp_t init_capacity
+    bint first
+
+    intp_t start
+    intp_t end
+    intp_t depth
+    intp_t parent
+    bint is_left
+    intp_t n_node_samples
+    float64_t weighted_n_node_samples
+    intp_t node_id
+    float64_t right_child_min, left_child_min, right_child_max, left_child_max
+
+    SplitRecord* split
+
+    float64_t middle_value
+    bint is_leaf
+    intp_t max_depth_seen
+
+    TreeBuildStatus rc
+
+    stack[StackRecord] builder_stack
+    stack[StackRecord] update_stack
+    stack[StackRecord]* target_stack
+    StackRecord stack_record
+
+    ParentInfo parent_record
+
+cdef enum TreeBuildEvent:
+    ADD_NODE = 1
+    UPDATE_NODE = 2
+    SET_ACTIVE_PARENT = 3
+
+cdef struct TreeBuildSetActiveParentEventData:
+    intp_t parent_node_id
+    bint child_is_left
+
+cdef struct TreeBuildAddNodeEventData:
+    intp_t parent_node_id
+    intp_t node_id
+    bint is_left
+    intp_t feature
+    float64_t split_point
+
 
 cdef class BaseTree:
 
@@ -167,6 +262,9 @@ cdef class TreeBuilder:
 
     cdef unsigned char store_leaf_values    # Whether to store leaf values
 
+    cdef EventBroker event_broker
+
+
     cpdef initialize_node_queue(
       self,
       Tree tree,
@@ -182,7 +280,7 @@ cdef class TreeBuilder:
         object X,
         const float64_t[:, ::1] y,
         const float64_t[:] sample_weight=*,
-        const unsigned char[::1] missing_values_in_feature_mask=*,
+        const unsigned char[::1] missing_values_in_feature_mask=*
     )
 
     cdef _check_input(
