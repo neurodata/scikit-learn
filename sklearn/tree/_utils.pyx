@@ -1,13 +1,14 @@
 # Authors: The scikit-learn developers
 # SPDX-License-Identifier: BSD-3-Clause
 
-from libc.stdlib cimport free
-from libc.stdlib cimport realloc
-from libc.math cimport log as ln
 from libc.math cimport isnan
+from libc.math cimport log as ln
+from libc.stdlib cimport free, realloc
 
 import numpy as np
+
 cimport numpy as cnp
+
 cnp.import_array()
 
 from ..utils._random cimport our_rand_r
@@ -16,7 +17,7 @@ from ..utils._random cimport our_rand_r
 # Helper functions
 # =============================================================================
 
-cdef int safe_realloc(realloc_ptr* p, size_t nelems) except -1 nogil:
+cdef intp_t safe_realloc(realloc_ptr* p, size_t nelems) except -1 nogil:
     # sizeof(realloc_ptr[0]) would be more like idiomatic C, but causes Cython
     # 0.20.1 to crash.
     cdef size_t nbytes = nelems * sizeof(p[0][0])
@@ -96,7 +97,7 @@ cdef class WeightedPQueue:
     def __dealloc__(self):
         free(self.array_)
 
-    cdef int reset(self) except -1 nogil:
+    cdef intp_t reset(self) except -1 nogil:
         """Reset the WeightedPQueue to its state at construction
 
         Return -1 in case of failure to allocate memory (and raise MemoryError)
@@ -113,7 +114,7 @@ cdef class WeightedPQueue:
     cdef intp_t size(self) noexcept nogil:
         return self.array_ptr
 
-    cdef int push(self, float64_t data, float64_t weight) except -1 nogil:
+    cdef intp_t push(self, float64_t data, float64_t weight) except -1 nogil:
         """Push record on the array.
 
         Return -1 in case of failure to allocate memory (and raise MemoryError)
@@ -145,7 +146,7 @@ cdef class WeightedPQueue:
         self.array_ptr = array_ptr + 1
         return 0
 
-    cdef int remove(self, float64_t data, float64_t weight) noexcept nogil:
+    cdef intp_t remove(self, float64_t data, float64_t weight) noexcept nogil:
         """Remove a specific value/weight record from the array.
         Returns 0 if successful, -1 if record not found."""
         cdef intp_t array_ptr = self.array_ptr
@@ -173,7 +174,7 @@ cdef class WeightedPQueue:
         self.array_ptr = array_ptr - 1
         return 0
 
-    cdef int pop(self, float64_t* data, float64_t* weight) noexcept nogil:
+    cdef intp_t pop(self, float64_t* data, float64_t* weight) noexcept nogil:
         """Remove the top (minimum) element from array.
         Returns 0 if successful, -1 if nothing to remove."""
         cdef intp_t array_ptr = self.array_ptr
@@ -194,7 +195,7 @@ cdef class WeightedPQueue:
         self.array_ptr = array_ptr - 1
         return 0
 
-    cdef int peek(self, float64_t* data, float64_t* weight) noexcept nogil:
+    cdef intp_t peek(self, float64_t* data, float64_t* weight) noexcept nogil:
         """Write the top element from array to a pointer.
         Returns 0 if successful, -1 if nothing to write."""
         cdef WeightedPQueueRecord* array = self.array_
@@ -271,7 +272,7 @@ cdef class WeightedMedianCalculator:
         WeightedMedianCalculator"""
         return self.samples.size()
 
-    cdef int reset(self) except -1 nogil:
+    cdef intp_t reset(self) except -1 nogil:
         """Reset the WeightedMedianCalculator to its state at construction
 
         Return -1 in case of failure to allocate memory (and raise MemoryError)
@@ -285,13 +286,13 @@ cdef class WeightedMedianCalculator:
         self.sum_w_0_k = 0
         return 0
 
-    cdef int push(self, float64_t data, float64_t weight) except -1 nogil:
+    cdef intp_t push(self, float64_t data, float64_t weight) except -1 nogil:
         """Push a value and its associated weight to the WeightedMedianCalculator
 
         Return -1 in case of failure to allocate memory (and raise MemoryError)
         or 0 otherwise.
         """
-        cdef int return_value
+        cdef intp_t return_value
         cdef float64_t original_median = 0.0
 
         if self.size() != 0:
@@ -302,7 +303,7 @@ cdef class WeightedMedianCalculator:
                                                 original_median)
         return return_value
 
-    cdef int update_median_parameters_post_push(
+    cdef intp_t update_median_parameters_post_push(
             self, float64_t data, float64_t weight,
             float64_t original_median) noexcept nogil:
         """Update the parameters used in the median calculation,
@@ -344,11 +345,11 @@ cdef class WeightedMedianCalculator:
                 self.sum_w_0_k += self.samples.get_weight_from_index(self.k-1)
             return 0
 
-    cdef int remove(self, float64_t data, float64_t weight) noexcept nogil:
+    cdef intp_t remove(self, float64_t data, float64_t weight) noexcept nogil:
         """Remove a value from the MedianHeap, removing it
         from consideration in the median calculation
         """
-        cdef int return_value
+        cdef intp_t return_value
         cdef float64_t original_median = 0.0
 
         if self.size() != 0:
@@ -359,11 +360,11 @@ cdef class WeightedMedianCalculator:
                                                   original_median)
         return return_value
 
-    cdef int pop(self, float64_t* data, float64_t* weight) noexcept nogil:
+    cdef intp_t pop(self, float64_t* data, float64_t* weight) noexcept nogil:
         """Pop a value from the MedianHeap, starting from the
         left and moving to the right.
         """
-        cdef int return_value
+        cdef intp_t return_value
         cdef float64_t original_median = 0.0
 
         if self.size() != 0:
@@ -379,7 +380,7 @@ cdef class WeightedMedianCalculator:
                                                   original_median)
         return return_value
 
-    cdef int update_median_parameters_post_remove(
+    cdef intp_t update_median_parameters_post_remove(
             self, float64_t data, float64_t weight,
             float64_t original_median) noexcept nogil:
         """Update the parameters used in the median calculation,

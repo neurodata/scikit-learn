@@ -4,12 +4,15 @@
 # See _tree.pyx for details.
 
 import numpy as np
+
 cimport numpy as cnp
+from libcpp.unordered_map cimport unordered_map
+from libcpp.vector cimport vector
 
 from ..utils._typedefs cimport float32_t, float64_t, intp_t, int32_t, uint8_t, uint32_t
 
-from ._splitter cimport Splitter
-from ._splitter cimport SplitRecord
+from ._splitter cimport SplitRecord, Splitter
+
 
 cdef struct Node:
     # Base storage structure for the nodes in a Tree object
@@ -23,7 +26,6 @@ cdef struct Node:
     float64_t weighted_n_node_samples    # Weighted number of samples at the node
     uint8_t missing_go_to_left     # Whether features have missing values
 
-
 cdef struct ParentInfo:
     # Structure to store information about the parent of a node
     # This is passed to the splitter, to provide information about the previous split
@@ -33,16 +35,7 @@ cdef struct ParentInfo:
     float64_t impurity              # the impurity of the parent
     intp_t n_constant_features      # the number of constant features found in parent
 
-cdef class Tree:
-    # The Tree object is a binary tree structure constructed by the
-    # TreeBuilder. The tree structure is used for predictions and
-    # feature importances.
-
-    # Input/Output layout
-    cdef public intp_t n_features        # Number of features in X
-    cdef intp_t* n_classes               # Number of classes in y[:, k]
-    cdef public intp_t n_outputs         # Number of outputs in y
-    cdef public intp_t max_n_classes     # max(n_classes)
+cdef class BaseTree:
 
     # Inner structures: values are stored separately from node structure,
     # since size is determined at runtime.
@@ -54,19 +47,33 @@ cdef class Tree:
     cdef intp_t value_stride             # = n_outputs * max_n_classes
 
     # Methods
-    cdef intp_t _add_node(self, intp_t parent, bint is_left, bint is_leaf,
-                          intp_t feature, float64_t threshold, float64_t impurity,
-                          intp_t n_node_samples,
-                          float64_t weighted_n_node_samples,
-                          uint8_t missing_go_to_left) except -1 nogil
+    cdef intp_t _add_node(
+        self,
+        intp_t parent,
+        bint is_left,
+        bint is_leaf,
+        SplitRecord* split_node,
+        float64_t impurity,
+        intp_t n_node_samples,
+        float64_t weighted_n_node_samples,
+        uint8_t missing_go_to_left
+    ) except -1 nogil
     cdef int _resize(self, intp_t capacity) except -1 nogil
     cdef int _resize_c(self, intp_t capacity=*) except -1 nogil
 
-    cdef cnp.ndarray _get_value_ndarray(self)
-    cdef cnp.ndarray _get_node_ndarray(self)
+    cdef intp_t _update_node(
+        self,
+        intp_t parent,
+        bint is_left,
+        bint is_leaf,
+        SplitRecord* split_node,
+        float64_t impurity,
+        intp_t n_node_samples,
+        float64_t weighted_n_node_samples,
+        uint8_t missing_go_to_left
+    ) except -1 nogil
 
-    cpdef cnp.ndarray predict(self, object X)
-
+    # Python API methods: These are methods exposed to Python
     cpdef cnp.ndarray apply(self, object X)
     cdef cnp.ndarray _apply_dense(self, object X)
     cdef cnp.ndarray _apply_sparse_csr(self, object X)
@@ -78,6 +85,64 @@ cdef class Tree:
     cpdef compute_node_depths(self)
     cpdef compute_feature_importances(self, normalize=*)
 
+    # Abstract methods: these functions must be implemented by any decision tree
+    cdef int _set_split_node(
+        self,
+        SplitRecord* split_node,
+        Node* node,
+        intp_t node_id,
+    ) except -1 nogil
+    cdef int _set_leaf_node(
+        self,
+        SplitRecord* split_node,
+        Node* node,
+        intp_t node_id,
+    ) except -1 nogil
+    cdef float32_t _compute_feature(
+        self,
+        const float32_t[:, :] X_ndarray,
+        intp_t sample_index,
+        Node *node
+    ) noexcept nogil
+    cdef void _compute_feature_importances(
+        self,
+        float64_t[:] importances,
+        Node* node,
+    ) noexcept nogil
+
+cdef class Tree(BaseTree):
+    # The Tree object is a binary tree structure constructed by the
+    # TreeBuilder. The tree structure is used for predictions and
+    # feature importances.
+
+    # The Supervised Tree object is a binary tree structure constructed by the
+    # TreeBuilder. The tree structure is used for predictions and
+    # feature importances.
+    #
+    # Value of upstream properties:
+    # - value_stride = n_outputs * max_n_classes
+    # - value = (capacity, n_outputs, max_n_classes) array of values
+
+    # Input/Output layout
+    cdef public intp_t n_features        # Number of features in X
+    cdef intp_t* n_classes               # Number of classes in y[:, k]
+    cdef public intp_t n_outputs         # Number of outputs in y
+    cdef public intp_t max_n_classes     # max(n_classes)
+
+    # Enables the use of tree to store distributions of the output to allow
+    # arbitrary usage of the the leaves. This is used in the quantile
+    # estimators for example.
+    # for storing samples at each leaf node with leaf's node ID as the key and
+    # the sample values as the value
+    cdef unordered_map[intp_t, vector[vector[float64_t]]] value_samples
+
+    # Methods
+    cdef cnp.ndarray _get_value_ndarray(self)
+    cdef cnp.ndarray _get_node_ndarray(self)
+    cdef cnp.ndarray _get_value_samples_ndarray(self, intp_t node_id)
+    cdef cnp.ndarray _get_value_samples_keys(self)
+
+    cpdef cnp.ndarray predict(self, object X)
 
 # =============================================================================
 # Tree builder
@@ -93,11 +158,23 @@ cdef class TreeBuilder:
 
     cdef Splitter splitter              # Splitting algorithm
 
-    cdef intp_t min_samples_split       # Minimum number of samples in an internal node
-    cdef intp_t min_samples_leaf        # Minimum number of samples in a leaf
-    cdef float64_t min_weight_leaf         # Minimum weight in a leaf
-    cdef intp_t max_depth               # Maximal tree depth
-    cdef float64_t min_impurity_decrease   # Impurity threshold for early stopping
+    cdef intp_t min_samples_split           # Minimum number of samples in an internal node
+    cdef intp_t min_samples_leaf            # Minimum number of samples in a leaf
+    cdef float64_t min_weight_leaf          # Minimum weight in a leaf
+    cdef intp_t max_depth                   # Maximal tree depth
+    cdef float64_t min_impurity_decrease    # Impurity threshold for early stopping
+    cdef cnp.ndarray initial_roots          # Leaf nodes for streaming updates
+
+    cdef uint8_t store_leaf_values    # Whether to store leaf values
+
+    cpdef initialize_node_queue(
+      self,
+      Tree tree,
+      object X,
+      const float64_t[:, ::1] y,
+      const float64_t[:] sample_weight=*,
+      const uint8_t[::1] missing_values_in_feature_mask=*,
+    )
 
     cpdef build(
         self,

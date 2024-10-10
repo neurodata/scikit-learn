@@ -39,13 +39,14 @@ Single and multi-output problems are both handled.
 import threading
 from abc import ABCMeta, abstractmethod
 from numbers import Integral, Real
+from time import time
 from warnings import catch_warnings, simplefilter, warn
 
 import numpy as np
 from scipy.sparse import hstack as sparse_hstack
 from scipy.sparse import issparse
 
-from ..base import (
+from sklearn.base import (
     ClassifierMixin,
     MultiOutputMixin,
     RegressorMixin,
@@ -53,9 +54,29 @@ from ..base import (
     _fit_context,
     is_classifier,
 )
-from ..exceptions import DataConversionWarning
-from ..metrics import accuracy_score, r2_score
-from ..preprocessing import OneHotEncoder
+from sklearn.ensemble._base import BaseEnsemble, _partition_estimators
+from sklearn.ensemble._hist_gradient_boosting.binning import _BinMapper
+from sklearn.exceptions import DataConversionWarning
+from sklearn.metrics import accuracy_score, r2_score
+from sklearn.preprocessing import OneHotEncoder
+from sklearn.utils import check_random_state, compute_sample_weight
+from sklearn.utils._openmp_helpers import _openmp_effective_n_threads
+from sklearn.utils._param_validation import Interval, RealNotInt, StrOptions
+from sklearn.utils._tags import get_tags
+from sklearn.utils.multiclass import (
+    _check_partial_fit_first_call,
+    check_classification_targets,
+    type_of_target,
+)
+from sklearn.utils.parallel import Parallel, delayed
+from sklearn.utils.validation import (
+    _check_feature_names_in,
+    _check_sample_weight,
+    _num_samples,
+    check_is_fitted,
+    validate_data,
+)
+
 from ..tree import (
     BaseDecisionTree,
     DecisionTreeClassifier,
@@ -64,19 +85,6 @@ from ..tree import (
     ExtraTreeRegressor,
 )
 from ..tree._tree import DOUBLE, DTYPE
-from ..utils import check_random_state, compute_sample_weight
-from ..utils._param_validation import Interval, RealNotInt, StrOptions
-from ..utils._tags import get_tags
-from ..utils.multiclass import check_classification_targets, type_of_target
-from ..utils.parallel import Parallel, delayed
-from ..utils.validation import (
-    _check_feature_names_in,
-    _check_sample_weight,
-    _num_samples,
-    check_is_fitted,
-    validate_data,
-)
-from ._base import BaseEnsemble, _partition_estimators
 
 __all__ = [
     "RandomForestClassifier",
@@ -93,14 +101,18 @@ def _get_n_samples_bootstrap(n_samples, max_samples):
     """
     Get the number of samples in a bootstrap sample.
 
+    The expected total number of unique samples in a bootstrap sample is
+    required to be at most ``n_samples - 1``.
+    This is equivalent to the expected number of out-of-bag samples being at
+    least 1.
+
     Parameters
     ----------
     n_samples : int
         Number of samples in the dataset.
     max_samples : int or float
         The maximum number of samples to draw from the total available:
-            - if float, this indicates a fraction of the total and should be
-              the interval `(0.0, 1.0]`;
+            - if float, this indicates a fraction of the total;
             - if int, this indicates the exact number of samples;
             - if None, this indicates the total number of samples.
 
@@ -113,12 +125,21 @@ def _get_n_samples_bootstrap(n_samples, max_samples):
         return n_samples
 
     if isinstance(max_samples, Integral):
-        if max_samples > n_samples:
-            msg = "`max_samples` must be <= n_samples={} but got value {}"
-            raise ValueError(msg.format(n_samples, max_samples))
+        expected_oob_samples = (1 - np.exp(-max_samples / n_samples)) * n_samples
+        if expected_oob_samples >= n_samples - 1:
+            raise ValueError(
+                "The expected number of unique samples in the bootstrap sample"
+                f" must be at most {n_samples - 1}. It is: {expected_oob_samples}"
+            )
         return max_samples
 
     if isinstance(max_samples, Real):
+        expected_oob_samples = (1 - np.exp(-max_samples)) * n_samples
+        if expected_oob_samples >= n_samples - 1:
+            raise ValueError(
+                "The expected number of unique samples in the bootstrap sample"
+                f" must be at most {n_samples - 1}. It is: {expected_oob_samples}"
+            )
         return max(round(n_samples * max_samples), 1)
 
 
@@ -160,6 +181,7 @@ def _parallel_build_trees(
     class_weight=None,
     n_samples_bootstrap=None,
     missing_values_in_feature_mask=None,
+    classes=None,
 ):
     """
     Private function used to fit a single tree in parallel."""
@@ -192,6 +214,7 @@ def _parallel_build_trees(
             sample_weight=curr_sample_weight,
             check_input=False,
             missing_values_in_feature_mask=missing_values_in_feature_mask,
+            classes=classes,
         )
     else:
         tree._fit(
@@ -200,6 +223,50 @@ def _parallel_build_trees(
             sample_weight=sample_weight,
             check_input=False,
             missing_values_in_feature_mask=missing_values_in_feature_mask,
+            classes=classes,
+        )
+
+    return tree
+
+
+def _parallel_update_trees(
+    tree,
+    bootstrap,
+    X,
+    y,
+    sample_weight,
+    tree_idx,
+    n_trees,
+    verbose=0,
+    class_weight=None,
+    n_samples_bootstrap=None,
+    classes=None,
+):
+    """
+    Private function used to fit a single tree in parallel."""
+    if verbose > 1:
+        print("Updating tree %d of %d" % (tree_idx + 1, n_trees))
+
+    if bootstrap:
+        n_samples = X.shape[0]
+        indices = _generate_sample_indices(
+            tree.random_state, n_samples, n_samples_bootstrap
+        )
+
+        tree.partial_fit(
+            X[indices, :],
+            y[indices],
+            sample_weight=sample_weight,
+            check_input=False,
+            classes=classes,
+        )
+    else:
+        tree.partial_fit(
+            X,
+            y,
+            sample_weight=sample_weight,
+            check_input=False,
+            classes=classes,
         )
 
     return tree
@@ -226,6 +293,11 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             Interval(RealNotInt, 0.0, 1.0, closed="right"),
             Interval(Integral, 1, None, closed="left"),
         ],
+        "max_bins": [
+            None,
+            Interval(Integral, 1, None, closed="left"),
+        ],
+        "store_leaf_values": ["boolean"],
     }
 
     @abstractmethod
@@ -243,6 +315,8 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         warm_start=False,
         class_weight=None,
         max_samples=None,
+        max_bins=None,
+        store_leaf_values=False,
     ):
         super().__init__(
             estimator=estimator,
@@ -258,6 +332,8 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         self.warm_start = warm_start
         self.class_weight = class_weight
         self.max_samples = max_samples
+        self.max_bins = max_bins
+        self.store_leaf_values = store_leaf_values
 
     def apply(self, X):
         """
@@ -277,6 +353,15 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             return the index of the leaf x ends up in.
         """
         X = self._validate_X_predict(X)
+
+        # if we trained a binning tree, then we should re-bin the data
+        # XXX: this is inefficient and should be improved to be in line with what
+        # the Histogram Gradient Boosting Tree does, where the binning thresholds
+        # are passed into the tree itself, thus allowing us to set the node feature
+        # value thresholds within the tree itself.
+        if self.max_bins is not None:
+            X = self._bin_data(X, is_training_data=False).astype(DTYPE)
+
         results = Parallel(
             n_jobs=self.n_jobs,
             verbose=self.verbose,
@@ -326,7 +411,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         return sparse_hstack(indicators).tocsr(), n_nodes_ptr
 
     @_fit_context(prefer_skip_nested_validation=True)
-    def fit(self, X, y, sample_weight=None):
+    def fit(self, X, y, sample_weight=None, classes=None):
         """
         Build a forest of trees from the training set (X, y).
 
@@ -347,6 +432,9 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             ignored while searching for a split in each node. In the case of
             classification, splits are also ignored if they would result in any
             single class carrying a negative weight in either child node.
+
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
 
         Returns
         -------
@@ -416,7 +504,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
         self._n_samples, self.n_outputs_ = y.shape
 
-        y, expanded_class_weight = self._validate_y_class_weight(y)
+        y, expanded_class_weight = self._validate_y_class_weight(y, classes=classes)
 
         if getattr(y, "dtype", None) != DOUBLE or not y.flags.contiguous:
             y = np.ascontiguousarray(y, dtype=DOUBLE)
@@ -455,6 +543,38 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
         n_more_estimators = self.n_estimators - len(self.estimators_)
 
+        if self.max_bins is not None:
+            # `_openmp_effective_n_threads` is used to take cgroups CPU quotes
+            # into account when determine the maximum number of threads to use.
+            n_threads = _openmp_effective_n_threads()
+
+            # Bin the data
+            # For ease of use of the API, the user-facing GBDT classes accept the
+            # parameter max_bins, which doesn't take into account the bin for
+            # missing values (which is always allocated). However, since max_bins
+            # isn't the true maximal number of bins, all other private classes
+            # (binmapper, histbuilder...) accept n_bins instead, which is the
+            # actual total number of bins. Everywhere in the code, the
+            # convention is that n_bins == max_bins + 1
+            n_bins = self.max_bins + 1  # + 1 for missing values
+            self._bin_mapper = _BinMapper(
+                n_bins=n_bins,
+                # is_categorical=self.is_categorical_,
+                known_categories=None,
+                random_state=random_state,
+                n_threads=n_threads,
+            )
+
+            # XXX: in order for this to work with the underlying tree submodule's Cython
+            # code, we need to convert this into the original data's DTYPE because
+            # the Cython code assumes that `DTYPE` is used.
+            # The proper implementation will be a lot more complicated and should be
+            # tackled once scikit-learn has finalized their inclusion of missing data
+            # and categorical support for decision trees
+            X = self._bin_data(X, is_training_data=True)  # .astype(DTYPE)
+        else:
+            self._bin_mapper = None
+
         if n_more_estimators < 0:
             raise ValueError(
                 "n_estimators=%d must be larger or equal to "
@@ -473,40 +593,17 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
                 # would have got if we hadn't used a warm_start.
                 random_state.randint(MAX_INT, size=len(self.estimators_))
 
-            trees = [
-                self._make_estimator(append=False, random_state=random_state)
-                for i in range(n_more_estimators)
-            ]
-
-            # Parallel loop: we prefer the threading backend as the Cython code
-            # for fitting the trees is internally releasing the Python GIL
-            # making threading more efficient than multiprocessing in
-            # that case. However, for joblib 0.12+ we respect any
-            # parallel_backend contexts set at a higher level,
-            # since correctness does not rely on using threads.
-            trees = Parallel(
-                n_jobs=self.n_jobs,
-                verbose=self.verbose,
-                prefer="threads",
-            )(
-                delayed(_parallel_build_trees)(
-                    t,
-                    self.bootstrap,
-                    X,
-                    y,
-                    sample_weight,
-                    i,
-                    len(trees),
-                    verbose=self.verbose,
-                    class_weight=self.class_weight,
-                    n_samples_bootstrap=n_samples_bootstrap,
-                    missing_values_in_feature_mask=missing_values_in_feature_mask,
-                )
-                for i, t in enumerate(trees)
+            # construct the trees in parallel
+            self._construct_trees(
+                X,
+                y,
+                sample_weight,
+                random_state,
+                n_samples_bootstrap,
+                missing_values_in_feature_mask,
+                classes,
+                n_more_estimators,
             )
-
-            # Collect newly grown trees
-            self.estimators_.extend(trees)
 
         if self.oob_score and (
             n_more_estimators > 0 or not hasattr(self, "oob_score_")
@@ -540,6 +637,53 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             self.classes_ = self.classes_[0]
 
         return self
+
+    def _construct_trees(
+        self,
+        X,
+        y,
+        sample_weight,
+        random_state,
+        n_samples_bootstrap,
+        missing_values_in_feature_mask,
+        classes,
+        n_more_estimators,
+    ):
+        trees = [
+            self._make_estimator(append=False, random_state=random_state)
+            for i in range(n_more_estimators)
+        ]
+
+        # Parallel loop: we prefer the threading backend as the Cython code
+        # for fitting the trees is internally releasing the Python GIL
+        # making threading more efficient than multiprocessing in
+        # that case. However, for joblib 0.12+ we respect any
+        # parallel_backend contexts set at a higher level,
+        # since correctness does not rely on using threads.
+        trees = Parallel(
+            n_jobs=self.n_jobs,
+            verbose=self.verbose,
+            prefer="threads",
+        )(
+            delayed(_parallel_build_trees)(
+                t,
+                self.bootstrap,
+                X,
+                y,
+                sample_weight,
+                i,
+                len(trees),
+                verbose=self.verbose,
+                class_weight=self.class_weight,
+                n_samples_bootstrap=n_samples_bootstrap,
+                missing_values_in_feature_mask=missing_values_in_feature_mask,
+                classes=classes,
+            )
+            for i, t in enumerate(trees)
+        )
+
+        # Collect newly grown trees
+        self.estimators_.extend(trees)
 
     @abstractmethod
     def _set_oob_score_and_attributes(self, X, y, scoring_function=None):
@@ -623,7 +767,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
 
         return oob_pred
 
-    def _validate_y_class_weight(self, y):
+    def _validate_y_class_weight(self, y, classes=None):
         # Default implementation
         return y, None
 
@@ -683,6 +827,174 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         all_importances = np.mean(all_importances, axis=0, dtype=np.float64)
         return all_importances / np.sum(all_importances)
 
+    def _bin_data(self, X, is_training_data):
+        """Bin data X.
+
+        If is_training_data, then fit the _bin_mapper attribute.
+        Else, the binned data is converted to a C-contiguous array.
+        """
+        description = "training" if is_training_data else "validation"
+        if self.verbose:
+            print(
+                "Binning {:.3f} GB of {} data: ".format(X.nbytes / 1e9, description),
+                end="",
+                flush=True,
+            )
+        tic = time()
+        if is_training_data:
+            X_binned = self._bin_mapper.fit_transform(X)  # F-aligned array
+        else:
+            X_binned = self._bin_mapper.transform(X)  # F-aligned array
+            # We convert the array to C-contiguous since predicting is faster
+            # with this layout (training is faster on F-arrays though)
+            X_binned = np.ascontiguousarray(X_binned)
+        toc = time()
+        if self.verbose:
+            duration = toc - tic
+            print("{:.3f} s".format(duration))
+
+        return X_binned
+
+    def predict_quantiles(self, X, quantiles=0.5, method="nearest"):
+        """Predict class or regression value for X at given quantiles.
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix} of shape (n_samples, n_features)
+            Input data.
+        quantiles : float, optional
+            The quantiles at which to evaluate, by default 0.5 (median).
+        method : str, optional
+            The method to interpolate, by default 'linear'. Can be any keyword
+            argument accepted by :func:`~np.quantile`.
+
+        Returns
+        -------
+        y : ndarray of shape (n_samples, n_quantiles, [n_outputs])
+            The predicted values. The ``n_outputs`` dimension is present only
+            for multi-output regressors.
+        """
+        if not self.store_leaf_values:
+            raise RuntimeError(
+                "Quantile prediction is not available when store_leaf_values=False"
+            )
+        check_is_fitted(self)
+        # Check data
+        X = self._validate_X_predict(X)
+
+        if not isinstance(quantiles, (np.ndarray, list)):
+            quantiles = np.array([quantiles])
+
+        # if we trained a binning tree, then we should re-bin the data
+        # XXX: this is inefficient and should be improved to be in line with what
+        # the Histogram Gradient Boosting Tree does, where the binning thresholds
+        # are passed into the tree itself, thus allowing us to set the node feature
+        # value thresholds within the tree itself.
+        if self.max_bins is not None:
+            X = self._bin_data(X, is_training_data=False).astype(DTYPE)
+
+        # Assign chunk of trees to jobs
+        # n_jobs, _, _ = _partition_estimators(self.n_estimators, self.n_jobs)
+
+        # avoid storing the output of every estimator by summing them here
+        if self.n_outputs_ > 1:
+            y_hat = np.zeros(
+                (X.shape[0], len(quantiles), self.n_outputs_), dtype=np.float64
+            )
+        else:
+            y_hat = np.zeros((X.shape[0], len(quantiles)), dtype=np.float64)
+
+        # get (n_samples, n_estimators) indicator of leaf nodes
+        X_leaves = self.apply(X)
+
+        # we now want to aggregate all leaf samples across all trees for each sample
+        for idx in range(X.shape[0]):
+            # get leaf nodes for this sample
+            leaf_nodes = X_leaves[idx, :]
+
+            # (n_total_leaf_samples, n_outputs)
+            leaf_node_samples = np.vstack(
+                [
+                    est.tree_.leaf_nodes_samples[leaf_nodes[jdx]]
+                    for jdx, est in enumerate(self.estimators_)
+                ]
+            )
+
+            # get quantiles across all leaf node samples
+            try:
+                y_hat[idx, ...] = np.quantile(
+                    leaf_node_samples, quantiles, axis=0, method=method
+                )
+            except TypeError:
+                y_hat[idx, ...] = np.quantile(
+                    leaf_node_samples, quantiles, axis=0, interpolation=method
+                )
+
+            if is_classifier(self):
+                if self.n_outputs_ == 1:
+                    for i in range(len(quantiles)):
+                        class_pred_per_sample = y_hat[idx, i, :].squeeze().astype(int)
+                        y_hat[idx, ...] = self.classes_.take(
+                            class_pred_per_sample, axis=0
+                        )
+                else:
+                    for k in range(self.n_outputs_):
+                        for i in range(len(quantiles)):
+                            class_pred_per_sample = (
+                                y_hat[idx, i, k].squeeze().astype(int)
+                            )
+                            y_hat[idx, i, k] = self.classes_[k].take(
+                                class_pred_per_sample, axis=0
+                            )
+        return y_hat
+
+    def get_leaf_node_samples(self, X):
+        """For each datapoint x in X, get the training samples in the leaf node.
+
+        Parameters
+        ----------
+        X : array-like of shape (n_samples, n_features)
+            Dataset to apply the forest to.
+
+        Returns
+        -------
+        leaf_node_samples : a list of array-like
+            Each sample is represented by the indices of the training samples that
+            reached the leaf node. The ``n_leaf_node_samples`` may vary between
+            samples, since the number of samples that fall in a leaf node is
+            variable. Each array-like has shape (n_leaf_node_samples, n_outputs).
+        """
+        if not self.store_leaf_values:
+            raise RuntimeError(
+                "Leaf node samples are not available when store_leaf_values=False"
+            )
+
+        check_is_fitted(self)
+        # Check data
+        X = self._validate_X_predict(X)
+
+        # if we trained a binning tree, then we should re-bin the data
+        # XXX: this is inefficient and should be improved to be in line with what
+        # the Histogram Gradient Boosting Tree does, where the binning thresholds
+        # are passed into the tree itself, thus allowing us to set the node feature
+        # value thresholds within the tree itself.
+        if self.max_bins is not None:
+            X = self._bin_data(X, is_training_data=False).astype(DTYPE)
+
+        # Assign chunk of trees to jobs
+        n_jobs, _, _ = _partition_estimators(self.n_estimators, self.n_jobs)
+
+        # avoid storing the output of every estimator by summing them here
+        result = Parallel(n_jobs=n_jobs, verbose=self.verbose)(
+            delayed(_accumulate_leaf_nodes_samples)(e.get_leaf_node_samples, X)
+            for e in self.estimators_
+        )
+        leaf_nodes_samples = result[0]
+        for result_ in result[1:]:
+            for i, node_samples in enumerate(result_):
+                leaf_nodes_samples[i] = np.vstack((leaf_nodes_samples[i], node_samples))
+        return leaf_nodes_samples
+
     def _get_estimators_indices(self):
         # Get drawn indices along both sample and feature axes
         for tree in self.estimators_:
@@ -738,6 +1050,17 @@ def _accumulate_prediction(predict, X, out, lock):
                 out[i] += prediction[i]
 
 
+def _accumulate_leaf_nodes_samples(func, X):
+    """
+    This is a utility function for joblib's Parallel.
+
+    It can't go locally in ForestClassifier or ForestRegressor, because joblib
+    complains that it cannot pickle it when placed there.
+    """
+    leaf_nodes_samples = func(X, check_input=False)
+    return leaf_nodes_samples
+
+
 class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
     """
     Base class for forest of trees-based classifiers.
@@ -761,6 +1084,8 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
         warm_start=False,
         class_weight=None,
         max_samples=None,
+        max_bins=None,
+        store_leaf_values=False,
     ):
         super().__init__(
             estimator=estimator,
@@ -774,6 +1099,8 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             warm_start=warm_start,
             class_weight=class_weight,
             max_samples=max_samples,
+            max_bins=max_bins,
+            store_leaf_values=store_leaf_values,
         )
 
     @staticmethod
@@ -828,7 +1155,7 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             y, np.argmax(self.oob_decision_function_, axis=1)
         )
 
-    def _validate_y_class_weight(self, y):
+    def _validate_y_class_weight(self, y, classes=None):
         check_classification_targets(y)
 
         y = np.copy(y)
@@ -841,12 +1168,28 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
         self.n_classes_ = []
 
         y_store_unique_indices = np.zeros(y.shape, dtype=int)
-        for k in range(self.n_outputs_):
-            classes_k, y_store_unique_indices[:, k] = np.unique(
-                y[:, k], return_inverse=True
-            )
-            self.classes_.append(classes_k)
-            self.n_classes_.append(classes_k.shape[0])
+        if classes is not None:
+            classes = np.atleast_1d(classes)
+            if classes.ndim == 1:
+                classes = np.array([classes])
+
+            for k in classes:
+                self.classes_.append(np.array(k))
+                self.n_classes_.append(np.array(k).shape[0])
+
+            for i in range(y.shape[0]):
+                for j in range(self.n_outputs_):
+                    y_store_unique_indices[i, j] = np.where(
+                        self.classes_[j] == y[i, j]
+                    )[0][0]
+        else:
+            for k in range(self.n_outputs_):
+                classes_k, y_store_unique_indices[:, k] = np.unique(
+                    y[:, k], return_inverse=True
+                )
+                self.classes_.append(classes_k)
+                self.n_classes_.append(classes_k.shape[0])
+
         y = y_store_unique_indices
 
         if self.class_weight is not None:
@@ -880,6 +1223,229 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
                 expanded_class_weight = compute_sample_weight(class_weight, y_original)
 
         return y, expanded_class_weight
+
+    def partial_fit(self, X, y, sample_weight=None, classes=None):
+        """Update a decision tree classifier from the training set (X, y).
+
+        Parameters
+        ----------
+        X : {array-like, sparse matrix} of shape (n_samples, n_features)
+            The training input samples. Internally, it will be converted to
+            ``dtype=np.float32`` and if a sparse matrix is provided
+            to a sparse ``csc_matrix``.
+
+        y : array-like of shape (n_samples,) or (n_samples, n_outputs)
+            The target values (class labels) as integers or strings.
+
+        sample_weight : array-like of shape (n_samples,), default=None
+            Sample weights. If None, then samples are equally weighted. Splits
+            that would create child nodes with net zero or negative weight are
+            ignored while searching for a split in each node. Splits are also
+            ignored if they would result in any single class carrying a
+            negative weight in either child node.
+
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
+            Must be provided at the first call to partial_fit, can be omitted
+            in subsequent calls.
+
+        Returns
+        -------
+        self : object
+            Returns the instance itself.
+        """
+        self._validate_params()
+
+        # validate input parameters
+        first_call = _check_partial_fit_first_call(self, classes=classes)
+
+        # Fit if no tree exists yet
+        if first_call:
+            self.fit(
+                X,
+                y,
+                sample_weight=sample_weight,
+                classes=classes,
+            )
+            return self
+
+        X, y = validate_data(
+            self,
+            X,
+            y,
+            multi_output=True,
+            accept_sparse="csc",
+            dtype=DTYPE,
+            force_all_finite=False,
+            reset=first_call,
+        )
+
+        if issparse(y):
+            raise ValueError("sparse multilabel-indicator for y is not supported.")
+
+        if sample_weight is not None:
+            sample_weight = _check_sample_weight(sample_weight, X)
+
+        if issparse(X):
+            # Pre-sort indices to avoid that each individual tree of the
+            # ensemble sorts the indices.
+            X.sort_indices()
+
+        y = np.atleast_1d(y)
+        if y.ndim == 2 and y.shape[1] == 1:
+            warn(
+                (
+                    "A column-vector y was passed when a 1d array was"
+                    " expected. Please change the shape of y to "
+                    "(n_samples,), for example using ravel()."
+                ),
+                DataConversionWarning,
+                stacklevel=2,
+            )
+
+        if y.ndim == 1:
+            # reshape is necessary to preserve the data contiguity against vs
+            # [:, np.newaxis] that does not.
+            y = np.reshape(y, (-1, 1))
+
+        if self.criterion == "poisson":
+            if np.any(y < 0):
+                raise ValueError(
+                    "Some value(s) of y are negative which is "
+                    "not allowed for Poisson regression."
+                )
+            if np.sum(y) <= 0:
+                raise ValueError(
+                    "Sum of y is not strictly positive which "
+                    "is necessary for Poisson regression."
+                )
+
+        self.n_outputs_ = y.shape[1]
+
+        classes = self.classes_
+        if self.n_outputs_ == 1:
+            classes = [classes]
+
+        y, expanded_class_weight = self._validate_y_class_weight(y, classes)
+
+        if getattr(y, "dtype", None) != DOUBLE or not y.flags.contiguous:
+            y = np.ascontiguousarray(y, dtype=DOUBLE)
+
+        if expanded_class_weight is not None:
+            if sample_weight is not None:
+                sample_weight = sample_weight * expanded_class_weight
+            else:
+                sample_weight = expanded_class_weight
+
+        if not self.bootstrap and self.max_samples is not None:
+            raise ValueError(
+                "`max_sample` cannot be set if `bootstrap=False`. "
+                "Either switch to `bootstrap=True` or set "
+                "`max_sample=None`."
+            )
+        elif self.bootstrap:
+            n_samples_bootstrap = _get_n_samples_bootstrap(
+                n_samples=X.shape[0], max_samples=self.max_samples
+            )
+        else:
+            n_samples_bootstrap = None
+
+        self._validate_estimator()
+
+        if not self.bootstrap and self.oob_score:
+            raise ValueError("Out of bag estimation only available if bootstrap=True")
+
+        random_state = check_random_state(self.random_state)
+
+        if self.max_bins is not None:
+            # `_openmp_effective_n_threads` is used to take cgroups CPU quotes
+            # into account when determine the maximum number of threads to use.
+            n_threads = _openmp_effective_n_threads()
+
+            # Bin the data
+            # For ease of use of the API, the user-facing GBDT classes accept the
+            # parameter max_bins, which doesn't take into account the bin for
+            # missing values (which is always allocated). However, since max_bins
+            # isn't the true maximal number of bins, all other private classes
+            # (binmapper, histbuilder...) accept n_bins instead, which is the
+            # actual total number of bins. Everywhere in the code, the
+            # convention is that n_bins == max_bins + 1
+            n_bins = self.max_bins + 1  # + 1 for missing values
+            self._bin_mapper = _BinMapper(
+                n_bins=n_bins,
+                # is_categorical=self.is_categorical_,
+                known_categories=None,
+                random_state=random_state,
+                n_threads=n_threads,
+            )
+
+            # XXX: in order for this to work with the underlying tree submodule's Cython
+            # code, we need to convert this into the original data's DTYPE because
+            # the Cython code assumes that `DTYPE` is used.
+            # The proper implementation will be a lot more complicated and should be
+            # tackled once scikit-learn has finalized their inclusion of missing data
+            # and categorical support for decision trees
+            X = self._bin_data(X, is_training_data=True)  # .astype(DTYPE)
+        else:
+            self._bin_mapper = None
+
+        # We draw from the random state to get the random state we
+        # would have got if we hadn't used a warm_start.
+        random_state.randint(MAX_INT, size=len(self.estimators_))
+
+        # Parallel loop: we prefer the threading backend as the Cython code
+        # for fitting the trees is internally releasing the Python GIL
+        # making threading more efficient than multiprocessing in
+        # that case. However, for joblib 0.12+ we respect any
+        # parallel_backend contexts set at a higher level,
+        # since correctness does not rely on using threads.
+        Parallel(
+            n_jobs=self.n_jobs,
+            verbose=self.verbose,
+            prefer="threads",
+        )(
+            delayed(_parallel_update_trees)(
+                t,
+                self.bootstrap,
+                X,
+                y,
+                sample_weight,
+                i,
+                len(self.estimators_),
+                verbose=self.verbose,
+                class_weight=self.class_weight,
+                n_samples_bootstrap=n_samples_bootstrap,
+                classes=classes[0],
+            )
+            for i, t in enumerate(self.estimators_)
+        )
+
+        if self.oob_score:
+            y_type = type_of_target(y)
+            if y_type in ("multiclass-multioutput", "unknown"):
+                # FIXME: we could consider to support multiclass-multioutput if
+                # we introduce or reuse a constructor parameter (e.g.
+                # oob_score) allowing our user to pass a callable defining the
+                # scoring strategy on OOB sample.
+                raise ValueError(
+                    "The type of target cannot be used to compute OOB "
+                    f"estimates. Got {y_type} while only the following are "
+                    "supported: continuous, continuous-multioutput, binary, "
+                    "multiclass, multilabel-indicator."
+                )
+
+            if callable(self.oob_score):
+                self._set_oob_score_and_attributes(
+                    X, y, scoring_function=self.oob_score
+                )
+            else:
+                self._set_oob_score_and_attributes(X, y)
+
+        # Decapsulate classes_ attributes
+        if hasattr(self, "classes_") and self.n_outputs_ == 1:
+            self.n_classes_ = self.n_classes_[0]
+            self.classes_ = self.classes_[0]
+        return self
 
     def predict(self, X):
         """
@@ -945,6 +1511,14 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
         check_is_fitted(self)
         # Check data
         X = self._validate_X_predict(X)
+
+        # if we trained a binning tree, then we should re-bin the data
+        # XXX: this is inefficient and should be improved to be in line with what
+        # the Histogram Gradient Boosting Tree does, where the binning thresholds
+        # are passed into the tree itself, thus allowing us to set the node feature
+        # value thresholds within the tree itself.
+        if self.max_bins is not None:
+            X = self._bin_data(X, is_training_data=False).astype(DTYPE)
 
         # Assign chunk of trees to jobs
         n_jobs, _, _ = _partition_estimators(self.n_estimators, self.n_jobs)
@@ -1028,6 +1602,8 @@ class ForestRegressor(RegressorMixin, BaseForest, metaclass=ABCMeta):
         verbose=0,
         warm_start=False,
         max_samples=None,
+        max_bins=None,
+        store_leaf_values=False,
     ):
         super().__init__(
             estimator,
@@ -1040,6 +1616,8 @@ class ForestRegressor(RegressorMixin, BaseForest, metaclass=ABCMeta):
             verbose=verbose,
             warm_start=warm_start,
             max_samples=max_samples,
+            max_bins=max_bins,
+            store_leaf_values=store_leaf_values,
         )
 
     def predict(self, X):
@@ -1064,6 +1642,14 @@ class ForestRegressor(RegressorMixin, BaseForest, metaclass=ABCMeta):
         check_is_fitted(self)
         # Check data
         X = self._validate_X_predict(X)
+
+        # if we trained a binning tree, then we should re-bin the data
+        # XXX: this is inefficient and should be improved to be in line with what
+        # the Histogram Gradient Boosting Tree does, where the binning thresholds
+        # are passed into the tree itself, thus allowing us to set the node feature
+        # value thresholds within the tree itself.
+        if self.max_bins is not None:
+            X = self._bin_data(X, is_training_data=False).astype(DTYPE)
 
         # Assign chunk of trees to jobs
         n_jobs, _, _ = _partition_estimators(self.n_estimators, self.n_jobs)
@@ -1180,7 +1766,7 @@ class RandomForestClassifier(ForestClassifier):
     classifiers on various sub-samples of the dataset and uses averaging to
     improve the predictive accuracy and control over-fitting.
     Trees in the forest use the best split strategy, i.e. equivalent to passing
-    `splitter="best"` to the underlying :class:`~sklearn.tree.DecisionTreeRegressor`.
+    `splitter="best"` to the underlying :class:`~sklearn.tree.DecisionTreeClassifier`.
     The sub-sample size is controlled with the `max_samples` parameter if
     `bootstrap=True` (default), otherwise the whole dataset is used to build
     each tree.
@@ -1345,7 +1931,9 @@ class RandomForestClassifier(ForestClassifier):
         Complexity parameter used for Minimal Cost-Complexity Pruning. The
         subtree with the largest cost complexity that is smaller than
         ``ccp_alpha`` will be chosen. By default, no pruning is performed. See
-        :ref:`minimal_cost_complexity_pruning` for details.
+        :ref:`minimal_cost_complexity_pruning` for details. See
+        :ref:`sphx_glr_auto_examples_tree_plot_cost_complexity_pruning.py`
+        for an example of such pruning.
 
         .. versionadded:: 0.22
 
@@ -1359,6 +1947,16 @@ class RandomForestClassifier(ForestClassifier):
           `max_samples` should be in the interval `(0.0, 1.0]`.
 
         .. versionadded:: 0.22
+
+    max_bins : int, default=255
+        The maximum number of bins to use for non-missing values.
+
+        **This is an experimental feature**.
+
+    store_leaf_values : bool, default=False
+        Whether to store the leaf values in the ``get_leaf_node_samples`` function.
+
+        **This is an experimental feature**.
 
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
@@ -1517,6 +2115,8 @@ class RandomForestClassifier(ForestClassifier):
         class_weight=None,
         ccp_alpha=0.0,
         max_samples=None,
+        max_bins=None,
+        store_leaf_values=False,
         monotonic_cst=None,
     ):
         super().__init__(
@@ -1533,6 +2133,7 @@ class RandomForestClassifier(ForestClassifier):
                 "min_impurity_decrease",
                 "random_state",
                 "ccp_alpha",
+                "store_leaf_values",
                 "monotonic_cst",
             ),
             bootstrap=bootstrap,
@@ -1543,6 +2144,8 @@ class RandomForestClassifier(ForestClassifier):
             warm_start=warm_start,
             class_weight=class_weight,
             max_samples=max_samples,
+            max_bins=max_bins,
+            store_leaf_values=store_leaf_values,
         )
 
         self.criterion = criterion
@@ -1721,7 +2324,9 @@ class RandomForestRegressor(ForestRegressor):
         Complexity parameter used for Minimal Cost-Complexity Pruning. The
         subtree with the largest cost complexity that is smaller than
         ``ccp_alpha`` will be chosen. By default, no pruning is performed. See
-        :ref:`minimal_cost_complexity_pruning` for details.
+        :ref:`minimal_cost_complexity_pruning` for details. See
+        :ref:`sphx_glr_auto_examples_tree_plot_cost_complexity_pruning.py`
+        for an example of such pruning.
 
         .. versionadded:: 0.22
 
@@ -1735,6 +2340,17 @@ class RandomForestRegressor(ForestRegressor):
           `max_samples` should be in the interval `(0.0, 1.0]`.
 
         .. versionadded:: 0.22
+
+    max_bins : int, default=255
+        The maximum number of bins to use for non-missing values. Used for
+        speeding up training time.
+
+        **This is an experimental feature**.
+
+    store_leaf_values : bool, default=False
+        Whether to store the leaf values in the ``get_leaf_node_samples`` function.
+
+        **This is an experimental feature**.
 
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
@@ -1877,6 +2493,8 @@ class RandomForestRegressor(ForestRegressor):
         warm_start=False,
         ccp_alpha=0.0,
         max_samples=None,
+        max_bins=None,
+        store_leaf_values=False,
         monotonic_cst=None,
     ):
         super().__init__(
@@ -1893,6 +2511,7 @@ class RandomForestRegressor(ForestRegressor):
                 "min_impurity_decrease",
                 "random_state",
                 "ccp_alpha",
+                "store_leaf_values",
                 "monotonic_cst",
             ),
             bootstrap=bootstrap,
@@ -1902,6 +2521,8 @@ class RandomForestRegressor(ForestRegressor):
             verbose=verbose,
             warm_start=warm_start,
             max_samples=max_samples,
+            max_bins=max_bins,
+            store_leaf_values=store_leaf_values,
         )
 
         self.criterion = criterion
@@ -2086,7 +2707,9 @@ class ExtraTreesClassifier(ForestClassifier):
         Complexity parameter used for Minimal Cost-Complexity Pruning. The
         subtree with the largest cost complexity that is smaller than
         ``ccp_alpha`` will be chosen. By default, no pruning is performed. See
-        :ref:`minimal_cost_complexity_pruning` for details.
+        :ref:`minimal_cost_complexity_pruning` for details. See
+        :ref:`sphx_glr_auto_examples_tree_plot_cost_complexity_pruning.py`
+        for an example of such pruning.
 
         .. versionadded:: 0.22
 
@@ -2100,6 +2723,16 @@ class ExtraTreesClassifier(ForestClassifier):
           `max_samples` should be in the interval `(0.0, 1.0]`.
 
         .. versionadded:: 0.22
+
+    max_bins : int, default=255
+        The maximum number of bins to use for non-missing values.
+
+        **This is an experimental feature**.
+
+    store_leaf_values : bool, default=False
+        Whether to store the leaf values in the ``get_leaf_node_samples`` function.
+
+        **This is an experimental feature**.
 
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
@@ -2247,6 +2880,8 @@ class ExtraTreesClassifier(ForestClassifier):
         class_weight=None,
         ccp_alpha=0.0,
         max_samples=None,
+        max_bins=None,
+        store_leaf_values=False,
         monotonic_cst=None,
     ):
         super().__init__(
@@ -2263,6 +2898,7 @@ class ExtraTreesClassifier(ForestClassifier):
                 "min_impurity_decrease",
                 "random_state",
                 "ccp_alpha",
+                "store_leaf_values",
                 "monotonic_cst",
             ),
             bootstrap=bootstrap,
@@ -2273,6 +2909,8 @@ class ExtraTreesClassifier(ForestClassifier):
             warm_start=warm_start,
             class_weight=class_weight,
             max_samples=max_samples,
+            max_bins=max_bins,
+            store_leaf_values=store_leaf_values,
         )
 
         self.criterion = criterion
@@ -2445,7 +3083,9 @@ class ExtraTreesRegressor(ForestRegressor):
         Complexity parameter used for Minimal Cost-Complexity Pruning. The
         subtree with the largest cost complexity that is smaller than
         ``ccp_alpha`` will be chosen. By default, no pruning is performed. See
-        :ref:`minimal_cost_complexity_pruning` for details.
+        :ref:`minimal_cost_complexity_pruning` for details. See
+        :ref:`sphx_glr_auto_examples_tree_plot_cost_complexity_pruning.py`
+        for an example of such pruning.
 
         .. versionadded:: 0.22
 
@@ -2459,6 +3099,16 @@ class ExtraTreesRegressor(ForestRegressor):
           `max_samples` should be in the interval `(0.0, 1.0]`.
 
         .. versionadded:: 0.22
+
+    max_bins : int, default=255
+        The maximum number of bins to use for non-missing values.
+
+        **This is an experimental feature**.
+
+    store_leaf_values : bool, default=False
+        Whether to store the leaf values in the ``get_leaf_node_samples`` function.
+
+        **This is an experimental feature**.
 
     monotonic_cst : array-like of int of shape (n_features), default=None
         Indicates the monotonicity constraint to enforce on each feature.
@@ -2586,6 +3236,8 @@ class ExtraTreesRegressor(ForestRegressor):
         warm_start=False,
         ccp_alpha=0.0,
         max_samples=None,
+        max_bins=None,
+        store_leaf_values=False,
         monotonic_cst=None,
     ):
         super().__init__(
@@ -2602,6 +3254,7 @@ class ExtraTreesRegressor(ForestRegressor):
                 "min_impurity_decrease",
                 "random_state",
                 "ccp_alpha",
+                "store_leaf_values",
                 "monotonic_cst",
             ),
             bootstrap=bootstrap,
@@ -2611,6 +3264,8 @@ class ExtraTreesRegressor(ForestRegressor):
             verbose=verbose,
             warm_start=warm_start,
             max_samples=max_samples,
+            max_bins=max_bins,
+            store_leaf_values=store_leaf_values,
         )
 
         self.criterion = criterion
@@ -2734,6 +3389,9 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
         new forest. See :term:`Glossary <warm_start>` and
         :ref:`tree_ensemble_warm_start` for details.
 
+    store_leaf_values : bool, default=False
+        Whether to store the leaf values in the ``get_leaf_node_samples`` function.
+
     Attributes
     ----------
     estimator_ : :class:`~sklearn.tree.ExtraTreeRegressor` instance
@@ -2835,6 +3493,7 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
         random_state=None,
         verbose=0,
         warm_start=False,
+        store_leaf_values=False,
     ):
         super().__init__(
             estimator=ExtraTreeRegressor(),
@@ -2849,6 +3508,7 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
                 "max_leaf_nodes",
                 "min_impurity_decrease",
                 "random_state",
+                "store_leaf_values",
             ),
             bootstrap=False,
             oob_score=False,
@@ -2857,6 +3517,7 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
             verbose=verbose,
             warm_start=warm_start,
             max_samples=None,
+            store_leaf_values=store_leaf_values,
         )
 
         self.max_depth = max_depth
@@ -2870,7 +3531,7 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
     def _set_oob_score_and_attributes(self, X, y, scoring_function=None):
         raise NotImplementedError("OOB score not supported by tree embedding")
 
-    def fit(self, X, y=None, sample_weight=None):
+    def fit(self, X, y=None, sample_weight=None, classes=None):
         """
         Fit estimator.
 
@@ -2891,17 +3552,20 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
             classification, splits are also ignored if they would result in any
             single class carrying a negative weight in either child node.
 
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
+
         Returns
         -------
         self : object
             Returns the instance itself.
         """
         # Parameters are validated in fit_transform
-        self.fit_transform(X, y, sample_weight=sample_weight)
+        self.fit_transform(X, y, sample_weight=sample_weight, classes=classes)
         return self
 
     @_fit_context(prefer_skip_nested_validation=True)
-    def fit_transform(self, X, y=None, sample_weight=None):
+    def fit_transform(self, X, y=None, sample_weight=None, classes=None):
         """
         Fit estimator and transform dataset.
 
@@ -2921,6 +3585,9 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
             classification, splits are also ignored if they would result in any
             single class carrying a negative weight in either child node.
 
+        classes : array-like of shape (n_classes,), default=None
+            List of all the classes that can possibly appear in the y vector.
+
         Returns
         -------
         X_transformed : sparse matrix of shape (n_samples, n_out)
@@ -2928,7 +3595,7 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
         """
         rnd = check_random_state(self.random_state)
         y = rnd.uniform(size=_num_samples(X))
-        super().fit(X, y, sample_weight=sample_weight)
+        super().fit(X, y, sample_weight=sample_weight, classes=classes)
 
         self.one_hot_encoder_ = OneHotEncoder(sparse_output=self.sparse_output)
         output = self.one_hot_encoder_.fit_transform(self.apply(X))

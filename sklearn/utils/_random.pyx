@@ -11,7 +11,10 @@ The module contains:
     * Fast rand_r alternative based on xor shifts
 """
 import numpy as np
-from . import check_random_state
+
+# XXX: added instead of relative import to make scikit-tree easier
+# from .utils import check_random_state
+from sklearn.utils import check_random_state
 
 from ._typedefs cimport intp_t
 

@@ -55,12 +55,93 @@ cdef inline void _init_split(SplitRecord* self, intp_t start_pos) noexcept nogil
     self.missing_go_to_left = False
     self.n_missing = 0
 
-cdef class Splitter:
-    """Abstract splitter class.
+cdef class BaseSplitter:
+    """This is an abstract interface for splitters.
 
-    Splitters are called by tree builders to find the best splits on both
-    sparse and dense data, one split at a time.
+    For example, a tree model could be either supervisedly, or unsupervisedly computing splits on samples of
+    covariates, labels, or both. Although scikit-learn currently only contains
+    supervised tree methods, this class enables 3rd party packages to leverage
+    scikit-learn's Cython code for splitting.
+
+    A splitter is usually used in conjunction with a criterion class, which explicitly handles
+    computing the criteria, which we split on. The setting of that criterion class is handled
+    by downstream classes.
+
+    The downstream classes _must_ implement methods to compute the split in a node.
     """
+
+    def __getstate__(self):
+        return {}
+
+    def __setstate__(self, d):
+        pass
+
+    cdef int node_reset(
+        self,
+        intp_t start,
+        intp_t end,
+        float64_t* weighted_n_node_samples
+    ) except -1 nogil:
+        """Reset splitter on node samples[start:end].
+
+        Returns -1 in case of failure to allocate memory (and raise MemoryError)
+        or 0 otherwise.
+
+        Parameters
+        ----------
+        start : intp_t
+            The index of the first sample to consider
+        end : intp_t
+            The index of the last sample to consider
+        weighted_n_node_samples : ndarray, dtype=float64_t pointer
+            The total weight of those samples
+        """
+        pass
+
+    cdef int node_split(
+        self,
+        ParentInfo* parent,
+        SplitRecord* split,
+    ) except -1 nogil:
+        """Find the best split on node samples[start:end].
+
+        This is a placeholder method. The majority of computation will be done
+        here.
+
+        It should return -1 upon errors.
+
+        Parameters
+        ----------
+        impurity : float64_t
+            The impurity of the current node.
+        split : SplitRecord pointer
+            A pointer to a memory-allocated SplitRecord object which will be filled with the
+            split chosen.
+        lower_bound : float64_t
+            The lower bound of the monotonic constraint if used.
+        upper_bound : float64_t
+            The upper bound of the monotonic constraint if used.
+        """
+        pass
+
+    cdef void node_value(self, float64_t* dest) noexcept nogil:
+        """Copy the value of node samples[start:end] into dest."""
+        pass
+
+    cdef float64_t node_impurity(self) noexcept nogil:
+        """Return the impurity of the current node."""
+        pass
+
+    cdef intp_t pointer_size(self) noexcept nogil:
+        """Size of the pointer for split records.
+
+        Overriding this function allows one to use different subclasses of
+        `SplitRecord`.
+        """
+        return sizeof(SplitRecord)
+
+cdef class Splitter(BaseSplitter):
+    """Abstract interface for supervised splitters."""
 
     def __cinit__(
         self,
@@ -70,6 +151,7 @@ cdef class Splitter:
         float64_t min_weight_leaf,
         object random_state,
         const int8_t[:] monotonic_cst,
+        *argv
     ):
         """
         Parameters
@@ -97,7 +179,6 @@ cdef class Splitter:
             Monotonicity constraints
 
         """
-
         self.criterion = criterion
 
         self.n_samples = 0
@@ -110,19 +191,13 @@ cdef class Splitter:
         self.monotonic_cst = monotonic_cst
         self.with_monotonic_cst = monotonic_cst is not None
 
-    def __getstate__(self):
-        return {}
-
-    def __setstate__(self, d):
-        pass
-
     def __reduce__(self):
         return (type(self), (self.criterion,
                              self.max_features,
                              self.min_samples_leaf,
                              self.min_weight_leaf,
                              self.random_state,
-                             self.monotonic_cst), self.__getstate__())
+                             self.monotonic_cst.base if self.monotonic_cst is not None else None), self.__getstate__())
 
     cdef int init(
         self,
@@ -156,7 +231,6 @@ cdef class Splitter:
         has_missing : bool
             At least one missing values is in X.
         """
-
         self.rand_r_state = self.random_state.randint(0, RAND_R_MAX)
         cdef intp_t n_samples = X.shape[0]
 
@@ -194,8 +268,21 @@ cdef class Splitter:
         self.y = y
 
         self.sample_weight = sample_weight
+
+        self.criterion.init(
+            self.y,
+            self.sample_weight,
+            self.weighted_n_samples,
+            self.samples
+        )
+
+        self.criterion.set_sample_pointers(
+            self.start,
+            self.end
+        )
         if missing_values_in_feature_mask is not None:
             self.criterion.init_sum_missing()
+
         return 0
 
     cdef int node_reset(
@@ -222,14 +309,7 @@ cdef class Splitter:
         self.start = start
         self.end = end
 
-        self.criterion.init(
-            self.y,
-            self.sample_weight,
-            self.weighted_n_samples,
-            self.samples,
-            start,
-            end
-        )
+        self.criterion.set_sample_pointers(start, end)
 
         weighted_n_node_samples[0] = self.criterion.weighted_n_node_samples
         return 0
@@ -260,13 +340,67 @@ cdef class Splitter:
 
         self.criterion.clip_node_value(dest, lower_bound, upper_bound)
 
+    cdef void node_samples(self, vector[vector[float64_t]]& dest) noexcept nogil:
+        """Copy the samples[start:end] into dest."""
+        self.criterion.node_samples(dest)
+
     cdef float64_t node_impurity(self) noexcept nogil:
         """Return the impurity of the current node."""
 
         return self.criterion.node_impurity()
 
+    cdef inline bint check_presplit_conditions(
+        self,
+        SplitRecord* current_split,
+        intp_t n_missing,
+        bint missing_go_to_left,
+    ) noexcept nogil:
+        """Check stopping conditions pre-split.
 
-cdef inline int node_split_best(
+        This is typically a metric that is cheaply computed given the
+        current proposed split, which is stored as a the `current_split`
+        argument.
+
+        Returns 1 if not a valid split, and 0 if it is.
+        """
+        cdef intp_t min_samples_leaf = self.min_samples_leaf
+        cdef intp_t end_non_missing = self.end - n_missing
+        cdef intp_t n_left, n_right
+
+        if missing_go_to_left:
+            n_left = current_split.pos - self.start + n_missing
+            n_right = end_non_missing - current_split.pos
+        else:
+            n_left = current_split.pos - self.start
+            n_right = end_non_missing - current_split.pos + n_missing
+
+        # Reject if min_samples_leaf is not guaranteed
+        if n_left < min_samples_leaf or n_right < min_samples_leaf:
+            return 1
+
+        return 0
+
+    cdef inline bint check_postsplit_conditions(
+        self
+    ) noexcept nogil:
+        """Check stopping conditions after evaluating the split.
+
+        This takes some metric that is stored in the Criterion
+        object and checks against internal stop metrics.
+
+        Returns 1 if condition is not met, and 0 if it is.
+        """
+        cdef float64_t min_weight_leaf = self.min_weight_leaf
+
+        # Reject if min_weight_leaf is not satisfied
+        if ((self.criterion.weighted_n_left < min_weight_leaf) or
+                (self.criterion.weighted_n_right < min_weight_leaf)):
+            return 1
+
+        return 0
+
+
+cdef inline intp_t node_split_best(
     Splitter splitter,
     Partitioner partitioner,
     Criterion criterion,
@@ -396,7 +530,6 @@ cdef inline int node_split_best(
         criterion.init_missing(n_missing)  # initialize even when n_missing == 0
 
         # Evaluate all splits
-
         # If there are missing values, then we search twice for the most optimal split.
         # The first search will have all the missing values going to the right node.
         # The second search will have all the missing values going to the left node.
@@ -417,18 +550,12 @@ cdef inline int node_split_best(
                 if p >= end_non_missing:
                     continue
 
-                if missing_go_to_left:
-                    n_left = p - start + n_missing
-                    n_right = end_non_missing - p
-                else:
-                    n_left = p - start
-                    n_right = end_non_missing - p + n_missing
+                current_split.pos = p
 
                 # Reject if min_samples_leaf is not guaranteed
-                if n_left < min_samples_leaf or n_right < min_samples_leaf:
+                if splitter.check_presplit_conditions(&current_split, n_missing, missing_go_to_left) == 1:
                     continue
 
-                current_split.pos = p
                 criterion.update(current_split.pos)
 
                 # Reject if monotonicity constraints are not satisfied
@@ -444,8 +571,7 @@ cdef inline int node_split_best(
                     continue
 
                 # Reject if min_weight_leaf is not satisfied
-                if ((criterion.weighted_n_left < min_weight_leaf) or
-                        (criterion.weighted_n_right < min_weight_leaf)):
+                if splitter.check_postsplit_conditions() == 1:
                     continue
 
                 current_proxy_improvement = criterion.proxy_impurity_improvement()
@@ -470,6 +596,13 @@ cdef inline int node_split_best(
                     # test time, we send missing values to the branch that contains
                     # the most samples during training time.
                     if n_missing == 0:
+                        if missing_go_to_left:
+                            n_left = current_split.pos - splitter.start + n_missing
+                            n_right = end_non_missing - current_split.pos
+                        else:
+                            n_left = current_split.pos - splitter.start
+                            n_right = end_non_missing - current_split.pos + n_missing
+
                         current_split.missing_go_to_left = n_left > n_right
                     else:
                         current_split.missing_go_to_left = missing_go_to_left
@@ -569,8 +702,6 @@ cdef inline int node_split_random(
     cdef intp_t n_features = splitter.n_features
 
     cdef intp_t max_features = splitter.max_features
-    cdef intp_t min_samples_leaf = splitter.min_samples_leaf
-    cdef float64_t min_weight_leaf = splitter.min_weight_leaf
     cdef uint32_t* random_state = &splitter.rand_r_state
 
     cdef SplitRecord best_split, current_split
@@ -706,7 +837,7 @@ cdef inline int node_split_random(
             n_right = end_non_missing - current_split.pos + n_missing
 
         # Reject if min_samples_leaf is not guaranteed
-        if n_left < min_samples_leaf or n_right < min_samples_leaf:
+        if splitter.check_presplit_conditions(&current_split, n_missing, missing_go_to_left) == 1:
             continue
 
         # Evaluate split
@@ -715,21 +846,20 @@ cdef inline int node_split_random(
         criterion.reset()
         criterion.update(current_split.pos)
 
-        # Reject if min_weight_leaf is not satisfied
-        if ((criterion.weighted_n_left < min_weight_leaf) or
-                (criterion.weighted_n_right < min_weight_leaf)):
-            continue
-
         # Reject if monotonicity constraints are not satisfied
         if (
-                with_monotonic_cst and
-                monotonic_cst[current_split.feature] != 0 and
-                not criterion.check_monotonicity(
-                    monotonic_cst[current_split.feature],
-                    lower_bound,
-                    upper_bound,
-                )
+            with_monotonic_cst and
+            monotonic_cst[current_split.feature] != 0 and
+            not criterion.check_monotonicity(
+                monotonic_cst[current_split.feature],
+                lower_bound,
+                upper_bound,
+            )
         ):
+            continue
+
+        # Reject if min_weight_leaf is not satisfied
+        if splitter.check_postsplit_conditions() == 1:
             continue
 
         current_proxy_improvement = criterion.proxy_impurity_improvement()
@@ -805,9 +935,9 @@ cdef class BestSplitter(Splitter):
         )
 
     cdef int node_split(
-            self,
-            ParentInfo* parent_record,
-            SplitRecord* split,
+        self,
+        ParentInfo* parent_record,
+        SplitRecord* split,
     ) except -1 nogil:
         return node_split_best(
             self,
@@ -833,9 +963,9 @@ cdef class BestSparseSplitter(Splitter):
         )
 
     cdef int node_split(
-            self,
-            ParentInfo* parent_record,
-            SplitRecord* split,
+        self,
+        ParentInfo* parent_record,
+        SplitRecord* split,
     ) except -1 nogil:
         return node_split_best(
             self,
@@ -861,9 +991,9 @@ cdef class RandomSplitter(Splitter):
         )
 
     cdef int node_split(
-            self,
-            ParentInfo* parent_record,
-            SplitRecord* split,
+        self,
+        ParentInfo* parent_record,
+        SplitRecord* split,
     ) except -1 nogil:
         return node_split_random(
             self,
