@@ -1753,7 +1753,7 @@ class ForestRegressor(RegressorMixin, BaseForest, metaclass=ABCMeta):
 
     def __sklearn_tags__(self):
         tags = super().__sklearn_tags__()
-        # tags.regressor_tags.multi_label = True
+        # tags.regressor_tags.multi_label = True TODO: add regression support
         return tags
 
 
