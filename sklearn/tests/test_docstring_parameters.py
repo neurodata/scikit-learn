@@ -14,6 +14,7 @@ import pytest
 import sklearn
 from sklearn import metrics
 from sklearn.datasets import make_classification
+from sklearn.ensemble import StackingClassifier, StackingRegressor
 
 # make it possible to discover experimental estimators when calling `all_estimators`
 from sklearn.experimental import (
@@ -23,12 +24,13 @@ from sklearn.experimental import (
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.utils import all_estimators
-from sklearn.utils._test_common.instance_generator import _construct_instance
+from sklearn.utils._test_common.instance_generator import _construct_instances
 from sklearn.utils._testing import (
     _get_func_name,
     assert_docstring_consistency,
     check_docstring_parameters,
     ignore_warnings,
+    skip_if_no_numpydoc,
 )
 from sklearn.utils.deprecation import _is_deprecated
 from sklearn.utils.estimator_checks import (
@@ -175,9 +177,6 @@ def _construct_sparse_coder(Estimator):
 
 
 @pytest.mark.filterwarnings("ignore::sklearn.exceptions.ConvergenceWarning")
-# TODO(1.6): remove "@pytest.mark.filterwarnings" as SAMME.R will be removed
-# and substituted with the SAMME algorithm as a default
-@pytest.mark.filterwarnings("ignore:The SAMME.R algorithm")
 @pytest.mark.parametrize("name, Estimator", all_estimators())
 def test_fit_docstring_attributes(name, Estimator):
     pytest.importorskip("numpydoc")
@@ -201,8 +200,13 @@ def test_fit_docstring_attributes(name, Estimator):
         est = _construct_compose_pipeline_instance(Estimator)
     elif Estimator.__name__ == "SparseCoder":
         est = _construct_sparse_coder(Estimator)
+    elif Estimator.__name__ == "FrozenEstimator":
+        X, y = make_classification(n_samples=20, n_features=5, random_state=0)
+        est = Estimator(LogisticRegression().fit(X, y))
     else:
-        est = _construct_instance(Estimator)
+        # TODO(devtools): use _tested_estimators instead of all_estimators in the
+        # decorator
+        est = next(_construct_instances(Estimator))
 
     if Estimator.__name__ == "SelectKBest":
         est.set_params(k=2)
@@ -220,10 +224,6 @@ def test_fit_docstring_attributes(name, Estimator):
     elif Estimator.__name__ == "TSNE":
         # default raises an error, perplexity must be less than n_samples
         est.set_params(perplexity=2)
-
-    # TODO(1.6): remove (avoid FutureWarning)
-    if Estimator.__name__ in ("NMF", "MiniBatchNMF"):
-        est.set_params(n_components="auto")
 
     # Low max iter to speed up tests: we are only interested in checking the existence
     # of fitted attributes. This should be invariant to whether it has converged or not.
@@ -324,12 +324,9 @@ def _get_all_fitted_attributes(estimator):
     return [k for k in fit_attr if k.endswith("_") and not k.startswith("_")]
 
 
+@skip_if_no_numpydoc
 def test_precision_recall_f_score_docstring_consistency():
     """Check docstrings parameters of related metrics are consistent."""
-    pytest.importorskip(
-        "numpydoc",
-        reason="numpydoc is required to test the docstrings",
-    )
     assert_docstring_consistency(
         [
             metrics.precision_recall_fscore_support,
@@ -344,4 +341,15 @@ def test_precision_recall_f_score_docstring_consistency():
         # "zero_division" - the reason for zero division differs between f scores,
         # precison and recall.
         exclude_params=["average", "zero_division"],
+    )
+
+
+@skip_if_no_numpydoc
+def test_stacking_classifier_regressor_docstring_consistency():
+    """Check docstrings parameters stacking estimators are consistent."""
+    assert_docstring_consistency(
+        [StackingClassifier, StackingRegressor],
+        include_params=["cv", "n_jobs", "passthrough", "verbose"],
+        include_attrs=True,
+        exclude_attrs=["final_estimator_"],
     )

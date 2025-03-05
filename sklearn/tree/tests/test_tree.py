@@ -54,7 +54,9 @@ from sklearn.utils._testing import (
     ignore_warnings,
     skip_if_32bit,
 )
-from sklearn.utils.estimator_checks import check_sample_weights_invariance
+from sklearn.utils.estimator_checks import (
+    parametrize_with_checks,
+)
 from sklearn.utils.fixes import (
     _IS_32BIT,
     COO_CONTAINERS,
@@ -233,6 +235,18 @@ def assert_tree_equal(d, s, message):
     assert_array_almost_equal(
         d.value[external], s.value[external], err_msg=message + ": inequal value"
     )
+
+
+@parametrize_with_checks(
+    [
+        DecisionTreeClassifier(),
+        DecisionTreeRegressor(),
+        ExtraTreeClassifier(),
+        ExtraTreeRegressor(),
+    ]
+)
+def test_sklearn_compatible_estimator(estimator, check):
+    check(estimator)
 
 
 def test_classification_toy():
@@ -893,7 +907,7 @@ def test_pickle():
         else:
             X, y = diabetes.data, diabetes.target
 
-        est = TreeEstimator(random_state=0)
+        est = TreeEstimator(random_state=0, store_leaf_values=True)
         est.fit(X, y)
         score = est.score(X, y)
 
@@ -912,6 +926,7 @@ def test_pickle():
             "n_node_samples",
             "weighted_n_node_samples",
             "value",
+            "leaf_nodes_samples",
         ]
         fitted_attribute = {
             attribute: getattr(est.tree_, attribute) for attribute in attributes
@@ -926,14 +941,25 @@ def test_pickle():
             score == score2
         ), "Failed to generate same score  after pickling with {0}".format(name)
         for attribute in fitted_attribute:
-            assert_array_equal(
-                getattr(est2.tree_, attribute),
-                fitted_attribute[attribute],
-                err_msg=(
-                    f"Failed to generate same attribute {attribute} after pickling with"
-                    f" {name}"
-                ),
-            )
+            if attribute == "leaf_nodes_samples":
+                for key in fitted_attribute[attribute].keys():
+                    assert_array_equal(
+                        getattr(est2.tree_, attribute)[key],
+                        fitted_attribute[attribute][key],
+                        err_msg=(
+                            f"Failed to generate same attribute {attribute} after"
+                            f" pickling with {name}"
+                        ),
+                    )
+            else:
+                assert_array_equal(
+                    getattr(est2.tree_, attribute),
+                    fitted_attribute[attribute],
+                    err_msg=(
+                        f"Failed to generate same attribute {attribute} after pickling"
+                        f" with {name}"
+                    ),
+                )
 
 
 def test_multioutput():
@@ -2021,44 +2047,6 @@ def test_poisson_vs_mse():
         assert metric_poi < 0.75 * metric_dummy
 
 
-@pytest.mark.parametrize("criterion", REG_CRITERIONS)
-def test_decision_tree_regressor_sample_weight_consistency(criterion):
-    """Test that the impact of sample_weight is consistent."""
-    tree_params = dict(criterion=criterion)
-    tree = DecisionTreeRegressor(**tree_params, random_state=42)
-    for kind in ["zeros", "ones"]:
-        check_sample_weights_invariance(
-            "DecisionTreeRegressor_" + criterion, tree, kind="zeros"
-        )
-
-    rng = np.random.RandomState(0)
-    n_samples, n_features = 10, 5
-
-    X = rng.rand(n_samples, n_features)
-    y = np.mean(X, axis=1) + rng.rand(n_samples)
-    # make it positive in order to work also for poisson criterion
-    y += np.min(y) + 0.1
-
-    # check that multiplying sample_weight by 2 is equivalent
-    # to repeating corresponding samples twice
-    X2 = np.concatenate([X, X[: n_samples // 2]], axis=0)
-    y2 = np.concatenate([y, y[: n_samples // 2]])
-    sample_weight_1 = np.ones(len(y))
-    sample_weight_1[: n_samples // 2] = 2
-
-    tree1 = DecisionTreeRegressor(**tree_params).fit(
-        X, y, sample_weight=sample_weight_1
-    )
-
-    tree2 = DecisionTreeRegressor(**tree_params).fit(X2, y2, sample_weight=None)
-
-    assert tree1.tree_.node_count == tree2.tree_.node_count
-    # Thresholds, tree.tree_.threshold, and values, tree.tree_.value, are not
-    # exactly the same, but on the training set, those differences do not
-    # matter and thus predictions are the same.
-    assert_allclose(tree1.predict(X), tree2.predict(X))
-
-
 @pytest.mark.parametrize("Tree", [DecisionTreeClassifier, ExtraTreeClassifier])
 @pytest.mark.parametrize("n_classes", [2, 4])
 def test_criterion_entropy_same_as_log_loss(Tree, n_classes):
@@ -2384,8 +2372,8 @@ def test_min_sample_split_1_error(Tree):
     # min_samples_split=1 is invalid
     tree = Tree(min_samples_split=1)
     msg = (
-        r"'min_samples_split' .* must be an int in the range \[2, inf\) "
-        r"or a float in the range \(0.0, 1.0\]"
+        r"'min_samples_split' .* must be an int in the range \[2, inf\)"
+        r".* a float in the range \(0.0, 1.0\]"
     )
     with pytest.raises(ValueError, match=msg):
         tree.fit(X, y)
@@ -2397,7 +2385,9 @@ def test_missing_values_best_splitter_on_equal_nodes_no_missing(criterion):
     X = np.array([[0, 1, 2, 3, 8, 9, 11, 12, 15]]).T
     y = np.array([0.1, 0.2, 0.3, 0.2, 1.4, 1.4, 1.5, 1.6, 2.6])
 
-    dtc = DecisionTreeRegressor(random_state=42, max_depth=1, criterion=criterion)
+    dtc = DecisionTreeRegressor(
+        random_state=42, max_depth=1, criterion=criterion, store_leaf_values=True
+    )
     dtc.fit(X, y)
 
     # Goes to right node because it has the most data points
@@ -2679,6 +2669,151 @@ def test_sample_weight_non_uniform(make_data, Tree):
     assert_allclose(tree_samples_removed.predict(X), tree_with_sw.predict(X))
 
 
+@pytest.mark.parametrize(
+    "tree_name",
+    ALL_TREES,
+)
+def test_leaf_node_samples(tree_name):
+    """Test getting leaf node samples from fitted tree."""
+    tree = ALL_TREES[tree_name](random_state=0, store_leaf_values=False)
+    tree.fit(X_small, y_small)
+
+    # Check that the leaf node samples are not stored by default
+    assert tree.tree_.leaf_nodes_samples == dict()
+
+    # error should be raised if trying to predict quantiles
+    assert hasattr(tree, "predict_quantiles")
+    for meth in ["predict_quantiles", "get_leaf_node_samples"]:
+        if hasattr(tree, meth):
+            with pytest.raises(
+                RuntimeError,
+                match="leaf node samples",
+            ):
+                getattr(tree, meth)(X_small)
+
+    quantile_tree = ALL_TREES[tree_name](random_state=0, store_leaf_values=True)
+    quantile_tree.fit(X_small, y_small)
+
+    score = tree.score(X_small, y_small)
+    new_score = quantile_tree.score(X_small, y_small)
+    assert np.isclose(score, new_score)
+
+    # Check that the leaf node samples are what they should be
+    X_leaves = quantile_tree.apply(X_small)
+    for idx in range(X_leaves.shape[0]):
+        leaf_idx = X_leaves[idx]
+        assert y_small[idx] in quantile_tree.tree_.leaf_nodes_samples[leaf_idx]
+    assert set(np.unique(X_leaves)) == set(
+        quantile_tree.tree_.leaf_nodes_samples.keys()
+    )
+
+
+@pytest.mark.parametrize(
+    "name",
+    ALL_TREES,
+)
+def test_quantile_tree_predict(name):
+    TreeEstimator = ALL_TREES[name]
+
+    # test quantile prediction
+    est = TreeEstimator(store_leaf_values=True, random_state=0)
+
+    # fit on binary results in perfect leaves, so all quantiles are the same
+    est.fit(X_small, y_small)
+    pred = est.predict_quantiles(X_small, quantiles=[0.1, 0.5, 0.9])
+    assert_array_equal(est.predict(X_small), pred[:, 0])
+    assert_array_equal(est.predict(X_small), pred[:, 1])
+    assert_array_equal(est.predict(X_small), pred[:, 2])
+    assert_array_equal(pred[:, 0], y_small)
+    assert np.unique(pred, axis=1).shape[1] == 1
+
+    est.fit(X_small[:-5], y_small[:-5])
+    held_out_X = X_small[-5:, :]
+    pred = est.predict_quantiles(held_out_X, quantiles=[0.1, 0.5, 0.9])
+    assert_array_equal(est.predict(held_out_X), pred[:, 0])
+    assert_array_equal(est.predict(held_out_X), pred[:, 1])
+    assert_array_equal(est.predict(held_out_X), pred[:, 2])
+
+    # fit on real data
+    est.fit(iris.data, iris.target)
+    pred = est.predict_quantiles(iris.data, quantiles=[0.1, 0.5, 0.9])
+    assert_array_equal(pred[:, 0], iris.target)
+    assert_array_equal(pred[:, 1], iris.target)
+    assert_array_equal(pred[:, 2], iris.target)
+
+
+@pytest.mark.parametrize(
+    "name",
+    ALL_TREES,
+)
+def test_quantile_tree_predict_impure_leaves(name):
+    TreeEstimator = ALL_TREES[name]
+
+    # test quantile prediction
+    est = TreeEstimator(store_leaf_values=True, random_state=0, max_depth=4)
+    # fit on binary results with constrained depth will result in impure leaves
+    est.fit(X_small, y_small)
+    pred = est.predict_quantiles(X_small, quantiles=[0.1, 0.5, 0.9])
+    assert np.unique(pred, axis=1).shape[1] > 1
+
+
+def test_multioutput_quantiles():
+    # Check estimators on multi-output problems.
+    X = [
+        [-2, -1],
+        [-1, -1],
+        [-1, -2],
+        [1, 1],
+        [1, 2],
+        [2, 1],
+        [-2, 1],
+        [-1, 1],
+        [-1, 2],
+        [2, -1],
+        [1, -1],
+        [1, -2],
+    ]
+
+    y = [
+        [-1, 0],
+        [-1, 0],
+        [-1, 0],
+        [1, 1],
+        [1, 1],
+        [1, 1],
+        [-1, 2],
+        [-1, 2],
+        [-1, 2],
+        [1, 3],
+        [1, 3],
+        [1, 3],
+    ]
+
+    T = [[-1, -1], [1, 1], [-1, 1], [1, -1]]
+    y_true = [[-1, 0], [1, 1], [-1, 2], [1, 3]]
+
+    # toy classification problem
+    for name, TreeClassifier in CLF_TREES.items():
+        clf = TreeClassifier(random_state=0, store_leaf_values=True)
+        clf.fit(X, y)
+
+        y_hat = clf.predict_quantiles(T, quantiles=[0.25, 0.5, 0.75])
+        y_hat = y_hat.squeeze()
+        assert_array_equal(y_hat[:, 0], y_true)
+        assert_array_equal(y_hat[:, 1], y_true)
+        assert_array_equal(y_hat[:, 2], y_true)
+        assert y_hat.shape == (4, 3, 2)
+
+    # toy regression problem
+    for name, TreeRegressor in REG_TREES.items():
+        reg = TreeRegressor(random_state=0, store_leaf_values=True)
+        y_hat = reg.fit(X, y).predict_quantiles(T, quantiles=[0.25, 0.5, 0.75])
+        assert_array_equal(y_hat[:, 0], y_true)
+        assert_array_equal(y_hat[:, 1], y_true)
+        assert_array_equal(y_hat[:, 2], y_true)
+        assert y_hat.shape == (4, 3, 2)
+
+
 def test_deterministic_pickle():
     # Non-regression test for:
     # https://github.com/scikit-learn/scikit-learn/issues/27268
@@ -2725,7 +2860,8 @@ def test_regression_tree_missing_values_toy(Tree, X, criterion):
     tree = Tree(criterion=criterion, random_state=0).fit(X, y)
     tree_ref = clone(tree).fit(y.reshape(-1, 1), y)
 
-    assert all(tree.tree_.impurity >= 0)  # MSE should always be positive
+    impurity = tree.tree_.impurity
+    assert all(impurity >= 0), impurity.min()  # MSE should always be positive
 
     # Note: the impurity matches after the first split only on greedy trees
     if Tree is DecisionTreeRegressor:

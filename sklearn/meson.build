@@ -48,7 +48,7 @@ if not meson.is_cross_build()
   # meson-python is required only when going through pip. Using meson directly
   # should not check meson-python version.
   meson_python_version_command_result = run_command(py,
-    ['-c', 'import mesonpy; print(mesonpy.__version__)'], check: false)
+    ['-c', 'import importlib.metadata; print(importlib.metadata.version("meson-python"))'], check: false)
   meson_python_installed = meson_python_version_command_result.returncode() == 0
   if meson_python_installed
     meson_python_version = meson_python_version_command_result.stdout().strip()
@@ -193,14 +193,14 @@ cython_args += scikit_learn_cython_args
 # Write file in Meson build dir to be able to figure out from Python code
 # whether scikit-learn was built with Meson. Adapted from pandas
 # _version_meson.py.
-custom_target('write_built_with_meson_file',
-    output: '_built_with_meson.py',
-    command: [
-        py, '-c', 'with open("sklearn/_built_with_meson.py", "w") as f: f.write("")'
-    ],
-    install: true,
-    install_dir: py.get_install_dir() / 'sklearn'
-)
+# custom_target('write_built_with_meson_file',
+#     output: '_built_with_meson.py',
+#     command: [
+#         py, '-c', 'with open("sklearn/_built_with_meson.py", "w") as f: f.write("")'
+#     ],
+#     install: true,
+#     install_dir: py.get_install_dir() / 'sklearn'
+# )
 
 extensions = ['_isotonic']
 
