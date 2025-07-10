@@ -2161,11 +2161,11 @@ class RandomForestClassifier(ForestClassifier):
     def __sklearn_tags__(self):
         tags = super().__sklearn_tags__()
         # TODO: replace by a statistical test, see meta-issue #16298
-        tags._xfail_checks = {
-            "check_sample_weight_equivalence": (
-                "sample_weight is not equivalent to removing/repeating samples."
-            ),
-        }
+        # tags._xfail_checks = {
+        #     "check_sample_weight_equivalence": (
+        #         "sample_weight is not equivalent to removing/repeating samples."
+        #     ),
+        # }
         return tags
 
 
@@ -2548,11 +2548,11 @@ class RandomForestRegressor(ForestRegressor):
     def __sklearn_tags__(self):
         tags = super().__sklearn_tags__()
         # TODO: replace by a statistical test, see meta-issue #16298
-        tags._xfail_checks = {
-            "check_sample_weight_equivalence": (
-                "sample_weight is not equivalent to removing/repeating samples."
-            ),
-        }
+        # tags._xfail_checks = {
+        #     "check_sample_weight_equivalence": (
+        #         "sample_weight is not equivalent to removing/repeating samples."
+        #     ),
+        # }
         return tags
 
 
@@ -3675,9 +3675,9 @@ class RandomTreesEmbedding(TransformerMixin, BaseForest):
     def __sklearn_tags__(self):
         tags = super().__sklearn_tags__()
         # TODO: replace by a statistical test, see meta-issue #16298
-        tags._xfail_checks = {
-            "check_sample_weight_equivalence": (
-                "sample_weight is not equivalent to removing/repeating samples."
-            ),
-        }
+        # tags._xfail_checks = {
+        #     "check_sample_weight_equivalence": (
+        #         "sample_weight is not equivalent to removing/repeating samples."
+        #     ),
+        # }
         return tags
