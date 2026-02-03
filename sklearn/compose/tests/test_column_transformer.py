@@ -20,6 +20,7 @@ from sklearn.compose import (
     make_column_transformer,
 )
 from sklearn.exceptions import NotFittedError
+from sklearn.feature_extraction import DictVectorizer
 from sklearn.feature_selection import VarianceThreshold
 from sklearn.preprocessing import (
     FunctionTransformer,
@@ -90,6 +91,26 @@ class TransRaise(BaseEstimator):
 
     def transform(self, X, y=None):
         raise ValueError("specific message")
+
+
+@pytest.mark.parametrize(
+    "transformers, class_name",
+    [
+        ([("trans1", Trans, [0]), ("trans2", Trans(), [1])], "Trans"),
+        ([("trans1", Trans(), [0]), ("trans2", Trans, [1])], "Trans"),
+        ([("drop", "drop", [0]), ("trans2", Trans, [1])], "Trans"),
+        ([("trans1", Trans, [0]), ("passthrough", "passthrough", [1])], "Trans"),
+    ],
+)
+def test_column_transformer_raises_class_not_instance_error(transformers, class_name):
+    # non-regression tests for https://github.com/scikit-learn/scikit-learn/issues/32719
+    ct = ColumnTransformer(transformers)
+    msg = re.escape(
+        f"Expected an estimator instance ({class_name}()), "
+        f"got estimator class instead ({class_name})."
+    )
+    with pytest.raises(TypeError, match=msg):
+        ct.fit([[1]])
 
 
 def test_column_transformer():
@@ -512,14 +533,17 @@ def test_column_transformer_list():
 
 
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
-def test_column_transformer_sparse_stacking(csr_container):
-    X_array = np.array([[0, 1, 2], [2, 4, 6]]).T
+@pytest.mark.parametrize("constructor_name", ["array", "pandas", "polars"])
+def test_column_transformer_sparse_stacking(csr_container, constructor_name):
+    X = np.array([[0, 1, 2], [2, 4, 6]]).T
+    X = _convert_container(X, constructor_name, columns_name=["first", "second"])
+
     col_trans = ColumnTransformer(
         [("trans1", Trans(), [0]), ("trans2", SparseMatrixTrans(csr_container), 1)],
         sparse_threshold=0.8,
     )
-    col_trans.fit(X_array)
-    X_trans = col_trans.transform(X_array)
+    col_trans.fit(X)
+    X_trans = col_trans.transform(X)
     assert sparse.issparse(X_trans)
     assert X_trans.shape == (X_trans.shape[0], X_trans.shape[0] + 1)
     assert_array_equal(X_trans.toarray()[:, 1:], np.eye(X_trans.shape[0]))
@@ -530,8 +554,8 @@ def test_column_transformer_sparse_stacking(csr_container):
         [("trans1", Trans(), [0]), ("trans2", SparseMatrixTrans(csr_container), 1)],
         sparse_threshold=0.1,
     )
-    col_trans.fit(X_array)
-    X_trans = col_trans.transform(X_array)
+    col_trans.fit(X)
+    X_trans = col_trans.transform(X)
     assert not sparse.issparse(X_trans)
     assert X_trans.shape == (X_trans.shape[0], X_trans.shape[0] + 1)
     assert_array_equal(X_trans[:, 1:], np.eye(X_trans.shape[0]))
@@ -1375,10 +1399,10 @@ def test_n_features_in():
     "cols, pattern, include, exclude",
     [
         (["col_int", "col_float"], None, np.number, None),
-        (["col_int", "col_float"], None, None, object),
+        (["col_int", "col_float"], None, None, [object, "string"]),
         (["col_int", "col_float"], None, [int, float], None),
-        (["col_str"], None, [object], None),
-        (["col_str"], None, object, None),
+        (["col_str"], None, [object, "string"], None),
+        (["col_float"], None, [float], None),
         (["col_float"], None, float, None),
         (["col_float"], "at$", [np.number], None),
         (["col_int"], None, [int], None),
@@ -1386,7 +1410,12 @@ def test_n_features_in():
         (["col_float", "col_str"], "float|str", None, None),
         (["col_str"], "^col_s", None, [int]),
         ([], "str$", float, None),
-        (["col_int", "col_float", "col_str"], None, [np.number, object], None),
+        (
+            ["col_int", "col_float", "col_str"],
+            None,
+            [np.number, object, "string"],
+            None,
+        ),
     ],
 )
 def test_make_column_selector_with_select_dtypes(cols, pattern, include, exclude):
@@ -1422,7 +1451,7 @@ def test_column_transformer_with_make_column_selector():
     )
     X_df["col_str"] = X_df["col_str"].astype("category")
 
-    cat_selector = make_column_selector(dtype_include=["category", object])
+    cat_selector = make_column_selector(dtype_include=["category", object, "string"])
     num_selector = make_column_selector(dtype_include=np.number)
 
     ohe = OneHotEncoder()
@@ -1458,8 +1487,7 @@ def test_make_column_selector_pickle():
         },
         columns=["col_int", "col_float", "col_str"],
     )
-
-    selector = make_column_selector(dtype_include=[object])
+    selector = make_column_selector(dtype_include=[object, "string"])
     selector_picked = pickle.loads(pickle.dumps(selector))
 
     assert_array_equal(selector(X_df), selector_picked(X_df))
@@ -1530,7 +1558,7 @@ def test_sk_visual_block_remainder(remainder):
     )
     visual_block = ct._sk_visual_block_()
     assert visual_block.names == ("ohe", "remainder")
-    assert visual_block.name_details == (["col1", "col2"], "")
+    assert visual_block.name_details == (["col1", "col2"], [])
     assert visual_block.estimators == (ohe, remainder)
 
 
@@ -2595,6 +2623,9 @@ def test_column_transformer_error_with_duplicated_columns(dataframe_lib):
         transformer.fit_transform(df)
 
 
+# TODO: remove mark once loky bug is fixed:
+# https://github.com/joblib/loky/issues/458
+@pytest.mark.thread_unsafe
 @pytest.mark.skipif(
     parse_version(joblib.__version__) < parse_version("1.3"),
     reason="requires joblib >= 1.3",
@@ -2617,6 +2648,29 @@ def test_column_transformer_auto_memmap(global_random_seed):
         Xt = transformer.fit_transform(X)
 
     assert_allclose(Xt, StandardScaler().fit_transform(X[:, [0]]))
+
+
+def test_column_transformer_non_default_index():
+    """Check index handling when both pd.Series and pd.DataFrame slices are used in
+    ColumnTransformer.
+
+    Non-regression test for issue #31546.
+    """
+    pd = pytest.importorskip("pandas")
+    df = pd.DataFrame(
+        {
+            "dict_col": [{"foo": 1, "bar": 2}, {"foo": 3, "baz": 1}],
+            "dummy_col": [1, 2],
+        },
+        index=[1, 2],
+    )
+    t = make_column_transformer(
+        (DictVectorizer(sparse=False), "dict_col"),
+        (FunctionTransformer(), ["dummy_col"]),
+    )
+    t.set_output(transform="pandas")
+    X = t.fit_transform(df)
+    assert list(X.index) == [1, 2]
 
 
 # Metadata Routing Tests

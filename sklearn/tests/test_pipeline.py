@@ -282,6 +282,40 @@ def test_pipeline_invalid_parameters():
     assert params == params2
 
 
+@pytest.mark.parametrize(
+    "meta_estimators, class_name",
+    [
+        (Pipeline([("pca", PCA)]), "PCA"),
+        (Pipeline([("pca", PCA), ("ident", None)]), "PCA"),
+        (Pipeline([("passthrough", "passthrough"), ("pca", PCA)]), "PCA"),
+        (Pipeline([("passthrough", None), ("pca", PCA)]), "PCA"),
+        (Pipeline([("scale", StandardScaler), ("pca", PCA())]), "StandardScaler"),
+        (FeatureUnion([("pca", PCA), ("svd", TruncatedSVD())]), "PCA"),
+        (FeatureUnion([("pca", PCA()), ("svd", TruncatedSVD)]), "TruncatedSVD"),
+        (FeatureUnion([("drop", "drop"), ("svd", TruncatedSVD)]), "TruncatedSVD"),
+        (FeatureUnion([("pca", PCA), ("passthrough", "passthrough")]), "PCA"),
+    ],
+)
+def test_meta_estimator_raises_class_not_instance_error(meta_estimators, class_name):
+    # non-regression tests for https://github.com/scikit-learn/scikit-learn/issues/32719
+    msg = re.escape(
+        f"Expected an estimator instance ({class_name}()), "
+        f"got estimator class instead ({class_name})."
+    )
+    with pytest.raises(TypeError, match=msg):
+        meta_estimators.fit([[1]])
+
+
+def test_empty_pipeline():
+    X = iris.data
+    y = iris.target
+
+    pipe = Pipeline([])
+    msg = "The pipeline is empty. Please add steps."
+    with pytest.raises(ValueError, match=msg):
+        pipe.fit(X, y)
+
+
 def test_pipeline_init_tuple():
     # Pipeline accepts steps as tuple
     X = np.array([[1, 2]])
@@ -922,7 +956,7 @@ def test_make_pipeline():
             make_pipeline(StandardScaler()),
             lambda est: get_tags(est).estimator_type is None,
         ),
-        (Pipeline([]), lambda est: est._estimator_type is None),
+        (Pipeline([]), lambda est: get_tags(est).estimator_type is None),
     ],
 )
 def test_pipeline_estimator_type(pipeline, check_estimator_type):
@@ -982,6 +1016,9 @@ def test_feature_union_weights():
     assert X_fit_transformed_wo_method.shape == (X.shape[0], 7)
 
 
+# TODO: remove mark once loky bug is fixed:
+# https://github.com/joblib/loky/issues/458
+@pytest.mark.thread_unsafe
 def test_feature_union_parallel():
     # test that n_jobs work for FeatureUnion
     X = JUNK_FOOD_DOCS
@@ -1376,11 +1413,11 @@ def test_pipeline_memory():
     cachedir = mkdtemp()
     try:
         memory = joblib.Memory(location=cachedir, verbose=10)
-        # Test with Transformer + SVC
-        clf = SVC(probability=True, random_state=0)
+        # Test with transformer + logistic regression
+        clf = LogisticRegression(random_state=0)
         transf = DummyTransf()
-        pipe = Pipeline([("transf", clone(transf)), ("svc", clf)])
-        cached_pipe = Pipeline([("transf", transf), ("svc", clf)], memory=memory)
+        pipe = Pipeline([("transf", clone(transf)), ("logreg", clf)])
+        cached_pipe = Pipeline([("transf", transf), ("logreg", clf)], memory=memory)
 
         # Memoize the transformer at the first fit
         cached_pipe.fit(X, y)
@@ -1410,10 +1447,10 @@ def test_pipeline_memory():
         assert ts == cached_pipe.named_steps["transf"].timestamp_
         # Create a new pipeline with cloned estimators
         # Check that even changing the name step does not affect the cache hit
-        clf_2 = SVC(probability=True, random_state=0)
+        clf_2 = LogisticRegression(random_state=0)
         transf_2 = DummyTransf()
         cached_pipe_2 = Pipeline(
-            [("transf_2", transf_2), ("svc", clf_2)], memory=memory
+            [("transf_2", transf_2), ("logreg", clf_2)], memory=memory
         )
         cached_pipe_2.fit(X, y)
 
@@ -1813,20 +1850,22 @@ def test_pipeline_set_output_integration():
     assert_array_equal(feature_names_in_, log_reg_feature_names)
 
 
-def test_feature_union_set_output():
+@pytest.mark.parametrize("df_library", ["pandas", "polars"])
+def test_feature_union_set_output(df_library):
     """Test feature union with set_output API."""
-    pd = pytest.importorskip("pandas")
+    lib = pytest.importorskip(df_library)
 
     X, _ = load_iris(as_frame=True, return_X_y=True)
     X_train, X_test = train_test_split(X, random_state=0)
     union = FeatureUnion([("scalar", StandardScaler()), ("pca", PCA())])
-    union.set_output(transform="pandas")
+    union.set_output(transform=df_library)
     union.fit(X_train)
 
     X_trans = union.transform(X_test)
-    assert isinstance(X_trans, pd.DataFrame)
+    assert isinstance(X_trans, lib.DataFrame)
     assert_array_equal(X_trans.columns, union.get_feature_names_out())
-    assert_array_equal(X_trans.index, X_test.index)
+    if df_library == "pandas":
+        assert_array_equal(X_trans.index, X_test.index)
 
 
 def test_feature_union_getitem():
@@ -1888,6 +1927,22 @@ def test_feature_union_feature_names_in_():
     union = FeatureUnion([("pass", "passthrough")])
     union.fit(X_array)
     assert not hasattr(union, "feature_names_in_")
+
+
+def test_feature_union_1d_output():
+    """Test that FeatureUnion raises error for 1D transformer outputs."""
+    X = np.arange(6).reshape(3, 2)
+
+    with pytest.raises(
+        ValueError,
+        match="Transformer 'b' returned an array or dataframe with 1 dimensions",
+    ):
+        FeatureUnion(
+            [
+                ("a", FunctionTransformer(lambda X: X)),
+                ("b", FunctionTransformer(lambda X: X[:, 1])),
+            ]
+        ).fit_transform(X)
 
 
 # transform_input tests
@@ -2060,7 +2115,6 @@ def test_transform_tuple_input():
 # =============================
 
 
-# TODO(1.8): change warning to checking for NotFittedError
 @pytest.mark.parametrize(
     "method",
     [
@@ -2111,7 +2165,7 @@ def test_pipeline_warns_not_fitted(method):
             return X
 
     pipe = Pipeline([("estimator", StatelessEstimator())])
-    with pytest.warns(FutureWarning, match="This Pipeline instance is not fitted yet."):
+    with pytest.raises(NotFittedError):
         getattr(pipe, method)([[1]])
 
 
