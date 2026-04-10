@@ -176,6 +176,11 @@ conda activate $CONDA_ENV_NAME
 
 show_installed_libraries
 
+# limit parallel build to avoid OOM
+export NINJAFLAGS="-j1"
+export CMAKE_BUILD_PARALLEL_LEVEL=1
+export MAKEFLAGS="-j1"
+
 pip install -e . --no-build-isolation
 
 echo "ccache build summary:"
