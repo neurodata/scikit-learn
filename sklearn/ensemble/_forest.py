@@ -1275,7 +1275,7 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             multi_output=True,
             accept_sparse="csc",
             dtype=DTYPE,
-            force_all_finite=False,
+            ensure_all_finite=False,
             reset=first_call,
         )
 
