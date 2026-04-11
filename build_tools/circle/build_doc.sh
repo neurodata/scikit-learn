@@ -176,17 +176,24 @@ conda activate $CONDA_ENV_NAME
 
 show_installed_libraries
 
-# limit parallel build to avoid OOM
-export NINJAFLAGS="-j1"
-export CMAKE_BUILD_PARALLEL_LEVEL=1
-export MAKEFLAGS="-j1"
+# reduce memory pressure
+export NINJAFLAGS="-j1 -l1"
+export MESON_NUM_PROCESSES=1
+export OMP_NUM_THREADS=1
+export PYTHONMALLOC=malloc
 
-pip install -e . --no-build-isolation
+# add swap (robust)
+sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+free -h
+
+# build
+pip install -e . --no-build-isolation -v
 
 echo "ccache build summary:"
 ccache -s
-
-export OMP_NUM_THREADS=1
 
 if [[ "$CIRCLE_BRANCH" =~ ^main$ && -z "$CI_PULL_REQUEST" ]]
 then
