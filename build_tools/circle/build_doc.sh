@@ -178,7 +178,6 @@ show_installed_libraries
 
 # reduce memory pressure
 pip install scikit-learn
-export PYTHONPATH=$(pwd)
 
 echo "ccache build summary:"
 ccache -s
