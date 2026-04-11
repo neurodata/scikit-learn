@@ -176,7 +176,8 @@ conda activate $CONDA_ENV_NAME
 
 show_installed_libraries
 
-pip install -e . --no-build-isolation
+# reduce memory pressure
+pip install scikit-learn
 
 echo "ccache build summary:"
 ccache -s
