@@ -178,12 +178,12 @@ show_installed_libraries
 
 # reduce memory pressure
 pip install scikit-learn
-pip install -e . --no-deps
-
-export OMP_NUM_THREADS=1
+export PYTHONPATH=$(pwd)
 
 echo "ccache build summary:"
 ccache -s
+
+export OMP_NUM_THREADS=1
 
 if [[ "$CIRCLE_BRANCH" =~ ^main$ && -z "$CI_PULL_REQUEST" ]]
 then
