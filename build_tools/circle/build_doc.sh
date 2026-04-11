@@ -177,20 +177,10 @@ conda activate $CONDA_ENV_NAME
 show_installed_libraries
 
 # reduce memory pressure
-export NINJAFLAGS="-j1 -l1"
-export MESON_NUM_PROCESSES=1
+pip install scikit-learn
+pip install -e . --no-deps
+
 export OMP_NUM_THREADS=1
-export PYTHONMALLOC=malloc
-
-# add swap (robust)
-sudo dd if=/dev/zero of=/swapfile bs=1M count=4096
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-free -h
-
-# build
-pip install -e . --no-build-isolation -v
 
 echo "ccache build summary:"
 ccache -s
