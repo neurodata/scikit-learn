@@ -292,7 +292,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                     )
 
         # Determine output settings
-        n_samples, self.n_features_in_ = X.shape
+        n_samples, self.n_features_in_ = X.shape[0], X.shape[1]
 
         # Do preprocessing if 'y' is passed
         is_classification = False
