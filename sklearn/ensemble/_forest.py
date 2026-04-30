@@ -453,6 +453,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             accept_sparse="csc",
             dtype=DTYPE,
             ensure_all_finite=False,
+            skip_check_array=True,
         )
         # _compute_missing_values_in_feature_mask checks if X has missing values and
         # will raise an error if the underlying tree base estimator can't handle missing
@@ -786,6 +787,7 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
             accept_sparse="csr",
             reset=False,
             ensure_all_finite=ensure_all_finite,
+            skip_check_array=True,
         )
         if issparse(X) and (X.indices.dtype != np.intc or X.indptr.dtype != np.intc):
             raise ValueError("No support for np.int64 index based sparse matrices")
@@ -1277,6 +1279,7 @@ class ForestClassifier(ClassifierMixin, BaseForest, metaclass=ABCMeta):
             dtype=DTYPE,
             ensure_all_finite=False,
             reset=first_call,
+            skip_check_array=True,
         )
 
         if issparse(y):
