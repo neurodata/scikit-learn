@@ -3,7 +3,7 @@
 
 from cpython cimport Py_INCREF, PyObject, PyTypeObject
 
-from libc.math cimport INFINITY, isnan
+from libc.math cimport INFINITY
 from libc.stdlib cimport free
 from libc.string cimport memcpy
 from libc.string cimport memset
@@ -25,7 +25,6 @@ from scipy.sparse import csr_array
 
 from sklearn.utils import _align_api_if_sparse
 from sklearn.utils._bitset cimport BITSET_LENGTH
-from sklearn.utils._bitset cimport in_bitset
 
 from sklearn.tree._utils cimport goes_left
 from sklearn.tree._utils cimport safe_realloc
@@ -1107,6 +1106,8 @@ cdef class Tree:
         cdef float32_t* X_sample = NULL
         cdef intp_t i = 0
         cdef int32_t k = 0
+        cdef bint go_left
+        cdef bint is_categorical
 
         # feature_to_sample as a data structure records the last seen sample
         # for each feature; functionally, it is an efficient way to identify
@@ -1135,7 +1136,14 @@ cdef class Tree:
                     else:
                         feature_value = 0.
 
-                    if feature_value <= node.split_value.threshold:
+                    is_categorical = self.n_categories[node.feature] > 0
+                    go_left = goes_left(
+                        node.split_value,
+                        node.missing_go_to_left,
+                        is_categorical,
+                        feature_value,
+                    )
+                    if go_left:
                         node = &self.nodes[node.left_child]
                     else:
                         node = &self.nodes[node.right_child]
@@ -1180,6 +1188,8 @@ cdef class Tree:
         # Initialize auxiliary data-structure
         cdef Node* node = NULL
         cdef intp_t i = 0
+        cdef bint go_left
+        cdef bint is_categorical
 
         with nogil:
             for i in range(n_samples):
@@ -1193,20 +1203,14 @@ cdef class Tree:
                     indptr[i + 1] += 1
 
                     X_i_node_feature = X_ndarray[i, node.feature]
-                    if isnan(X_i_node_feature):
-                        if node.missing_go_to_left:
-                            node = &self.nodes[node.left_child]
-                        else:
-                            node = &self.nodes[node.right_child]
-                    elif self.n_categories[node.feature] > 0:
-                        if in_bitset(
-                            node.split_value.categorical_bitset,
-                            <uint8_t> X_i_node_feature
-                        ):
-                            node = &self.nodes[node.left_child]
-                        else:
-                            node = &self.nodes[node.right_child]
-                    elif X_i_node_feature <= node.split_value.threshold:
+                    is_categorical = self.n_categories[node.feature] > 0
+                    go_left = goes_left(
+                        node.split_value,
+                        node.missing_go_to_left,
+                        is_categorical,
+                        X_i_node_feature,
+                    )
+                    if go_left:
                         node = &self.nodes[node.left_child]
                     else:
                         node = &self.nodes[node.right_child]
@@ -1253,6 +1257,8 @@ cdef class Tree:
         cdef float32_t* X_sample = NULL
         cdef intp_t i = 0
         cdef int32_t k = 0
+        cdef bint go_left
+        cdef bint is_categorical
 
         # feature_to_sample as a data structure records the last seen sample
         # for each feature; functionally, it is an efficient way to identify
@@ -1286,7 +1292,14 @@ cdef class Tree:
                     else:
                         feature_value = 0.
 
-                    if feature_value <= node.split_value.threshold:
+                    is_categorical = self.n_categories[node.feature] > 0
+                    go_left = goes_left(
+                        node.split_value,
+                        node.missing_go_to_left,
+                        is_categorical,
+                        feature_value,
+                    )
+                    if go_left:
                         node = &self.nodes[node.left_child]
                     else:
                         node = &self.nodes[node.right_child]

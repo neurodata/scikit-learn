@@ -1777,6 +1777,23 @@ def test_decision_path(name):
     assert est.tree_.max_depth <= max_depth
 
 
+@pytest.mark.parametrize("Tree", [DecisionTreeClassifier, DecisionTreeRegressor])
+def test_categorical_decision_path_leaf_matches_apply(Tree):
+    X = np.array(
+        [[0, 0], [0, 1], [1, 0], [1, 1]] * 5,
+        dtype=np.float64,
+    )
+    y = np.array([0, 0, 0, 1] * 5, dtype=np.float64)
+
+    est = Tree(random_state=0, categorical_features=[0, 1]).fit(X, y)
+    node_indicator = est.decision_path(X)
+    leaves = est.apply(X)
+    path_leaves = node_indicator.indices[node_indicator.indptr[1:] - 1]
+
+    assert est.tree_.max_depth == 2
+    assert_array_equal(path_leaves, leaves)
+
+
 @pytest.mark.parametrize("name", ALL_TREES)
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
 def test_no_sparse_y_support(name, csr_container):
