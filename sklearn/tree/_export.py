@@ -75,6 +75,109 @@ def _color_brew(n):
     return color_list
 
 
+def _validate_category_names(category_names, tree):
+    """Validate and normalize category labels for categorical split exports."""
+    if category_names is None:
+        return None
+
+    validated_category_names = {}
+    for feature_idx, names in category_names.items():
+        if not isinstance(feature_idx, Integral) or isinstance(feature_idx, bool):
+            raise ValueError(
+                "category_names keys must be integer feature indices. "
+                f"Got key {feature_idx!r}."
+            )
+
+        feature_idx = int(feature_idx)
+        if feature_idx < 0 or feature_idx >= tree.n_features:
+            raise ValueError(
+                "category_names contains feature index "
+                f"{feature_idx}, but the tree has {tree.n_features} features."
+            )
+
+        n_categories = int(tree.n_categories[feature_idx])
+        if n_categories <= 0:
+            raise ValueError(
+                "category_names contains feature index "
+                f"{feature_idx}, which does not correspond to a categorical feature."
+            )
+
+        names = np.asarray(names, dtype=object)
+        if names.ndim != 1:
+            raise ValueError(
+                "category_names values must be one-dimensional arrays of labels."
+            )
+
+        if names.shape[0] != n_categories:
+            raise ValueError(
+                "category_names for feature "
+                f"{feature_idx} must contain {n_categories} labels, "
+                f"got {names.shape[0]}."
+            )
+
+        validated_category_names[feature_idx] = names
+
+    return validated_category_names
+
+
+def _categorical_bitset_to_codes(bitset, n_categories):
+    """Return category codes enabled in a categorical split bitset."""
+    bitset = np.asarray(bitset).reshape(-1)
+    bits_per_word = bitset.dtype.itemsize * 8
+    return [
+        code
+        for code in range(n_categories)
+        if int(bitset[code // bits_per_word]) & (1 << (code % bits_per_word))
+    ]
+
+
+def _format_category_value(code, category_names, feature_idx, str_escape=None):
+    if category_names is None or feature_idx not in category_names:
+        return str(code)
+
+    label = str(category_names[feature_idx][code])
+    if str_escape is not None:
+        label = str_escape(label)
+    return f"{label} ({code})"
+
+
+def _format_category_set(codes, category_names, feature_idx, str_escape=None):
+    categories = [
+        _format_category_value(code, category_names, feature_idx, str_escape)
+        for code in codes
+    ]
+    return "{" + ", ".join(categories) + "}"
+
+
+def _format_categorical_bitset_predicates(
+    tree, node_id, feature, category_names, str_escape=None
+):
+    feature_idx = int(tree.feature[node_id])
+    n_categories = int(tree.n_categories[feature_idx])
+    left_codes = _categorical_bitset_to_codes(
+        tree.categorical_bitset[node_id], n_categories
+    )
+    left_code_set = set(left_codes)
+    right_codes = [
+        code for code in range(n_categories) if code not in left_code_set
+    ]
+
+    if len(left_codes) <= len(right_codes):
+        categories = _format_category_set(
+            left_codes, category_names, feature_idx, str_escape
+        )
+        return f"{feature} in {categories}", f"{feature} not in {categories}"
+
+    categories = _format_category_set(
+        right_codes, category_names, feature_idx, str_escape
+    )
+    return f"{feature} not in {categories}", f"{feature} in {categories}"
+
+
+def _format_categorical_hash_split(feature):
+    return f"{feature} categorical hash split"
+
+
 class Sentinel:
     def __repr__(self):
         return '"tree.dot"'
@@ -88,6 +191,7 @@ SENTINEL = Sentinel()
         "decision_tree": [DecisionTreeClassifier, DecisionTreeRegressor],
         "max_depth": [Interval(Integral, 0, None, closed="left"), None],
         "feature_names": ["array-like", None],
+        "category_names": [dict, None],
         "class_names": ["array-like", "boolean", None],
         "label": [StrOptions({"all", "root", "none"})],
         "filled": ["boolean"],
@@ -106,6 +210,7 @@ def plot_tree(
     *,
     max_depth=None,
     feature_names=None,
+    category_names=None,
     class_names=None,
     label="all",
     filled=False,
@@ -142,6 +247,13 @@ def plot_tree(
     feature_names : array-like of str, default=None
         Names of each of the features.
         If None, generic names will be used ("x[0]", "x[1]", ...).
+
+    category_names : dict of int to array-like, default=None
+        Names of each category for categorical features. The keys are integer
+        feature indices and the values are arrays of labels ordered by category
+        code.
+
+        .. versionadded:: 1.9
 
     class_names : array-like of str or True, default=None
         Names of each of the target classes in ascending numerical order.
@@ -203,10 +315,12 @@ def plot_tree(
     """
 
     check_is_fitted(decision_tree)
+    category_names = _validate_category_names(category_names, decision_tree.tree_)
 
     exporter = _MPLTreeExporter(
         max_depth=max_depth,
         feature_names=feature_names,
+        category_names=category_names,
         class_names=class_names,
         label=label,
         filled=filled,
@@ -225,6 +339,7 @@ class _BaseTreeExporter:
         self,
         max_depth=None,
         feature_names=None,
+        category_names=None,
         class_names=None,
         label="all",
         filled=False,
@@ -237,6 +352,7 @@ class _BaseTreeExporter:
     ):
         self.max_depth = max_depth
         self.feature_names = feature_names
+        self.category_names = category_names
         self.class_names = class_names
         self.label = label
         self.filled = filled
@@ -330,12 +446,26 @@ class _BaseTreeExporter:
                     tree.feature[node_id],
                     characters[2],
                 )
-            node_string += "%s %s %s%s" % (
-                feature,
-                characters[3],
-                round(tree.threshold[node_id], self.precision),
-                characters[4],
-            )
+            split_kind = int(tree.split_kind[node_id])
+            if split_kind == _tree.SPLIT_CATEGORICAL_BITSET:
+                node_string += _format_categorical_bitset_predicates(
+                    tree,
+                    node_id,
+                    feature,
+                    self.category_names,
+                    self.str_escape,
+                )[0]
+                node_string += characters[4]
+            elif split_kind == _tree.SPLIT_CATEGORICAL_HASH:
+                node_string += _format_categorical_hash_split(feature)
+                node_string += characters[4]
+            else:
+                node_string += "%s %s %s%s" % (
+                    feature,
+                    characters[3],
+                    round(tree.threshold[node_id], self.precision),
+                    characters[4],
+                )
 
         # Write impurity
         if self.impurity:
@@ -422,6 +552,7 @@ class _DOTTreeExporter(_BaseTreeExporter):
         out_file=SENTINEL,
         max_depth=None,
         feature_names=None,
+        category_names=None,
         class_names=None,
         label="all",
         filled=False,
@@ -438,6 +569,7 @@ class _DOTTreeExporter(_BaseTreeExporter):
         super().__init__(
             max_depth=max_depth,
             feature_names=feature_names,
+            category_names=category_names,
             class_names=class_names,
             label=label,
             filled=filled,
@@ -599,6 +731,7 @@ class _MPLTreeExporter(_BaseTreeExporter):
         self,
         max_depth=None,
         feature_names=None,
+        category_names=None,
         class_names=None,
         label="all",
         filled=False,
@@ -612,6 +745,7 @@ class _MPLTreeExporter(_BaseTreeExporter):
         super().__init__(
             max_depth=max_depth,
             feature_names=feature_names,
+            category_names=category_names,
             class_names=class_names,
             label=label,
             filled=filled,
@@ -777,6 +911,7 @@ class _MPLTreeExporter(_BaseTreeExporter):
         "out_file": [str, None, HasMethods("write")],
         "max_depth": [Interval(Integral, 0, None, closed="left"), None],
         "feature_names": ["array-like", None],
+        "category_names": [dict, None],
         "class_names": ["array-like", "boolean", None],
         "label": [StrOptions({"all", "root", "none"})],
         "filled": ["boolean"],
@@ -798,6 +933,7 @@ def export_graphviz(
     *,
     max_depth=None,
     feature_names=None,
+    category_names=None,
     class_names=None,
     label="all",
     filled=False,
@@ -844,6 +980,13 @@ def export_graphviz(
     feature_names : array-like of shape (n_features,), default=None
         An array containing the feature names.
         If None, generic names will be used ("x[0]", "x[1]", ...).
+
+    category_names : dict of int to array-like, default=None
+        Names of each category for categorical features. The keys are integer
+        feature indices and the values are arrays of labels ordered by category
+        code.
+
+        .. versionadded:: 1.9
 
     class_names : array-like of shape (n_classes,) or bool, default=None
         Names of each of the target classes in ascending numerical order.
@@ -922,6 +1065,7 @@ def export_graphviz(
         )
 
     check_is_fitted(decision_tree)
+    category_names = _validate_category_names(category_names, decision_tree.tree_)
     own_file = False
     return_string = False
     try:
@@ -937,6 +1081,7 @@ def export_graphviz(
             out_file=out_file,
             max_depth=max_depth,
             feature_names=feature_names,
+            category_names=category_names,
             class_names=class_names,
             label=label,
             filled=filled,
@@ -988,6 +1133,7 @@ def _compute_depth(tree, node):
     {
         "decision_tree": [DecisionTreeClassifier, DecisionTreeRegressor],
         "feature_names": ["array-like", None],
+        "category_names": [dict, None],
         "class_names": ["array-like", None],
         "max_depth": [Interval(Integral, 0, None, closed="left"), None],
         "spacing": [Interval(Integral, 1, None, closed="left"), None],
@@ -1000,6 +1146,7 @@ def export_text(
     decision_tree,
     *,
     feature_names=None,
+    category_names=None,
     class_names=None,
     max_depth=10,
     spacing=3,
@@ -1020,6 +1167,13 @@ def export_text(
     feature_names : array-like of shape (n_features,), default=None
         An array containing the feature names.
         If None generic names will be used ("feature_0", "feature_1", ...).
+
+    category_names : dict of int to array-like, default=None
+        Names of each category for categorical features. The keys are integer
+        feature indices and the values are arrays of labels ordered by category
+        code.
+
+        .. versionadded:: 1.9
 
     class_names : array-like of shape (n_classes,), default=None
         Names of each of the target classes in ascending numerical order.
@@ -1083,6 +1237,7 @@ def export_text(
 
     check_is_fitted(decision_tree)
     tree_ = decision_tree.tree_
+    category_names = _validate_category_names(category_names, tree_)
     if is_classifier(decision_tree):
         if class_names is None:
             class_names = decision_tree.classes_
@@ -1095,6 +1250,7 @@ def export_text(
             )
     right_child_fmt = "{} {} <= {}\n"
     left_child_fmt = "{} {} >  {}\n"
+    categorical_child_fmt = "{} {}\n"
     truncation_fmt = "{} {}\n"
 
     if feature_names is not None and len(feature_names) != tree_.n_features:
@@ -1159,15 +1315,47 @@ def export_text(
 
             if tree_.feature[node] != _tree.TREE_UNDEFINED:
                 name = feature_names_[node]
-                threshold = tree_.threshold[node]
-                threshold = "{1:.{0}f}".format(decimals, threshold)
-                report.write(right_child_fmt.format(indent, name, threshold))
-                report.write(info_fmt_left)
-                print_tree_recurse(report, tree_.children_left[node], depth + 1)
+                split_kind = int(tree_.split_kind[node])
+                if split_kind == _tree.SPLIT_CATEGORICAL_BITSET:
+                    left_predicate, right_predicate = (
+                        _format_categorical_bitset_predicates(
+                            tree_, node, name, category_names
+                        )
+                    )
+                    report.write(categorical_child_fmt.format(indent, left_predicate))
+                    report.write(info_fmt_left)
+                    print_tree_recurse(report, tree_.children_left[node], depth + 1)
 
-                report.write(left_child_fmt.format(indent, name, threshold))
-                report.write(info_fmt_right)
-                print_tree_recurse(report, tree_.children_right[node], depth + 1)
+                    report.write(categorical_child_fmt.format(indent, right_predicate))
+                    report.write(info_fmt_right)
+                    print_tree_recurse(report, tree_.children_right[node], depth + 1)
+                elif split_kind == _tree.SPLIT_CATEGORICAL_HASH:
+                    split_description = _format_categorical_hash_split(name)
+                    report.write(
+                        categorical_child_fmt.format(
+                            indent, f"{split_description}: left"
+                        )
+                    )
+                    report.write(info_fmt_left)
+                    print_tree_recurse(report, tree_.children_left[node], depth + 1)
+
+                    report.write(
+                        categorical_child_fmt.format(
+                            indent, f"{split_description}: right"
+                        )
+                    )
+                    report.write(info_fmt_right)
+                    print_tree_recurse(report, tree_.children_right[node], depth + 1)
+                else:
+                    threshold = tree_.threshold[node]
+                    threshold = "{1:.{0}f}".format(decimals, threshold)
+                    report.write(right_child_fmt.format(indent, name, threshold))
+                    report.write(info_fmt_left)
+                    print_tree_recurse(report, tree_.children_left[node], depth + 1)
+
+                    report.write(left_child_fmt.format(indent, name, threshold))
+                    report.write(info_fmt_right)
+                    print_tree_recurse(report, tree_.children_right[node], depth + 1)
             else:  # leaf
                 _add_leaf(value, weighted_n_node_samples, class_name, indent)
         else:

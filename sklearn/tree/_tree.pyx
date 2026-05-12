@@ -27,7 +27,9 @@ from sklearn.utils import _align_api_if_sparse
 from sklearn.utils._bitset cimport BITSET_LENGTH
 
 from sklearn.tree._utils cimport goes_left
-from sklearn.tree._utils cimport SPLIT_NUMERIC
+from sklearn.tree._utils cimport SPLIT_CATEGORICAL_BITSET as SPLIT_CATEGORICAL_BITSET_C
+from sklearn.tree._utils cimport SPLIT_CATEGORICAL_HASH as SPLIT_CATEGORICAL_HASH_C
+from sklearn.tree._utils cimport SPLIT_NUMERIC as SPLIT_NUMERIC_C
 from sklearn.tree._utils cimport safe_realloc
 from sklearn.tree._utils cimport sizet_ptr_to_ndarray
 
@@ -57,6 +59,10 @@ TREE_LEAF = -1
 TREE_UNDEFINED = -2
 cdef intp_t _TREE_LEAF = TREE_LEAF
 cdef intp_t _TREE_UNDEFINED = TREE_UNDEFINED
+
+SPLIT_NUMERIC = SPLIT_NUMERIC_C
+SPLIT_CATEGORICAL_BITSET = SPLIT_CATEGORICAL_BITSET_C
+SPLIT_CATEGORICAL_HASH = SPLIT_CATEGORICAL_HASH_C
 
 MAX_NUM_CATEGORIES_PY = 256
 
@@ -291,7 +297,7 @@ cdef class DepthFirstTreeBuilder(TreeBuilder):
                 if is_leaf:
                     split.feature = 0
                     split.split_value.threshold = 0.
-                    split.split_kind = SPLIT_NUMERIC
+                    split.split_kind = SPLIT_NUMERIC_C
                     split.missing_go_to_left = False
 
                 node_id = tree._add_node(parent, is_left, is_leaf, split.feature,
@@ -655,7 +661,7 @@ cdef class BestFirstTreeBuilder(TreeBuilder):
         if is_leaf:
             split.feature = 0
             split.split_value.threshold = 0.
-            split.split_kind = SPLIT_NUMERIC
+            split.split_kind = SPLIT_NUMERIC_C
             split.missing_go_to_left = False
 
         node_id = tree._add_node(parent - tree.nodes
@@ -1025,14 +1031,14 @@ cdef class Tree:
             node.right_child = _TREE_LEAF
             node.feature = _TREE_UNDEFINED
             node.split_value.threshold = _TREE_UNDEFINED
-            node.split_kind = SPLIT_NUMERIC
+            node.split_kind = SPLIT_NUMERIC_C
             node.missing_go_to_left = 0
 
         else:
             # left_child and right_child will be set later
             node.feature = feature
             node.split_kind = split_kind
-            if split_kind == SPLIT_NUMERIC:
+            if split_kind == SPLIT_NUMERIC_C:
                 node.split_value.threshold = split_value.threshold
             else:
                 node.split_value.threshold = -INFINITY

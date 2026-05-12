@@ -15,6 +15,7 @@ from sklearn.exceptions import NotFittedError
 from sklearn.tree import (
     DecisionTreeClassifier,
     DecisionTreeRegressor,
+    ExtraTreeClassifier,
     export_graphviz,
     export_text,
     plot_tree,
@@ -30,6 +31,20 @@ y = [-1, -1, -1, 1, 1, 1]
 y2 = [[-1, 1], [-1, 1], [-1, 1], [1, 2], [1, 2], [1, 3]]
 w = [1, 1, 1, 0.5, 0.5, 0.5]
 y_degraded = [1, 1, 1, 1, 1, 1]
+
+
+def _categorical_export_data():
+    X_cat = np.repeat(np.arange(4, dtype=np.float64), 3)
+    X = X_cat.reshape(-1, 1)
+    y = (X_cat == 3).astype(np.intp)
+    return X, y
+
+
+def _categorical_export_tree():
+    X, y = _categorical_export_data()
+    return DecisionTreeClassifier(
+        max_depth=1, random_state=0, categorical_features=[0]
+    ).fit(X, y)
 
 
 def test_rgb_to_hexstring():
@@ -589,6 +604,89 @@ def test_export_text_feature_class_names_array_support(constructor):
     """
     ).lstrip()
     assert export_text(clf, class_names=constructor(["cat", "dog"])) == expected_report
+
+
+def test_export_text_categorical_bitset_codes():
+    clf = _categorical_export_tree()
+
+    report = export_text(clf, feature_names=["cat"])
+
+    assert "cat in {3}" in report
+    assert "cat not in {3}" in report
+    assert "{0, 1, 2}" not in report
+    assert "<=" not in report
+
+
+def test_export_text_categorical_bitset_category_names():
+    clf = _categorical_export_tree()
+
+    report = export_text(
+        clf,
+        feature_names=["cat"],
+        category_names={0: ["zero", "one", "two", "three"]},
+    )
+
+    assert "three (3)" in report
+    assert "cat in {three (3)}" in report
+    assert "cat not in {three (3)}" in report
+    assert "zero (0)" not in report
+
+
+def test_export_graphviz_categorical_bitset_predicate():
+    clf = _categorical_export_tree()
+
+    dot_data = export_graphviz(clf, out_file=None, feature_names=["cat"])
+
+    assert search(r"cat (?:not in|in) \{3\}", dot_data) is not None
+    assert "{0, 1, 2}" not in dot_data
+    assert "cat <=" not in dot_data
+
+
+def test_plot_tree_categorical_bitset_predicate(pyplot):
+    clf = _categorical_export_tree()
+
+    nodes = plot_tree(
+        clf,
+        feature_names=["cat"],
+        category_names={0: ["zero", "one", "two", "three"]},
+    )
+
+    assert search(r"cat (?:not in|in) \{three \(3\)\}", nodes[0].get_text())
+
+
+def test_categorical_hash_split_export():
+    categories = np.arange(300, dtype=np.float64)
+    X = categories.reshape(-1, 1)
+    y = (categories.astype(np.intp) % 2).astype(np.intp)
+    clf = ExtraTreeClassifier(
+        max_depth=1, random_state=0, categorical_features=[0]
+    ).fit(X, y)
+
+    report = export_text(clf)
+    dot_data = export_graphviz(clf, out_file=None)
+
+    assert "feature_0 categorical hash split: left" in report
+    assert "feature_0 categorical hash split: right" in report
+    assert "x[0] categorical hash split" in dot_data
+    assert "seed" not in report
+    assert "seed" not in dot_data
+
+
+def test_category_names_errors():
+    clf = _categorical_export_tree()
+
+    with pytest.raises(ValueError, match="keys must be integer feature indices"):
+        export_text(clf, category_names={"0": ["zero", "one", "two", "three"]})
+
+    with pytest.raises(ValueError, match="must contain 4 labels, got 3"):
+        export_text(clf, category_names={0: ["zero", "one", "two"]})
+
+    X_cat, y = _categorical_export_data()
+    X = np.column_stack([X_cat, np.ones_like(X_cat)])
+    clf = DecisionTreeClassifier(categorical_features=[0], random_state=0).fit(X, y)
+
+    with pytest.raises(ValueError, match="does not correspond to a categorical"):
+        export_text(clf, category_names={1: ["off", "on"]})
 
 
 def test_plot_tree_entropy(pyplot):
