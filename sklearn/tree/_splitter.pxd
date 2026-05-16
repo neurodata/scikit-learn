@@ -1,12 +1,66 @@
-# Authors: The scikit-learn developers
+# Authors: Gilles Louppe <g.louppe@gmail.com>
+#          Peter Prettenhofer <peter.prettenhofer@gmail.com>
+#          Brian Holt <bdholt1@gmail.com>
+#          Joel Nothman <joel.nothman@gmail.com>
+#          Arnaud Joly <arnaud.v.joly@gmail.com>
+#          Jacob Schreiber <jmschreiber91@gmail.com>
+#          Adam Li <adam2392@gmail.com>
+#          Jong Shin <jshinm@gmail.com>
+#          Samuel Carliles <scarlil1@jhu.edu>
+#
+# License: BSD 3 clause
 # SPDX-License-Identifier: BSD-3-Clause
 
 # See _splitter.pyx for details.
 from libcpp.vector cimport vector
 
+from ._partitioner cimport Partitioner, DensePartitioner, SparsePartitioner
 from ._criterion cimport BaseCriterion, Criterion
 from ._tree cimport ParentInfo
-from ..utils._typedefs cimport float32_t, float64_t, intp_t, int8_t, int32_t, uint8_t, uint32_t
+
+from ..utils._typedefs cimport float32_t, float64_t, intp_t, int8_t, uint8_t, int32_t, uint32_t
+
+from ._events cimport EventBroker, EventHandler, NullHandler
+
+
+cdef enum NodeSplitEvent:
+    SORT_FEATURE = 1
+
+cdef struct NodeSortFeatureEventData:
+    intp_t feature
+    intp_t is_left
+
+cdef struct NodeSplitEventData:
+    intp_t feature
+    float64_t threshold
+
+# We wish to generalize Splitter so that arbitrary split rejection criteria can be
+# passed in dynamically at construction. The natural way to want to do this is to
+# pass in a list of lambdas, but as we are in cython, this is not so straightforward.
+# We want the convience of being able to pass them in as a python list, and while it
+# would be nice to receive them as a memoryview, this is quite a nuisance with
+# cython extension types, so we do cpp vector instead. We do the same closure struct
+# pattern for execution speed, but they need to be wrapped in cython extension types
+# both for convenience and to go in python list.
+ctypedef void* SplitConditionEnv
+ctypedef bint (*SplitConditionFunction)(
+    Splitter splitter,
+    intp_t split_feature,
+    intp_t split_pos,
+    float64_t split_value,
+    intp_t n_missing,
+    bint missing_go_to_left,
+    float64_t lower_bound,
+    float64_t upper_bound,
+    SplitConditionEnv split_condition_env
+) noexcept nogil
+
+cdef struct SplitConditionClosure:
+    SplitConditionFunction f
+    SplitConditionEnv e
+
+cdef class SplitCondition:
+    cdef SplitConditionClosure c
 
 
 cdef struct SplitRecord:
@@ -23,6 +77,19 @@ cdef struct SplitRecord:
     float64_t upper_bound     # Upper bound on value of both children for monotonicity
     uint8_t missing_go_to_left  # Controls if missing values go to the left node.
     intp_t n_missing            # Number of missing values for the feature being split on
+
+
+# In the neurodata fork of sklearn there was a hack added where SplitRecords are
+# created which queries splitter for pointer size and does an inline malloc. This
+# is to accommodate the ability to create extended SplitRecord types in Splitter
+# subclasses. We refactor that into a factory method again implemented as a closure
+# struct.
+ctypedef void* SplitRecordFactoryEnv
+ctypedef SplitRecord* (*SplitRecordFactory)(SplitRecordFactoryEnv env) except NULL nogil
+
+cdef struct SplitRecordFactoryClosure:
+    SplitRecordFactory f
+    SplitRecordFactoryEnv e
 
 cdef class BaseSplitter:
     """Abstract interface for splitter."""
@@ -52,6 +119,8 @@ cdef class BaseSplitter:
     cdef intp_t end                      # End position for the current node
 
     cdef const float64_t[:] sample_weight
+
+    cdef SplitRecordFactoryClosure split_record_factory
 
     # The samples vector `samples` is maintained by the Splitter object such
     # that the samples contained in a node are contiguous. With this setting,
@@ -84,6 +153,7 @@ cdef class BaseSplitter:
     cdef void node_value(self, float64_t* dest) noexcept nogil
     cdef float64_t node_impurity(self) noexcept nogil
     cdef intp_t pointer_size(self) noexcept nogil
+    cdef SplitRecord* create_split_record(self) except NULL nogil
 
 cdef class Splitter(BaseSplitter):
     """Base class for supervised splitters."""
@@ -98,6 +168,19 @@ cdef class Splitter(BaseSplitter):
     #   +1: monotonic increase
     cdef const int8_t[:] monotonic_cst
     cdef bint with_monotonic_cst
+
+    cdef SplitCondition min_samples_leaf_condition
+    cdef SplitCondition min_weight_leaf_condition
+    cdef SplitCondition monotonic_constraint_condition
+
+    # split rejection criteria checked before split selection
+    cdef vector[SplitConditionClosure] presplit_conditions
+
+    # split rejection criteria checked after split selection
+    cdef vector[SplitConditionClosure] postsplit_conditions
+
+    # event broker for handling splitter events
+    cdef EventBroker event_broker
 
     cdef int init(
         self,
@@ -127,3 +210,16 @@ cdef class Splitter(BaseSplitter):
         float64_t lower_bound,
         float64_t upper_bound
     ) noexcept nogil
+
+    cdef void _add_conditions(
+        self,
+        vector[SplitConditionClosure]* v,
+        split_conditions : [SplitCondition]
+    )
+
+
+cdef void shift_missing_values_to_left_if_required(
+    SplitRecord* best,
+    intp_t[::1] samples,
+    intp_t end,
+) noexcept nogil

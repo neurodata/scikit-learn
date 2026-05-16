@@ -95,6 +95,36 @@ SPARSE_SPLITTERS = {
 # =============================================================================
 
 
+class BuildTreeArgs:
+    def __init__(
+            self,
+            X,
+            y,
+            sample_weight,
+            missing_values_in_feature_mask,
+            min_samples_leaf,
+            min_weight_leaf,
+            max_leaf_nodes,
+            min_samples_split,
+            max_depth,
+            random_state,
+            classes,
+            n_classes
+    ):
+        self.X = X
+        self.y = y
+        self.sample_weight = sample_weight
+        self.missing_values_in_feature_mask = missing_values_in_feature_mask
+        self.min_samples_leaf = min_samples_leaf
+        self.min_weight_leaf = min_weight_leaf
+        self.max_leaf_nodes = max_leaf_nodes
+        self.min_samples_split = min_samples_split
+        self.max_depth = max_depth
+        self.random_state = random_state
+        self.classes = classes
+        self.n_classes = n_classes
+
+
 class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
     """Base class for decision trees.
 
@@ -166,6 +196,10 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         self.ccp_alpha = ccp_alpha
         self.store_leaf_values = store_leaf_values
         self.monotonic_cst = monotonic_cst
+        self.presplit_conditions = None
+        self.postsplit_conditions = None
+        self.splitter_listeners = None
+        self.tree_build_listeners = None
 
     def get_depth(self):
         """Return the depth of the decision tree.
@@ -239,7 +273,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
         missing_values_in_feature_mask = _any_isnan_axis0(X)
         return missing_values_in_feature_mask
 
-    def _fit(
+    def _prep_data(
         self,
         X,
         y,
@@ -416,8 +450,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             min_weight_leaf = self.min_weight_fraction_leaf * np.sum(sample_weight)
         self.min_weight_leaf_ = min_weight_leaf
 
-        # build the actual tree now with the parameters
-        self = self._build_tree(
+        return BuildTreeArgs(
             X=X,
             y=y,
             sample_weight=sample_weight,
@@ -428,12 +461,88 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             min_samples_split=min_samples_split,
             max_depth=max_depth,
             random_state=random_state,
+            classes=classes,
+            n_classes=getattr(self, 'n_classes_', None)
         )
 
-        return self
+
+    # The existing implementation of _fit was almost nothing but data prep and
+    # state initialization, followed by a call to _build_tree. This made it
+    # impossible to tweak _fit ever so slightly without duplicating a lot of
+    # code. So we've modularized it a bit.
+    def _fit(
+        self,
+        X,
+        y,
+        sample_weight=None,
+        check_input=True,
+        missing_values_in_feature_mask=None,
+        classes=None,
+    ):
+        bta = self._prep_data(
+            X=X,
+            y=y,
+            sample_weight=sample_weight,
+            check_input=check_input,
+            missing_values_in_feature_mask=missing_values_in_feature_mask,
+            classes=classes
+        )
+
+        # Criterion can't be created until we do the class distribution analysis
+        # in _prep_data, so we have to create it here, and best to do it as a
+        # factory which can be overridden if necessary. This used to be in
+        # _build_tree, but that is the wrong place to commit to a particular
+        # implementation; it should be passed in as a parameter.
+        criterion = BaseDecisionTree._create_criterion(
+            self,
+            n_outputs=bta.y.shape[1],
+            n_samples=bta.X.shape[0],
+            n_classes=bta.n_classes
+        )
+
+        # build the actual tree now with the parameters
+        return self._build_tree(
+            criterion=criterion,
+            X=bta.X,
+            y=bta.y,
+            sample_weight=bta.sample_weight,
+            missing_values_in_feature_mask=bta.missing_values_in_feature_mask,
+            min_samples_leaf=bta.min_samples_leaf,
+            min_weight_leaf=bta.min_weight_leaf,
+            max_leaf_nodes=bta.max_leaf_nodes,
+            min_samples_split=bta.min_samples_split,
+            max_depth=bta.max_depth,
+            random_state=bta.random_state,
+        )
+
+    @staticmethod
+    # n_classes is an array of length n_outputs
+    # containing the number of classes in each output dimension
+    def _create_criterion(
+        tree: "BaseDecisionTree",
+        n_outputs,
+        n_samples,
+        n_classes=None
+    ) -> BaseCriterion:
+        criterion = tree.criterion
+        if not isinstance(tree.criterion, BaseCriterion):
+            if is_classifier(tree):
+                criterion = CRITERIA_CLF[tree.criterion](
+                    n_outputs, n_classes
+                )
+            else:
+                criterion = CRITERIA_REG[tree.criterion](n_outputs, n_samples)
+        else:
+            # Make a deepcopy in case the criterion has mutable attributes that
+            # might be shared and modified concurrently during parallel fitting
+            criterion = copy.deepcopy(tree.criterion)
+        
+        return criterion
+
 
     def _build_tree(
         self,
+        criterion,
         X,
         y,
         sample_weight,
@@ -469,20 +578,6 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
             Random seed.
         """
         n_samples = X.shape[0]
-
-        # Build tree
-        criterion = self.criterion
-        if not isinstance(criterion, BaseCriterion):
-            if is_classifier(self):
-                criterion = CRITERIA_CLF[self.criterion](
-                    self.n_outputs_, self.n_classes_
-                )
-            else:
-                criterion = CRITERIA_REG[self.criterion](self.n_outputs_, n_samples)
-        else:
-            # Make a deepcopy in case the criterion has mutable attributes that
-            # might be shared and modified concurrently during parallel fitting
-            criterion = copy.deepcopy(criterion)
 
         SPLITTERS = SPARSE_SPLITTERS if issparse(X) else DENSE_SPLITTERS
 
@@ -534,6 +629,9 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 min_weight_leaf,
                 random_state,
                 monotonic_cst,
+                presplit_conditions=self.presplit_conditions,
+                postsplit_conditions=self.postsplit_conditions,
+                listeners=self.splitter_listeners
             )
 
         if is_classifier(self):
@@ -556,6 +654,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 max_depth,
                 self.min_impurity_decrease,
                 self.store_leaf_values,
+                listeners = self.tree_build_listeners
             )
         else:
             builder = BestFirstTreeBuilder(
@@ -567,6 +666,7 @@ class BaseDecisionTree(MultiOutputMixin, BaseEstimator, metaclass=ABCMeta):
                 max_leaf_nodes,
                 self.min_impurity_decrease,
                 self.store_leaf_values,
+                listeners = self.tree_build_listeners
             )
         builder.build(self.tree_, X, y, sample_weight, missing_values_in_feature_mask)
 

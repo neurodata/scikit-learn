@@ -34,6 +34,7 @@ from sklearn.ensemble import (
 from sklearn.ensemble._forest import (
     _generate_unsampled_indices,
     _get_n_samples_bootstrap,
+    HonestRandomForestClassifier,
 )
 from sklearn.exceptions import NotFittedError
 from sklearn.metrics import (
@@ -44,6 +45,7 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import GridSearchCV, cross_val_score, train_test_split
 from sklearn.svm import LinearSVC
+from sklearn.tree.tests.test_tree import make_trunk_classification
 from sklearn.tree._classes import SPARSE_SPLITTERS
 from sklearn.utils._testing import (
     _convert_container,
@@ -269,6 +271,137 @@ def test_iris_criterion(name, criterion):
     clf.fit(iris.data, iris.target)
     score = clf.score(iris.data, iris.target)
     assert score > 0.5, "Failed with criterion %s and score = %f" % (criterion, score)
+
+@pytest.mark.parametrize("criterion", ("gini", "log_loss"))
+def test_honest_forest_iris_criterion(criterion):
+    # Check consistency on dataset iris.
+    clf = HonestRandomForestClassifier(
+        n_estimators=10, criterion=criterion, random_state=1
+    )
+    clf.fit(iris.data, iris.target)
+    score = clf.score(iris.data, iris.target)
+    assert score > 0.9, "Failed with criterion %s and score = %f" % (criterion, score)
+
+    clf = HonestRandomForestClassifier(
+        n_estimators=10, criterion=criterion, max_features=2, random_state=1
+    )
+    clf.fit(iris.data, iris.target)
+    score = clf.score(iris.data, iris.target)
+    assert score > 0.5, "Failed with criterion %s and score = %f" % (criterion, score)
+
+
+def test_honest_forest_separation():
+    # verify that splits by trees in an honest forest are made independent of honest
+    # Y labels. this can't be done using the shuffle test method used in the tree
+    # tests because in a forest using stratified sampling, the honest Y labels are
+    # used to determine the stratification, making it impossible to both shuffle the
+    # Y labels and keep the honest index selection fixed between trials. thus we must
+    # use a different method to test forests, which is simply to run two trials,
+    # shifting the honest X values in the second trial such that any split which
+    # considered the honest Y labels must move. we also do a third trial moving some
+    # of the structure X values to verify that moving X's under consideration would
+    # in fact alter splits, obvious as it may seem.
+    #
+    # in order for this test to work, one must ensure that the honest split rejection
+    # criteria never veto a desired split by the shadow structure tree.
+    # the lazy way to do this is to make sure there are enough honest observations
+    # so that there will be enough on either side of any potential structure split.
+    # thus more dims => more samples
+    N_TREES = 1
+    N_DIM = 10
+    SAMPLE_SIZE = 2098
+    RANDOM_STATE = 1
+    HONEST_FRACTION = 0.95
+    STRATIFY = True
+
+    X, y = make_trunk_classification(
+        n_samples=SAMPLE_SIZE,
+        n_dim=N_DIM,
+        n_informative=1,
+        seed=0,
+        mu_0=-5,
+        mu_1=5
+    )
+    X_t = np.concatenate((
+        X[: SAMPLE_SIZE // 2],
+        X[SAMPLE_SIZE // 2 :]
+    ))
+    y_t = np.concatenate((
+        y[: SAMPLE_SIZE // 2],
+        y[SAMPLE_SIZE // 2 :]
+    ))
+
+
+    def perturb(X, y, indices):
+        for d in range(N_DIM):
+            for i in indices:
+                if y[i] == 0 and np.random.randint(0, 2, 1) > 0:
+                    X[i, d] -= 5
+                elif np.random.randint(0, 2, 1) > 0:
+                    X[i, d] -= 2
+
+        return X, y
+
+
+    class Trial:
+        def __init__(self, X, y):
+            self.est = HonestRandomForestClassifier(
+                n_estimators=N_TREES,
+                max_samples=1.0,
+                max_features=0.3,
+                bootstrap=True,
+                stratify=STRATIFY,
+                n_jobs=-2,
+                random_state=RANDOM_STATE,
+                honest_prior="ignore",
+                honest_fraction=HONEST_FRACTION,
+            )
+            self.est.fit(X, y)
+            
+            self.tree = self.est.estimators_[0]
+            self.honest_tree = self.tree.tree_
+            self.structure_tree = self.honest_tree.target_tree
+            self.honest_indices = np.sort(self.tree.honest_indices_)
+            self.structure_indices = np.sort(self.tree.structure_indices_)
+            self.threshold = self.honest_tree.target_tree.threshold.copy()
+
+
+    trial_results = []
+    trial_results.append(Trial(X_t, y_t))
+
+    # perturb honest X values; threshold should not change
+    X_t, y_t = perturb(X_t, y_t, trial_results[0].honest_indices)
+
+    trial_results.append(Trial(X_t, y_t))
+    assert np.array_equal(
+        trial_results[0].honest_indices,
+        trial_results[1].honest_indices
+    )
+    assert np.array_equal(
+        trial_results[0].structure_indices,
+        trial_results[1].structure_indices
+    )
+    assert np.array_equal(
+        trial_results[0].threshold,
+        trial_results[1].threshold
+    ), f"threshold1 = {trial_results[0].threshold}\nthreshold2 = {trial_results[1].threshold}"
+
+
+    # perturb structure X's; threshold should change
+    X_t, y_t = perturb(X_t, y_t, trial_results[0].structure_indices)
+    trial_results.append(Trial(X_t, y_t))
+    assert np.array_equal(
+        trial_results[0].honest_indices,
+        trial_results[2].honest_indices
+    )
+    assert np.array_equal(
+        trial_results[0].structure_indices,
+        trial_results[2].structure_indices
+    )
+    assert not np.array_equal(
+        trial_results[0].threshold,
+        trial_results[2].threshold
+    )
 
 
 @pytest.mark.parametrize("name", FOREST_REGRESSORS)

@@ -10,10 +10,12 @@ from ._classes import (
     ExtraTreeClassifier,
     ExtraTreeRegressor,
 )
+from ._honest_tree import HonestDecisionTree
 from ._export import export_graphviz, export_text, plot_tree
 
 __all__ = [
     "BaseDecisionTree",
+    "HonestDecisionTree",
     "DecisionTreeClassifier",
     "DecisionTreeRegressor",
     "ExtraTreeClassifier",

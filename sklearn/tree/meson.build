@@ -2,6 +2,9 @@ tree_extension_metadata = {
   '_tree':
     {'sources': ['_tree.pyx'],
      'override_options': ['cython_language=cpp', 'optimization=3']},
+  '_sort':
+    {'sources': ['_sort.pyx'],
+     'override_options': ['cython_language=cpp', 'optimization=3']},
   '_splitter':
     {'sources': ['_splitter.pyx'],
      'override_options': ['cython_language=cpp', 'optimization=3']},
@@ -14,6 +17,15 @@ tree_extension_metadata = {
   '_utils':
     {'sources': ['_utils.pyx'],
      'override_options': ['cython_language=cpp', 'optimization=3']},
+  '_events':
+    {'sources': ['_events.pyx'],
+     'override_options': ['cython_language=cpp', 'optimization=3']},
+  '_honesty':
+    {'sources': ['_honesty.pyx'],
+     'override_options': ['cython_language=cpp', 'optimization=3']},
+  '_test':
+    {'sources': ['_test.pyx'],
+     'override_options': ['cython_language=cpp', 'optimization=3']}
 }
 
 foreach ext_name, ext_dict : tree_extension_metadata
