@@ -775,11 +775,13 @@ class BaseForest(MultiOutputMixin, BaseEnsemble, metaclass=ABCMeta):
         """
         Validate X whenever one tries to predict, apply, predict_proba."""
         check_is_fitted(self)
-        if self.estimators_[0]._support_missing_values(X):
-            ensure_all_finite = "allow-nan"
-        else:
-            ensure_all_finite = True
+        # if self.estimators_[0]._support_missing_values(X):
+        #     ensure_all_finite = "allow-nan"
+        # else:
+        #     ensure_all_finite = True
 
+        # Always allow NaNs:
+        ensure_all_finite = "allow-nan"
         X = validate_data(
             self,
             X,
